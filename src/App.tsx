@@ -574,14 +574,16 @@ export default function App() {
               />
               {busy
                 ? t("분석 중", "Analyzing")
-                : saveState === "saved"
-                  ? t("기기에 저장됨", "Saved locally")
-                  : saveState === "failed"
-                    ? t(
-                        "저장 실패 · 내보내기 필요",
-                        "Save failed; export needed",
-                      )
-                    : t("저장 중", "Saving")}
+                : demoMode
+                  ? t("체험 모드 · 저장 안 함", "Demo · not saved")
+                  : saveState === "saved"
+                    ? t("기기에 저장됨", "Saved locally")
+                    : saveState === "failed"
+                      ? t(
+                          "저장 실패 · 내보내기 필요",
+                          "Save failed; export needed",
+                        )
+                      : t("저장 중", "Saving")}
             </span>
             <label className="language-select">
               <Icon name="globe" size={15} />

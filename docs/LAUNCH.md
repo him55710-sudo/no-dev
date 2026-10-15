@@ -2,6 +2,8 @@
 
 제품 전략: [PRODUCT.md](PRODUCT.md). 문구는 준비한 초안이며 외부에 게시하거나 누구에게 보내지 않았다.
 
+2026-10-16 공개 상태: [저장소](https://github.com/him55710-sudo/pureobom), [설치 파일](https://github.com/him55710-sudo/pureobom/releases), [한국어 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko), [English demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en). Windows·Ubuntu CI와 Pages 배포를 실제 확인했다. 비공개 취약점 제보가 활성화되어 있다. 아래 공개 글은 커뮤니티에 아직 게시하지 않은 초안이며, 사용자 관찰과 Marketplace 출시는 남아 있다.
+
 ## 공개 전
 
 1. 소유할 GitHub 계정·저장소를 정하고 준비된 소스를 공개한다. 실데이터, `.env`, 로그, 테스트 사용자 프로필은 배포에 넣지 않는다.
@@ -31,7 +33,7 @@ I built Pureobom for people who can describe the product they want but struggle 
 
 Try changing a free-shipping threshold from 50,000 to 70,000. You can see which sample orders change before applying the code edit. Comparisons use a restricted AST interpreter, not arbitrary code execution. Unsupported cases stay unavailable. This preview supports JS/TS and literal/comparison edits; it does not generate entire features or prove correctness.
 
-I would appreciate small, public examples where the explanation or edit is confusing. The project is MIT licensed. [Insert verified repository and demo URLs before posting.]
+I would appreciate small, public examples where the explanation or edit is confusing. The project is MIT licensed. [Source and installation](https://github.com/him55710-sudo/pureobom) · [Live demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en).
 
 ## 한국어 공개 글 초안
 
@@ -41,7 +43,7 @@ I would appreciate small, public examples where the explanation or edit is confu
 
 무료 배송 기준을 5만 원에서 7만 원으로 바꾸면 어떤 주문이 달라지는지 직접 체험할 수 있습니다. 계정·API 키 없이 로컬에서 동작합니다. 현재는 JS/TS 중심의 공개 시제품이고, 복잡한 기능 생성이나 실제 앱 전체 테스트는 지원하지 않습니다.
 
-작은 공개 예제로 피드백을 주시면 설명과 지원 범위를 개선하는 데 도움이 됩니다. [실제 저장소·데모 주소 확인 후 삽입]
+작은 공개 예제로 피드백을 주시면 설명과 지원 범위를 개선하는 데 도움이 됩니다. [저장소와 설치 안내](https://github.com/him55710-sudo/pureobom) · [바로 체험하기](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko).
 
 ## 출시 후 4주
 

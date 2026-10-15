@@ -3,7 +3,10 @@
   "version": "0.4.0",
   "description": "Read code in your language. Change a rule. Check what changes.",
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/him55710-sudo/pureobom.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/him55710-sudo/pureobom.git"
+  },
   "engines": {
     "node": ">=24"
   },

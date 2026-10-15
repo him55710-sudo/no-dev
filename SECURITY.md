@@ -6,7 +6,7 @@ The browser stores an imported workspace in IndexedDB on the current origin. `?d
 
 VS Code uses its own editor, save and undo behavior. Changes require a trusted workspace. Applying a patch edits the buffer and does not automatically save. The extension rejects patches and comparisons from stale document contexts. Computation has operation and recursion limits and runs in a terminable worker. This is a restricted interpreter, not a sandbox for executing arbitrary JavaScript.
 
-To report a vulnerability, use the repository's **Security → Report a vulnerability** when private vulnerability reporting has been enabled. Until then, open a minimal issue asking for a private contact route without including exploit details, credentials or private code. The release checklist includes enabling that route before a public launch. We do not claim a response-time SLA or completed external audit.
+To report a vulnerability, use [Security → Report a vulnerability](https://github.com/him55710-sudo/pureobom/security/advisories/new). Private vulnerability reporting is enabled. Do not put credentials or private source in public issues. We do not claim a response-time SLA or completed external audit.
 
 Custom project terms are also local data: browser workspace IndexedDB, or VS Code workspace state keyed by document URI. Untitled-document terms are not persisted across extension sessions. Terms can appear in explanation reports, so avoid private business labels in reports you intend to share. Code ZIP exports do not include the local term dictionary.
 

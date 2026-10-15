@@ -8,7 +8,9 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 **VS Code extension · Korean / English · Local processing · MIT**
 
-[한국어](README.ko.md) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
+[한국어](README.ko.md) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+
+[![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
 
 </div>
 
@@ -31,12 +33,14 @@ These are computed example outputs, not an application-wide correctness claim.
 
 **VS Code — the primary experience**
 
-1. Get `pureobom-0.4.0.vsix` from the distribution bundle (or build it below).
+1. Download `pureobom-0.4.0.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
 2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
 3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
 4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
 
 **Browser — no account or API key**
+
+[Open the live demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en). One click prepares a rule change; compare the outcomes before applying it. Your own files stay on your device.
 
 With Node.js 24 and pnpm 11.25.0 installed, from this source folder:
 

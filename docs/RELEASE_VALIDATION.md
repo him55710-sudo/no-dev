@@ -12,6 +12,13 @@
 
 성능 원자료는 [benchmark.json](benchmark.json). 합성 파일 엔진 측정이며 UI·네트워크·Worker 시작 비용을 포함하지 않는다. 사용자 이해도·실제 수요·재사용은 아직 측정하지 않았다.
 
+## 0.4 공개 기록
+
+- [공개 저장소](https://github.com/him55710-sudo/pureobom)를 생성하고 소스를 게시했다. 비공개 취약점 제보를 활성화했다.
+- 커밋 `11ff748`의 [GitHub Actions 검증](https://github.com/him55710-sudo/pureobom/actions/runs/38789261792)에서 **Windows·Ubuntu 모두 통과**했다. 각 환경에서 핵심 검사, 웹·확장 빌드, VS Code 통합 검사, VSIX 생성이 완료되었다.
+- [체험 페이지 배포](https://github.com/him55710-sudo/pureobom/actions/runs/38789290350) 성공 후 [실제 공개 주소](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko)에서 50,000→70,000 변경안을 만들었다. 7개 입력 중 3개 달라짐·0개 확인 불가를 확인했고 Markdown 다운로드 내용도 읽었다. 브라우저 오류 로그는 없었다.
+- 브라우저 용어 편집기는 390×844 설정에서 clientWidth와 scrollWidth가 같았고, 입력·저장·초기화 버튼을 확인했다. [VS Code 재시작 증거](terminology-vscode.png) · [공개 체험판 화면](public-preview-ko.png).
+
 ## 이전 0.3.0 공개 준비 버전 기록
 
 이하 내용은 0.3 당시의 기록이며 현재 공개 상태와 다를 수 있다.
