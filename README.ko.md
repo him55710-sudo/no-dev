@@ -10,6 +10,8 @@ AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·
 
 **0.5의 새 흐름:** React 화면의 요소·문구·표시 조건·이벤트 속성을 펼쳐 읽고, 문구를 선택해 실제 코드를 바꿉니다. [버튼 문구 바꿔보기](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=ko) · [지원 범위와 한계](docs/INTERFACE.md). VS Code에서는 **풀어봄: React 화면 문구 바꿔보기** 명령으로 시작하세요.
 
+![조건에서 버튼 문구를 찾아 실제 코드를 바꾸는 공개 화면](docs/interface-preview-ko.png)
+
 첫 제품 형태를 **VS Code 확장 기능**으로 구현했습니다. 설치 파일은 배포 묶음의 `pureobom-0.5.0.vsix`입니다. 소스에서 `pnpm extension:build`와 `pnpm extension:package`로 만들 수도 있습니다.
 
 1. VS Code에서 `Ctrl+Shift+X` → 상단 `…` → **VSIX에서 설치…** 로 위 파일을 선택합니다.

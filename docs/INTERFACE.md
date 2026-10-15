@@ -4,6 +4,8 @@ Pureobom 0.5 adds a source structure view for JSX/TSX in both VS Code and the br
 
 Try [the interactive example](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=en), or run **Pureobom: Edit React interface text** in VS Code. Open the non-member branch, expand the button, select its text, enter a new phrase, inspect the diff, apply, and undo. The browser also has a shortcut to the example's button text.
 
+![The public React example with a text change ready to apply](interface-preview-ko.png)
+
 ## What the structure means
 
 - These are source fragments, not a screenshot or a prediction of the final DOM. CSS, runtime values, control flow outside a fragment and component internals can change what appears. Multiple roots need not appear together.

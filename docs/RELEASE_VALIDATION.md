@@ -11,7 +11,10 @@
 - 브라우저 한·영 설명과 React 변경안에서 계산 비교 버튼이 숨겨짐을 확인했다. 높이가 작은 화면에서 편집 패널 안을 스크롤해 적용 버튼을 클릭할 수 있도록 수정했다. 390×844 설정에서 가로 넘침 없이 clientWidth/scrollWidth 모두 375px였으며 오류 로그가 없었다.
 - 공개 예제 전체를 `pnpm exec tsc -p examples/tsconfig.json`으로 타입 검사했다. 배포 ZIP·VSIX의 체크섬과 필수 파일 검사도 통과했다.
 
-공개 배포 결과는 완료 후 추가한다. 실제 사용자 수요·이해도·재사용은 아직 측정하지 않았다.
+- 커밋 `35efa2d`의 [공개 CI](https://github.com/him55710-sudo/pureobom/actions/runs/38794248187)에서 Windows·Ubuntu 모두 핵심 검사, 빌드, 실제 VS Code 통합 검사와 VSIX 생성에 성공했다.
+- [Pages 배포](https://github.com/him55710-sudo/pureobom/actions/runs/38794259524) 성공 후 [공개 React 예제](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=ko)에서 문구 변경안을 만들고 적용했다. 원문 보기의 20행에서 `<button type="button" onClick={onJoin}>{"14일 무료 체험"}</button>`을 확인했다. 오류 로그는 없었다. [공개 화면](interface-preview-ko.png).
+
+실제 사용자 수요·이해도·재사용은 아직 측정하지 않았다.
 
 # 이전 0.4.0 검증
 
