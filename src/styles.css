@@ -12,9 +12,42 @@
   --border: #e4e8e3;
   --sidebar: #172c29;
 }
-.quick-demo{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:24px 32px 0;padding:26px 30px;border:1px solid #c8ddd0;border-radius:16px;background:linear-gradient(115deg,#edf6ed,#f5f8ed)}
-.quick-demo h2{font-size:23px;letter-spacing:-.8px;margin:8px 0 10px}.quick-demo p{margin:0 0 7px;line-height:1.6}.quick-demo small{color:#50645b}.quick-demo .button{flex-shrink:0}
-@media(max-width:600px){.quick-demo{margin:16px;padding:20px}.quick-demo h2{font-size:20px}}
+.quick-demo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin: 24px 32px 0;
+  padding: 26px 30px;
+  border: 1px solid #c8ddd0;
+  border-radius: 16px;
+  background: linear-gradient(115deg, #edf6ed, #f5f8ed);
+}
+.quick-demo h2 {
+  font-size: 23px;
+  letter-spacing: -0.8px;
+  margin: 8px 0 10px;
+}
+.quick-demo p {
+  margin: 0 0 7px;
+  line-height: 1.6;
+}
+.quick-demo small {
+  color: #50645b;
+}
+.quick-demo .button {
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .quick-demo {
+    margin: 16px;
+    padding: 20px;
+  }
+  .quick-demo h2 {
+    font-size: 20px;
+  }
+}
 * {
   box-sizing: border-box;
 }
@@ -852,6 +885,7 @@ h1 {
   font-weight: 500;
 }
 .step-content {
+  word-break: keep-all;
   font-size: 14px;
   line-height: 1.95;
   color: #536c4a;

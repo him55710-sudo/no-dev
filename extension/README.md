@@ -11,7 +11,7 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 0.5에서는 **풀어봄: React 화면 문구 바꿔보기 / Pureobom: Edit React interface text** 명령도 제공합니다. 화면 요소·문구·조건·이벤트 속성을 펼쳐 읽고 문구를 선택해 실제 코드의 변경안을 만드세요. 화면을 실행하거나 최종 디자인을 재현하지는 않습니다.
 
 1. VS Code 1.96 이상에서 확장 탭을 엽니다. (`Ctrl+Shift+X`)
-2. 상단 `…` → **VSIX에서 설치… / Install from VSIX…** 를 선택하고 `pureobom-0.5.1.vsix`를 엽니다.
+2. 상단 `…` → **VSIX에서 설치… / Install from VSIX…** 를 선택하고 `pureobom-0.5.2.vsix`를 엽니다.
 3. `.ts` 또는 `.js` 파일을 열고, `Ctrl+Shift+P` → **풀어봄: 현재 파일 설명 열기**를 실행합니다. 편집기 오른쪽 위 책 아이콘으로도 열 수 있습니다.
 4. 처음이라면 왼쪽 풀어봄 아이콘 → **예제로 시작하기**를 누르세요.
 

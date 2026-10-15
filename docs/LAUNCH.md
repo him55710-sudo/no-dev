@@ -8,7 +8,7 @@
 
 1. 소유할 GitHub 계정·저장소를 정하고 준비된 소스를 공개한다. 실데이터, `.env`, 로그, 테스트 사용자 프로필은 배포에 넣지 않는다.
 2. 저장소 URL을 README와 `extension/package.json`의 repository에 넣는다. 게시할 실제 publisher를 확보하기 전 `pureobom-local`을 Marketplace publisher라고 소개하지 않는다.
-3. GitHub Actions 결과를 확인한 후 버전을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다. 현재 공개 설치 버전은 0.5.1이다.
+3. GitHub Actions 결과를 확인한 후 버전을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다. 0.5.2 설치본은 설명의 오류 처리·정리 순서를 개선한다. 공개 상태는 [Releases](https://github.com/him55710-sudo/pureobom/releases)에서 확인한다.
 4. GitHub Pages의 Source를 GitHub Actions로 선택하고 `Publish browser demo`를 실행한다. 실제 배포 주소에서 Worker·비교·내보내기를 확인한 다음 README에 연결한다.
 5. GitHub private vulnerability reporting을 켜고 보고 경로가 실제 작동하는지 확인한다. 기여 이슈에 재현 예제·난이도·완료 조건을 쓴다.
 

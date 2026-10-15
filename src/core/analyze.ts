@@ -44,6 +44,24 @@ export function anchor(node: ts.Node, sf: ts.SourceFile): Anchor {
     endLine: sf.getLineAndCharacterOfPosition(node.end).line + 1,
   };
 }
+function hasPendingFinally(node: ts.Node): boolean {
+  for (
+    let parent = node.parent;
+    parent && !ts.isFunctionLike(parent);
+    parent = parent.parent
+  ) {
+    if (
+      ts.isTryStatement(parent) &&
+      parent.finallyBlock &&
+      ((node.pos >= parent.tryBlock.pos && node.end <= parent.tryBlock.end) ||
+        (parent.catchClause &&
+          node.pos >= parent.catchClause.pos &&
+          node.end <= parent.catchClause.end))
+    )
+      return true;
+  }
+  return false;
+}
 function literal(n: ts.Node): string | number | boolean | undefined {
   if (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n))
     return n.text;
@@ -326,15 +344,24 @@ export function analyzeFile(
       if (s.elseStatement) base.otherwise = block(s.elseStatement);
     } else if (ts.isReturnStatement(s)) {
       base.kind = "return";
-      base.text = s.expression
+      base.text = hasPendingFinally(s)
         ? words(
-            `${particle(txt(s.expression).ko, "object")} 결과로 돌려주고 이 기능을 끝냅니다.`,
-            `Return ${txt(s.expression).en} and finish this function.`,
+            s.expression
+              ? `${particle(txt(s.expression).ko, "object")} 반환하려고 합니다. 이 블록을 나가기 전에 주변 finally 단계를 먼저 거칩니다.`
+              : "값 없이 반환하려고 합니다. 이 블록을 나가기 전에 주변 finally 단계를 먼저 거칩니다.",
+            s.expression
+              ? `Prepare to return ${txt(s.expression).en}; run the enclosing finally steps before leaving.`
+              : "Prepare to return without a value; run the enclosing finally steps before leaving.",
           )
-        : words(
-            "값 없이 이 기능을 끝냅니다.",
-            "Finish this function without a value.",
-          );
+        : s.expression
+          ? words(
+              `${particle(txt(s.expression).ko, "object")} 결과로 돌려주고 이 기능을 끝냅니다.`,
+              `Return ${txt(s.expression).en} and finish this function.`,
+            )
+          : words(
+              "값 없이 이 기능을 끝냅니다.",
+              "Finish this function without a value.",
+            );
     } else if (ts.isThrowStatement(s)) {
       base.kind = "error";
       base.text = words(
@@ -374,25 +401,30 @@ export function analyzeFile(
       base.children = block(s.statement);
     } else if (ts.isTryStatement(s)) {
       base.kind = "guard";
-      base.text = words(
-        "먼저 시도합니다. 오류가 나면 오류 처리로 넘어갑니다.",
-        "Try these steps; on an error, enter the catch branch.",
-      );
+      base.text = s.catchClause
+        ? words(
+            "먼저 시도합니다. 오류가 이 try 블록으로 전달되면 아래 오류 처리로 넘어갑니다.",
+            "Try these steps; if an error reaches this try block, enter the catch branch below.",
+          )
+        : words(
+            "먼저 시도합니다. 이 블록에는 catch 오류 처리가 없습니다.",
+            "Try these steps. This block has no catch handler.",
+          );
       base.children = s.tryBlock.statements.map(step);
       if (s.catchClause)
         base.otherwise = s.catchClause.block.statements.map(step);
       if (s.finallyBlock)
-        base.children.push({
+        base.finalizer = {
           ...at(s.finallyBlock),
           id: `finally:${s.pos}`,
           kind: "finally",
           text: words(
-            "성공·실패와 관계없이 마지막에 실행합니다.",
-            "Always execute afterward, even on an error.",
+            "마지막 정리 (finally): try 또는 오류 처리 단계를 벗어날 때 실행합니다. 여기서 반환하거나 오류를 던지면 앞선 반환값·오류를 바꿀 수 있습니다.",
+            "Finally: run when leaving the try or catch steps. A return or throw here can replace the earlier return value or error.",
           ),
           children: s.finallyBlock.statements.map(step),
           supported: true,
-        });
+        };
     } else if (ts.isBlock(s)) {
       base.kind = "group";
       base.text = words(

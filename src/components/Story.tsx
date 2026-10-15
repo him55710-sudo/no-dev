@@ -52,7 +52,7 @@ export function Steps({
               depth={depth + 1}
             />
           )}{" "}
-          {step.otherwise && (
+          {depth < 12 && step.otherwise && (
             <div className="otherwise">
               <span>
                 {lang === "ko"
@@ -71,13 +71,22 @@ export function Steps({
               />
             </div>
           )}
-          {depth >= 12 && (step.children.length > 0 || step.otherwise) && (
-            <p className="muted">
-              {lang === "ko"
-                ? "더 깊은 구조는 원문에서 확인해 주세요."
-                : "See source for deeper nesting."}
-            </p>
+          {depth < 12 && step.finalizer && (
+            <Steps
+              steps={[step.finalizer]}
+              lang={lang}
+              onSource={onSource}
+              depth={depth + 1}
+            />
           )}
+          {depth >= 12 &&
+            (step.children.length > 0 || step.otherwise || step.finalizer) && (
+              <p className="muted">
+                {lang === "ko"
+                  ? "더 깊은 구조는 원문에서 확인해 주세요."
+                  : "See source for deeper nesting."}
+              </p>
+            )}
         </li>
       ))}
     </ol>

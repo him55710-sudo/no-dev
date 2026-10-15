@@ -1,0 +1,13 @@
+# Cleanup is a separate branch
+
+0.5.2 corrects a misleading reading order in `try/catch/finally` explanations. Previously the analyzer appended `finally` to the try body's children, so both the UI and exported explanation placed cleanup before the catch branch. A return inside a protected block also said the function ended without mentioning pending cleanup.
+
+The story now keeps three separate parts: the try body, the conditional error handler and the finalizer. The UI and Markdown export display them in that order, with independent source links. Returns in a try or catch covered by a finalizer say that cleanup runs before leaving. A nested function does not inherit that explanation from a try surrounding its declaration. A try/finally with no catch does not invent an error handler.
+
+This matches the [ECMAScript try-statement evaluation](https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-try-statement-runtime-semantics-evaluation): the finalizer runs after the protected block and applicable catch; an abrupt completion from it can replace the earlier completion. The [return-statement note](https://tc39.es/ecma262/multipage/ecmascript-language-statements-and-declarations.html#sec-return-statement) explains the surrounding-finally exception to immediate return.
+
+Try reading [saveSettings.ts](../examples/saveSettings.ts): both the saved and failed return paths pass through `setSaving(false)`. This is a source-reading example. Async callbacks and try/catch are not newly supported by the restricted calculation interpreter, and the analyzer does not execute the file.
+
+Nine regression checks cover branch structure, source anchors, both rendered languages, Markdown order, missing catch/finally branches, nested functions, nested finalizers, return replacement and depth limits. One check runs an explicitly authored reference function; no imported user code is executed. The actual VS Code worker check verifies the serialized finalizer and source navigation. Deep else and finalizer branches now obey the same rendering depth limit as ordinary children, with a source-review notice.
+
+The investigation also analyzed this repository's own 40 JS/TS/TSX source files (273,194 characters), including its React UI and extension host. All 1,376 editable ranges matched their source text, no parse errors occurred, and the warm cache reused all 40 files. The observed engine times were about 332ms cold and 0.5ms cached on this Windows/Node session. These are single-run measurements of this repository, excluding worker transfer, UI rendering and network time; they are not a general large-project benchmark or user-comprehension result. [Raw record](real-code-probe-0.5.2.json).

@@ -13,6 +13,7 @@ export type Step = Anchor & {
   text: Words;
   children: Step[];
   otherwise?: Step[];
+  finalizer?: Step;
   supported: boolean;
 };
 export type Rule = Anchor & {

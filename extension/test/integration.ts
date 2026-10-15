@@ -275,6 +275,30 @@ export async function run() {
   reports.push(
     "React example command, TSX structure, source line, inert text diff, editor apply, reanalysis and native undo",
   );
+  const cleanupSource =
+    "function save() {\n  try { return persist(); }\n  catch (error) { return recover(error); }\n  finally { cleanup(); }\n}\n";
+  const cleanupDoc = await vscode.workspace.openTextDocument({
+    language: "typescript",
+    content: cleanupSource,
+  });
+  await vscode.window.showTextDocument(cleanupDoc, vscode.ViewColumn.One);
+  await c.setDocument(cleanupDoc);
+  await until(
+    () => !c.state.busy && c.state.analysis?.functions[0]?.name === "save",
+    "cleanup flow analysis",
+  );
+  const guard = c.state.analysis!.functions[0].steps[0];
+  assert.equal(guard.children.length, 1);
+  assert.equal(guard.otherwise?.length, 1);
+  assert.equal(guard.finalizer?.kind, "finally");
+  assert.ok(guard.children[0].text.en.includes("enclosing finally"));
+  assert.ok(guard.otherwise![0].text.en.includes("enclosing finally"));
+  await c.source(c.state.contextId, guard.finalizer!.children[0].line);
+  assert.equal(vscode.window.activeTextEditor?.selection.start.line, 3);
+  assert.equal(cleanupDoc.getText(), cleanupSource);
+  reports.push(
+    "worker preserves separate cleanup branch, pending returns and finalizer source navigation without code mutation",
+  );
   const report = {
     vscode: vscode.version,
     checks: reports,

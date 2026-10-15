@@ -4,17 +4,19 @@
 
 **[30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko)** — 원문 → 설명 → 변경안 → 주문별 비교 → 적용 → 되돌리기를 실제 공개 화면으로 보여줍니다. 한국어·영어 자막과 텍스트 설명을 제공합니다. [MP4 받기](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
 
-**0.5.1 공개 시제품:** 낯선 코드 이름에 내 용어를 붙이고, 규칙을 바꿔 최대 12개 입력의 전후 결과를 비교합니다. MIT 라이선스로 공개합니다. [설치 없이 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko) · [설치 파일과 소스](https://github.com/him55710-sudo/pureobom/releases) · [0.5 검증 기록](docs/RELEASE_VALIDATION.md). Marketplace 게시와 실제 수요 검증은 아직 완료하지 않았습니다.
+**0.5.2 공개 시제품:** 낯선 코드 이름에 내 용어를 붙이고, 규칙을 바꿔 최대 12개 입력의 전후 결과를 비교합니다. MIT 라이선스로 공개합니다. [설치 없이 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko) · [설치 파일과 소스](https://github.com/him55710-sudo/pureobom/releases) · [0.5 검증 기록](docs/RELEASE_VALIDATION.md). Marketplace 게시와 실제 수요 검증은 아직 완료하지 않았습니다.
 
 AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·연결 지도·표로 보고, 값과 조건을 수정한 뒤 실제 코드의 차이와 결과를 확인하는 **로컬 시제품**입니다.
 
 ## VS Code에서 바로 사용하기 (권장)
 
+**0.5.2 정확성 수정:** `try → 오류 처리 → finally 정리`의 표시 순서를 바로잡았습니다. 반환 전에 정리 단계를 거치는 경우도 화면과 설명서에 함께 표시합니다. [검증 내용과 예제](docs/CONTROL_FLOW.md).
+
 **0.5의 새 흐름:** React 화면의 요소·문구·표시 조건·이벤트 속성을 펼쳐 읽고, 문구를 선택해 실제 코드를 바꿉니다. [버튼 문구 바꿔보기](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=ko) · [지원 범위와 한계](docs/INTERFACE.md). VS Code에서는 **풀어봄: React 화면 문구 바꿔보기** 명령으로 시작하세요.
 
 ![조건에서 버튼 문구를 찾아 실제 코드를 바꾸는 공개 화면](docs/interface-preview-ko.png)
 
-첫 제품 형태를 **VS Code 확장 기능**으로 구현했습니다. 설치 파일은 배포 묶음의 `pureobom-0.5.1.vsix`입니다. 소스에서 `pnpm extension:build`와 `pnpm extension:package`로 만들 수도 있습니다.
+첫 제품 형태를 **VS Code 확장 기능**으로 구현했습니다. 설치 파일은 배포 묶음의 `pureobom-0.5.2.vsix`입니다. 소스에서 `pnpm extension:build`와 `pnpm extension:package`로 만들 수도 있습니다.
 
 1. VS Code에서 `Ctrl+Shift+X` → 상단 `…` → **VSIX에서 설치…** 로 위 파일을 선택합니다.
 2. JavaScript 또는 TypeScript 파일을 열고 `Ctrl+Shift+P` → **풀어봄: 현재 파일 설명 열기**를 실행합니다.
@@ -85,7 +87,7 @@ pnpm build     # TypeScript 검사 + 프로덕션 빌드
 node scripts/serve.mjs # http://127.0.0.1:4173
 pnpm extension:build   # 확장 기능 타입 검사 + 번들
 pnpm extension:test    # 별도 VS Code 1.96.4에서 실제 통합 테스트
-pnpm extension:package # release/pureobom-0.5.1.vsix 생성
+pnpm extension:package # release/pureobom-0.5.2.vsix 생성
 pnpm release:package   # 소스·브라우저 체험 ZIP 및 SHA-256 체크섬
 pnpm release:check     # 체크섬과 필수 포함 파일 검사
 ```

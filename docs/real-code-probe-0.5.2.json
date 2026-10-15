@@ -1,0 +1,167 @@
+{
+  "measuredAt": "2026-10-15T20:18:39.715Z",
+  "files": 40,
+  "characters": 273194,
+  "coldMs": 331.7754,
+  "cachedMs": 0.49490000000002965,
+  "cacheHits": 40,
+  "totalRules": 1376,
+  "badRanges": 0,
+  "syntaxErrors": [],
+  "largest": [
+    {
+      "path": "src/App.tsx",
+      "chars": 61789,
+      "lines": 1696,
+      "functions": 128,
+      "rules": 236,
+      "outputBytes": 273533,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "extension/ui/main.tsx",
+      "chars": 25540,
+      "lines": 708,
+      "functions": 61,
+      "rules": 96,
+      "outputBytes": 159676,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "src/core/analyze.ts",
+      "chars": 23551,
+      "lines": 696,
+      "functions": 34,
+      "rules": 67,
+      "outputBytes": 139476,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "src/components/Story.tsx",
+      "chars": 8470,
+      "lines": 264,
+      "functions": 13,
+      "rules": 112,
+      "outputBytes": 111738,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "extension/src/controller.ts",
+      "chars": 15928,
+      "lines": 501,
+      "functions": 40,
+      "rules": 79,
+      "outputBytes": 108006,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "src/core/simulate.ts",
+      "chars": 16190,
+      "lines": 481,
+      "functions": 29,
+      "rules": 56,
+      "outputBytes": 104786,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "src/components/ScenarioLab.tsx",
+      "chars": 12103,
+      "lines": 379,
+      "functions": 33,
+      "rules": 75,
+      "outputBytes": 102655,
+      "syntaxValid": true,
+      "badRanges": 0
+    },
+    {
+      "path": "src/components/MapView.tsx",
+      "chars": 8035,
+      "lines": 238,
+      "functions": 20,
+      "rules": 95,
+      "outputBytes": 94075,
+      "syntaxValid": true,
+      "badRanges": 0
+    }
+  ],
+  "flow": {
+    "start": 33,
+    "end": 139,
+    "line": 2,
+    "endLine": 4,
+    "id": "step:33",
+    "kind": "guard",
+    "text": {
+      "ko": "먼저 시도합니다. 오류가 이 try 블록으로 전달되면 아래 오류 처리로 넘어갑니다.",
+      "en": "Try these steps; if an error reaches this try block, enter the catch branch below."
+    },
+    "children": [
+      {
+        "start": 39,
+        "end": 62,
+        "line": 2,
+        "endLine": 2,
+        "id": "step:39",
+        "kind": "return",
+        "text": {
+          "ko": "「persist」 기능 호출 (전달: 없음) 결과를 기다림을 반환하려고 합니다. 이 블록을 나가기 전에 주변 finally 단계를 먼저 거칩니다.",
+          "en": "Prepare to return wait for call persist (with no inputs); run the enclosing finally steps before leaving."
+        },
+        "children": [],
+        "supported": true
+      }
+    ],
+    "supported": true,
+    "otherwise": [
+      {
+        "start": 83,
+        "end": 105,
+        "line": 3,
+        "endLine": 3,
+        "id": "step:83",
+        "kind": "return",
+        "text": {
+          "ko": "「recover」 기능 호출 (전달: 「error」) 값을 반환하려고 합니다. 이 블록을 나가기 전에 주변 finally 단계를 먼저 거칩니다.",
+          "en": "Prepare to return call recover (with error); run the enclosing finally steps before leaving."
+        },
+        "children": [],
+        "supported": true
+      }
+    ],
+    "finalizer": {
+      "start": 118,
+      "end": 139,
+      "line": 4,
+      "endLine": 4,
+      "id": "finally:30",
+      "kind": "finally",
+      "text": {
+        "ko": "마지막 정리 (finally): try 또는 오류 처리 단계를 벗어날 때 실행합니다. 여기서 반환하거나 오류를 던지면 앞선 반환값·오류를 바꿀 수 있습니다.",
+        "en": "Finally: run when leaving the try or catch steps. A return or throw here can replace the earlier return value or error."
+      },
+      "children": [
+        {
+          "start": 120,
+          "end": 137,
+          "line": 4,
+          "endLine": 4,
+          "id": "step:120",
+          "kind": "action",
+          "text": {
+            "ko": "「setSaving」 기능 호출 (전달: 아니요)",
+            "en": "call set Saving (with no)"
+          },
+          "children": [],
+          "supported": true
+        }
+      ],
+      "supported": true
+    }
+  }
+}

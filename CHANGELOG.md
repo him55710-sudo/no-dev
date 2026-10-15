@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.2 — explain cleanup in the correct order
+
+- Keep `finally` separate from the try body and display it after catch in both the story and Markdown export.
+- Explain pending returns through enclosing finalizers, keep nested function boundaries intact, and stop describing catch behavior when there is no catch.
+- Bound else and finalizer rendering at the same depth as ordinary child steps.
+- Add a realistic async save example, semantic/renderer regressions and a VS Code worker/source-link integration check. The restricted simulator does not gain async or try/catch execution support.
+
 ## 0.5.1 — from the demo to your own code
 
 - Add shared installation and feedback help to the browser and VS Code panel, plus a next-step card after a browser demo edit.

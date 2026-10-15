@@ -22,6 +22,7 @@ import { ScenarioLab } from "./components/ScenarioLab";
 import { Terminology } from "./components/Terminology";
 import { ProductHelp } from "./components/ProductHelp";
 import { productResource, productVersion } from "./product";
+import { storyLines } from "./core/storyReport";
 import { updateGlossary, type GlossaryEntry } from "./core/glossary";
 import type { ScenarioReport } from "./core/scenarioModel";
 const demoKind = new URLSearchParams(location.search).get("demo");
@@ -395,20 +396,7 @@ export default function App() {
           `### ${fn.label[lang]} (${fn.name})`,
           `${t("입력", "Inputs")}: ${fn.params.map((p) => p.name + ": " + p.type).join(", ")}`,
         );
-        const walk = (steps: typeof fn.steps, d = 0) => {
-          for (const s of steps) {
-            lines.push("  ".repeat(d) + `- L${s.line}: ${s.text[lang]}`);
-            walk(s.children, d + 1);
-            if (s.otherwise) {
-              lines.push(
-                "  ".repeat(d + 1) +
-                  `- ${t("그렇지 않으면 / 오류 처리", "Otherwise / on error")}`,
-              );
-              walk(s.otherwise, d + 2);
-            }
-          }
-        };
-        walk(fn.steps);
+        lines.push(...storyLines(fn.steps, lang));
         lines.push("");
       }
       for (const r of f.rules)
