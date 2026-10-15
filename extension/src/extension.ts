@@ -4,6 +4,7 @@ import { Controller, message } from "./controller";
 import { AnalysisClient } from "./analysisClient";
 import { inputString, requestMessage } from "./protocol";
 import type { Scenario } from "../../src/core/scenarioModel";
+import { interfaceDemo } from "../../src/interfaceDemo";
 
 export function activate(context: vscode.ExtensionContext) {
   const controller = new Controller(
@@ -161,6 +162,7 @@ export function activate(context: vscode.ExtensionContext) {
         ["현재 파일 설명 열기", "pureobom.explain", "book"],
         ["작업 공간 연결 지도", "pureobom.map", "type-hierarchy"],
         ["예제로 시작하기", "pureobom.example", "beaker"],
+        ["React 화면 문구 바꿔보기", "pureobom.interfaceExample", "layout"],
       ].map(([label, command, icon]) => {
         const item = new vscode.TreeItem(label);
         item.command = { command, title: label };
@@ -185,6 +187,20 @@ export function activate(context: vscode.ExtensionContext) {
         const doc = await vscode.workspace.openTextDocument({
           language: "typescript",
           content: example,
+        });
+        await vscode.window.showTextDocument(doc, {
+          viewColumn: vscode.ViewColumn.One,
+          preview: false,
+        });
+        await openPanel();
+      }),
+    ),
+    vscode.commands.registerCommand(
+      "pureobom.interfaceExample",
+      handle(async () => {
+        const doc = await vscode.workspace.openTextDocument({
+          language: "typescriptreact",
+          content: interfaceDemo[0].content,
         });
         await vscode.window.showTextDocument(doc, {
           viewColumn: vscode.ViewColumn.One,

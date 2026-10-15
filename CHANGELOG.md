@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — read the interface, change its words
+
+- Read JSX/TSX elements, component props, text, conditional branches and simple map callbacks as an expandable, source-linked structure in VS Code and the browser.
+- Edit static JSX text and quoted attributes with compiler-correct whitespace/entity decoding and inert string-expression replacements. Re-editing and native undo work through the existing checked patch path.
+- Distinguish render-time calls from passed event functions. Display spread/complex expressions and truncation limits explicitly. React components are excluded from the calculation simulator.
+- Add a React membership-card example, VS Code command, direct browser demo link and multiline text inputs.
+- Add 14 core checks and a real TSX editor integration flow. Browser demo history now accurately explains that changes are not saved.
+
 ## 0.4.0 — your project's words
 
 - Add Korean/English names for source declarations in the browser and VS Code, without renaming source identifiers.

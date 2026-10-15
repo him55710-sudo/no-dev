@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { demo } from "./demo";
+import { interfaceDemo } from "./interfaceDemo";
 import { request } from "./client";
 import { loadWorkspace, saveWorkspace } from "./storage";
 import { readFiles } from "./core/import";
@@ -21,20 +22,21 @@ import { ScenarioLab } from "./components/ScenarioLab";
 import { Terminology } from "./components/Terminology";
 import { updateGlossary, type GlossaryEntry } from "./core/glossary";
 import type { ScenarioReport } from "./core/scenarioModel";
-const demoMode =
-  new URLSearchParams(location.search).get("demo") === "shipping";
+const demoKind = new URLSearchParams(location.search).get("demo");
+const demoMode = demoKind === "shipping" || demoKind === "interface";
+const initialFiles = demoKind === "interface" ? interfaceDemo : demo;
 type View = "story" | "map" | "rules" | "checks" | "research";
 type History = { patch: Patch; date: string };
 export default function App() {
   const [lang, setLang] = useState<Lang>(
       new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko",
     ),
-    [files, setFiles] = useState<SourceFile[]>(demo),
+    [files, setFiles] = useState<SourceFile[]>(initialFiles),
     [glossary, setGlossary] = useState<GlossaryEntry[]>([]),
     [ready, setReady] = useState(false),
     [analysis, setAnalysis] = useState<ProjectAnalysis | null>(null),
     [busy, setBusy] = useState(true),
-    [selected, setSelected] = useState("src/shipping.ts"),
+    [selected, setSelected] = useState(initialFiles[0].path),
     [view, setView] = useState<View>("story"),
     [search, setSearch] = useState(""),
     [notice, setNotice] = useState(""),
@@ -54,7 +56,9 @@ export default function App() {
     [simulation, setSimulation] = useState<string | null>(null),
     [modal, setModal] = useState<"history" | "reset" | "import" | null>(null),
     [importedSkipped, setImportedSkipped] = useState<string[]>([]),
-    [projectTitle, setProjectTitle] = useState("작은 상점"),
+    [projectTitle, setProjectTitle] = useState(
+      demoKind === "interface" ? "멤버십 화면" : "작은 상점",
+    ),
     [exporting, setExporting] = useState(false);
   const folderInput = useRef<HTMLInputElement>(null),
     fileInput = useRef<HTMLInputElement>(null),
@@ -454,7 +458,7 @@ export default function App() {
           </span>
         </a>
         <div className="workspace-label">
-          WORKSPACE <span className="beta">PREVIEW 0.4</span>
+          WORKSPACE <span className="beta">PREVIEW 0.5</span>
         </div>
         <button className="workspace-select" onClick={() => setModal("reset")}>
           <span className="project-avatar">
@@ -607,6 +611,63 @@ export default function App() {
           </div>
         </header>
         <main>
+          {demoMode && (
+            <nav
+              className="demo-switch"
+              aria-label={t("체험 예제 선택", "Choose an example")}
+            >
+              <a
+                href={`?demo=shipping&lang=${lang}`}
+                aria-current={demoKind === "shipping" ? "page" : undefined}
+              >
+                {t("배송 규칙 바꾸기", "Change a shipping rule")}
+              </a>
+              <a
+                href={`?demo=interface&lang=${lang}`}
+                aria-current={demoKind === "interface" ? "page" : undefined}
+              >
+                {t("React 화면 문구 바꾸기", "Edit React interface text")}
+              </a>
+            </nav>
+          )}
+          {demoKind === "interface" &&
+            active?.rules.some((r) => r.value === "무료로 시작하기") && (
+              <section className="quick-demo">
+                <div>
+                  <span className="eyebrow">READ IT. MAKE IT YOURS.</span>
+                  <h2>
+                    {t(
+                      "이 버튼의 문구, 어디서 바꾸죠?",
+                      "Where do I change this button’s text?",
+                    )}
+                  </h2>
+                  <p>
+                    {t(
+                      "화면 구조에서 문구를 찾고, ‘14일 무료 체험’으로 바꿔 보세요. 변경안을 확인한 뒤 적용할 수 있습니다.",
+                      "Find the button text in the structure and try ‘Start my 14-day trial’. Review the code change before applying it.",
+                    )}
+                  </p>
+                  <small>
+                    {t(
+                      "React 예제 · 코드 실행 없이 읽고 수정합니다.",
+                      "React example · read and edit without running code.",
+                    )}
+                  </small>
+                </div>
+                <button
+                  className="button primary"
+                  disabled={busy || editing}
+                  onClick={() =>
+                    selectRule(
+                      selected,
+                      active.rules.find((r) => r.value === "무료로 시작하기")!,
+                    )
+                  }
+                >
+                  {t("버튼 문구 바꿔보기 →", "Try editing the button text →")}
+                </button>
+              </section>
+            )}
           {selected === demo[0].path &&
             active?.rules.some((r) => r.name === "freeShippingThreshold") && (
               <section className="quick-demo">
@@ -1173,6 +1234,16 @@ export default function App() {
                               </option>
                             ))}
                           </select>
+                        ) : editRule.rule.type === "string" ? (
+                          <textarea
+                            id="rule-value"
+                            value={draft}
+                            rows={3}
+                            onChange={(e) => {
+                              setDraft(e.target.value);
+                              setPatch(null);
+                            }}
+                          />
                         ) : (
                           <input
                             id="rule-value"
@@ -1268,26 +1339,33 @@ export default function App() {
                         : {dependencies.join(", ")}
                       </p>
                     )}
-                    <button
-                      className="text-button"
-                      onClick={() => {
-                        setSelected(patch.path);
-                        const f = analysis?.files.find(
-                          (x) => x.path === patch.path,
-                        );
-                        if (f?.functions[0]) setSimulation(f.functions[0].name);
-                        else
-                          setNotice(
-                            t(
-                              "이 파일에는 미리보기할 기능이 없습니다.",
-                              "No function to preview in this file.",
-                            ),
+                    {analysis?.files
+                      .find((x) => x.path === patch.path)
+                      ?.functions.some((f) => f.simulatable) && (
+                      <button
+                        className="text-button"
+                        onClick={() => {
+                          setSelected(patch.path);
+                          const f = analysis?.files.find(
+                            (x) => x.path === patch.path,
                           );
-                      }}
-                    >
-                      <Icon name="play" size={14} />
-                      {t("입력별 결과 비교", "Compare with inputs")}
-                    </button>
+                          const candidate = f?.functions.find(
+                            (fn) => fn.simulatable,
+                          );
+                          if (candidate) setSimulation(candidate.name);
+                          else
+                            setNotice(
+                              t(
+                                "이 파일에는 미리보기할 기능이 없습니다.",
+                                "No function to preview in this file.",
+                              ),
+                            );
+                        }}
+                      >
+                        <Icon name="play" size={14} />
+                        {t("입력별 결과 비교", "Compare with inputs")}
+                      </button>
+                    )}
                     <button
                       className="button primary full apply"
                       onClick={apply}
@@ -1417,68 +1495,73 @@ export default function App() {
           </div>
         </Modal>
       )}
-      {simulation && active?.functions.find((f) => f.name === simulation) && (
-        <Modal
-          wide
-          title={t("입력으로 확인하기", "Check with inputs")}
-          onClose={() => setSimulation(null)}
-        >
-          <label className="field-label" htmlFor="function-select">
-            {t("확인할 기능", "Function")}
-          </label>
-          <select
-            id="function-select"
-            value={simulation}
-            onChange={(e) => setSimulation(e.target.value)}
+      {simulation &&
+        active?.functions.find(
+          (f) => f.name === simulation && f.simulatable,
+        ) && (
+          <Modal
+            wide
+            title={t("입력으로 확인하기", "Check with inputs")}
+            onClose={() => setSimulation(null)}
           >
-            {active.functions.map((fn) => (
-              <option key={fn.id} value={fn.name}>
-                {fn.label[lang]} · {fn.name}
-              </option>
-            ))}
-          </select>
-          <ScenarioLab
-            key={`cases:${selected}:${simulation}:${patch?.updated}:${file.content}`}
-            fn={active.functions.find((f) => f.name === simulation)!}
-            rules={active.rules}
-            lang={lang}
-            revision={`${file.content}:${patch?.updated}`}
-            change={patch ?? undefined}
-            disabled={busy}
-            run={(scenarios) =>
-              request<ScenarioReport>("compare", {
-                files,
-                path: selected,
-                name: simulation,
-                scenarios,
-                patch,
-              })
-            }
-            exportReport={(markdown) =>
-              saveBlob(
-                new Blob([markdown], { type: "text/markdown;charset=utf-8" }),
-                "pureobom-comparison.md",
-              )
-            }
-          />
-          <details>
-            <summary>
-              {t(
-                "입력 하나의 판단 과정 자세히 보기",
-                "Inspect a single input and its decision trace",
-              )}
-            </summary>
-            <Simulator
-              key={`${selected}:${simulation}:${patch?.updated}:${file.content}`}
-              files={files}
-              path={selected}
+            <label className="field-label" htmlFor="function-select">
+              {t("확인할 기능", "Function")}
+            </label>
+            <select
+              id="function-select"
+              value={simulation}
+              onChange={(e) => setSimulation(e.target.value)}
+            >
+              {active.functions
+                .filter((fn) => fn.simulatable)
+                .map((fn) => (
+                  <option key={fn.id} value={fn.name}>
+                    {fn.label[lang]} · {fn.name}
+                  </option>
+                ))}
+            </select>
+            <ScenarioLab
+              key={`cases:${selected}:${simulation}:${patch?.updated}:${file.content}`}
               fn={active.functions.find((f) => f.name === simulation)!}
-              patch={patch}
+              rules={active.rules}
               lang={lang}
+              revision={`${file.content}:${patch?.updated}`}
+              change={patch ?? undefined}
+              disabled={busy}
+              run={(scenarios) =>
+                request<ScenarioReport>("compare", {
+                  files,
+                  path: selected,
+                  name: simulation,
+                  scenarios,
+                  patch,
+                })
+              }
+              exportReport={(markdown) =>
+                saveBlob(
+                  new Blob([markdown], { type: "text/markdown;charset=utf-8" }),
+                  "pureobom-comparison.md",
+                )
+              }
             />
-          </details>
-        </Modal>
-      )}
+            <details>
+              <summary>
+                {t(
+                  "입력 하나의 판단 과정 자세히 보기",
+                  "Inspect a single input and its decision trace",
+                )}
+              </summary>
+              <Simulator
+                key={`${selected}:${simulation}:${patch?.updated}:${file.content}`}
+                files={files}
+                path={selected}
+                fn={active.functions.find((f) => f.name === simulation)!}
+                patch={patch}
+                lang={lang}
+              />
+            </details>
+          </Modal>
+        )}
       {modal === "history" && (
         <Modal
           title={t("이번 세션의 변경 기록", "Session change history")}
@@ -1486,8 +1569,12 @@ export default function App() {
         >
           <p className="muted">
             {t(
-              "새로고침하면 기록은 초기화됩니다. 수정된 파일은 기기에 저장됩니다.",
-              "History resets on reload. Modified files remain saved on your device.",
+              demoMode
+                ? "체험 모드에서는 새로고침하면 변경 내용과 기록이 초기화됩니다. 보관하려면 파일을 내보내세요."
+                : "새로고침하면 기록은 초기화됩니다. 수정된 파일은 기기에 저장됩니다.",
+              demoMode
+                ? "Demo changes and history reset on reload. Export files to keep them."
+                : "History resets on reload. Modified files remain saved on your device.",
             )}
           </p>
           {history.length ? (

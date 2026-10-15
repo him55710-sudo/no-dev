@@ -33,7 +33,7 @@ These are computed example outputs, not an application-wide correctness claim.
 
 **VS Code — the primary experience**
 
-1. Download `pureobom-0.4.0.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
+1. Download `pureobom-0.5.0.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
 2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
 3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
 4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
@@ -51,13 +51,14 @@ pnpm dev
 
 Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). Demo mode does not read or overwrite your saved browser workspace. Remove `demo=shipping` to use the persistent local workspace.
 
-The prebuilt `pureobom-0.4.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
+The prebuilt `pureobom-0.5.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
 Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
 
 ## What works today
 
 - **Read:** Korean/English explanations anchored to the exact source lines, including unsaved VS Code edits.
+- **Read a React interface:** expand JSX elements, text, conditions and event props. Select a phrase and change the real source with a checked diff. [Try it](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=en) · [Scope and limits](docs/INTERFACE.md).
 - **Use your words:** give unfamiliar variables, functions and inputs your own Korean/English names. Terms stay tied to their declarations and work in sentence edits. [How project terms work](docs/TERMINOLOGY.md).
 - **Explore:** function inputs, conditions, returns, a rule table, static relative-import graph and limited review hints.
 - **Change:** numbers, strings, booleans and comparison operators through the same checked patch path.
@@ -67,7 +68,7 @@ Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Mar
 
 ## Know the boundary
 
-This is a **0.4 preview**, not an AI coding agent or a replacement for a developer's review.
+This is a **0.5 preview**, not an AI coding agent or a replacement for a developer's review.
 
 | Area | Current boundary |
 | --- | --- |

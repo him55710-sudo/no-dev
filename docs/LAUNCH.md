@@ -8,7 +8,7 @@
 
 1. 소유할 GitHub 계정·저장소를 정하고 준비된 소스를 공개한다. 실데이터, `.env`, 로그, 테스트 사용자 프로필은 배포에 넣지 않는다.
 2. 저장소 URL을 README와 `extension/package.json`의 repository에 넣는다. 게시할 실제 publisher를 확보하기 전 `pureobom-local`을 Marketplace publisher라고 소개하지 않는다.
-3. GitHub Actions 결과를 확인한 후 0.4.0을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다.
+3. GitHub Actions 결과를 확인한 후 0.5.0을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다.
 4. GitHub Pages의 Source를 GitHub Actions로 선택하고 `Publish browser demo`를 실행한다. 실제 배포 주소에서 Worker·비교·내보내기를 확인한 다음 README에 연결한다.
 5. GitHub private vulnerability reporting을 켜고 보고 경로가 실제 작동하는지 확인한다. 기여 이슈에 재현 예제·난이도·완료 조건을 쓴다.
 
@@ -46,6 +46,8 @@ I would appreciate small, public examples where the explanation or edit is confu
 작은 공개 예제로 피드백을 주시면 설명과 지원 범위를 개선하는 데 도움이 됩니다. [저장소와 설치 안내](https://github.com/him55710-sudo/pureobom) · [바로 체험하기](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko).
 
 ## 출시 후 4주
+
+0.5의 두 번째 짧은 체험은 [React 버튼 문구 바꾸기](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=ko)다. “이 버튼의 문구, 어디서 바꾸죠?”로 시작해 회원 여부 조건 → 버튼 → 문구 → 실제 코드 차이 → 적용·되돌리기를 보여준다. 실행 화면을 재현하거나 앱 전체의 동작을 검증한다고 소개하지 않는다. [구조와 제한](INTERFACE.md).
 
 - 1주차: 동의한 사용자 5명의 첫 사용 관찰. 가장 자주 막히는 단계 한 가지부터 수정.
 - 2주차: 실제 사용 예제 20건을 모집하고 미지원·오설명·성공을 구분. 재현 가능한 이슈를 공개.

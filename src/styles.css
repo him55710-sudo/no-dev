@@ -952,6 +952,9 @@ h1 {
 .editor-column {
   position: sticky;
   top: 20px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 .editor-card {
   padding: 22px 21px 0;
@@ -1809,6 +1812,9 @@ tr.selected-row {
   }
   .editor-column {
     position: static;
+    max-height: none;
+    overflow-y: visible;
+    scrollbar-gutter: auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;

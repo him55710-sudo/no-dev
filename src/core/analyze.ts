@@ -2,6 +2,7 @@ import ts from "typescript";
 import { label, operators, particle } from "./labels";
 import { normalizeGlossary, type GlossaryEntry } from "./glossary";
 import { terminology } from "./terminology";
+import { analyzeInterface } from "./jsx";
 import {
   words,
   type Anchor,
@@ -226,6 +227,9 @@ export function analyzeFile(
     expression(node, sf, lang, 0, naming.describe);
   const at = (n: ts.Node) => anchor(n, sf);
   const txt = (n: ts.Node) => words(ex(n, "ko"), ex(n, "en"));
+  const ui = analyzeInterface(sf, txt);
+  if (ui.structure.roots.length) out.interface = ui.structure;
+  out.rules.push(...ui.rules);
   const issue = (
     n: ts.Node,
     key: string,
@@ -598,7 +602,7 @@ export function analyzeFile(
         async: !!n.modifiers?.some(
           (m) => m.kind === ts.SyntaxKind.AsyncKeyword,
         ),
-        simulatable: !ts.isMethodDeclaration(n),
+        simulatable: !ts.isMethodDeclaration(n) && !ui.contains(n.body),
       };
       out.functions.push(fn);
     }

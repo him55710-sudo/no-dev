@@ -227,6 +227,54 @@ export async function run() {
   reports.push(
     "terminology survives file switches, stays scoped to its document and resets to the default",
   );
+  await vscode.commands.executeCommand("pureobom.interfaceExample");
+  await until(
+    () => !c.state.busy && !!c.state.analysis?.interface,
+    "React example analysis",
+  );
+  const screen = vscode.window.activeTextEditor!.document;
+  assert.equal(screen.languageId, "typescriptreact");
+  const screenBefore = screen.getText();
+  const phrase = c.state.analysis!.rules.find(
+    (r) => r.value === "무료로 시작하기",
+  )!;
+  assert.ok(phrase);
+  assert.equal(
+    c.state.analysis!.functions.find((f) => f.name === "SignupCard")
+      ?.simulatable,
+    false,
+  );
+  await c.source(c.state.contextId, phrase.line);
+  assert.equal(
+    vscode.window.activeTextEditor?.selection.start.line,
+    phrase.line - 1,
+  );
+  const textChange = await c.prepare(c.state.contextId, {
+    ruleId: phrase.id,
+    value: "14일 무료 체험",
+  });
+  const jsxPreview = await c.preview(textChange.id, c.state.contextId);
+  const jsxAfter = await vscode.workspace.openTextDocument(
+    vscode.Uri.parse(jsxPreview.after),
+  );
+  assert.ok(jsxAfter.getText().includes('{"14일 무료 체험"}</button>'));
+  assert.equal(screen.getText(), screenBefore);
+  await c.apply(textChange.id, c.state.contextId);
+  assert.ok(screen.getText().includes('{"14일 무료 체험"}</button>'));
+  assert.equal(screen.isDirty, true);
+  await until(
+    () =>
+      !c.state.busy &&
+      c.state.analysis?.rules.some((r) => r.value === "14일 무료 체험") ===
+        true,
+    "JSX edit reanalysis",
+  );
+  await vscode.window.showTextDocument(screen, vscode.ViewColumn.One);
+  await vscode.commands.executeCommand("undo");
+  await until(() => screen.getText() === screenBefore, "native JSX undo");
+  reports.push(
+    "React example command, TSX structure, source line, inert text diff, editor apply, reanalysis and native undo",
+  );
   const report = {
     vscode: vscode.version,
     checks: reports,

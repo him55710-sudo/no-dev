@@ -2,7 +2,7 @@
   "name": "pureobom",
   "displayName": "Pureobom · 풀어봄",
   "description": "%description%",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "pureobom-local",
   "license": "MIT",
   "repository": {
@@ -58,6 +58,11 @@
         "command": "pureobom.example",
         "title": "%command.example%",
         "icon": "$(beaker)"
+      },
+      {
+        "command": "pureobom.interfaceExample",
+        "title": "%command.interfaceExample%",
+        "icon": "$(layout)"
       }
     ],
     "viewsContainers": {

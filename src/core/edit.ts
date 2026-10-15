@@ -33,7 +33,12 @@ export function makePatch(
   } else if (r.type === "operator") {
     if (!operators[input]) throw Error("지원하지 않는 비교 방식입니다.");
     value = input;
-  } else value = JSON.stringify(input);
+  } else {
+    if (input === r.value) throw Error("현재 값과 같습니다. / No change.");
+    value = JSON.stringify(input);
+    if (r.syntax === "jsxText" || r.syntax === "jsxAttribute")
+      value = `{${value}}`;
+  }
   if (value === r.raw) throw Error("현재 값과 같습니다. / No change.");
   const updated =
     file.content.slice(0, r.start) + value + file.content.slice(r.end);

@@ -89,7 +89,9 @@ function App() {
         block: "center",
       });
       editorRef.current
-        ?.querySelector<HTMLInputElement | HTMLSelectElement>("input, select")
+        ?.querySelector<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >("input, select, textarea")
         ?.focus();
     });
   }
@@ -409,6 +411,13 @@ function App() {
                               </option>
                             ))}
                           </select>
+                        ) : edit.type === "string" ? (
+                          <textarea
+                            id="rule-value"
+                            value={value}
+                            rows={3}
+                            onChange={(e) => setValue(e.target.value)}
+                          />
                         ) : (
                           <input
                             id="rule-value"

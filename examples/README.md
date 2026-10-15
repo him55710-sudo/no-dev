@@ -1,5 +1,7 @@
 # Three changes you can explain
 
+Also try [SignupCard.tsx](SignupCard.tsx): expand the React interface structure, find **무료로 시작하기**, change it to **14일 무료 체험**, inspect the string-expression diff, apply and undo. JSX is read without rendering or execution, so this example uses source comparison instead of calculation scenarios. [Open in the browser](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=en).
+
 Open a file in VS Code and run **풀어봄: 현재 파일 설명 열기**. Choose English in the panel if preferred. Edit a rule, compare the cases, inspect the native diff, apply, then undo.
 
 | Example | Change | Input | Expected before → after |

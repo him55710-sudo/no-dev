@@ -24,6 +24,30 @@ export type Rule = Anchor & {
   scope: string;
   raw: string;
   note?: Words;
+  syntax?: "jsxText" | "jsxAttribute";
+};
+export type InterfaceNode = Anchor & {
+  id: string;
+  kind:
+    | "element"
+    | "component"
+    | "text"
+    | "value"
+    | "condition"
+    | "branch"
+    | "iteration"
+    | "attribute"
+    | "fragment"
+    | "unknown";
+  title: Words;
+  detail?: Words;
+  code?: string;
+  ruleId?: string;
+  children: InterfaceNode[];
+};
+export type InterfaceStructure = {
+  roots: InterfaceNode[];
+  truncated: boolean;
 };
 export type FunctionInfo = Anchor & {
   id: string;
@@ -48,6 +72,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];
   path: string;
   kind: "script" | "json" | "text";

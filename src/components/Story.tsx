@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FileAnalysis, Lang, Step, Rule } from "../core/types";
 import { label } from "../core/labels";
 import { Icon } from "./Icon";
+import { InterfaceTree } from "./InterfaceTree";
 export function Steps({
   steps,
   lang,
@@ -161,6 +162,12 @@ export function Story({
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
         </section>
       )}
+      <InterfaceTree
+        analysis={analysis}
+        lang={lang}
+        onSource={onSource}
+        onEdit={onEdit}
+      />
       {analysis.functions.length === 0 ? (
         <section className="card setup-card">
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
@@ -223,13 +230,15 @@ export function Story({
                 <span className="status-dot" />
                 {ko ? "코드 구문에서 확인한 설명" : "Derived from code syntax"}
               </span>
-              <button
-                className="text-button"
-                onClick={() => onSimulate(fn.name)}
-              >
-                <Icon name="play" size={14} />
-                {ko ? "값을 넣어 확인" : "Try inputs"}
-              </button>
+              {fn.simulatable && (
+                <button
+                  className="text-button"
+                  onClick={() => onSimulate(fn.name)}
+                >
+                  <Icon name="play" size={14} />
+                  {ko ? "값을 넣어 확인" : "Try inputs"}
+                </button>
+              )}
             </footer>
           </section>
         ))
