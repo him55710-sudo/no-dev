@@ -1,0 +1,6 @@
+{
+  "description": "Read JS/TS as a story, edit rules, and compare outcomes. Local, source-linked explanations in English and Korean.",
+  "command.explain": "Pureobom: Explain current file",
+  "command.map": "Pureobom: Workspace connection map",
+  "command.example": "Pureobom: Try an example"
+}

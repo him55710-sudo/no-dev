@@ -1,0 +1,564 @@
+:root {
+  color-scheme: light dark;
+  font-family: var(--vscode-font-family, system-ui);
+  font-size: var(--vscode-font-size, 13px);
+  color: var(--vscode-foreground, #ddd);
+  background: var(--vscode-editor-background, #1f1f1f);
+  --border: var(--vscode-panel-border, #414141);
+  --muted: var(--vscode-descriptionForeground, #aaa);
+  --surface: var(--vscode-sideBar-background, #252526);
+  --accent: var(--vscode-textLink-foreground, #67b7ee);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  padding: 0;
+  margin: 0;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 7px 10px;
+  background: var(--vscode-button-secondaryBackground, #333);
+  color: var(--vscode-button-secondaryForeground, #eee);
+}
+button:hover {
+  background: var(--vscode-button-secondaryHoverBackground, #444);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--vscode-button-background, #0078d4);
+  color: var(--vscode-button-foreground, #fff);
+  border-color: transparent;
+}
+button.primary:hover {
+  background: var(--vscode-button-hoverBackground, #026ec1);
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #0078d4);
+  outline-offset: 2px;
+}
+input,
+select {
+  min-width: 0;
+  border: 1px solid var(--vscode-input-border, var(--border));
+  background: var(--vscode-input-background, #313131);
+  color: var(--vscode-input-foreground, #eee);
+  border-radius: 5px;
+  padding: 8px;
+}
+input {
+  width: 100%;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+h1 {
+  font-size: 20px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  margin-bottom: 12px;
+}
+h2 {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+h3 {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+p,
+li {
+  line-height: 1.8;
+}
+small {
+  font-size: 11px;
+  color: var(--muted);
+}
+code,
+.mono {
+  font-family: var(--vscode-editor-font-family, monospace);
+  overflow-wrap: anywhere;
+}
+.muted,
+.footnote {
+  color: var(--muted);
+}
+.app {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px;
+}
+.app-header,
+.brand,
+.meta,
+.section-heading,
+.actions,
+.function-card header,
+.function-card footer,
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-header {
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.brand strong {
+  display: block;
+  font-size: 20px;
+  letter-spacing: -1px;
+}
+.brand small {
+  display: block;
+  margin-top: 3px;
+}
+.brand-icon {
+  font-weight: 700;
+  font-size: 20px;
+  background: var(--vscode-badge-background, #326657);
+  color: var(--vscode-badge-foreground, white);
+  padding: 9px 12px;
+  border-radius: 12px;
+}
+.file-summary {
+  padding: 24px 0 12px;
+}
+.eyebrow {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.meta {
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--muted);
+}
+.meta button {
+  margin-left: auto;
+}
+.pill,
+.tag,
+.input-pill {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 11px;
+}
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin: 12px 0 24px;
+  overflow-x: auto;
+}
+.tabs button {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 12px 10px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.tabs .selected {
+  color: var(--vscode-foreground);
+  border-color: var(--accent);
+}
+.count {
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  padding: 1px 5px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+  background: var(--vscode-editor-background);
+}
+.section-heading {
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 12px 0 16px;
+}
+.section-heading h2 {
+  margin-bottom: 0;
+}
+.small-toggle {
+  font-size: 11px;
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.story-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.story-rule {
+  text-align: left;
+  padding: 14px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.story-rule strong {
+  font-size: 24px;
+  font-weight: 500;
+}
+.story-rule-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 11px;
+}
+.function-card header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+}
+.function-symbol {
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 600;
+}
+.function-card header h3 {
+  margin: 0;
+}
+.function-card header .tag {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.function-input {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 16px 0;
+}
+.mini-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.input-pill {
+  gap: 8px;
+}
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+.step {
+  padding: 8px 0;
+}
+.step-body {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.step-number {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 24px;
+  min-width: 20px;
+}
+.step-content {
+  flex: 1;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.line-link,
+.text-button {
+  border: 0;
+  background: transparent;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: var(--accent);
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+.line-link {
+  white-space: nowrap;
+}
+.step-content .line-link {
+  margin-left: 8px;
+}
+.step > .steps,
+.otherwise {
+  margin-left: 26px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.otherwise > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.function-card footer {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 16px;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.function-card footer button {
+  font-size: 12px;
+}
+.status-dot {
+  display: inline-block;
+  background: var(--accent);
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.footnote {
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 16px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.footnote svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.sentence {
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.sentence small {
+  display: block;
+  margin-top: 8px;
+}
+.input-row > input,
+.input-row > select {
+  flex: 1;
+}
+.input-row button {
+  white-space: nowrap;
+}
+.table-scroll {
+  overflow-x: auto;
+  padding: 0;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 480px;
+  text-align: left;
+}
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  vertical-align: middle;
+}
+th {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface);
+  font-weight: 500;
+}
+td small {
+  display: block;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+td strong {
+  font-weight: 500;
+}
+tr:last-child td {
+  border-bottom: 0;
+}
+.rule-editor,
+.patch {
+  border-color: var(--vscode-focusBorder, var(--accent));
+}
+.diff {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background: var(--surface);
+  border-radius: 6px;
+  margin: 14px 0;
+}
+.diff > div {
+  flex: 1;
+  min-width: 0;
+}
+.diff small,
+.diff code {
+  display: block;
+}
+.diff code {
+  margin-top: 6px;
+  font-size: 18px;
+}
+.actions {
+  flex-wrap: wrap;
+}
+.banner {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 6px;
+}
+.error {
+  border-color: var(--vscode-inputValidation-errorBorder, #f66);
+  color: var(--vscode-errorForeground, #f88);
+}
+.success {
+  border-color: var(--accent);
+}
+.empty {
+  text-align: center;
+  padding: 32px 18px;
+}
+.empty p {
+  max-width: 540px;
+  margin: 12px auto;
+}
+.app-footer {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.graph {
+  padding: 0;
+  overflow: auto;
+  background: #f5f8f6;
+  color: #25372f;
+}
+.graph svg {
+  display: block;
+  width: 100%;
+}
+.graph-node {
+  cursor: pointer;
+}
+.graph-node:hover > rect:first-child,
+.graph-node:focus > rect:first-child {
+  stroke: #167c68;
+  stroke-width: 3px;
+}
+.hint-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--surface);
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.hint-card svg {
+  flex-shrink: 0;
+}
+.simulation {
+  margin-top: 20px;
+  border-color: var(--accent);
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface);
+  padding: 14px;
+  border-radius: 6px;
+}
+.issue p {
+  margin: 10px 0;
+}
+.simulation ol {
+  padding-left: 20px;
+}
+.simulation .section-heading h2 {
+  font-size: 15px;
+}
+svg {
+  vertical-align: middle;
+}
+@media (max-width: 560px) {
+  .app {
+    padding: 16px;
+  }
+  .brand small {
+    display: none;
+  }
+  .section-heading {
+    flex-wrap: wrap;
+  }
+  .tabs button {
+    padding: 10px 7px;
+    font-size: 12px;
+  }
+  .input-row {
+    flex-wrap: wrap;
+  }
+  .input-row input {
+    flex-basis: 100%;
+  }
+  .function-card header .tag {
+    display: none;
+  }
+  .meta button {
+    margin-left: 0;
+  }
+  .card {
+    padding: 14px;
+  }
+  .table-scroll {
+    padding: 0;
+  }
+  h1 {
+    font-size: 17px;
+  }
+  .story-rules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,166 @@
+.scenario-lab {
+  margin: 20px 0;
+  padding: 22px;
+  border: 1px solid var(--border, #dce5df);
+  border-radius: 14px;
+  background: var(--vscode-editor-background, #fff);
+  color: inherit;
+  min-width: 0;
+}
+.scenario-inputs > summary { cursor: pointer; padding: 8px 0; font-size: 13px; font-weight: 600; }
+.scenario-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.scenario-heading h3 {
+  margin: 7px 0 10px;
+  font-size: 20px;
+  letter-spacing: -0.6px;
+}
+.scenario-local {
+  font-size: 11px;
+  border: 1px solid var(--border, #dce5df);
+  padding: 5px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.scenario-description {
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.scenario-hint,
+.scenario-footnote {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--vscode-descriptionForeground, #52645d);
+}
+.scenario-scroll {
+  overflow: auto;
+  max-width: 100%;
+  margin: 12px 0;
+}
+.scenario-lab table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+.scenario-lab th,
+.scenario-lab td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border, #dce5df);
+  vertical-align: middle;
+}
+.scenario-lab th small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+.scenario-lab td code {
+  font:
+    12px/1.6 Consolas,
+    monospace;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.scenario-lab input,
+.scenario-lab select {
+  width: 100%;
+  min-width: 100px;
+  border: 1px solid var(--border, #dce5df);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--vscode-input-background, #f7faf8);
+  color: inherit;
+  font: inherit;
+}
+.scenario-lab button {
+  padding: 8px 11px;
+  border: 1px solid var(--border, #dce5df);
+  border-radius: 7px;
+  background: var(--vscode-button-secondaryBackground, #f4f7f4);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.scenario-lab button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.scenario-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+.scenario-actions .scenario-primary {
+  background: var(--vscode-button-background, #177c69);
+  color: var(--vscode-button-foreground, #fff);
+  border-color: transparent;
+  margin-left: auto;
+}
+.scenario-lab :focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #177c69);
+  outline-offset: 3px;
+}
+.scenario-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 22px 0 8px;
+}
+.scenario-summary strong {
+  font-size: 30px;
+}
+.scenario-summary span {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.scenario-results tr[data-status="changed"] {
+  background: var(--vscode-diffEditor-insertedTextBackground, #eaf7ee);
+}
+.scenario-status {
+  font-size: 11px;
+  white-space: nowrap;
+  border: 1px solid var(--border, #dce5df);
+  border-radius: 20px;
+  padding: 4px 7px;
+}
+.scenario-status.changed {
+  font-weight: 700;
+}
+.scenario-status.unavailable,
+.scenario-error {
+  color: var(--vscode-errorForeground, #b54429);
+}
+.scenario-export {
+  margin-top: 10px;
+}
+.scenario-footnote {
+  margin-bottom: 0;
+  border-top: 1px solid var(--border, #dce5df);
+  padding-top: 14px;
+}
+.scenario-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+@media (max-width: 600px) {
+  .scenario-lab {
+    padding: 14px;
+  }
+  .scenario-actions .scenario-primary {
+    margin-left: 0;
+  }
+  .scenario-heading h3 {
+    font-size: 18px;
+  }
+}

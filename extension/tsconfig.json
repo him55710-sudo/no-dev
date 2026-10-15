@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "types": ["node", "vscode"] },
+  "include": [
+    "src",
+    "ui",
+    "test",
+    "../src/core",
+    "../src/components/Story.tsx",
+    "../src/components/MapView.tsx"
+  ]
+}

@@ -1,0 +1,99 @@
+<div align="center">
+
+# Pureobom · 풀어봄
+
+### Read it. Change it. Check it.
+
+Understand the code AI wrote. Change a rule. See which cases change.
+
+**VS Code extension · Korean / English · Local processing · MIT**
+
+[한국어](README.ko.md) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+
+</div>
+
+![Change impact in Pureobom](docs/scenario-preview.png)
+
+Pureobom turns JavaScript and TypeScript into source-linked stories, editable rules and a dependency map. It is for people who know what their product should do but struggle to inspect the code an AI generates.
+
+Change a free-shipping threshold from **50,000 to 70,000**. Compare several order amounts. Inspect the exact code diff, apply the change in VS Code, and undo it with the editor's normal undo command.
+
+| Order subtotal | Before | After | What changed? |
+| --- | --- | --- | --- |
+| 49,999 | 3,000 | 3,000 | Same |
+| 50,000 | 0 | 3,000 | Shipping now charged |
+| 60,000 | 0 | 3,000 | Shipping now charged |
+| 70,000 | 0 | 0 | Still free |
+
+These are computed example outputs, not an application-wide correctness claim.
+
+## Try it
+
+**VS Code — the primary experience**
+
+1. Get `pureobom-0.3.0.vsix` from the distribution bundle (or build it below).
+2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
+3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
+4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
+
+**Browser — no account or API key**
+
+With Node.js 24 and pnpm 11.25.0 installed, from this source folder:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). Demo mode does not read or overwrite your saved browser workspace. Remove `demo=shipping` to use the persistent local workspace.
+
+The prebuilt `pureobom-0.3.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
+
+This source distribution is ready for publication. A public repository, live hosted demo and Marketplace listing must be verified before adding their links here; none is implied by these instructions.
+
+## What works today
+
+- **Read:** Korean/English explanations anchored to the exact source lines, including unsaved VS Code edits.
+- **Explore:** function inputs, conditions, returns, a rule table, static relative-import graph and limited review hints.
+- **Change:** numbers, strings, booleans and comparison operators through the same checked patch path.
+- **Compare:** up to 12 editable input cases, suggested numeric boundaries, before/after outputs and an explicit unavailable state.
+- **Explain to someone else:** a local Markdown report containing the displayed comparison. Nothing is automatically published.
+- **Stay in control:** native diff, explicit apply, normal save/undo, stale-document checks and local workers.
+
+## Know the boundary
+
+This is a **0.3 preview**, not an AI coding agent or a replacement for a developer's review.
+
+| Area | Current boundary |
+| --- | --- |
+| Languages | JS/TS/JSX/TSX and related extensions; JSON overview. Other imported text is preserved, not explained. |
+| Editing | Literals and comparison operators. No whole-feature generation or multi-file refactoring. |
+| Understanding | Syntax-grounded descriptions and a small name glossary; no inferred business intent. |
+| Comparison | Restricted AST interpretation of supported synchronous calculations. No arbitrary code execution, network, DOM, loops or external packages. |
+| Verification | Syntax checks and limited static hints. No full type checking, application tests or security audit. |
+| File limits | Up to 300 imported text files, 512 KB/file and 8 MB total. Exports contain imported files only. |
+| Privacy | Analysis stays on-device. Normal hosted-demo asset requests still reach its host; browser workspaces persist in IndexedDB outside demo mode. |
+
+An unavailable case is not a pass. A correct output for a few inputs does not prove a program correct. The import graph is a static relationship map, not complete runtime impact analysis. See [security and privacy](SECURITY.md).
+
+## Build and verify
+
+```sh
+pnpm test
+pnpm build
+pnpm extension:build
+pnpm extension:test      # downloads an isolated VS Code test host on first run
+pnpm extension:package
+pnpm release:package    # VSIX must already exist; creates source/demo ZIPs + SHA-256 sums
+pnpm release:check      # verifies checksums and required contents
+```
+
+On Linux, run the integration step with `xvfb-run -a pnpm extension:test`. CI definitions cover Windows and Linux; local results are recorded separately in [validation](docs/RELEASE_VALIDATION.md).
+
+The browser and extension share the analysis engine. The parser stays in a worker; UI code imports only lightweight view models. [Architecture](docs/ARCHITECTURE.md) · [Research](docs/RESEARCH.md) · [Product direction](docs/PRODUCT.md) · [Launch plan](docs/LAUNCH.md)
+
+## Help make code understandable
+
+Bring a small example where the explanation is confusing, improve a translation, or contribute a useful scenario. Start with [CONTRIBUTING.md](CONTRIBUTING.md). A reproducible counterexample is valuable even if you do not write code.
+
+Licensed under [MIT](LICENSE). Bundled third-party licenses remain their own. No claims of measured user demand, retention or comprehension gains are made yet.

@@ -1,0 +1,19 @@
+{
+  "file": "pureobom-0.2.0.vsix",
+  "bytes": 1127048,
+  "sha256": "fe8512ca831e6800b96598c0932b5ebe9a7b3af3d0df946a88f3cfbb3e8da3d1",
+  "entries": [
+    "extension.vsixmanifest",
+    "[Content_Types].xml",
+    "extension/THIRD_PARTY_NOTICES.txt",
+    "extension/readme.md",
+    "extension/package.json",
+    "extension/LICENSE.txt",
+    "extension/out/worker.cjs",
+    "extension/out/extension.cjs",
+    "extension/media/view.js",
+    "extension/media/view.css",
+    "extension/media/logo.svg"
+  ],
+  "bundlesMatchSourceBuild": true
+}

@@ -1,0 +1,434 @@
+import * as vscode from "vscode";
+import { randomUUID } from "node:crypto";
+import type {
+  Patch,
+  ProjectAnalysis,
+  Simulation,
+  SourceFile,
+} from "../../src/core/types";
+import { AnalysisClient } from "./analysisClient";
+import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
+import { inputString, type PatchSummary, type ViewState } from "./protocol";
+
+const FILE_BYTES = 512 * 1024,
+  TOTAL_BYTES = 8 * 1024 * 1024;
+const LANGS = new Set([
+  "javascript",
+  "javascriptreact",
+  "typescript",
+  "typescriptreact",
+  "json",
+  "jsonc",
+]);
+type PendingPatch = {
+  patch: Patch;
+  uri: vscode.Uri;
+  version: number;
+  contextId: string;
+};
+export class Controller implements vscode.Disposable {
+  readonly changes = new vscode.EventEmitter<ViewState>();
+  state: ViewState = {
+    contextId: "",
+    path: "",
+    version: 0,
+    dirty: false,
+    trusted: vscode.workspace.isTrusted,
+    busy: false,
+  };
+  private active?: vscode.TextDocument;
+  private sources = new Map<string, { uri: vscode.Uri; file: SourceFile }>();
+  private patches = new Map<string, PendingPatch>();
+  private previews = new Map<string, string>();
+  private epoch = 0;
+  private timer?: ReturnType<typeof setTimeout>;
+  private registration: vscode.Disposable;
+  constructor(private client: AnalysisClient) {
+    this.registration = vscode.workspace.registerTextDocumentContentProvider(
+      "pureobom-preview",
+      {
+        provideTextDocumentContent: (uri) =>
+          this.previews.get(uri.toString()) ?? "",
+      },
+    );
+  }
+  static accepts(doc: vscode.TextDocument) {
+    return (
+      ["file", "untitled", "vscode-remote"].includes(doc.uri.scheme) &&
+      LANGS.has(doc.languageId)
+    );
+  }
+  isActive(doc: vscode.TextDocument) {
+    return this.active?.uri.toString() === doc.uri.toString();
+  }
+  private path(doc: vscode.TextDocument) {
+    return this.pathFor(doc.uri, doc.languageId);
+  }
+  private pathFor(uri: vscode.Uri, languageId?: string) {
+    const folder = vscode.workspace.getWorkspaceFolder(uri);
+    if (folder) {
+      const index =
+        vscode.workspace.workspaceFolders?.findIndex(
+          (f) => f.uri.toString() === folder.uri.toString(),
+        ) ?? 0;
+      return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
+    }
+    if (uri.scheme === "untitled")
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "json" } as Record<string, string>)[languageId || ""] || "txt"}`;
+    return uri.path;
+  }
+  private publish(next: Partial<ViewState>) {
+    this.state = { ...this.state, tab: undefined, ...next };
+    this.changes.fire(this.state);
+  }
+  private invalidate() {
+    this.epoch++;
+    this.patches.clear();
+    this.publish({
+      contextId: randomUUID(),
+      busy: true,
+      error: undefined,
+      trusted: vscode.workspace.isTrusted,
+    });
+  }
+  async setDocument(doc: vscode.TextDocument) {
+    if (!Controller.accepts(doc)) return;
+    this.active = doc;
+    this.publish({
+      path: vscode.workspace.asRelativePath(doc.uri),
+      version: doc.version,
+      dirty: doc.isDirty,
+      analysis: undefined,
+    });
+    await this.refresh();
+  }
+  documentChanged(doc: vscode.TextDocument) {
+    if (
+      !this.active ||
+      (doc.uri.toString() !== this.active.uri.toString() &&
+        ![...this.sources.values()].some(
+          (s) => s.uri.toString() === doc.uri.toString(),
+        ))
+    )
+      return;
+    this.invalidate();
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => void this.refresh(), 300);
+  }
+  async refresh() {
+    clearTimeout(this.timer);
+    if (!this.active || this.active.isClosed) {
+      this.publish({ busy: false });
+      return;
+    }
+    this.invalidate();
+    const epoch = this.epoch,
+      doc = this.active,
+      path = this.path(doc);
+    try {
+      const content = doc.getText();
+      if (Buffer.byteLength(content, "utf8") > FILE_BYTES)
+        throw Error(
+          "파일당 512KB까지 설명할 수 있습니다. 작은 파일로 나누어 주세요.",
+        );
+      if (!this.sources.has(path) && this.sources.size >= 300)
+        this.sources.delete(this.sources.keys().next().value!);
+      this.sources.set(path, { uri: doc.uri, file: { path, content } });
+      // Open documents are authoritative, including unsaved editor changes.
+      for (const source of this.sources.values()) {
+        const open = vscode.workspace.textDocuments.find(
+          (d) => !d.isClosed && d.uri.toString() === source.uri.toString(),
+        );
+        if (open) source.file = { ...source.file, content: open.getText() };
+      }
+      let bytes = 0;
+      for (const [key, source] of this.sources) {
+        const size = Buffer.byteLength(source.file.content, "utf8");
+        if (
+          key !== path &&
+          (size > FILE_BYTES ||
+            bytes + size > TOTAL_BYTES - Buffer.byteLength(content, "utf8"))
+        )
+          this.sources.delete(key);
+        else if (key !== path) bytes += size;
+      }
+      const project = await this.client.call<ProjectAnalysis>("analyze", {
+        files: [...this.sources.values()].map((s) => s.file),
+      });
+      if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
+      this.publish({
+        project,
+        analysis: project.files.find((f) => f.path === path),
+        busy: false,
+        version: doc.version,
+        dirty: doc.isDirty,
+      });
+    } catch (e) {
+      if (epoch === this.epoch)
+        this.publish({ busy: false, analysis: undefined, error: message(e) });
+    }
+  }
+  async scan() {
+    if (!vscode.workspace.workspaceFolders?.length)
+      throw Error("VS Code에서 프로젝트 폴더를 먼저 열어 주세요.");
+    this.publish({ scanNote: "작업 공간의 연결을 읽고 있습니다…" });
+    const uris = await vscode.workspace.findFiles(
+      "**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,json,jsonc}",
+      "**/{node_modules,.git,.next,.vscode,dist,build,coverage,vendor,pnpm-lock.yaml,package-lock.json,yarn.lock}/**",
+      301,
+    );
+    const next = new Map<string, { uri: vscode.Uri; file: SourceFile }>();
+    let total = 0,
+      skipped = 0;
+    for (const uri of uris.slice(0, 300)) {
+      if (/(?:^|\/)(?:\.[^/]+|package-lock\.json)(?:\/|$)/.test(uri.path)) {
+        skipped++;
+        continue;
+      }
+      try {
+        const open = vscode.workspace.textDocuments.find(
+          (d) => !d.isClosed && d.uri.toString() === uri.toString(),
+        );
+        let content: string;
+        if (open) content = open.getText();
+        else {
+          const stat = await vscode.workspace.fs.stat(uri);
+          if (stat.size > FILE_BYTES) {
+            skipped++;
+            continue;
+          }
+          content = Buffer.from(
+            await vscode.workspace.fs.readFile(uri),
+          ).toString("utf8");
+        }
+        const size = Buffer.byteLength(content, "utf8");
+        if (size > FILE_BYTES || total + size > TOTAL_BYTES) {
+          skipped++;
+          continue;
+        }
+        total += size;
+        const path = this.pathFor(uri);
+        next.set(path, { uri, file: { path, content } });
+      } catch {
+        skipped++;
+      }
+    }
+    this.sources = next;
+    this.publish({
+      scanNote: `${next.size}개 파일을 읽었습니다. ${skipped}개 제외${uris.length > 300 ? " · 300개 한도에 도달해 일부 파일은 생략했습니다" : ""}. 최대 8MB.`,
+      tab: "map",
+    });
+    if (!this.active && next.size) {
+      const first = next.values().next().value!;
+      this.active = await vscode.workspace.openTextDocument(first.uri);
+      this.publish({ path: vscode.workspace.asRelativePath(first.uri) });
+    }
+    await this.refresh();
+  }
+  private current(contextId: string | undefined) {
+    const doc = this.active;
+    if (
+      !doc ||
+      doc.isClosed ||
+      !contextId ||
+      contextId !== this.state.contextId ||
+      this.state.busy ||
+      !this.state.analysis ||
+      doc.version !== this.state.version
+    )
+      throw Error("파일이 바뀌었습니다. 최신 설명에서 다시 시도해 주세요.");
+    return doc;
+  }
+  async prepare(
+    contextId: string | undefined,
+    payload: Record<string, unknown>,
+  ): Promise<PatchSummary> {
+    const doc = this.current(contextId);
+    if (!vscode.workspace.isTrusted)
+      throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
+    const file = { path: this.path(doc), content: doc.getText() },
+      version = doc.version;
+    const patch =
+      payload.request !== undefined
+        ? await this.client.call<Patch>("request", {
+            file,
+            request: inputString(payload.request),
+          })
+        : await this.client.call<Patch>("patch", {
+            file,
+            ruleId: inputString(payload.ruleId),
+            value: inputString(payload.value),
+          });
+    if (
+      this.current(contextId) !== doc ||
+      doc.version !== version ||
+      doc.getText() !== patch.original
+    )
+      throw Error(
+        "변경안을 만드는 동안 파일이 바뀌었습니다. 다시 시도해 주세요.",
+      );
+    const id = randomUUID();
+    this.patches.clear();
+    this.patches.set(id, {
+      patch,
+      uri: doc.uri,
+      version,
+      contextId: contextId!,
+    });
+    return {
+      id,
+      description: patch.description,
+      oldText: patch.oldText,
+      newText: patch.newText,
+    };
+  }
+  private pending(id: string, contextId: string | undefined) {
+    const doc = this.current(contextId),
+      pending = this.patches.get(id);
+    if (
+      !pending ||
+      pending.contextId !== contextId ||
+      pending.uri.toString() !== doc.uri.toString() ||
+      pending.version !== doc.version ||
+      pending.patch.original !== doc.getText()
+    )
+      throw Error(
+        "미리보기 이후 파일이 바뀌었습니다. 변경안을 다시 만들어 주세요.",
+      );
+    return { doc, ...pending };
+  }
+  async preview(id: string, contextId: string | undefined) {
+    const pending = this.pending(id, contextId);
+    const before = vscode.Uri.from({
+      scheme: "pureobom-preview",
+      path: `/${id}/before.ts`,
+    });
+    const after = vscode.Uri.from({
+      scheme: "pureobom-preview",
+      path: `/${id}/after.ts`,
+    });
+    if (this.previews.size > 20) this.previews.clear();
+    this.previews.set(before.toString(), pending.patch.original);
+    this.previews.set(after.toString(), pending.patch.updated);
+    await vscode.commands.executeCommand(
+      "vscode.diff",
+      before,
+      after,
+      `풀어봄 · ${pending.patch.description.ko}`,
+      { preview: true },
+    );
+    return { before: before.toString(), after: after.toString() };
+  }
+  async apply(id: string, contextId: string | undefined) {
+    if (!vscode.workspace.isTrusted)
+      throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
+    const pending = this.pending(id, contextId);
+    const editor = await vscode.window.showTextDocument(pending.doc, {
+      preview: false,
+      preserveFocus: true,
+      viewColumn: vscode.ViewColumn.One,
+    });
+    // Recheck after showTextDocument: no asynchronous gap before editor.edit.
+    const checked = this.pending(id, contextId);
+    const patch = checked.patch;
+    const success = await editor.edit(
+      (builder) =>
+        builder.replace(
+          new vscode.Range(
+            checked.doc.positionAt(patch.start),
+            checked.doc.positionAt(patch.end),
+          ),
+          patch.newText,
+        ),
+      { undoStopBefore: true, undoStopAfter: true },
+    );
+    if (!success)
+      throw Error(
+        "VS Code에서 변경을 적용하지 못했습니다. 파일 권한을 확인해 주세요.",
+      );
+    this.patches.clear();
+    await this.refresh();
+    return { applied: true };
+  }
+  async source(contextId: string | undefined, line: unknown) {
+    const doc = this.current(contextId);
+    if (
+      !Number.isInteger(line) ||
+      Number(line) < 1 ||
+      Number(line) > doc.lineCount
+    )
+      throw Error("줄 번호가 올바르지 않습니다.");
+    const position = new vscode.Position(Number(line) - 1, 0);
+    const editor = await vscode.window.showTextDocument(doc, {
+      viewColumn: vscode.ViewColumn.One,
+      preview: false,
+    });
+    editor.selection = new vscode.Selection(position, position);
+    editor.revealRange(
+      new vscode.Range(position, position),
+      vscode.TextEditorRevealType.InCenterIfOutsideViewport,
+    );
+  }
+  async select(path: string) {
+    const source = this.sources.get(path);
+    if (!source)
+      throw Error("연결 지도에 없는 파일입니다. 지도를 새로 읽어 주세요.");
+    const doc = await vscode.workspace.openTextDocument(source.uri);
+    await vscode.window.showTextDocument(doc, {
+      viewColumn: vscode.ViewColumn.One,
+      preview: false,
+      preserveFocus: true,
+    });
+    await this.setDocument(doc);
+  }
+  async simulate(
+    contextId: string | undefined,
+    name: string,
+    input: string,
+  ): Promise<Simulation> {
+    const doc = this.current(contextId);
+    const args: unknown = JSON.parse(input);
+    if (!Array.isArray(args) || args.length > 20)
+      throw Error("입력값을 JSON 배열로 적어 주세요. 예: [50000]");
+    if (!this.state.analysis!.functions.some((f) => f.name === name))
+      throw Error("현재 파일에 없는 기능입니다.");
+    const result = await this.client.call<Simulation>("simulate", {
+      files: [...this.sources.values()].map((s) => s.file),
+      path: this.path(doc),
+      name,
+      args,
+    });
+    this.current(contextId);
+    return result;
+  }
+  async compare(
+    contextId: string | undefined,
+    name: string,
+    scenarios: Scenario[],
+    patchId?: string,
+  ): Promise<ScenarioReport> {
+    const doc = this.current(contextId);
+    if (!this.state.analysis!.functions.some((f) => f.name === name))
+      throw Error("현재 파일에 없는 기능입니다. / Function not in this file.");
+    const patch = patchId ? this.pending(patchId, contextId).patch : undefined;
+    const report = await this.client.call<ScenarioReport>("compare", {
+      files: [...this.sources.values()].map((s) => s.file),
+      path: this.path(doc),
+      name,
+      scenarios,
+      patch,
+    });
+    this.current(contextId);
+    if (patchId) this.pending(patchId, contextId);
+    return report;
+  }
+  dispose() {
+    clearTimeout(this.timer);
+    this.registration.dispose();
+    this.changes.dispose();
+    this.client.dispose();
+  }
+}
+export function message(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}

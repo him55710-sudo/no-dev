@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env*
+test-results/
+.vscode-test/
+extension/out/
+extension/media/view.js
+extension/media/view.css
+release/
+.DS_Store
+*.log

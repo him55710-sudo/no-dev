@@ -1,0 +1,658 @@
+import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { Story } from "../../src/components/Story";
+import { MapView } from "../../src/components/MapView";
+import { ScenarioLab } from "../../src/components/ScenarioLab";
+import type { ScenarioReport } from "../../src/core/scenarioModel";
+import type { Lang, Rule, Simulation } from "../../src/core/types";
+import type { PatchSummary, ViewState } from "../src/protocol";
+import { host, request } from "./bridge";
+import "./style.css";
+
+type Tab = "story" | "rules" | "checks" | "map";
+function App() {
+  const saved = host.getState() as { lang?: Lang } | undefined;
+  const [lang, setLang] = useState<Lang>(saved?.lang === "en" ? "en" : "ko");
+  const [state, setState] = useState<ViewState>({
+    contextId: "",
+    path: "",
+    version: 0,
+    dirty: false,
+    trusted: true,
+    busy: false,
+  });
+  const [tab, setTab] = useState<Tab>("story");
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [working, setWorking] = useState(false);
+  const [edit, setEdit] = useState<Rule>();
+  const [value, setValue] = useState("");
+  const [sentence, setSentence] = useState("");
+  const [patch, setPatch] = useState<PatchSummary>();
+  const [fn, setFn] = useState("");
+  const [args, setArgs] = useState("[50000]");
+  const [simulation, setSimulation] = useState<Simulation>();
+  const context = useRef("");
+  const editorRef = useRef<HTMLDivElement>(null);
+  const patchRef = useRef<HTMLElement>(null);
+  const simulationRef = useRef<HTMLElement>(null);
+  const ko = lang === "ko",
+    a = state.analysis;
+  const disabled = working || state.busy || !a;
+  const scenarioFn =
+    a?.functions.find((f) => f.name === fn) ??
+    a?.functions.find((f) => f.simulatable);
+  const t = (k: string, e: string) => (ko ? k : e);
+  useEffect(() => {
+    const receive = (e: MessageEvent) => {
+      if (e.data?.type !== "state") return;
+      const next = e.data.state as ViewState;
+      if (context.current !== next.contextId) {
+        setPatch(undefined);
+        setEdit(undefined);
+        setSimulation(undefined);
+        setFn("");
+        setError("");
+        context.current = next.contextId;
+      }
+      setState(next);
+      if (next.tab === "map") setTab("map");
+    };
+    window.addEventListener("message", receive);
+    void request("ready").catch((e) => setError(e.message));
+    return () => window.removeEventListener("message", receive);
+  }, []);
+  useEffect(() => {
+    host.setState({ lang });
+  }, [lang]);
+  async function action(job: () => Promise<void>) {
+    setWorking(true);
+    setError("");
+    setNotice("");
+    try {
+      await job();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setWorking(false);
+    }
+  }
+  function selectRule(rule: Rule) {
+    setEdit(rule);
+    setValue(String(rule.value));
+    setPatch(undefined);
+    setTab("rules");
+    requestAnimationFrame(() => {
+      editorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      editorRef.current
+        ?.querySelector<HTMLInputElement | HTMLSelectElement>("input, select")
+        ?.focus();
+    });
+  }
+  async function prepare(payload: Record<string, unknown>) {
+    const id = context.current;
+    const result = await request<PatchSummary>("prepare", payload, id);
+    if (id === context.current) {
+      setPatch(result);
+      requestAnimationFrame(() =>
+        patchRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        }),
+      );
+    }
+  }
+  const source = (line: number) =>
+    void action(() => request("source", { line }, state.contextId));
+  return (
+    <div className="app">
+      <header className="app-header">
+        <div className="brand">
+          <span className="brand-icon">풀</span>
+          <div>
+            <strong>풀어봄</strong>
+            <small>
+              {t(
+                "코드를 이해하는 작업 공간",
+                "A workspace for understanding code",
+              )}
+            </small>
+          </div>
+        </div>
+        <select
+          aria-label="설명 언어 / Language"
+          value={lang}
+          onChange={(e) => setLang(e.target.value as Lang)}
+        >
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+      </header>
+      <section className="file-summary">
+        <span className="eyebrow">{t("지금 읽는 파일", "CURRENT FILE")}</span>
+        <h1>
+          {state.path || t("코드 파일을 열어 주세요", "Open a code file")}
+        </h1>
+        <div className="meta">
+          <span className="pill">
+            {state.busy
+              ? t("설명 업데이트 중…", "Updating…")
+              : t("내 컴퓨터에서 분석", "Analyzed locally")}
+          </span>
+          {state.path && (
+            <span>
+              {state.dirty
+                ? t("저장 전 변경 포함", "Includes unsaved edits")
+                : t("저장된 내용", "Saved content")}
+            </span>
+          )}
+          {a && (
+            <span>
+              {a.functions.length} {t("개 기능", "functions")} ·{" "}
+              {a.rules.length} {t("개 규칙", "rules")}
+            </span>
+          )}
+          <button
+            disabled={working || state.busy}
+            onClick={() => void action(() => request("refresh"))}
+          >
+            {t("새로 읽기", "Refresh")}
+          </button>
+        </div>
+      </section>
+      {!state.trusted && (
+        <p className="banner">
+          {t(
+            "제한 모드: 설명은 읽을 수 있습니다. 코드 변경은 작업 공간을 신뢰한 뒤 가능합니다.",
+            "Restricted Mode: read explanations now; edits require a trusted workspace.",
+          )}
+        </p>
+      )}
+      {(error || state.error) && (
+        <p className="banner error" role="alert">
+          {error || state.error}
+        </p>
+      )}
+      {notice && (
+        <p className="banner success" role="status">
+          {notice}
+        </p>
+      )}
+      {!a && !state.busy ? (
+        <section className="empty card">
+          <h2>
+            {t(
+              "어려운 코드, 문장으로 읽어 보세요",
+              "Read your code as a story",
+            )}
+          </h2>
+          <p>
+            {t(
+              "JavaScript 또는 TypeScript 파일을 열면 기능, 조건, 바꿀 수 있는 값을 보여 드립니다. JSON 파일도 읽을 수 있습니다.",
+              "Open a JavaScript, TypeScript or JSON file to explore its logic and editable values.",
+            )}
+          </p>
+          <button
+            className="primary"
+            onClick={() => void action(() => request("example"))}
+          >
+            {t("무료 배송 예제로 시작", "Try the shipping example")}
+          </button>
+          <p className="muted">
+            {t(
+              "외부 AI 서비스와 API 키 없이 작동합니다.",
+              "No external AI service or API key required.",
+            )}
+          </p>
+        </section>
+      ) : (
+        <>
+          <nav className="tabs" aria-label={t("설명 보기 방식", "Views")}>
+            {(
+              [
+                ["story", "문장으로 읽기", "Story"],
+                ["rules", "규칙 바꾸기", "Rules"],
+                ["checks", "검토할 부분", "Review"],
+                ["map", "연결 지도", "Map"],
+              ] as const
+            ).map(([key, korean, english]) => (
+              <button
+                key={key}
+                aria-pressed={tab === key}
+                className={tab === key ? "selected" : ""}
+                onClick={() => setTab(key)}
+              >
+                {t(korean, english)}
+                {key === "checks" && !!a?.issues.length && (
+                  <span className="count">{a.issues.length}</span>
+                )}
+              </button>
+            ))}
+          </nav>
+          <main aria-busy={state.busy}>
+            {a && tab === "story" && (
+              <Story
+                analysis={a}
+                lang={lang}
+                onSource={source}
+                onEdit={selectRule}
+                onSimulate={(name) => {
+                  setFn(name);
+                  setSimulation(undefined);
+                  setArgs("[]");
+                  requestAnimationFrame(() =>
+                    simulationRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    }),
+                  );
+                }}
+              />
+            )}
+            {a && tab === "rules" && (
+              <>
+                <div className="section-heading">
+                  <div>
+                    <span className="eyebrow">EDIT THE RULES</span>
+                    <h2>
+                      {t(
+                        "원하는 동작에 맞게 값을 바꾸세요",
+                        "Adjust the rules",
+                      )}
+                    </h2>
+                  </div>
+                </div>
+                <p className="muted">
+                  {t(
+                    "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 복잡한 기능을 새로 생성하는 AI는 아직 연결하지 않았습니다.",
+                    "Edit constants, text, booleans and comparisons. General AI code generation is not connected.",
+                  )}
+                </p>
+                <form
+                  className="sentence"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void action(() => prepare({ request: sentence }));
+                  }}
+                >
+                  <label htmlFor="sentence">
+                    {t("문장으로 변경 요청", "Request a change")}
+                  </label>
+                  <div className="input-row">
+                    <input
+                      id="sentence"
+                      value={sentence}
+                      onChange={(e) => setSentence(e.target.value)}
+                      placeholder={t(
+                        "무료 배송 기준을 70000으로 변경",
+                        "Change freeShippingThreshold to 70000",
+                      )}
+                    />
+                    <button
+                      disabled={
+                        disabled ||
+                        !state.trusted ||
+                        !sentence.trim() ||
+                        !a.syntaxValid
+                      }
+                    >
+                      {t("변경안 만들기", "Preview change")}
+                    </button>
+                  </div>
+                  <small>
+                    {t(
+                      "아래 표의 규칙 이름과 새 값 하나를 적어 주세요. 7만 → 70000, 15% → 0.15",
+                      "Use one rule name and one new value. Write 70000 or 0.15 without units.",
+                    )}
+                  </small>
+                </form>
+                <div className="table-scroll card">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t("규칙", "Rule")}</th>
+                        <th>{t("현재 값", "Value")}</th>
+                        <th>{t("위치", "Location")}</th>
+                        <th>{t("수정", "Edit")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {a.rules.map((rule) => (
+                        <tr key={rule.id}>
+                          <td>
+                            <strong>{rule.label[lang]}</strong>
+                            <small className="mono">{rule.name}</small>
+                          </td>
+                          <td className="mono">{String(rule.value)}</td>
+                          <td>
+                            <button
+                              className="line-link"
+                              onClick={() => source(rule.line)}
+                            >
+                              L{rule.line}
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              disabled={
+                                disabled || !state.trusted || !a.syntaxValid
+                              }
+                              onClick={() => selectRule(rule)}
+                            >
+                              {t("바꾸기", "Edit")}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {a.rules.length === 0 && (
+                    <p className="empty">
+                      {t(
+                        "이 파일에서 지원되는 편집 규칙을 찾지 못했습니다.",
+                        "No supported editable rules in this file.",
+                      )}
+                    </p>
+                  )}
+                </div>
+                {edit && (
+                  <div className="card rule-editor" ref={editorRef}>
+                    <h3>{edit.label[lang]}</h3>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void action(() => prepare({ ruleId: edit.id, value }));
+                      }}
+                    >
+                      <label htmlFor="rule-value">
+                        {t("새 값", "New value")}
+                      </label>
+                      <div className="input-row">
+                        {edit.type === "boolean" || edit.type === "operator" ? (
+                          <select
+                            id="rule-value"
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                          >
+                            {(edit.type === "boolean"
+                              ? ["true", "false"]
+                              : [">=", ">", "<=", "<", "===", "!==", "==", "!="]
+                            ).map((v) => (
+                              <option key={v} value={v}>
+                                {v}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            id="rule-value"
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
+                          />
+                        )}
+                        <button
+                          className="primary"
+                          disabled={disabled || !state.trusted}
+                        >
+                          {t("변경안 만들기", "Preview change")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEdit(undefined);
+                            setPatch(undefined);
+                          }}
+                        >
+                          {t("닫기", "Close")}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+                {patch && (
+                  <section
+                    className="card patch"
+                    ref={patchRef}
+                    aria-label={t("변경 미리보기", "Change preview")}
+                  >
+                    <span className="eyebrow">
+                      {t("적용 전 확인", "REVIEW BEFORE APPLYING")}
+                    </span>
+                    <h3>{patch.description[lang]}</h3>
+                    <div className="diff">
+                      <div>
+                        <small>{t("현재", "Before")}</small>
+                        <code>{patch.oldText}</code>
+                      </div>
+                      <span>→</span>
+                      <div>
+                        <small>{t("변경 후", "After")}</small>
+                        <code>{patch.newText}</code>
+                      </div>
+                    </div>
+                    <p>
+                      {t(
+                        "문법 검사를 통과했습니다. 의도한 동작인지는 입력값으로 확인해 주세요.",
+                        "Syntax checked. Verify intended behavior with examples.",
+                      )}
+                    </p>
+                    <div className="actions">
+                      <button
+                        disabled={disabled}
+                        onClick={() =>
+                          void action(() =>
+                            request(
+                              "preview",
+                              { id: patch.id },
+                              state.contextId,
+                            ),
+                          )
+                        }
+                      >
+                        {t("VS Code에서 차이 비교", "Compare in VS Code")}
+                      </button>
+                      <button
+                        className="primary"
+                        disabled={disabled || !state.trusted}
+                        onClick={() =>
+                          void action(async () => {
+                            await request(
+                              "apply",
+                              { id: patch.id },
+                              state.contextId,
+                            );
+                            setPatch(undefined);
+                            setNotice(
+                              t(
+                                "편집기에 적용했습니다. Ctrl+Z로 취소하고, Ctrl+S로 저장하세요.",
+                                "Applied to the editor. Undo with Ctrl+Z; save with Ctrl+S.",
+                              ),
+                            );
+                          })
+                        }
+                      >
+                        {t("편집기에 적용", "Apply to editor")}
+                      </button>
+                    </div>
+                  </section>
+                )}
+              </>
+            )}
+            {a && tab === "checks" && (
+              <>
+                <span className="eyebrow">REVIEW WITH CONTEXT</span>
+                <h2>{t("한 번 더 살펴볼 부분", "Things to review")}</h2>
+                <p className="muted">
+                  {t(
+                    "아래 항목은 구문 검사와 정해진 패턴에 따른 제안입니다. 실제 버그를 확정하거나 전체 코드의 품질을 보증하지 않습니다.",
+                    "These are syntax checks and pattern-based suggestions, not a complete audit.",
+                  )}
+                </p>
+                {a.issues.map((issue) => (
+                  <section key={issue.id} className="card issue">
+                    <span className="pill">
+                      {issue.level === "error"
+                        ? t("문법 오류", "Syntax error")
+                        : t("확인 필요", "Review")}
+                    </span>
+                    <h3>{issue.title[lang]}</h3>
+                    <p>{issue.detail[lang]}</p>
+                    <button
+                      className="line-link"
+                      onClick={() => source(issue.line)}
+                    >
+                      {t("해당 코드 보기", "View source")} · L{issue.line}
+                    </button>
+                  </section>
+                ))}
+                {!a.issues.length && (
+                  <p className="card">
+                    {t(
+                      "지원하는 검사에서 제안할 항목을 찾지 못했습니다. 모든 동작이 검증되었다는 뜻은 아닙니다.",
+                      "No findings from the supported checks. This does not verify all behavior.",
+                    )}
+                  </p>
+                )}
+              </>
+            )}
+            {tab === "map" && (
+              <>
+                <div className="actions">
+                  <button
+                    className="primary"
+                    disabled={working || state.busy}
+                    onClick={() => void action(() => request("scan"))}
+                  >
+                    {t("작업 공간 연결 읽기", "Scan workspace")}
+                  </button>
+                </div>
+                <p className="muted">
+                  {state.scanNote ||
+                    t(
+                      "열어 본 파일의 연결을 표시합니다. 프로젝트 전체 연결은 위 버튼으로 읽어 주세요.",
+                      "Showing files read so far. Scan the workspace to find more connections.",
+                    )}
+                </p>
+                <MapView
+                  files={state.project?.files || []}
+                  lang={lang}
+                  onSelect={(path) =>
+                    void action(async () => {
+                      await request("select", { path });
+                      setTab("story");
+                    })
+                  }
+                />
+              </>
+            )}
+          </main>
+        </>
+      )}
+      {a && scenarioFn && (patch || fn) && (
+        <ScenarioLab
+          key={`${state.contextId}:${patch?.id}:${scenarioFn.name}`}
+          fn={scenarioFn}
+          rules={a.rules}
+          lang={lang}
+          revision={`${state.contextId}:${patch?.id}`}
+          change={patch}
+          disabled={disabled}
+          run={(scenarios) =>
+            request<ScenarioReport>(
+              "compare",
+              { name: scenarioFn.name, scenarios, patchId: patch?.id },
+              state.contextId,
+            )
+          }
+          exportReport={(content) =>
+            request<void>("report", { content }, state.contextId)
+          }
+        />
+      )}
+      {fn && (
+        <section ref={simulationRef} className="card simulation">
+          <div className="section-heading">
+            <h2>
+              {t("값을 넣어 확인", "Try inputs")} · <code>{fn}</code>
+            </h2>
+            <button
+              onClick={() => {
+                setFn("");
+                setSimulation(undefined);
+              }}
+            >
+              {t("닫기", "Close")}
+            </button>
+          </div>
+          <p className="muted">
+            {t(
+              "제한된 계산을 따라가는 모의 실행입니다. 사용자 코드를 직접 실행하거나 네트워크를 호출하지 않습니다.",
+              "A restricted interpreter follows supported calculations without executing arbitrary code or making network calls.",
+            )}
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void action(async () => {
+                const id = state.contextId;
+                const result = await request<Simulation>(
+                  "simulate",
+                  { name: fn, args },
+                  id,
+                );
+                if (id === context.current) setSimulation(result);
+              });
+            }}
+          >
+            <label htmlFor="args">
+              {t(
+                "받는 정보 순서대로 입력 (예: [50000])",
+                "Arguments in order (e.g. [50000])",
+              )}
+            </label>
+            <div className="input-row">
+              <input
+                id="args"
+                value={args}
+                onChange={(e) => setArgs(e.target.value)}
+              />
+              <button disabled={disabled}>{t("결과 확인", "Evaluate")}</button>
+            </div>
+          </form>
+          {simulation && (
+            <>
+              <pre>
+                {simulation.ok
+                  ? (JSON.stringify(simulation.result, null, 2) ?? "undefined")
+                  : simulation.error}
+              </pre>
+              <ol>
+                {simulation.trace.map((step, i) => (
+                  <li key={i}>
+                    {step.text}{" "}
+                    <button
+                      className="line-link"
+                      onClick={() => source(step.line)}
+                    >
+                      L{step.line}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+        </section>
+      )}
+      <footer className="app-footer">
+        {t(
+          "설명은 구문 분석을 바탕으로 생성됩니다. 지원 범위: JavaScript · TypeScript · JSON. 이름 번역은 사전 기반입니다.",
+          "Syntax-based explanations for JavaScript, TypeScript and JSON. Names use a small glossary.",
+        )}
+      </footer>
+    </div>
+  );
+}
+createRoot(document.getElementById("root")!).render(<App />);

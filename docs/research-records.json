@@ -1,0 +1,46 @@
+{
+  "retrieved": "2026-10-15",
+  "source": "Consensus fetch records",
+  "papers": [
+    {
+      "id": "9efe9ec848035295a07fb95e4cda830b",
+      "title": "Direct Manipulation and Natural Language Programming, Together at Last?",
+      "text": "Decades of programming languages research has contributed novel approaches to program editing that go beyond modifying text, including direct manipulation programming, structure editing, and automated refactoring tools. However, the rapid growth of natural language programming largely reinforces a view of programs as text and program editing as (unstructured) text transformation. How can we develop unified programming systems that bridge the gap between these approaches, supporting multiple editing paradigms in concert? And how would such systems change the way we program? We take a first step toward answering these questions by introducing a framework that enables program editing via both direct manipulation and natural language, and instantiate this framework in a variant of the cartokit direct manipulation programming system (cartokitDM+NL). Our key insight is to treat programs as sequences of structured edits and to use an edit language as a shared interface for both direct manipulation and natural language interactions, leveraging constrained decoding to support the latter. Using our instantiation, we conducted a within-subjects study (N=18) to understand how the combination of direct manipulation and natural language as editing modalities changes the programming process compared to each modality alone. Perhaps surprisingly, we found that study participants overwhelmingly chose to edit via direct manipulation when both modalities were available, performing just 6.14% of edits via natural language. Our thematic analysis of study sessions revealed that direct manipulation aided task decomposition, encouraged incremental editing, and helped mitigate known challenges in natural language programming related to understanding model capabilities and interpreting model-generated code. Conversely, natural language editing came into play largely to automate, parameterize, and replay known edits that would otherwise be repeated tediously by hand. Our edit-based framework and study findings lay out a possible pathway for future research on programming systems that blend natural language with alternative editing modalities, building on the foundation of edit languages.",
+      "url": "https://consensus.app/papers/direct-manipulation-and-natural-language-programming-ziegler-cao/9efe9ec848035295a07fb95e4cda830b/?utm_source=chatgpt",
+      "metadata": {
+        "authors": "Parker Ziegler, D. Cao, Justin P. Lubin, Sarah E. Chasins",
+        "publish_year": "2026",
+        "journal": "Proceedings of the ACM on Programming Languages",
+        "volume": "10",
+        "pages": "1132 - 1163",
+        "citation_count": "0"
+      }
+    },
+    {
+      "id": "aaade7dd902c5a7e8bc4db392404554e",
+      "title": "Bidirectional evaluation with direct manipulation",
+      "text": "We present an evaluation update (or simply, update) algorithm for a full-featured functional programming language, which synthesizes program changes based on output changes. Intuitively, the update algorithm retraces the steps of the original evaluation, rewriting the program as needed to reconcile differences between the original and updated output values. Our approach, furthermore, allows expert users to define custom lenses that augment the update algorithm with more advanced or domain-specific program updates. To demonstrate the utility of evaluation update, we implement the algorithm in Sketch-n-Sketch, a novel direct manipulation programming system for generating HTML documents. In Sketch-n-Sketch, the user writes an ML-style functional program to generate HTML output. When the user directly manipulates the output using a graphical user interface, the update algorithm reconciles the changes. We evaluate bidirectional evaluation in Sketch-n-Sketch by authoring ten examples comprising approximately 1400 lines of code in total. These examples demonstrate how a variety of HTML documents and applications can be developed and edited interactively in Sketch-n-Sketch, mitigating the tedious edit-run-view cycle in traditional programming environments.",
+      "url": "https://consensus.app/papers/bidirectional-evaluation-with-direct-manipulation-mayer-kunčak/aaade7dd902c5a7e8bc4db392404554e/?utm_source=chatgpt",
+      "metadata": {
+        "authors": "M. Mayer, Viktor Kunčak, Ravi Chugh",
+        "publish_year": "2018",
+        "journal": "Proceedings of the ACM on Programming Languages",
+        "volume": "2",
+        "pages": "1 - 28",
+        "citation_count": "50"
+      }
+    },
+    {
+      "id": "5a84eb0eab1c5a3baf17cc92adcae33b",
+      "title": "``I Would Have Written My Code Differently': Beginners Struggle to Understand LLM-Generated Code",
+      "text": "Large language models (LLMs) are being increasingly adopted for programming work. Prior work shows that while LLMs accelerate task completion for professional programmers, beginning programmers struggle to prompt models effectively. However, prompting is just half of the code generation process– when code is generated, it must be read, evaluated, and integrated (or rejected). How accessible are these tasks for beginning programmers? This paper measures how well beginners comprehend LLM-generated code and explores the challenges students face in judging code correctness. We compare how well students understand natural language descriptions of functions and LLM-generated implementations, studying 32 CS1 students on 160 task instances. Our results show a low per-task success rate of 32.5%, with indiscriminate struggles across demographic populations. Key challenges include barriers for non-native English speakers, unfamiliarity with Python syntax, and automation bias. Our findings highlight the barrier that code comprehension presents to beginning programmers seeking to write code with LLMs.",
+      "url": "https://consensus.app/papers/i-would-have-written-my-code-differently-beginners-zi-li/5a84eb0eab1c5a3baf17cc92adcae33b/?utm_source=chatgpt",
+      "metadata": {
+        "authors": "Yangtian Zi, Luisa Li, Arjun Guha, C. Anderson, Molly Q. Feldman",
+        "publish_year": "2025",
+        "journal": "Proceedings of the 33rd ACM International Conference on the Foundations of Software Engineering",
+        "citation_count": "15"
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "pureobom",
+  "displayName": "Pureobom · 풀어봄",
+  "description": "%description%",
+  "version": "0.3.0",
+  "publisher": "pureobom-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "korean",
+    "한국어",
+    "code explanation",
+    "non-developer"
+  ],
+  "main": "./out/extension.cjs",
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onView:pureobom.start"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "설명은 열람할 수 있습니다. 코드 변경은 신뢰한 작업 공간에서 가능합니다."
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "pureobom.explain",
+        "title": "%command.explain%",
+        "icon": "$(book)"
+      },
+      {
+        "command": "pureobom.map",
+        "title": "%command.map%",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "pureobom.example",
+        "title": "%command.example%",
+        "icon": "$(beaker)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "pureobom",
+          "title": "풀어봄",
+          "icon": "media/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "pureobom": [
+        {
+          "id": "pureobom.start",
+          "name": "코드를 문장으로 읽기"
+        }
+      ]
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "pureobom.explain",
+          "when": "resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact|json|jsonc)$/",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pureobom.explain",
+          "when": "resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact|json|jsonc)$/",
+          "group": "navigation@9"
+        }
+      ]
+    }
+  }
+}

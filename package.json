@@ -1,0 +1,45 @@
+{
+  "name": "pureobom",
+  "version": "0.3.0",
+  "description": "Read code in your language. Change a rule. Check what changes.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "bench": "vitest run tests/performance.test.ts",
+    "extension:build": "tsc -p extension/tsconfig.json && node scripts/build-extension.mjs",
+    "extension:test": "node scripts/test-extension.mjs",
+    "extension:package": "node scripts/package-extension.mjs",
+    "release:package": "node scripts/package-release.mjs",
+    "release:check": "node scripts/check-release.mjs",
+    "verify": "pnpm test && pnpm build && pnpm extension:build && pnpm extension:test",
+    "format": "prettier --write src tests docs *.json *.ts *.html"
+  },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "typescript": "5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/vscode": "1.96.0",
+    "@vitejs/plugin-react": "5.1.0",
+    "@vscode/test-electron": "2.5.2",
+    "@vscode/vsce": "4.0.0",
+    "esbuild": "0.25.12",
+    "prettier": "3.6.2",
+    "vite": "7.3.7",
+    "vitest": "4.1.11"
+  }
+}

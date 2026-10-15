@@ -1,0 +1,6 @@
+{
+  "description": "JS/TS를 한국어 설명·규칙 표·연결 지도로 읽고, 규칙 수정 전후의 결과를 비교하세요.",
+  "command.explain": "풀어봄: 현재 파일 설명 열기",
+  "command.map": "풀어봄: 작업 공간 연결 지도",
+  "command.example": "풀어봄: 예제로 시작하기"
+}

@@ -1,0 +1,87 @@
+export type Lang = "ko" | "en";
+export type Words = { ko: string; en: string };
+export type SourceFile = { path: string; content: string };
+export type Anchor = {
+  start: number;
+  end: number;
+  line: number;
+  endLine: number;
+};
+export type Step = Anchor & {
+  id: string;
+  kind: string;
+  text: Words;
+  children: Step[];
+  otherwise?: Step[];
+  supported: boolean;
+};
+export type Rule = Anchor & {
+  id: string;
+  name: string;
+  label: Words;
+  value: string | number | boolean;
+  type: "string" | "number" | "boolean" | "operator";
+  scope: string;
+  raw: string;
+  note?: Words;
+};
+export type FunctionInfo = Anchor & {
+  id: string;
+  name: string;
+  label: Words;
+  params: { name: string; type: string; optional: boolean }[];
+  steps: Step[];
+  calls: string[];
+  async: boolean;
+  simulatable: boolean;
+};
+export type Issue = Anchor & {
+  id: string;
+  level: "error" | "review" | "info";
+  title: Words;
+  detail: Words;
+};
+export type ImportInfo = {
+  source: string;
+  line: number;
+  target?: string;
+  external: boolean;
+};
+export type FileAnalysis = {
+  path: string;
+  kind: "script" | "json" | "text";
+  lines: number;
+  functions: FunctionInfo[];
+  rules: Rule[];
+  imports: ImportInfo[];
+  issues: Issue[];
+  steps: Step[];
+  explained: number;
+  total: number;
+  syntaxValid: boolean;
+};
+export type ProjectAnalysis = {
+  files: FileAnalysis[];
+  elapsed: number;
+  cacheHits: number;
+};
+export type Patch = {
+  path: string;
+  ruleId: string;
+  start: number;
+  end: number;
+  oldText: string;
+  newText: string;
+  original: string;
+  updated: string;
+  description: Words;
+  semanticChecked: false;
+};
+export type Trace = { line: number; text: string };
+export type Simulation = {
+  ok: boolean;
+  result?: unknown;
+  error?: string;
+  trace: Trace[];
+};
+export const words = (ko: string, en: string): Words => ({ ko, en });

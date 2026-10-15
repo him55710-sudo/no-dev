@@ -1,0 +1,8 @@
+src/**
+ui/**
+test/**
+tsconfig.json
+out/integration.cjs
+node_modules/**
+**/*.map
+.DS_Store

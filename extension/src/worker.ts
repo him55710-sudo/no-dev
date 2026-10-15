@@ -1,0 +1,40 @@
+import { parentPort } from "node:worker_threads";
+import { ProjectAnalyzer } from "../../src/core/project";
+import { analyzeFile } from "../../src/core/analyze";
+import { makePatch, parseRequest } from "../../src/core/edit";
+import { simulate } from "../../src/core/simulate";
+import { compareScenarios } from "../../src/core/scenarios";
+const analyzer = new ProjectAnalyzer();
+parentPort!.on("message", ({ id, type, payload }) => {
+  try {
+    let result: unknown;
+    if (type === "analyze") result = analyzer.analyze(payload.files);
+    else if (type === "patch")
+      result = makePatch(payload.file, payload.ruleId, payload.value);
+    else if (type === "request") {
+      const r = parseRequest(payload.request, analyzeFile(payload.file).rules);
+      result = makePatch(payload.file, r.rule.id, r.value);
+    } else if (type === "compare")
+      result = compareScenarios(
+        payload.files,
+        payload.path,
+        payload.name,
+        payload.scenarios,
+        payload.patch,
+      );
+    else if (type === "simulate")
+      result = simulate(
+        payload.files,
+        payload.path,
+        payload.name,
+        payload.args,
+      );
+    else throw Error("지원하지 않는 분석 요청입니다.");
+    parentPort!.postMessage({ id, result });
+  } catch (error) {
+    parentPort!.postMessage({
+      id,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+});
