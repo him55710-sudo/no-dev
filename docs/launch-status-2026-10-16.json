@@ -1,0 +1,72 @@
+{
+  "checkedAt": "2026-10-15T20:50:04.112Z",
+  "repository": {
+    "url": "https://github.com/him55710-sudo/pureobom",
+    "public": true,
+    "license": "MIT",
+    "stars": 0,
+    "forks": 0,
+    "openIssuesAndPullRequests": 0
+  },
+  "release": {
+    "url": "https://github.com/him55710-sudo/pureobom/releases/tag/v0.6.0",
+    "version": "v0.6.0",
+    "prerelease": true,
+    "commit": "d415f8b288190e259d3f18b9c8a1c693a44497ae",
+    "assets": [
+      {
+        "name": "pureobom-0.6.0-demo.zip",
+        "bytes": 1702049,
+        "digest": "sha256:1618564447e0c8fba690b09d80da179acd3a5ba8a3338f461f9a2d335effb367",
+        "url": "https://github.com/him55710-sudo/pureobom/releases/download/v0.6.0/pureobom-0.6.0-demo.zip",
+        "matchesPreviouslyDownloadedArtifact": true
+      },
+      {
+        "name": "pureobom-0.6.0-SHA256SUMS.txt",
+        "bytes": 268,
+        "digest": "sha256:f71b64c94d344305fb064103e16baa012f43ddf5ce069eace239c0be4c66fb4d",
+        "url": "https://github.com/him55710-sudo/pureobom/releases/download/v0.6.0/pureobom-0.6.0-SHA256SUMS.txt",
+        "matchesPreviouslyDownloadedArtifact": true
+      },
+      {
+        "name": "pureobom-0.6.0-source.zip",
+        "bytes": 1483689,
+        "digest": "sha256:50e9dcf314383ef463756bdc6a7aaee2e5912eb2ccfe0c870fe8d45f04c983ca",
+        "url": "https://github.com/him55710-sudo/pureobom/releases/download/v0.6.0/pureobom-0.6.0-source.zip",
+        "matchesPreviouslyDownloadedArtifact": true
+      },
+      {
+        "name": "pureobom-0.6.0.vsix",
+        "bytes": 1151791,
+        "digest": "sha256:a344d78cfa2608c9da086ce8700210f1194159bffee07536a5b9e61049473d30",
+        "url": "https://github.com/him55710-sudo/pureobom/releases/download/v0.6.0/pureobom-0.6.0.vsix",
+        "matchesPreviouslyDownloadedArtifact": true
+      }
+    ]
+  },
+  "verification": [
+    {
+      "name": "Verify",
+      "url": "https://github.com/him55710-sudo/pureobom/actions/runs/38803845267",
+      "status": "completed",
+      "conclusion": "success",
+      "commit": "d415f8b288190e259d3f18b9c8a1c693a44497ae"
+    },
+    {
+      "name": "Publish browser demo",
+      "url": "https://github.com/him55710-sudo/pureobom/actions/runs/38803845903",
+      "status": "completed",
+      "conclusion": "success",
+      "commit": "d415f8b288190e259d3f18b9c8a1c693a44497ae"
+    }
+  ],
+  "feedback": {
+    "publicIssuesReturned": 0,
+    "publicPullRequestsReturned": 0,
+    "query": "https://api.github.com/repos/him55710-sudo/pureobom/issues?state=all&per_page=100",
+    "resultLimit": 100,
+    "observationRowsRecorded": 0,
+    "observationFile": "docs/user-study-observations.csv"
+  },
+  "interpretation": "Public repository activity and recorded observations only. Downloads and agent checks are not independent users, comprehension gains, reuse or demand. This snapshot does not measure unknown private usage. No Marketplace release or recruited study participants are recorded in this project."
+}

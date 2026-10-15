@@ -2,13 +2,15 @@
 
 제품 전략: [PRODUCT.md](PRODUCT.md). 문구는 준비한 초안이며 외부에 게시하거나 누구에게 보내지 않았다.
 
+현재 준비 상태와 남은 근거는 [0.6.0 출시 점검](LAUNCH_READINESS.md)에 정리했다. GitHub 배포·검증과 실제 사용자 수요를 구분하며, Marketplace의 소유 publisher 확인과 첫 사용자 모집이 다음 단계다.
+
 2026-10-16 공개 상태: [저장소](https://github.com/him55710-sudo/pureobom), [설치 파일](https://github.com/him55710-sudo/pureobom/releases), [한국어 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko), [English demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en). Windows·Ubuntu CI와 Pages 배포를 실제 확인했다. 비공개 취약점 제보가 활성화되어 있다. 아래 공개 글은 커뮤니티에 아직 게시하지 않은 초안이며, 사용자 관찰과 Marketplace 출시는 남아 있다.
 
 ## 공개 전
 
 1. 소유할 GitHub 계정·저장소를 정하고 준비된 소스를 공개한다. 실데이터, `.env`, 로그, 테스트 사용자 프로필은 배포에 넣지 않는다.
 2. 저장소 URL을 README와 `extension/package.json`의 repository에 넣는다. 게시할 실제 publisher를 확보하기 전 `pureobom-local`을 Marketplace publisher라고 소개하지 않는다.
-3. GitHub Actions 결과를 확인한 후 버전을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다. 0.5.2 설치본은 설명의 오류 처리·정리 순서를 개선한다. 공개 상태는 [Releases](https://github.com/him55710-sudo/pureobom/releases)에서 확인한다.
+3. GitHub Actions 결과를 확인한 후 버전을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다. 현재 0.6.0은 VS Code의 오류·경고와 TypeScript 오류 뜻풀이를 연결한다. 공개 상태는 [Releases](https://github.com/him55710-sudo/pureobom/releases)에서 확인한다.
 4. GitHub Pages의 Source를 GitHub Actions로 선택하고 `Publish browser demo`를 실행한다. 실제 배포 주소에서 Worker·비교·내보내기를 확인한 다음 README에 연결한다.
 5. GitHub private vulnerability reporting을 켜고 보고 경로가 실제 작동하는지 확인한다. 기여 이슈에 재현 예제·난이도·완료 조건을 쓴다.
 
@@ -37,6 +39,8 @@ Try changing a free-shipping threshold from 50,000 to 70,000. You can see which 
 
 I would appreciate small, public examples where the explanation or edit is confusing. The project is MIT licensed. [Source and installation](https://github.com/him55710-sudo/pureobom) · [Live demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en).
 
+Optional follow-up for the 0.6 example: “A valid code edit can still violate a type constraint. Change a shipping fee that permits 3000 or 5000 to 4000, read the actual TypeScript error in plain language, jump to the code and undo. [Reproduce it](https://github.com/him55710-sudo/pureobom/blob/main/docs/EDITOR_REPORTS.md).” This is a second example, not a claim that every change is type checked before applying.
+
 ## 한국어 공개 글 초안
 
 **AI가 만든 코드, 비개발자도 읽고 수정할 수 있게 — 풀어봄**
@@ -46,6 +50,8 @@ I would appreciate small, public examples where the explanation or edit is confu
 무료 배송 기준을 5만 원에서 7만 원으로 바꾸면 어떤 주문이 달라지는지 직접 체험할 수 있습니다. 계정·API 키 없이 로컬에서 동작합니다. 현재는 JS/TS 중심의 공개 시제품이고, 복잡한 기능 생성이나 실제 앱 전체 테스트는 지원하지 않습니다.
 
 작은 공개 예제로 피드백을 주시면 설명과 지원 범위를 개선하는 데 도움이 됩니다. [저장소와 설치 안내](https://github.com/him55710-sudo/pureobom) · [바로 체험하기](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko).
+
+0.6 후속 예시: “문법이 맞아도 허용된 값이 아닐 수 있습니다. 3000·5000만 허용된 배송비를 4000으로 바꿔 실제 TypeScript 오류를 읽고, 원문을 확인한 뒤 되돌려 보세요.” [재현 절차](EDITOR_REPORTS.md). 적용 전 전체 타입 검사를 수행한다고 소개하지 않는다.
 
 ## 출시 후 4주
 
