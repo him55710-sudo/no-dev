@@ -2,7 +2,7 @@
 
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 
-**0.5.0 공개 시제품:** 낯선 코드 이름에 내 용어를 붙이고, 규칙을 바꿔 최대 12개 입력의 전후 결과를 비교합니다. MIT 라이선스로 공개합니다. [설치 없이 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko) · [설치 파일과 소스](https://github.com/him55710-sudo/pureobom/releases) · [0.5 검증 기록](docs/RELEASE_VALIDATION.md). Marketplace 게시와 실제 수요 검증은 아직 완료하지 않았습니다.
+**0.5.1 공개 시제품:** 낯선 코드 이름에 내 용어를 붙이고, 규칙을 바꿔 최대 12개 입력의 전후 결과를 비교합니다. MIT 라이선스로 공개합니다. [설치 없이 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko) · [설치 파일과 소스](https://github.com/him55710-sudo/pureobom/releases) · [0.5 검증 기록](docs/RELEASE_VALIDATION.md). Marketplace 게시와 실제 수요 검증은 아직 완료하지 않았습니다.
 
 AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·연결 지도·표로 보고, 값과 조건을 수정한 뒤 실제 코드의 차이와 결과를 확인하는 **로컬 시제품**입니다.
 
@@ -12,7 +12,7 @@ AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·
 
 ![조건에서 버튼 문구를 찾아 실제 코드를 바꾸는 공개 화면](docs/interface-preview-ko.png)
 
-첫 제품 형태를 **VS Code 확장 기능**으로 구현했습니다. 설치 파일은 배포 묶음의 `pureobom-0.5.0.vsix`입니다. 소스에서 `pnpm extension:build`와 `pnpm extension:package`로 만들 수도 있습니다.
+첫 제품 형태를 **VS Code 확장 기능**으로 구현했습니다. 설치 파일은 배포 묶음의 `pureobom-0.5.1.vsix`입니다. 소스에서 `pnpm extension:build`와 `pnpm extension:package`로 만들 수도 있습니다.
 
 1. VS Code에서 `Ctrl+Shift+X` → 상단 `…` → **VSIX에서 설치…** 로 위 파일을 선택합니다.
 2. JavaScript 또는 TypeScript 파일을 열고 `Ctrl+Shift+P` → **풀어봄: 현재 파일 설명 열기**를 실행합니다.
@@ -21,6 +21,8 @@ AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·
 저장 전 내용도 설명에 반영되며, 줄 번호를 누르면 원본 위치로 이동합니다. 변경안은 VS Code 비교 화면에서 확인하고 편집기에 적용합니다. `Ctrl+Z` 실행 취소와 `Ctrl+S` 저장을 사용합니다. 자세한 지원 범위와 사용법은 [확장 기능 안내](extension/README.md), 검증 기록은 [VS Code 검증](docs/VSCODE.md)을 확인하세요.
 
 ## 브라우저 시제품 사용하기
+
+**0.5.1:** 브라우저의 **설치·피드백**, VS Code의 **도움말·피드백**에서 내 프로젝트로 넘어가는 안내를 제공합니다. 성공·막힘·미지원 경험을 직접 선택하고, 공유할 요약을 확인한 뒤 복사할 수 있습니다. 자동 전송은 없습니다. [피드백 안내](docs/FEEDBACK.md) · [첫 사용자 5명 관찰 계획](docs/USER_STUDY.md).
 
 미리 빌드한 demo.zip을 풀고 `START.cmd`를 더블클릭하거나 `node scripts/serve.mjs`를 실행하세요. Node.js 24가 필요하며 추가 의존성 설치는 필요 없습니다. 소스에서 시작하려면 `pnpm install --frozen-lockfile`과 `pnpm build`를 먼저 실행합니다. **http://127.0.0.1:4173/?demo=shipping&lang=ko**에서 기존 저장 프로젝트를 건드리지 않는 예제 체험을 제공합니다. 서버 창은 열어 두세요.
 
@@ -81,7 +83,7 @@ pnpm build     # TypeScript 검사 + 프로덕션 빌드
 node scripts/serve.mjs # http://127.0.0.1:4173
 pnpm extension:build   # 확장 기능 타입 검사 + 번들
 pnpm extension:test    # 별도 VS Code 1.96.4에서 실제 통합 테스트
-pnpm extension:package # release/pureobom-0.5.0.vsix 생성
+pnpm extension:package # release/pureobom-0.5.1.vsix 생성
 pnpm release:package   # 소스·브라우저 체험 ZIP 및 SHA-256 체크섬
 pnpm release:check     # 체크섬과 필수 포함 파일 검사
 ```

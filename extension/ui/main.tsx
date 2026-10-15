@@ -4,6 +4,7 @@ import { Story } from "../../src/components/Story";
 import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
+import { ProductHelp } from "../../src/components/ProductHelp";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
@@ -25,6 +26,7 @@ function App() {
   const [tab, setTab] = useState<Tab>("story");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [help, setHelp] = useState(false);
   const [working, setWorking] = useState(false);
   const [edit, setEdit] = useState<Rule>();
   const [value, setValue] = useState("");
@@ -125,14 +127,19 @@ function App() {
             </small>
           </div>
         </div>
-        <select
-          aria-label="설명 언어 / Language"
-          value={lang}
-          onChange={(e) => setLang(e.target.value as Lang)}
-        >
-          <option value="ko">한국어</option>
-          <option value="en">English</option>
-        </select>
+        <div className="product-links">
+          <button onClick={() => setHelp(true)}>
+            {t("도움말·피드백", "Help & feedback")}
+          </button>
+          <select
+            aria-label="설명 언어 / Language"
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+          >
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+          </select>
+        </div>
       </header>
       <section className="file-summary">
         <span className="eyebrow">{t("지금 읽는 파일", "CURRENT FILE")}</span>
@@ -684,6 +691,16 @@ function App() {
           "Syntax-based explanations for JavaScript, TypeScript and JSON. Names use a small glossary.",
         )}
       </footer>
+      {help && (
+        <ProductHelp
+          lang={lang}
+          environment="vscode"
+          example={false}
+          onClose={() => setHelp(false)}
+          onOpen={(resource) => request("openResource", { resource })}
+          onCopy={(text) => request("copyFeedback", { text })}
+        />
+      )}
     </div>
   );
 }

@@ -20,6 +20,8 @@ import { Modal } from "./components/Modal";
 import { Research } from "./components/Research";
 import { ScenarioLab } from "./components/ScenarioLab";
 import { Terminology } from "./components/Terminology";
+import { ProductHelp } from "./components/ProductHelp";
+import { productResource, productVersion } from "./product";
 import { updateGlossary, type GlossaryEntry } from "./core/glossary";
 import type { ScenarioReport } from "./core/scenarioModel";
 const demoKind = new URLSearchParams(location.search).get("demo");
@@ -54,7 +56,9 @@ export default function App() {
     [editing, setEditing] = useState(false),
     [sourceLine, setSourceLine] = useState<number | null>(null),
     [simulation, setSimulation] = useState<string | null>(null),
-    [modal, setModal] = useState<"history" | "reset" | "import" | null>(null),
+    [modal, setModal] = useState<
+      "history" | "reset" | "import" | "help" | null
+    >(null),
     [importedSkipped, setImportedSkipped] = useState<string[]>([]),
     [projectTitle, setProjectTitle] = useState(
       demoKind === "interface" ? "멤버십 화면" : "작은 상점",
@@ -458,7 +462,7 @@ export default function App() {
           </span>
         </a>
         <div className="workspace-label">
-          WORKSPACE <span className="beta">PREVIEW 0.5</span>
+          WORKSPACE <span className="beta">PREVIEW {productVersion}</span>
         </div>
         <button className="workspace-select" onClick={() => setModal("reset")}>
           <span className="project-avatar">
@@ -570,6 +574,9 @@ export default function App() {
             <strong>{projectTitle}</strong>
           </div>
           <div className="topbar-actions">
+            <button className="button" onClick={() => setModal("help")}>
+              {t("설치·피드백", "Install & feedback")}
+            </button>
             <span className="save-indicator">
               <span
                 className={
@@ -611,6 +618,33 @@ export default function App() {
           </div>
         </header>
         <main>
+          {demoMode && history.length > 0 && (
+            <section
+              className="product-next-step"
+              aria-label={t("체험 다음 단계", "After the demo")}
+            >
+              <div>
+                <strong>
+                  {t(
+                    "첫 변경을 해봤어요. 이제 내 코드로 가볼까요?",
+                    "You made a change. Try your own code next.",
+                  )}
+                </strong>
+                <p>
+                  {t(
+                    "VS Code 설치 안내와 사용 경험을 남기는 방법을 확인하세요.",
+                    "Find installation steps and tell us how the experience went.",
+                  )}
+                </p>
+              </div>
+              <button
+                className="button primary"
+                onClick={() => setModal("help")}
+              >
+                {t("다음 단계 보기 →", "See next steps →")}
+              </button>
+            </section>
+          )}
           {demoMode && (
             <nav
               className="demo-switch"
@@ -1641,6 +1675,22 @@ export default function App() {
             ))}
           </ul>
         </Modal>
+      )}
+      {modal === "help" && (
+        <ProductHelp
+          lang={lang}
+          environment="browser"
+          example={demoMode}
+          onClose={() => setModal(null)}
+          onOpen={(resource) => {
+            window.open(
+              productResource(resource),
+              "_blank",
+              "noopener,noreferrer",
+            );
+          }}
+          onCopy={(text) => navigator.clipboard.writeText(text)}
+        />
       )}
     </div>
   );

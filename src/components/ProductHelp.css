@@ -1,0 +1,186 @@
+.product-help {
+  width: min(640px, calc(100vw - 28px));
+  max-height: calc(100dvh - 40px);
+  padding: 0;
+  border: 1px solid var(--border, #dce3de);
+  border-radius: 14px;
+  color: inherit;
+  background: var(--vscode-editor-background, #fff);
+  box-shadow: 0 20px 80px #0003;
+}
+.product-help::backdrop {
+  background: #13282380;
+}
+.product-help > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 16px;
+  gap: 16px;
+}
+.product-help h2 {
+  margin: 5px 0 0;
+  font-size: 22px;
+  line-height: 1.4;
+}
+.product-help-version {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--muted, #718077);
+}
+.product-help header > button {
+  font-size: 23px;
+  min-width: 36px;
+  min-height: 36px;
+}
+.product-help nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 24px 16px;
+  border-bottom: 1px solid var(--border, #ddd);
+}
+.product-help button {
+  border: 1px solid var(--border, #ddd);
+  border-radius: 7px;
+  padding: 9px 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.product-help button[aria-pressed="true"] {
+  background: var(--vscode-button-secondaryBackground, #eaf3ed);
+  border-color: var(--vscode-focusBorder, #93b49f);
+}
+.product-help .help-primary {
+  color: var(--vscode-button-foreground, #fff);
+  background: var(--vscode-button-background, #286b50);
+  border-color: transparent;
+}
+.product-help button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.product-help :is(button, textarea, select):focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #177c69);
+  outline-offset: 3px;
+}
+.product-help-body {
+  padding: 22px 24px;
+}
+.product-help-body h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.product-help-body p {
+  line-height: 1.75;
+  margin: 0 0 15px;
+}
+.product-steps {
+  padding-left: 22px;
+  line-height: 1.8;
+}
+.product-steps li {
+  padding: 4px 0;
+}
+.product-help-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 16px 0;
+}
+.product-help-note {
+  font-size: 12px;
+  color: var(--muted, #718077);
+}
+.product-first-task {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 10px;
+  background: var(--vscode-sideBar-background, #f6f8f4);
+}
+.product-first-task button {
+  text-align: left;
+}
+.product-help-fields {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0 12px;
+}
+.product-help-fields label:not(:first-child) {
+  margin-top: 10px;
+}
+.product-help label {
+  font-size: 13px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+.product-help :is(select, textarea) {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 7px;
+  padding: 10px;
+  color: inherit;
+  background: var(--vscode-input-background, #fff);
+  font: inherit;
+}
+.product-help textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.product-feedback-preview {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border, #ddd);
+}
+.product-feedback-preview textarea {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.product-help-error {
+  color: var(--vscode-errorForeground, #a63030);
+}
+.product-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.product-next-step {
+  margin: 16px 32px 0;
+  padding: 18px 22px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #edf5ec;
+}
+.product-next-step p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .product-help > header,
+  .product-help-body {
+    padding: 18px;
+  }
+  .product-help nav {
+    padding: 0 18px 14px;
+  }
+  .product-help h2 {
+    font-size: 19px;
+  }
+  .product-next-step {
+    margin: 16px;
+  }
+}

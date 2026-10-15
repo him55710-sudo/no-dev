@@ -1,0 +1,19 @@
+name: Use experience / 사용 경험
+description: Tell us about a change you completed or where you got stuck. / 성공하거나 막힌 경험을 알려주세요.
+title: "[Experience] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying Pureobom. You can paste the summary from **Help → Share an experience** below, or describe your experience in your own words. Korean and English are welcome.
+
+        풀어봄의 **설치·피드백 → 사용 경험 남기기**에서 만든 요약을 붙여 넣거나, 자유롭게 적어 주세요.
+
+        This issue will be public. Do not include private code, credentials or personal information. / 공개 이슈입니다. 비공개 코드·인증 정보·개인 정보는 제외해 주세요.
+  - type: textarea
+    id: experience
+    attributes:
+      label: Your experience / 사용 경험
+      description: What did you try, what happened, and what did you expect? / 하려던 일, 실제 결과, 기대했던 결과를 적어 주세요.
+    validations:
+      required: true

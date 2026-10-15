@@ -5,6 +5,7 @@ import { AnalysisClient } from "./analysisClient";
 import { inputString, requestMessage } from "./protocol";
 import type { Scenario } from "../../src/core/scenarioModel";
 import { interfaceDemo } from "../../src/interfaceDemo";
+import { productResource } from "../../src/product";
 
 export function activate(context: vscode.ExtensionContext) {
   const controller = new Controller(
@@ -124,6 +125,17 @@ export function activate(context: vscode.ExtensionContext) {
           }
           case "example":
             await vscode.commands.executeCommand("pureobom.example");
+            break;
+          case "openResource":
+            if (
+              !(await vscode.env.openExternal(
+                vscode.Uri.parse(productResource(p.resource)),
+              ))
+            )
+              throw Error("Could not open the product link");
+            break;
+          case "copyFeedback":
+            await vscode.env.clipboard.writeText(inputString(p.text, 10000));
             break;
           default:
             throw Error("지원하지 않는 요청입니다.");

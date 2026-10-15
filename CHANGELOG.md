@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.1 — from the demo to your own code
+
+- Add shared installation and feedback help to the browser and VS Code panel, plus a next-step card after a browser demo edit.
+- Prepare and copy a user-reviewed experience summary locally. Do not attach source/paths, place feedback in URLs, send telemetry or create issues automatically. Link to a bilingual GitHub experience form.
+- Keep successful, stuck and unsupported experiences distinct. Add an empty observation sheet and first-use study protocol; no user results are claimed.
+- Scope sidebar navigation styles and keep mobile install/export actions reachable.
+
 ## 0.5.0 — read the interface, change its words
 
 - Read JSX/TSX elements, component props, text, conditional branches and simple map callbacks as an expandable, source-linked structure in VS Code and the browser.

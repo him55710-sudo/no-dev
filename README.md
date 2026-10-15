@@ -33,7 +33,7 @@ These are computed example outputs, not an application-wide correctness claim.
 
 **VS Code — the primary experience**
 
-1. Download `pureobom-0.5.0.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
+1. Download `pureobom-0.5.1.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
 2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
 3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
 4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
@@ -51,9 +51,11 @@ pnpm dev
 
 Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). Demo mode does not read or overwrite your saved browser workspace. Remove `demo=shipping` to use the persistent local workspace.
 
-The prebuilt `pureobom-0.5.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
+The prebuilt `pureobom-0.5.1-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
 Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
+
+**After your first change:** open **Install & feedback** in the demo or **Help & feedback** in VS Code. Try one task with your own code, then optionally review and copy a feedback summary. Nothing is submitted automatically. [Feedback guide](docs/FEEDBACK.md) · [Planned user study](docs/USER_STUDY.md).
 
 ## What works today
 
