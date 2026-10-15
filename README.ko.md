@@ -2,6 +2,8 @@
 
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 
+**[30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko)** — 원문 → 설명 → 변경안 → 주문별 비교 → 적용 → 되돌리기를 실제 공개 화면으로 보여줍니다. 한국어·영어 자막과 텍스트 설명을 제공합니다. [MP4 받기](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
+
 **0.5.1 공개 시제품:** 낯선 코드 이름에 내 용어를 붙이고, 규칙을 바꿔 최대 12개 입력의 전후 결과를 비교합니다. MIT 라이선스로 공개합니다. [설치 없이 체험](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=ko) · [설치 파일과 소스](https://github.com/him55710-sudo/pureobom/releases) · [0.5 검증 기록](docs/RELEASE_VALIDATION.md). Marketplace 게시와 실제 수요 검증은 아직 완료하지 않았습니다.
 
 AI가 만든 코딩 파일을 비개발자가 읽을 수 있는 문장·구조·연결 지도·표로 보고, 값과 조건을 수정한 뒤 실제 코드의 차이와 결과를 확인하는 **로컬 시제품**입니다.

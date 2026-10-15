@@ -8,11 +8,13 @@
 
 1. 소유할 GitHub 계정·저장소를 정하고 준비된 소스를 공개한다. 실데이터, `.env`, 로그, 테스트 사용자 프로필은 배포에 넣지 않는다.
 2. 저장소 URL을 README와 `extension/package.json`의 repository에 넣는다. 게시할 실제 publisher를 확보하기 전 `pureobom-local`을 Marketplace publisher라고 소개하지 않는다.
-3. GitHub Actions 결과를 확인한 후 0.5.0을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다.
+3. GitHub Actions 결과를 확인한 후 버전을 **prerelease**로 만든다. VSIX·source.zip·demo.zip·SHA256SUMS를 첨부한다. 현재 공개 설치 버전은 0.5.1이다.
 4. GitHub Pages의 Source를 GitHub Actions로 선택하고 `Publish browser demo`를 실행한다. 실제 배포 주소에서 Worker·비교·내보내기를 확인한 다음 README에 연결한다.
 5. GitHub private vulnerability reporting을 켜고 보고 경로가 실제 작동하는지 확인한다. 기여 이슈에 재현 예제·난이도·완료 조건을 쓴다.
 
 ## 45초 데모 대본
+
+**바로 사용할 실제 자료:** [30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko) · [English player](https://him55710-sudo.github.io/pureobom/demo.html) · [MP4](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4) · [촬영 내용과 범위](DEMO.md). 0.5.1 공개 브라우저에서 실제 수정·비교·적용·되돌리기를 수행한 화면들을 읽을 시간을 두고 연결했다. 연속 녹화나 작업 시간 측정 자료는 아니다. 한국어·영어 자막이 포함되어 있으며, 아래 45초 대본은 별도의 연속 촬영용 초안이다.
 
 | 시간 | 화면 | 말/자막 |
 | --- | --- | --- |

@@ -1,0 +1,27 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.000
+AI wrote the code. Now understand one change.
+
+00:00:02.000 --> 00:00:05.000
+Start with the real shipping rule: 50,000.
+
+00:00:05.000 --> 00:00:09.000
+Read the conditions in plain language, linked to source.
+
+00:00:09.000 --> 00:00:13.000
+Change the threshold to 70,000. Inspect the exact edit.
+
+00:00:13.000 --> 00:00:19.000
+An order of 60,000 changes from 0 to 3,000.
+An order of 70,000 still ships free.
+
+00:00:19.000 --> 00:00:23.000
+Apply: the real source now contains 70,000.
+
+00:00:23.000 --> 00:00:26.000
+Undo restores the original 50,000.
+
+00:00:26.000 --> 00:00:30.000
+Try it with your own code in VS Code.
+Local processing · Korean / English · MIT

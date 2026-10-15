@@ -8,13 +8,15 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 **VS Code extension · Korean / English · Local processing · MIT**
 
-[한국어](README.ko.md) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+[한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
 [![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
 
 </div>
 
-![Change impact in Pureobom](docs/scenario-preview.png)
+[![Watch a real rule change in Pureobom](public/media/demo-poster.png)](https://him55710-sudo.github.io/pureobom/demo.html)
+
+**[Watch the 30-second walkthrough](https://him55710-sudo.github.io/pureobom/demo.html)** — source → explanation → diff → comparison → apply → undo. Real browser screenshots, edited for reading time; English and Korean captions. [MP4](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
 
 Pureobom turns JavaScript and TypeScript into source-linked stories, editable rules and a dependency map. It is for people who know what their product should do but struggle to inspect the code an AI generates.
 

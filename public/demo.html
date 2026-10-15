@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pureobom in 30 seconds · 풀어봄</title>
+    <meta name="description" content="See a real code change: read a shipping rule, compare orders, apply and undo. Watch with English or Korean captions, then try Pureobom." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AI wrote the code. Now make it yours. · Pureobom" />
+    <meta property="og:description" content="Read a rule. Compare what changes. Edit the real code. Watch the 30-second demo with English or Korean captions." />
+    <meta property="og:url" content="https://him55710-sudo.github.io/pureobom/demo.html" />
+    <meta property="og:image" content="https://him55710-sudo.github.io/pureobom/media/demo-poster.png" />
+    <meta property="og:image:alt" content="Pureobom showing a shipping rule beside the 50000 to 70000 code change." />
+    <meta property="og:image:width" content="1265" />
+    <meta property="og:image:height" content="712" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="./favicon.svg" />
+    <style>
+      :root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #17362e; background: #f4f7f2; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      main { max-width: 1040px; margin: auto; padding: 30px 24px 50px; }
+      header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; align-items: center; }
+      .brand { font-weight: 800; letter-spacing: .02em; }
+      a { color: #1e644b; text-underline-offset: 4px; }
+      nav { display: flex; gap: 16px; font-size: 14px; }
+      h1 { max-width: 850px; font-size: clamp(30px,5vw,50px); line-height: 1.18; letter-spacing: -.035em; margin: 40px 0 16px; }
+      p { line-height: 1.7; }
+      :lang(ko) :is(h1,p,li) { word-break: keep-all; overflow-wrap: break-word; }
+      .intro { font-size: 19px; max-width: 760px; margin-bottom: 26px; }
+      video { width: 100%; display: block; background: #17362e; border: 1px solid #d4dfd5; border-radius: 12px; }
+      .note { font-size: 13px; color: #52675e; }
+      .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 24px 0; }
+      .button { text-decoration: none; padding: 13px 20px; border: 1px solid #b6cabe; border-radius: 8px; font-weight: 650; }
+      .primary { background: #246447; color: white; border-color: transparent; }
+      a:focus-visible, video:focus-visible, summary:focus-visible { outline: 3px solid #b77816; outline-offset: 4px; }
+      details { border-top: 1px solid #d4dfd5; padding-top: 20px; margin-top: 30px; }
+      summary { cursor: pointer; font-weight: 650; }
+      li { padding: 6px 0; line-height: 1.65; }
+      footer { font-size: 13px; margin-top: 32px; color: #52675e; }
+      [hidden] { display: none !important; }
+      @media (max-width: 560px) { main { padding: 22px 16px 36px; } h1 { margin-top: 30px; } .intro { font-size: 17px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header><a class="brand" href="./">Pureobom · 풀어봄</a><nav aria-label="Language"><a href="?lang=en" lang="en">English</a><a href="?lang=ko" lang="ko">한국어</a></nav></header>
+      <h1 data-en>AI wrote the code.<br />Now make it yours.</h1>
+      <h1 data-ko hidden>AI가 쓴 코드,<br />이제 내가 이해하고 고칩니다.</h1>
+      <p class="intro" data-en>Read a shipping rule, compare which orders change, then apply and undo the real code edit. See the flow in 30 seconds.</p>
+      <p class="intro" data-ko hidden>배송 규칙을 읽고, 어떤 주문이 달라지는지 비교한 뒤 실제 코드를 바꾸고 되돌립니다. 30초로 흐름을 확인하세요.</p>
+      <video controls playsinline preload="metadata" poster="./media/demo-poster.png" aria-label="Pureobom 30-second walkthrough" tabindex="0">
+        <source src="./media/pureobom-30s.mp4" type="video/mp4" />
+        <track kind="captions" src="./media/pureobom-30s.en.vtt" srclang="en" label="English" default />
+        <track kind="captions" src="./media/pureobom-30s.ko.vtt" srclang="ko" label="한국어" />
+        <a href="./media/pureobom-30s.mp4">Download the video / 영상 받기</a>
+      </video>
+      <p class="note" data-en>Actual browser demo, v0.5.1. Edited screenshot sequence with readable pauses; not a timing benchmark. No audio; English and Korean captions are available.</p>
+      <p class="note" data-ko hidden>0.5.1 공개 브라우저의 실제 조작 화면입니다. 읽을 시간을 두고 연결한 화면 모음이며, 작업 시간 측정 영상은 아닙니다. 소리 없이 한국어·영어 자막으로 볼 수 있습니다.</p>
+      <div class="actions" data-en><a class="button primary" href="./?demo=shipping&lang=en">Try the same change →</a><a class="button" href="https://github.com/him55710-sudo/pureobom/releases">Install in VS Code</a><a href="https://github.com/him55710-sudo/pureobom">Source on GitHub ↗</a></div>
+      <div class="actions" data-ko hidden><a class="button primary" href="./?demo=shipping&lang=ko">같은 변경 직접 해보기 →</a><a class="button" href="https://github.com/him55710-sudo/pureobom/releases">VS Code에 설치하기</a><a href="https://github.com/him55710-sudo/pureobom">GitHub 소스 ↗</a></div>
+      <p data-en>VS Code is the primary product; the browser lets you try it first. Korean / English · Local analysis · MIT. This preview supports small JS/TS/React edits and limited calculations, not whole-feature generation or complete app testing.</p>
+      <p data-ko hidden>주 제품은 VS Code 확장이고, 브라우저에서 먼저 체험할 수 있습니다. 한국어·영어 · 로컬 분석 · MIT. 작은 JS/TS/React 수정과 제한된 계산을 지원하는 시제품이며, 전체 기능 생성이나 앱 전체 테스트는 지원하지 않습니다.</p>
+      <details><summary><span data-en>Read the walkthrough</span><span data-ko hidden>영상 내용을 글로 읽기</span></summary>
+        <ol data-en><li>The source contains a free-shipping threshold of 50,000.</li><li>Read source-linked conditions and select the threshold.</li><li>Preview a change to 70,000. The exact literal changes; the rest of the function is preserved.</li><li>Compare seven inputs. For 60,000, shipping changes from 0 to 3,000. For 70,000, it stays 0.</li><li>Apply and inspect 70,000 in the source. Undo restores 50,000.</li><li>Install the VS Code extension to try a small change in your own project.</li></ol>
+        <ol data-ko hidden><li>원본 코드의 무료 배송 기준은 50,000입니다.</li><li>원문에 연결된 조건 설명을 읽고 기준값을 선택합니다.</li><li>70,000으로 바꾸는 변경안을 확인합니다. 선택한 값만 바뀌고 함수의 나머지는 유지됩니다.</li><li>입력 7개를 비교합니다. 60,000 주문은 배송비가 0에서 3,000으로 바뀌고, 70,000 주문은 0을 유지합니다.</li><li>적용한 원문에서 70,000을 확인합니다. 되돌리면 50,000이 복구됩니다.</li><li>VS Code에 설치해 내 프로젝트의 작은 변경을 시도합니다.</li></ol>
+      </details>
+      <footer><a href="./media/pureobom-30s.mp4" download>MP4</a> · <a href="./media/pureobom-30s.ko.vtt" download>한국어 자막</a> · <a href="./media/pureobom-30s.en.vtt" download>English captions</a></footer>
+    </main>
+    <script>
+      const ko = new URLSearchParams(location.search).get('lang') === 'ko';
+      document.documentElement.lang = ko ? 'ko' : 'en';
+      document.title = ko ? '풀어봄 30초 소개 · Pureobom' : 'Pureobom in 30 seconds';
+      document.querySelectorAll('[data-en]').forEach(el => el.hidden = ko);
+      document.querySelectorAll('[data-ko]').forEach(el => el.hidden = !ko);
+      const tracks = document.querySelector('video').textTracks;
+      for (const track of tracks) track.mode = track.language === (ko ? 'ko' : 'en') ? 'showing' : 'disabled';
+    </script>
+  </body>
+</html>
