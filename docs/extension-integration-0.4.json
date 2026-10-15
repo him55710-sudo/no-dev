@@ -1,0 +1,18 @@
+{
+  "vscode": "1.96.4",
+  "checks": [
+    "activation, real webview panel and initial explanation",
+    "unsaved document changes trigger fresh Korean analysis",
+    "native VS Code diff shows correct before/after without mutation",
+    "scenario matrix compares actual pending patch without changing the editor",
+    "apply changes editor only; native undo restores the previous value",
+    "stale preview rejected after an intervening editor change",
+    "workspace graph resolves relative imports, restricts navigation and simulates inputs",
+    "natural-language change prepared; switching files invalidates it",
+    "explanation source link selects the correct editor line",
+    "custom project term changes explanations and sentence editing; source stays intact and old patches expire",
+    "terminology survives file switches, stays scoped to its document and resets to the default"
+  ],
+  "passed": 11,
+  "timestamp": "2026-10-15T18:45:47.171Z"
+}

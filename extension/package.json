@@ -2,9 +2,11 @@
   "name": "pureobom",
   "displayName": "Pureobom · 풀어봄",
   "description": "%description%",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "pureobom-local",
   "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/him55710-sudo/pureobom.git", "directory": "extension" },
+  "bugs": { "url": "https://github.com/him55710-sudo/pureobom/issues" },
   "engines": {
     "vscode": "^1.96.0"
   },

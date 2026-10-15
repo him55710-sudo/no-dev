@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — your project's words
+
+- Add Korean/English names for source declarations in the browser and VS Code, without renaming source identifiers.
+- Bind terms to lexical symbols so shadowed names keep their own meaning; use custom names in stories, function inputs, rule tables and sentence edits.
+- Persist terms per browser workspace or VS Code document URI; isolate demo mode and untitled documents.
+- Invalidate pending changes when terminology changes and retain cache entries for unaffected files.
+- Cover name binding, sentence edits, reset, input limits and file-switch behavior. Restrict unit-test discovery to the maintained source tests.
+
 ## 0.3.0 — open-source preview
 
 - Compare up to 12 input scenarios against the actual pending change in the browser and VS Code.

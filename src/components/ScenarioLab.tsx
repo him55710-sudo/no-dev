@@ -115,133 +115,144 @@ export function ScenarioLab({
         )}
       </p>
       <details open={!result} className="scenario-inputs">
-      <summary>{t(`입력 사례 ${rows.length}개 편집`, `Edit ${rows.length} input cases`)}</summary>
-      <div className="scenario-scroll">
-        <table>
-          <caption className="scenario-sr">
-            {t("입력 사례 편집", "Edit scenarios")} · {fn.name}
-          </caption>
-          <thead>
-            <tr>
-              <th>#</th>
-              {fn.params.map((p) => (
-                <th key={p.name}>
-                  {p.name}
-                  <small>{p.type}</small>
-                </th>
-              ))}
-              <th>{t("삭제", "Remove")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i}>
-                <th scope="row">{i + 1}</th>
-                {row.map((value, j) => (
-                  <td key={j}>
-                    {fn.params[j].type === "boolean" ? (
-                      <select
-                        aria-label={`${i + 1}: ${fn.params[j].name}`}
-                        value={value}
-                        onChange={(e) =>
-                          edit(
-                            rows.map((r, n) =>
-                              n === i
-                                ? r.map((v, m) =>
-                                    m === j ? e.target.value : v,
-                                  )
-                                : r,
-                            ),
-                          )
-                        }
-                      >
-                        <option value="false">false</option>
-                        <option value="true">true</option>
-                      </select>
-                    ) : (
-                      <input
-                        aria-label={`${i + 1}: ${fn.params[j].name}`}
-                        value={value}
-                        inputMode={
-                          fn.params[j].type === "number" ? "decimal" : "text"
-                        }
-                        onChange={(e) =>
-                          edit(
-                            rows.map((r, n) =>
-                              n === i
-                                ? r.map((v, m) =>
-                                    m === j ? e.target.value : v,
-                                  )
-                                : r,
-                            ),
-                          )
-                        }
-                      />
+        <summary>
+          {t(
+            `입력 사례 ${rows.length}개 편집`,
+            `Edit ${rows.length} input cases`,
+          )}
+        </summary>
+        <div className="scenario-scroll">
+          <table>
+            <caption className="scenario-sr">
+              {t("입력 사례 편집", "Edit scenarios")} · {fn.name}
+            </caption>
+            <thead>
+              <tr>
+                <th>#</th>
+                {fn.params.map((p) => (
+                  <th key={p.name}>
+                    {p.label?.[lang] || p.name}
+                    {p.label && p.label[lang] !== p.name && (
+                      <small>{p.name}</small>
                     )}
-                  </td>
+                    <small>{p.type}</small>
+                  </th>
                 ))}
-                <td>
-                  <button
-                    type="button"
-                    aria-label={t(`사례 ${i + 1} 삭제`, `Remove case ${i + 1}`)}
-                    disabled={rows.length === 1 || busy}
-                    onClick={() => edit(rows.filter((_, n) => n !== i))}
-                  >
-                    ×
-                  </button>
-                </td>
+                <th>{t("삭제", "Remove")}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="scenario-actions">
-        <button
-          type="button"
-          disabled={rows.length >= 12 || busy}
-          onClick={() =>
-            edit([
-              ...rows,
-              fn.params.map((p) =>
-                p.type === "boolean"
-                  ? "false"
-                  : p.type === "number"
-                    ? "0"
-                    : p.type === "string"
-                      ? ""
-                      : "null",
-              ),
-            ])
-          }
-        >
-          {t("+ 사례 추가", "+ Add case")}
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() =>
-            edit(
-              suggestScenarios(fn, rules, change?.newText).map((r) =>
-                r.args.map(inputText),
-              ),
-            )
-          }
-        >
-          {t("추천 입력", "Suggest inputs")}
-        </button>
-        <button
-          className="scenario-primary"
-          type="button"
-          disabled={busy || disabled}
-          onClick={() => void evaluate()}
-        >
-          {busy
-            ? t("계산 중…", "Comparing…")
-            : change
-              ? t("변경 전후 비교", "Compare before & after")
-              : t("전체 결과 확인", "Evaluate all")}
-        </button>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i}>
+                  <th scope="row">{i + 1}</th>
+                  {row.map((value, j) => (
+                    <td key={j}>
+                      {fn.params[j].type === "boolean" ? (
+                        <select
+                          aria-label={`${i + 1}: ${fn.params[j].name}`}
+                          value={value}
+                          onChange={(e) =>
+                            edit(
+                              rows.map((r, n) =>
+                                n === i
+                                  ? r.map((v, m) =>
+                                      m === j ? e.target.value : v,
+                                    )
+                                  : r,
+                              ),
+                            )
+                          }
+                        >
+                          <option value="false">false</option>
+                          <option value="true">true</option>
+                        </select>
+                      ) : (
+                        <input
+                          aria-label={`${i + 1}: ${fn.params[j].name}`}
+                          value={value}
+                          inputMode={
+                            fn.params[j].type === "number" ? "decimal" : "text"
+                          }
+                          onChange={(e) =>
+                            edit(
+                              rows.map((r, n) =>
+                                n === i
+                                  ? r.map((v, m) =>
+                                      m === j ? e.target.value : v,
+                                    )
+                                  : r,
+                              ),
+                            )
+                          }
+                        />
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    <button
+                      type="button"
+                      aria-label={t(
+                        `사례 ${i + 1} 삭제`,
+                        `Remove case ${i + 1}`,
+                      )}
+                      disabled={rows.length === 1 || busy}
+                      onClick={() => edit(rows.filter((_, n) => n !== i))}
+                    >
+                      ×
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="scenario-actions">
+          <button
+            type="button"
+            disabled={rows.length >= 12 || busy}
+            onClick={() =>
+              edit([
+                ...rows,
+                fn.params.map((p) =>
+                  p.type === "boolean"
+                    ? "false"
+                    : p.type === "number"
+                      ? "0"
+                      : p.type === "string"
+                        ? ""
+                        : "null",
+                ),
+              ])
+            }
+          >
+            {t("+ 사례 추가", "+ Add case")}
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() =>
+              edit(
+                suggestScenarios(fn, rules, change?.newText).map((r) =>
+                  r.args.map(inputText),
+                ),
+              )
+            }
+          >
+            {t("추천 입력", "Suggest inputs")}
+          </button>
+          <button
+            className="scenario-primary"
+            type="button"
+            disabled={busy || disabled}
+            onClick={() => void evaluate()}
+          >
+            {busy
+              ? t("계산 중…", "Comparing…")
+              : change
+                ? t("변경 전후 비교", "Compare before & after")
+                : t("전체 결과 확인", "Evaluate all")}
+          </button>
+        </div>
       </details>
       {error && (
         <p className="scenario-error" role="alert">
@@ -252,7 +263,11 @@ export function ScenarioLab({
         <div className="scenario-results">
           <div className="scenario-summary" role="status">
             <strong>
-              {result.rows.filter((r) => r.status === (change ? "changed" : "observed")).length}
+              {
+                result.rows.filter(
+                  (r) => r.status === (change ? "changed" : "observed"),
+                ).length
+              }
             </strong>{" "}
             {change ? t("개 달라짐", "changed") : t("개 계산됨", "observed")}
             <span>

@@ -5,7 +5,13 @@ import type {
   ProjectAnalysis,
   Simulation,
   SourceFile,
+  Lang,
 } from "../../src/core/types";
+import {
+  normalizeGlossary,
+  updateGlossary,
+  type GlossaryEntry,
+} from "../../src/core/glossary";
 import { AnalysisClient } from "./analysisClient";
 import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
@@ -43,7 +49,16 @@ export class Controller implements vscode.Disposable {
   private epoch = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private registration: vscode.Disposable;
-  constructor(private client: AnalysisClient) {
+  private glossary: GlossaryEntry[] = [];
+  constructor(
+    private client: AnalysisClient,
+    private storage?: vscode.Memento,
+  ) {
+    try {
+      this.glossary = normalizeGlossary(storage?.get("pureobom.glossary.v1"));
+    } catch {
+      console.warn("Pureobom: ignored invalid local terminology data.");
+    }
     this.registration = vscode.workspace.registerTextDocumentContentProvider(
       "pureobom-preview",
       {
@@ -80,6 +95,54 @@ export class Controller implements vscode.Disposable {
   private publish(next: Partial<ViewState>) {
     this.state = { ...this.state, tab: undefined, ...next };
     this.changes.fire(this.state);
+  }
+  private analysisGlossary() {
+    const paths = new Map(
+      [...this.sources.values()].map((source) => [
+        source.uri.toString(),
+        source.file.path,
+      ]),
+    );
+    return this.glossary.flatMap((entry) => {
+      const path = paths.get(entry.path);
+      return path ? [{ ...entry, path }] : [];
+    });
+  }
+  async setTerm(
+    contextId: string | undefined,
+    symbolId: string,
+    lang: Lang,
+    label: string,
+  ) {
+    const doc = this.current(contextId);
+    if (
+      (lang !== "ko" && lang !== "en") ||
+      !this.state.analysis!.terms?.some((term) => term.id === symbolId)
+    )
+      throw Error(
+        "현재 파일의 용어를 선택해 주세요. / Select a term in the current file.",
+      );
+    const previous = this.glossary;
+    this.glossary = updateGlossary(
+      previous,
+      doc.uri.toString(),
+      symbolId,
+      lang,
+      label,
+    );
+    this.invalidate();
+    try {
+      // Untitled document names can be reused in later sessions; never persist them.
+      await this.storage?.update(
+        "pureobom.glossary.v1",
+        this.glossary.filter((entry) => !entry.path.startsWith("untitled:")),
+      );
+    } catch (error) {
+      this.glossary = previous;
+      await this.refresh();
+      throw error;
+    }
+    await this.refresh();
   }
   private invalidate() {
     this.epoch++;
@@ -154,6 +217,7 @@ export class Controller implements vscode.Disposable {
       }
       const project = await this.client.call<ProjectAnalysis>("analyze", {
         files: [...this.sources.values()].map((s) => s.file),
+        glossary: this.analysisGlossary(),
       });
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       this.publish({
@@ -253,11 +317,13 @@ export class Controller implements vscode.Disposable {
         ? await this.client.call<Patch>("request", {
             file,
             request: inputString(payload.request),
+            glossary: this.analysisGlossary(),
           })
         : await this.client.call<Patch>("patch", {
             file,
             ruleId: inputString(payload.ruleId),
             value: inputString(payload.value),
+            glossary: this.analysisGlossary(),
           });
     if (
       this.current(contextId) !== doc ||

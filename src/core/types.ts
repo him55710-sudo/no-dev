@@ -29,7 +29,7 @@ export type FunctionInfo = Anchor & {
   id: string;
   name: string;
   label: Words;
-  params: { name: string; type: string; optional: boolean }[];
+  params: { name: string; type: string; optional: boolean; label?: Words }[];
   steps: Step[];
   calls: string[];
   async: boolean;
@@ -48,6 +48,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  terms?: import("./glossary").CodeTerm[];
   path: string;
   kind: "script" | "json" | "text";
   lines: number;

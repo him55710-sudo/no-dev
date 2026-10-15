@@ -18,6 +18,8 @@ import { Simulator } from "./components/Simulator";
 import { Modal } from "./components/Modal";
 import { Research } from "./components/Research";
 import { ScenarioLab } from "./components/ScenarioLab";
+import { Terminology } from "./components/Terminology";
+import { updateGlossary, type GlossaryEntry } from "./core/glossary";
 import type { ScenarioReport } from "./core/scenarioModel";
 const demoMode =
   new URLSearchParams(location.search).get("demo") === "shipping";
@@ -28,6 +30,7 @@ export default function App() {
       new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko",
     ),
     [files, setFiles] = useState<SourceFile[]>(demo),
+    [glossary, setGlossary] = useState<GlossaryEntry[]>([]),
     [ready, setReady] = useState(false),
     [analysis, setAnalysis] = useState<ProjectAnalysis | null>(null),
     [busy, setBusy] = useState(true),
@@ -71,6 +74,7 @@ export default function App() {
       .then((saved) => {
         if (active && saved?.files.length) {
           setFiles(saved.files);
+          setGlossary(saved.glossary);
           setSelected(saved.files[0].path);
           setProjectTitle(saved.name);
         }
@@ -95,7 +99,7 @@ export default function App() {
     if (!ready) return;
     const token = ++generation.current;
     setBusy(true);
-    request<ProjectAnalysis>("analyze", { files })
+    request<ProjectAnalysis>("analyze", { files, glossary })
       .then((a) => {
         if (token === generation.current) {
           setAnalysis(a);
@@ -108,14 +112,14 @@ export default function App() {
           setBusy(false);
         }
       });
-  }, [files, ready]);
+  }, [files, glossary, ready]);
   useEffect(() => {
     if (!ready || demoMode) return;
     const rev = ++saveRevision.current;
     setSaveState("saving");
     const timer = setTimeout(
       () =>
-        saveWorkspace(files, projectTitle)
+        saveWorkspace(files, projectTitle, glossary)
           .then(() => {
             if (rev === saveRevision.current) setSaveState("saved");
           })
@@ -125,7 +129,7 @@ export default function App() {
       400,
     );
     return () => clearTimeout(timer);
-  }, [files, ready, projectTitle]);
+  }, [files, glossary, ready, projectTitle]);
   useEffect(() => {
     if (sourceLine !== null)
       sourceFocus.current?.scrollIntoView({ block: "center" });
@@ -180,6 +184,7 @@ export default function App() {
       editorRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
   }
   async function stage() {
+    const revision = generation.current;
     setError("");
     setPatch(null);
     setEditing(true);
@@ -191,9 +196,14 @@ export default function App() {
           file: target,
           ruleId: editRule.rule.id,
           value: draft,
+          glossary,
         });
       } else if (editMode === "sentence") {
-        result = await request<Patch>("request", { file, request: sentence });
+        result = await request<Patch>("request", {
+          file,
+          request: sentence,
+          glossary,
+        });
       } else
         throw Error(
           t(
@@ -201,12 +211,34 @@ export default function App() {
             "Choose a rule in the table first.",
           ),
         );
-      setPatch(result);
+      if (revision === generation.current) setPatch(result);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setEditing(false);
     }
+  }
+  async function saveTerm(id: string, label: string) {
+    if (busy || editing || !active?.terms?.some((term) => term.id === id))
+      throw Error(
+        t(
+          "최신 설명에서 다시 시도해 주세요.",
+          "Try again from the latest explanation.",
+        ),
+      );
+    const next = updateGlossary(glossary, active.path, id, lang, label);
+    generation.current++;
+    setGlossary(next);
+    setPatch(null);
+    setSelectedRule(null);
+    setSimulation(null);
+    setError("");
+    setNotice(
+      t(
+        "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
+        "Your term is now used in explanations. Source names are unchanged.",
+      ),
+    );
   }
   function apply() {
     if (!patch) return;
@@ -282,6 +314,7 @@ export default function App() {
           ),
         );
       setFiles(result.files);
+      setGlossary([]);
       setSelected(result.files[0].path);
       setView("story");
       setProjectTitle(
@@ -337,6 +370,11 @@ export default function App() {
         "Static syntax analysis; not a guarantee of behavior or security.",
       ),
       "",
+      t(
+        "이름에는 사용자가 지정한 프로젝트 용어가 포함될 수 있습니다. 작성자의 의도를 검증한 결과는 아닙니다.",
+        "Names may include user-defined project terms, not verified author intent.",
+      ),
+      "",
     ];
     for (const f of analysis.files) {
       lines.push(
@@ -380,6 +418,7 @@ export default function App() {
   }
   function reset() {
     setFiles(demo.map((f) => ({ ...f })));
+    setGlossary([]);
     setSelected(demo[0].path);
     setProjectTitle("작은 상점");
     setHistory([]);
@@ -415,7 +454,7 @@ export default function App() {
           </span>
         </a>
         <div className="workspace-label">
-          WORKSPACE <span className="beta">PREVIEW 0.3</span>
+          WORKSPACE <span className="beta">PREVIEW 0.4</span>
         </div>
         <button className="workspace-select" onClick={() => setModal("reset")}>
           <span className="project-avatar">
@@ -782,13 +821,23 @@ export default function App() {
                 </button>
               </div>
               {view === "story" && active && (
-                <Story
-                  analysis={active}
-                  lang={lang}
-                  onSource={setSourceLine}
-                  onSimulate={setSimulation}
-                  onEdit={(r) => selectRule(selected, r)}
-                />
+                <>
+                  <Terminology
+                    key={active.path}
+                    terms={active.terms || []}
+                    lang={lang}
+                    disabled={busy || editing}
+                    onSave={saveTerm}
+                    onSource={setSourceLine}
+                  />
+                  <Story
+                    analysis={active}
+                    lang={lang}
+                    onSource={setSourceLine}
+                    onSimulate={setSimulation}
+                    onEdit={(r) => selectRule(selected, r)}
+                  />
+                </>
               )}
               {view === "map" && analysis && (
                 <MapView

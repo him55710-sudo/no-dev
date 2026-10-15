@@ -8,7 +8,7 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 **VS Code extension · Korean / English · Local processing · MIT**
 
-[한국어](README.ko.md) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+[한국어](README.ko.md) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 
 </div>
 
@@ -31,7 +31,7 @@ These are computed example outputs, not an application-wide correctness claim.
 
 **VS Code — the primary experience**
 
-1. Get `pureobom-0.3.0.vsix` from the distribution bundle (or build it below).
+1. Get `pureobom-0.4.0.vsix` from the distribution bundle (or build it below).
 2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
 3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
 4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
@@ -47,13 +47,14 @@ pnpm dev
 
 Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). Demo mode does not read or overwrite your saved browser workspace. Remove `demo=shipping` to use the persistent local workspace.
 
-The prebuilt `pureobom-0.3.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
+The prebuilt `pureobom-0.4.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
-This source distribution is ready for publication. A public repository, live hosted demo and Marketplace listing must be verified before adding their links here; none is implied by these instructions.
+Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
 
 ## What works today
 
 - **Read:** Korean/English explanations anchored to the exact source lines, including unsaved VS Code edits.
+- **Use your words:** give unfamiliar variables, functions and inputs your own Korean/English names. Terms stay tied to their declarations and work in sentence edits. [How project terms work](docs/TERMINOLOGY.md).
 - **Explore:** function inputs, conditions, returns, a rule table, static relative-import graph and limited review hints.
 - **Change:** numbers, strings, booleans and comparison operators through the same checked patch path.
 - **Compare:** up to 12 editable input cases, suggested numeric boundaries, before/after outputs and an explicit unavailable state.
@@ -62,13 +63,13 @@ This source distribution is ready for publication. A public repository, live hos
 
 ## Know the boundary
 
-This is a **0.3 preview**, not an AI coding agent or a replacement for a developer's review.
+This is a **0.4 preview**, not an AI coding agent or a replacement for a developer's review.
 
 | Area | Current boundary |
 | --- | --- |
 | Languages | JS/TS/JSX/TSX and related extensions; JSON overview. Other imported text is preserved, not explained. |
 | Editing | Literals and comparison operators. No whole-feature generation or multi-file refactoring. |
-| Understanding | Syntax-grounded descriptions and a small name glossary; no inferred business intent. |
+| Understanding | Syntax-grounded descriptions, a built-in name glossary and your local project terms; no inferred business intent. |
 | Comparison | Restricted AST interpretation of supported synchronous calculations. No arbitrary code execution, network, DOM, loops or external packages. |
 | Verification | Syntax checks and limited static hints. No full type checking, application tests or security audit. |
 | File limits | Up to 300 imported text files, 512 KB/file and 8 MB total. Exports contain imported files only. |

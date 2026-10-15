@@ -8,6 +8,7 @@ import type { Scenario } from "../../src/core/scenarioModel";
 export function activate(context: vscode.ExtensionContext) {
   const controller = new Controller(
     new AnalysisClient(context.asAbsolutePath("out/worker.cjs")),
+    context.workspaceState,
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {
@@ -64,6 +65,16 @@ export function activate(context: vscode.ExtensionContext) {
             break;
           case "prepare":
             result = await controller.prepare(r.contextId, p);
+            break;
+          case "term":
+            if (p.lang !== "ko" && p.lang !== "en")
+              throw Error("Invalid language");
+            await controller.setTerm(
+              r.contextId,
+              inputString(p.symbolId, 2048),
+              p.lang,
+              inputString(p.label, 80),
+            );
             break;
           case "preview":
             result = await controller.preview(

@@ -198,7 +198,7 @@ export function Story({
               {fn.params.length ? (
                 fn.params.map((p) => (
                   <span className="input-pill" key={p.name}>
-                    {label(p.name)[lang]}{" "}
+                    {(p.label || label(p.name))[lang]} <code>{p.name}</code>{" "}
                     <small>
                       {p.type === "number"
                         ? ko

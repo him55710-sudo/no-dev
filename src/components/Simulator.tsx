@@ -80,7 +80,16 @@ export function Simulator({
     r.ok
       ? r.result === undefined
         ? "undefined"
-        : JSON.stringify(r.result, (_key,value)=>typeof value==='number'&&!Number.isFinite(value)?`[${String(value)}]`:value===undefined?'[undefined]':value, 2)
+        : JSON.stringify(
+            r.result,
+            (_key, value) =>
+              typeof value === "number" && !Number.isFinite(value)
+                ? `[${String(value)}]`
+                : value === undefined
+                  ? "[undefined]"
+                  : value,
+            2,
+          )
       : r.error;
   return (
     <div className="simulator">
@@ -100,7 +109,9 @@ export function Simulator({
       </p>
       <label htmlFor="simulation-input">
         {ko ? "받는 정보 순서" : "Input order"}:{" "}
-        {fn.params.map((p) => p.name).join(", ") || "없음 / none"}
+        {fn.params
+          .map((p) => (p.label ? `${p.label[lang]} (${p.name})` : p.name))
+          .join(", ") || "없음 / none"}
       </label>
       <div className="input-action">
         <input

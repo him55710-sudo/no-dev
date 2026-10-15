@@ -9,13 +9,18 @@ self.onmessage = (event: MessageEvent) => {
   try {
     let result: unknown;
     if (type === "analyze") {
-      result = analyzer.analyze(payload.files);
+      result = analyzer.analyze(payload.files, payload.glossary);
     } else if (type === "patch") {
-      result = makePatch(payload.file, payload.ruleId, payload.value);
+      result = makePatch(
+        payload.file,
+        payload.ruleId,
+        payload.value,
+        payload.glossary,
+      );
     } else if (type === "request") {
-      const a = analyzeFile(payload.file);
+      const a = analyzeFile(payload.file, payload.glossary);
       const r = parseRequest(payload.request, a.rules);
-      result = makePatch(payload.file, r.rule.id, r.value);
+      result = makePatch(payload.file, r.rule.id, r.value, payload.glossary);
     } else if (type === "compare") {
       result = compareScenarios(
         payload.files,

@@ -27,6 +27,11 @@ export async function run() {
   const ready = async () =>
     until(() => !c.state.busy && !!c.state.analysis, "analysis ready");
   await ready();
+  const firstTerm = c.state.analysis!.terms!.find(
+    (term) => term.name === "freeShippingThreshold",
+  )!;
+  if (firstTerm.custom?.ko)
+    await c.setTerm(c.state.contextId, firstTerm.id, "ko", "");
   assert.equal(c.state.analysis!.functions[0].name, "calculateShipping");
   assert.ok(
     c.state.analysis!.rules.find((r) => r.name === "freeShippingThreshold"),
@@ -182,6 +187,46 @@ export async function run() {
   await c.source(c.state.contextId, 3);
   assert.equal(vscode.window.activeTextEditor?.selection.start.line, 2);
   reports.push("explanation source link selects the correct editor line");
+  const originalText = doc.getText();
+  const term = c.state.analysis!.terms!.find(
+    (term) => term.name === "freeShippingThreshold",
+  )!;
+  const beforeTermContext = c.state.contextId;
+  const beforeTermPatch = await c.prepare(beforeTermContext, {
+    ruleId: rule().id,
+    value: "85000",
+  });
+  await c.setTerm(beforeTermContext, term.id, "ko", "우리 가게 무료 배송선");
+  assert.equal(rule().label.ko, "우리 가게 무료 배송선");
+  assert.equal(
+    doc.getText(),
+    originalText,
+    "terminology must not rename source identifiers",
+  );
+  await assert.rejects(() => c.apply(beforeTermPatch.id, beforeTermContext));
+  await assert.rejects(() =>
+    c.setTerm(beforeTermContext, term.id, "ko", "old context"),
+  );
+  const custom = await c.prepare(c.state.contextId, {
+    request: "우리 가게 무료 배송선을 75000으로 변경",
+  });
+  assert.equal(custom.newText, "75000");
+  assert.ok(custom.description.ko.includes("우리 가게 무료 배송선"));
+  reports.push(
+    "custom project term changes explanations and sentence editing; source stays intact and old patches expire",
+  );
+  await c.setDocument(helper);
+  assert.ok(
+    !JSON.stringify(c.state.analysis).includes("우리 가게 무료 배송선"),
+  );
+  await c.setDocument(doc);
+  assert.equal(rule().label.ko, "우리 가게 무료 배송선");
+  await c.setTerm(c.state.contextId, term.id, "ko", "");
+  assert.equal(rule().label.ko, "무료 배송 기준");
+  assert.equal(doc.getText(), originalText);
+  reports.push(
+    "terminology survives file switches, stays scoped to its document and resets to the default",
+  );
   const report = {
     vscode: vscode.version,
     checks: reports,

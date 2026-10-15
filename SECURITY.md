@@ -8,4 +8,6 @@ VS Code uses its own editor, save and undo behavior. Changes require a trusted w
 
 To report a vulnerability, use the repository's **Security → Report a vulnerability** when private vulnerability reporting has been enabled. Until then, open a minimal issue asking for a private contact route without including exploit details, credentials or private code. The release checklist includes enabling that route before a public launch. We do not claim a response-time SLA or completed external audit.
 
-Supported maintenance line: the latest 0.3 preview. Older local prototypes are not a supported release line.
+Custom project terms are also local data: browser workspace IndexedDB, or VS Code workspace state keyed by document URI. Untitled-document terms are not persisted across extension sessions. Terms can appear in explanation reports, so avoid private business labels in reports you intend to share. Code ZIP exports do not include the local term dictionary.
+
+Supported maintenance line: the latest 0.4 preview. Older local prototypes are not a supported release line.

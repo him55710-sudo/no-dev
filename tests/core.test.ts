@@ -9,7 +9,12 @@ describe("source-grounded analysis", () => {
   it("extracts exact editable source ranges and nested control flow", () => {
     const a = analyzeFile(shipping);
     expect(a.functions[0].params).toEqual([
-      { name: "subtotal", type: "number", optional: false },
+      {
+        name: "subtotal",
+        type: "number",
+        optional: false,
+        label: { ko: "상품 합계", en: "Subtotal" },
+      },
     ]);
     const r = a.rules.find((x) => x.name === "freeShippingThreshold")!;
     expect(shipping.content.slice(r.start, r.end)).toBe("50000");
@@ -65,8 +70,9 @@ describe("source-grounded analysis", () => {
     expect(resolveImport("src/a.ts", "./b.js", paths)).toBe("src/b.ts");
     expect(resolveImport("src/a.ts", "@/b", paths)).toBeUndefined();
     expect(
-      linkFiles(demo.map(analyzeFile)).find((f) => f.path === "src/order.ts")
-        ?.imports[0].target,
+      linkFiles(demo.map((file) => analyzeFile(file))).find(
+        (f) => f.path === "src/order.ts",
+      )?.imports[0].target,
     ).toBe("src/shipping.ts");
   });
   it("uses review candidates instead of asserting fetch is broken", () => {

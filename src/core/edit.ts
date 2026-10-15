@@ -1,12 +1,14 @@
 import { analyzeFile, diagnostics, parse } from "./analyze";
 import { operators } from "./labels";
 import { words, type Patch, type Rule, type SourceFile } from "./types";
+import type { GlossaryEntry } from "./glossary";
 export function makePatch(
   file: SourceFile,
   ruleId: string,
   input: string,
+  glossary: GlossaryEntry[] = [],
 ): Patch {
-  const a = analyzeFile(file);
+  const a = analyzeFile(file, glossary);
   if (!a.syntaxValid)
     throw Error(
       "먼저 원본의 문법 오류를 해결해 주세요. / Fix syntax errors first.",

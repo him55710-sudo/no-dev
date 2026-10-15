@@ -1,5 +1,7 @@
 import ts from "typescript";
 import { label, operators, particle } from "./labels";
+import { normalizeGlossary, type GlossaryEntry } from "./glossary";
+import { terminology } from "./terminology";
 import {
   words,
   type Anchor,
@@ -10,6 +12,7 @@ import {
   type Rule,
   type SourceFile,
   type Step,
+  type Words,
 } from "./types";
 
 export function parse(file: SourceFile) {
@@ -62,11 +65,13 @@ export function expression(
   sf: ts.SourceFile,
   lang: Lang,
   depth = 0,
+  naming?: (node: ts.Node) => Words,
 ): string {
   const ko = lang === "ko";
   if (depth > 12)
     return ko ? "복잡한 계산식 (원문 확인)" : "complex expression (see source)";
-  const e = (x: ts.Node) => expression(x, sf, lang, depth + 1);
+  const e = (x: ts.Node) => expression(x, sf, lang, depth + 1, naming);
+  const name = (node: ts.Identifier) => naming?.(node) || label(node.text);
   const v = literal(n);
   if (v !== undefined)
     return typeof v === "string"
@@ -81,7 +86,7 @@ export function expression(
             : "no"
         : v.toLocaleString("en-US");
   if (n.kind === ts.SyntaxKind.NullKeyword) return ko ? "비어 있는 값" : "null";
-  if (ts.isIdentifier(n)) return label(n.text)[lang];
+  if (ts.isIdentifier(n)) return name(n)[lang];
   if (
     ts.isParenthesizedExpression(n) ||
     ts.isAsExpression(n) ||
@@ -119,8 +124,8 @@ export function expression(
     return ko ? `${particle(e(n.operand))} 아님` : `not ${e(n.operand)}`;
   if (ts.isPropertyAccessExpression(n))
     return ko
-      ? `${e(n.expression)}의 ${label(n.name.text)[lang]}`
-      : `${e(n.expression)} → ${label(n.name.text)[lang]}`;
+      ? `${e(n.expression)}의 ${(naming?.(n.name) || label(n.name.text))[lang]}`
+      : `${e(n.expression)} → ${(naming?.(n.name) || label(n.name.text))[lang]}`;
   if (ts.isElementAccessExpression(n))
     return ko
       ? `${e(n.expression)}에서 ${e(n.argumentExpression)} 위치의 값`
@@ -139,8 +144,8 @@ export function expression(
       : `if ${e(n.condition)}, ${e(n.whenTrue)}; otherwise ${e(n.whenFalse)}`;
   if (ts.isObjectLiteralExpression(n))
     return ko
-      ? `묶음 데이터 { ${n.properties.map((p) => (ts.isShorthandPropertyAssignment(p) ? label(p.name.text)[lang] : ts.isPropertyAssignment(p) ? `${p.name.getText(sf)}: ${e(p.initializer)}` : `원문: ${p.getText(sf)}`)).join(", ")} }`
-      : `record { ${n.properties.map((p) => p.getText(sf)).join(", ")} }`;
+      ? `묶음 데이터 { ${n.properties.map((p) => (ts.isShorthandPropertyAssignment(p) ? name(p.name)[lang] : ts.isPropertyAssignment(p) ? `${p.name.getText(sf)}: ${e(p.initializer)}` : `원문: ${p.getText(sf)}`)).join(", ")} }`
+      : `record { ${n.properties.map((p) => (ts.isShorthandPropertyAssignment(p) ? name(p.name)[lang] : ts.isPropertyAssignment(p) ? `${p.name.getText(sf)}: ${e(p.initializer)}` : p.getText(sf))).join(", ")} }`;
   if (ts.isArrayLiteralExpression(n))
     return `[${n.elements.map(e).join(", ")}]`;
   if (ts.isNewExpression(n))
@@ -162,7 +167,10 @@ export function expression(
   return `${n.getText(sf).slice(0, 180)} (${ko ? "이 표현은 원문 확인이 필요함" : "this expression needs source review"})`;
 }
 
-export function analyzeFile(file: SourceFile): FileAnalysis {
+export function analyzeFile(
+  file: SourceFile,
+  glossary: GlossaryEntry[] = [],
+): FileAnalysis {
   const out: FileAnalysis = {
     path: file.path,
     kind: "text",
@@ -212,9 +220,12 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
   if (!/\.[cm]?[jt]sx?$/i.test(file.path)) return out;
   out.kind = "script";
   const sf = parse(file);
+  const naming = terminology(sf, normalizeGlossary(glossary));
+  out.terms = naming.terms;
+  const ex = (node: ts.Node, lang: Lang) =>
+    expression(node, sf, lang, 0, naming.describe);
   const at = (n: ts.Node) => anchor(n, sf);
-  const txt = (n: ts.Node) =>
-    words(expression(n, sf, "ko"), expression(n, sf, "en"));
+  const txt = (n: ts.Node) => words(ex(n, "ko"), ex(n, "en"));
   const issue = (
     n: ts.Node,
     key: string,
@@ -293,13 +304,13 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
         ds
           .map(
             (d) =>
-              `${label(d.name.getText(sf)).ko}에 ${d.initializer ? expression(d.initializer, sf, "ko") : "아직 정해지지 않은 값"}을(를) 담습니다.`,
+              `${naming.describe(d.name).ko}에 ${d.initializer ? ex(d.initializer, "ko") : "아직 정해지지 않은 값"}을(를) 담습니다.`,
           )
           .join(" "),
         ds
           .map(
             (d) =>
-              `Store ${d.initializer ? expression(d.initializer, sf, "en") : "an undefined value"} in ${label(d.name.getText(sf)).en}.`,
+              `Store ${d.initializer ? ex(d.initializer, "en") : "an undefined value"} in ${naming.describe(d.name).en}.`,
           )
           .join(" "),
       );
@@ -388,8 +399,8 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
     } else if (ts.isFunctionDeclaration(s)) {
       base.kind = "definition";
       base.text = words(
-        `${label(s.name?.text || "익명 기능").ko} 기능을 정의합니다. 호출될 때 실행됩니다.`,
-        `Define ${s.name?.text || "an anonymous function"}; it runs when called.`,
+        `${naming.describe(s.name, "익명 기능").ko} 기능을 정의합니다. 호출될 때 실행됩니다.`,
+        `Define ${naming.describe(s.name, "an anonymous function").en}; it runs when called.`,
       );
     } else if (ts.isInterfaceDeclaration(s) || ts.isTypeAliasDeclaration(s)) {
       base.kind = "type";
@@ -438,7 +449,7 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
         external: !n.moduleSpecifier.text.startsWith("."),
       });
     if (ts.isVariableDeclaration(n) && n.initializer) {
-      rule(n.initializer, n.name.getText(sf));
+      rule(n.initializer, n.name.getText(sf), naming.describe(n.name));
       if (
         /(api.?key|password|secret|access.?token)/i.test(n.name.getText(sf)) &&
         typeof literal(n.initializer) === "string" &&
@@ -463,8 +474,8 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
         n.operatorToken,
         `condition@${at(n).line}`,
         words(
-          `${expression(n.left, sf, "ko")} 비교 방식`,
-          `${expression(n.left, sf, "en")} comparison`,
+          `${ex(n.left, "ko")} 비교 방식`,
+          `${ex(n.left, "en")} comparison`,
         ),
         "operator",
       );
@@ -472,8 +483,8 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
         n.right,
         `threshold@${at(n).line}`,
         words(
-          `${expression(n.left, sf, "ko")} 비교값`,
-          `${expression(n.left, sf, "en")} comparison value`,
+          `${ex(n.left, "ko")} 비교값`,
+          `${ex(n.left, "en")} comparison value`,
         ),
       );
       if (["==", "!="].includes(n.operatorToken.getText(sf)))
@@ -571,9 +582,14 @@ export function analyzeFile(file: SourceFile): FileAnalysis {
         ...at(n),
         id: `fn:${n.getStart(sf)}`,
         name,
-        label: label(name),
+        label: naming.describe(
+          n.name ||
+            (ts.isVariableDeclaration(n.parent) ? n.parent.name : undefined),
+          name,
+        ),
         params: n.parameters.map((p) => ({
           name: p.name.getText(sf),
+          label: naming.describe(p.name),
           type: p.type?.getText(sf) || "unknown",
           optional: !!p.questionToken || !!p.initializer,
         })),

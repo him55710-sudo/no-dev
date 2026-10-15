@@ -8,12 +8,21 @@ const analyzer = new ProjectAnalyzer();
 parentPort!.on("message", ({ id, type, payload }) => {
   try {
     let result: unknown;
-    if (type === "analyze") result = analyzer.analyze(payload.files);
+    if (type === "analyze")
+      result = analyzer.analyze(payload.files, payload.glossary);
     else if (type === "patch")
-      result = makePatch(payload.file, payload.ruleId, payload.value);
+      result = makePatch(
+        payload.file,
+        payload.ruleId,
+        payload.value,
+        payload.glossary,
+      );
     else if (type === "request") {
-      const r = parseRequest(payload.request, analyzeFile(payload.file).rules);
-      result = makePatch(payload.file, r.rule.id, r.value);
+      const r = parseRequest(
+        payload.request,
+        analyzeFile(payload.file, payload.glossary).rules,
+      );
+      result = makePatch(payload.file, r.rule.id, r.value, payload.glossary);
     } else if (type === "compare")
       result = compareScenarios(
         payload.files,

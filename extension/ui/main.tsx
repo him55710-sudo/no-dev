@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Story } from "../../src/components/Story";
 import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
+import { Terminology } from "../../src/components/Terminology";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
@@ -234,23 +235,45 @@ function App() {
           </nav>
           <main aria-busy={state.busy}>
             {a && tab === "story" && (
-              <Story
-                analysis={a}
-                lang={lang}
-                onSource={source}
-                onEdit={selectRule}
-                onSimulate={(name) => {
-                  setFn(name);
-                  setSimulation(undefined);
-                  setArgs("[]");
-                  requestAnimationFrame(() =>
-                    simulationRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    }),
-                  );
-                }}
-              />
+              <>
+                <Terminology
+                  key={a.path}
+                  terms={a.terms || []}
+                  lang={lang}
+                  disabled={disabled}
+                  onSource={source}
+                  onSave={async (symbolId, label) => {
+                    await request(
+                      "term",
+                      { symbolId, label, lang },
+                      state.contextId,
+                    );
+                    setNotice(
+                      t(
+                        "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
+                        "Your term is now used in explanations. Source names are unchanged.",
+                      ),
+                    );
+                  }}
+                />
+                <Story
+                  analysis={a}
+                  lang={lang}
+                  onSource={source}
+                  onEdit={selectRule}
+                  onSimulate={(name) => {
+                    setFn(name);
+                    setSimulation(undefined);
+                    setArgs("[]");
+                    requestAnimationFrame(() =>
+                      simulationRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      }),
+                    );
+                  }}
+                />
+              </>
             )}
             {a && tab === "rules" && (
               <>
