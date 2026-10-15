@@ -299,6 +299,179 @@ export async function run() {
   reports.push(
     "worker preserves separate cleanup branch, pending returns and finalizer source navigation without code mutation",
   );
+  const diagnosticDoc = await vscode.workspace.openTextDocument({
+    language: "typescript",
+    content: "export const fee: number = 3000;\n",
+  });
+  const diagnosticEditor = await vscode.window.showTextDocument(
+    diagnosticDoc,
+    vscode.ViewColumn.One,
+  );
+  await c.setDocument(diagnosticDoc);
+  const collection = vscode.languages.createDiagnosticCollection(
+    "pureobom-integration",
+  );
+  try {
+    const warning = new vscode.Diagnostic(
+      new vscode.Range(0, 13, 0, 16),
+      "Review this value",
+      vscode.DiagnosticSeverity.Warning,
+    );
+    warning.source = "pureobom-integration";
+    warning.code = "review-fee";
+    const beforeDiagnosticContext = c.state.contextId;
+    collection.set(diagnosticDoc.uri, [warning]);
+    await until(
+      () =>
+        c.state.diagnostics?.items.some(
+          (d) => d.source === "pureobom-integration",
+        ) === true,
+      "diagnostic provider event",
+    );
+    assert.equal(
+      c.state.contextId,
+      beforeDiagnosticContext,
+      "diagnostic updates must not discard a code proposal",
+    );
+    const firstSnapshot = c.state.diagnostics!;
+    const firstProblem = firstSnapshot.items.find(
+      (d) => d.source === "pureobom-integration",
+    )!;
+    await c.diagnosticSource(
+      c.state.contextId,
+      firstSnapshot.revision,
+      firstProblem.id,
+    );
+    assert.equal(
+      vscode.window.activeTextEditor?.document.uri.toString(),
+      diagnosticDoc.uri.toString(),
+    );
+    assert.equal(
+      diagnosticDoc.getText(vscode.window.activeTextEditor!.selection),
+      "fee",
+    );
+    reports.push(
+      "editor provider reports preserve context, source, severity and exact source selection",
+    );
+
+    await diagnosticEditor.edit((b) =>
+      b.replace(new vscode.Range(0, 26, 0, 30), "4000"),
+    );
+    await ready();
+    assert.equal(c.state.diagnostics?.status, "edited");
+    await assert.rejects(() =>
+      c.diagnosticSource(
+        c.state.contextId,
+        firstSnapshot.revision,
+        firstProblem.id,
+      ),
+    );
+    warning.message = "Review the new value";
+    collection.set(diagnosticDoc.uri, [warning]);
+    await until(
+      () =>
+        c.state.diagnostics?.items.some(
+          (d) => d.message === "Review the new value",
+        ) === true,
+      "updated diagnostic message",
+    );
+    assert.equal(c.state.diagnostics?.status, "reported");
+    assert.equal(c.state.diagnostics?.version, diagnosticDoc.version);
+    await assert.rejects(() =>
+      c.diagnosticSource(
+        c.state.contextId,
+        firstSnapshot.revision,
+        firstProblem.id,
+      ),
+    );
+    const latest = c.state.diagnostics!;
+    await c.setDocument(cleanupDoc);
+    assert.equal(
+      c.state.diagnostics?.items.some(
+        (d) => d.source === "pureobom-integration",
+      ),
+      false,
+    );
+    await assert.rejects(() =>
+      c.diagnosticSource(
+        c.state.contextId,
+        latest.revision,
+        latest.items[0].id,
+      ),
+    );
+    await c.setDocument(diagnosticDoc);
+    collection.delete(diagnosticDoc.uri);
+    await until(
+      () =>
+        c.state.diagnostics?.items.every(
+          (d) => d.source !== "pureobom-integration",
+        ) === true,
+      "removed diagnostic clears",
+    );
+    reports.push(
+      "edited reports, replaced report IDs and file switches reject stale navigation; removed reports clear",
+    );
+  } finally {
+    collection.dispose();
+  }
+
+  const typescript = vscode.extensions.getExtension(
+    "vscode.typescript-language-features",
+  );
+  assert.ok(typescript, "built-in TypeScript extension is available");
+  await typescript.activate();
+  const typedUri = vscode.Uri.joinPath(root, "typed-fee.ts");
+  await vscode.workspace.fs.writeFile(
+    typedUri,
+    Buffer.from("export const shippingFee: 3000 | 5000 = 3000;\n"),
+  );
+  const typedDoc = await vscode.workspace.openTextDocument(typedUri);
+  await vscode.window.showTextDocument(typedDoc, vscode.ViewColumn.One);
+  await c.setDocument(typedDoc);
+  const typedRule = c.state.analysis!.rules.find(
+    (r) => r.name === "shippingFee",
+  )!;
+  assert.ok(typedRule);
+  const typedPatch = await c.prepare(c.state.contextId, {
+    ruleId: typedRule.id,
+    value: "4000",
+  });
+  await c.apply(typedPatch.id, c.state.contextId);
+  await until(
+    () =>
+      c.state.diagnostics?.items.some(
+        (d) => d.source === "ts" && d.code === "2322",
+      ) === true,
+    "real TypeScript assignment error after applying rule edit",
+  );
+  const typeSnapshot = c.state.diagnostics!;
+  const typeError = typeSnapshot.items.find(
+    (d) => d.source === "ts" && d.code === "2322",
+  )!;
+  assert.ok(typeError.explanation?.ko);
+  assert.ok(typeError.message.includes("4000"));
+  await ready();
+  await c.diagnosticSource(
+    c.state.contextId,
+    typeSnapshot.revision,
+    typeError.id,
+  );
+  assert.equal(
+    typedDoc.getText(vscode.window.activeTextEditor!.selection),
+    "shippingFee",
+  );
+  await vscode.commands.executeCommand("undo");
+  await until(
+    () =>
+      c.state.diagnostics?.items.every(
+        (d) => !(d.source === "ts" && d.code === "2322"),
+      ) === true,
+    "real TypeScript error clears after undo",
+  );
+  assert.ok(typedDoc.getText().includes("= 3000"));
+  reports.push(
+    "built-in TypeScript reports an actual 2322 error after a rule edit; source selection and undo clear it",
+  );
   const report = {
     vscode: vscode.version,
     checks: reports,

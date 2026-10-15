@@ -11,6 +11,7 @@ export type ViewState = {
   trusted: boolean;
   busy: boolean;
   analysis?: FileAnalysis;
+  diagnostics?: import("../../src/core/editorDiagnostics").EditorDiagnostics;
   project?: ProjectAnalysis;
   scanNote?: string;
   error?: string;

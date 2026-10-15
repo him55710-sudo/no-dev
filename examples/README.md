@@ -1,4 +1,6 @@
-# Three changes you can explain
+# Changes you can explain
+
+[typedShipping.ts](typedShipping.ts) adds an editor check: in VS Code, change `shippingFee` from `3000` to `4000`, apply it and open **Editor reports**. TypeScript reports that the declared type only permits `3000 | 5000`. Jump to the exact source, then undo. [Guide and limits](../docs/EDITOR_REPORTS.md).
 
 Also try [SignupCard.tsx](SignupCard.tsx): expand the React interface structure, find **무료로 시작하기**, change it to **14일 무료 체험**, inspect the string-expression diff, apply and undo. JSX is read without rendering or execution, so this example uses source comparison instead of calculation scenarios. [Open in the browser](https://him55710-sudo.github.io/pureobom/?demo=interface&lang=en).
 

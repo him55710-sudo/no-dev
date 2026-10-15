@@ -5,6 +5,7 @@ import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
 import { ProductHelp } from "../../src/components/ProductHelp";
+import { EditorProblems } from "./EditorProblems";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
@@ -190,6 +191,20 @@ function App() {
         <p className="banner success" role="status">
           {notice}
         </p>
+      )}
+      {state.path && state.diagnostics && (
+        <button className="diagnostic-summary" onClick={() => setTab("checks")}>
+          <span>{t("편집기 알림", "Editor reports")}</span>
+          <strong>
+            {t("오류", "Errors")} {state.diagnostics.errors} ·{" "}
+            {t("경고", "Warnings")} {state.diagnostics.warnings}
+          </strong>
+          <span>
+            {state.diagnostics.status === "edited"
+              ? t("코드 변경 후 갱신 대기", "Awaiting reports after edit")
+              : t("내용 확인 →", "Review →")}
+          </span>
+        </button>
       )}
       {!a && !state.busy ? (
         <section className="empty card">
@@ -474,8 +489,8 @@ function App() {
                     </div>
                     <p>
                       {t(
-                        "문법 검사를 통과했습니다. 의도한 동작인지는 입력값으로 확인해 주세요.",
-                        "Syntax checked. Verify intended behavior with examples.",
+                        "문법 검사를 통과했습니다. 이 변경안의 타입과 실제 동작은 아직 확인하지 않았습니다. 적용 뒤 편집기 알림도 살펴보세요.",
+                        "Syntax checked. Types and runtime behavior of this proposal are not verified. Review editor reports after applying it.",
                       )}
                     </p>
                     <div className="actions">
@@ -522,6 +537,22 @@ function App() {
             )}
             {a && tab === "checks" && (
               <>
+                {state.diagnostics && (
+                  <EditorProblems
+                    snapshot={state.diagnostics}
+                    lang={lang}
+                    disabled={disabled}
+                    onSource={(revision, id) =>
+                      void action(() =>
+                        request(
+                          "diagnosticSource",
+                          { revision, id },
+                          state.contextId,
+                        ),
+                      )
+                    }
+                  />
+                )}
                 <span className="eyebrow">REVIEW WITH CONTEXT</span>
                 <h2>{t("한 번 더 살펴볼 부분", "Things to review")}</h2>
                 <p className="muted">

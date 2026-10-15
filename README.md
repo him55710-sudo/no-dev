@@ -33,9 +33,11 @@ These are computed example outputs, not an application-wide correctness claim.
 
 ## Try it
 
+**New in 0.6 — understand editor errors:** in VS Code, review reported errors and warnings beside the explanation, read plain-language help for common TypeScript errors and jump to the exact code. Try changing a typed shipping fee to an unsupported value, then undo. [Walkthrough and limits](docs/EDITOR_REPORTS.md). Empty reports are not a passed type check; the browser demo does not provide VS Code diagnostics.
+
 **VS Code — the primary experience**
 
-1. Download `pureobom-0.5.2.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
+1. Download `pureobom-0.6.0.vsix` from [Releases](https://github.com/him55710-sudo/pureobom/releases) (or build it below).
 2. In VS Code, open Extensions → `…` → **Install from VSIX…**.
 3. Run **Pureobom: Try an example** in the Command Palette. In a Korean VS Code installation, the command is **풀어봄: 예제로 시작하기**.
 4. Edit the threshold, compare inputs, inspect the native diff, then apply. `Ctrl+Z` / `Cmd+Z` undoes; `Ctrl+S` / `Cmd+S` saves.
@@ -53,7 +55,7 @@ pnpm dev
 
 Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). Demo mode does not read or overwrite your saved browser workspace. Remove `demo=shipping` to use the persistent local workspace.
 
-The prebuilt `pureobom-0.5.2-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
+The prebuilt `pureobom-0.6.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
 Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
 

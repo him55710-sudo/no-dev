@@ -525,6 +525,68 @@ pre {
 .issue p {
   margin: 10px 0;
 }
+.diagnostic-summary {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  text-align: left;
+  margin: 16px 0;
+  padding: 12px 16px;
+}
+.diagnostic-summary span:last-child {
+  margin-left: auto;
+  font-size: 11px;
+}
+.editor-problems {
+  margin-bottom: 28px;
+}
+.diagnostic-list {
+  list-style: none;
+  padding: 0;
+}
+.diagnostic {
+  border-left: 3px solid var(--border);
+  padding: 14px 16px;
+  margin: 16px 0;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+.diagnostic-error {
+  border-left-color: var(--vscode-errorForeground, #be5145);
+}
+.diagnostic-warning {
+  border-left-color: var(--vscode-editorWarning-foreground, #b17a2c);
+}
+.diagnostic-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.diagnostic-heading .mono {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.diagnostic-heading button {
+  margin-left: auto;
+}
+.diagnostic-meaning {
+  line-height: 1.85;
+}
+.diagnostic details {
+  margin-top: 12px;
+}
+.diagnostic summary {
+  cursor: pointer;
+  font-size: 12px;
+}
+.diagnostic pre {
+  font-size: 11px;
+}
 .simulation ol {
   padding-left: 20px;
 }

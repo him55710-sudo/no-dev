@@ -13,6 +13,7 @@ import {
   type GlossaryEntry,
 } from "../../src/core/glossary";
 import { AnalysisClient } from "./analysisClient";
+import { editorDiagnostics } from "../../src/core/editorDiagnostics";
 import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
 
@@ -49,6 +50,7 @@ export class Controller implements vscode.Disposable {
   private epoch = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private registration: vscode.Disposable;
+  private diagnosticRegistration: vscode.Disposable;
   private glossary: GlossaryEntry[] = [];
   constructor(
     private client: AnalysisClient,
@@ -65,6 +67,74 @@ export class Controller implements vscode.Disposable {
         provideTextDocumentContent: (uri) =>
           this.previews.get(uri.toString()) ?? "",
       },
+    );
+    this.diagnosticRegistration = vscode.languages.onDidChangeDiagnostics(
+      (event) => {
+        if (
+          this.active &&
+          !this.active.isClosed &&
+          event.uris.some(
+            (uri) => uri.toString() === this.active!.uri.toString(),
+          )
+        )
+          this.readDiagnostics();
+      },
+    );
+  }
+  private readDiagnostics() {
+    if (!this.active || this.active.isClosed) return;
+    this.publish({
+      diagnostics: editorDiagnostics(
+        vscode.languages.getDiagnostics(this.active.uri),
+        this.active.version,
+        randomUUID(),
+      ),
+    });
+  }
+  async diagnosticSource(
+    contextId: string | undefined,
+    revision: string,
+    id: string,
+  ) {
+    const doc = this.current(contextId),
+      snapshot = this.state.diagnostics;
+    if (
+      !snapshot ||
+      snapshot.revision !== revision ||
+      snapshot.status === "edited" ||
+      snapshot.version !== doc.version
+    )
+      throw Error(
+        "알림이나 코드가 바뀌었습니다. 최신 알림에서 다시 선택해 주세요. / The report or code changed. Select the latest report.",
+      );
+    const item = snapshot.items.find((problem) => problem.id === id);
+    if (!item)
+      throw Error("현재 알림에 없는 항목입니다. / Report no longer available.");
+    const range = doc.validateRange(
+      new vscode.Range(
+        item.line - 1,
+        item.column - 1,
+        item.endLine - 1,
+        item.endColumn - 1,
+      ),
+    );
+    const editor = await vscode.window.showTextDocument(doc, {
+      viewColumn: vscode.ViewColumn.One,
+      preserveFocus: true,
+    });
+    // Showing an editor can yield to edits or a newer diagnostic event.
+    this.current(contextId);
+    if (
+      this.state.diagnostics?.revision !== revision ||
+      doc.version !== snapshot.version
+    )
+      throw Error(
+        "알림이 바뀌었습니다. 다시 선택해 주세요. / The report changed. Select it again.",
+      );
+    editor.selection = new vscode.Selection(range.start, range.end);
+    editor.revealRange(
+      range,
+      vscode.TextEditorRevealType.InCenterIfOutsideViewport,
     );
   }
   static accepts(doc: vscode.TextDocument) {
@@ -156,13 +226,21 @@ export class Controller implements vscode.Disposable {
   }
   async setDocument(doc: vscode.TextDocument) {
     if (!Controller.accepts(doc)) return;
+    const changedDocument = !this.isActive(doc);
     this.active = doc;
     this.publish({
       path: vscode.workspace.asRelativePath(doc.uri),
       version: doc.version,
       dirty: doc.isDirty,
       analysis: undefined,
+      diagnostics: changedDocument
+        ? undefined
+        : this.state.diagnostics &&
+            this.state.diagnostics.version !== doc.version
+          ? { ...this.state.diagnostics, status: "edited" }
+          : this.state.diagnostics,
     });
+    if (changedDocument || !this.state.diagnostics) this.readDiagnostics();
     await this.refresh();
   }
   documentChanged(doc: vscode.TextDocument) {
@@ -174,6 +252,14 @@ export class Controller implements vscode.Disposable {
         ))
     )
       return;
+    if (
+      this.isActive(doc) &&
+      this.state.diagnostics &&
+      this.state.diagnostics.version !== doc.version
+    )
+      this.publish({
+        diagnostics: { ...this.state.diagnostics, status: "edited" },
+      });
     this.invalidate();
     clearTimeout(this.timer);
     this.timer = setTimeout(() => void this.refresh(), 300);
@@ -181,7 +267,7 @@ export class Controller implements vscode.Disposable {
   async refresh() {
     clearTimeout(this.timer);
     if (!this.active || this.active.isClosed) {
-      this.publish({ busy: false });
+      this.publish({ busy: false, diagnostics: undefined });
       return;
     }
     this.invalidate();
@@ -286,6 +372,7 @@ export class Controller implements vscode.Disposable {
       const first = next.values().next().value!;
       this.active = await vscode.workspace.openTextDocument(first.uri);
       this.publish({ path: vscode.workspace.asRelativePath(first.uri) });
+      this.readDiagnostics();
     }
     await this.refresh();
   }
@@ -491,6 +578,7 @@ export class Controller implements vscode.Disposable {
   dispose() {
     clearTimeout(this.timer);
     this.registration.dispose();
+    this.diagnosticRegistration.dispose();
     this.changes.dispose();
     this.client.dispose();
   }

@@ -93,6 +93,13 @@ export function activate(context: vscode.ExtensionContext) {
           case "source":
             await controller.source(r.contextId, p.line);
             break;
+          case "diagnosticSource":
+            await controller.diagnosticSource(
+              r.contextId,
+              inputString(p.revision, 100),
+              inputString(p.id, 100),
+            );
+            break;
           case "select":
             await controller.select(inputString(p.path));
             break;

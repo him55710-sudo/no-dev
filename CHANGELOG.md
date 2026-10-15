@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — understand the editor's reports
+
+- Connect current-file VS Code diagnostics to a compact summary and the Review view, with provider, severity, original message and exact source navigation.
+- Explain four common TypeScript errors in Korean and English while preserving original messages and leaving unknown reports untranslated.
+- Distinguish edited reports, reject stale report/file navigation, show empty reports without a pass claim and cap long lists/messages with visible omissions.
+- Add a typed shipping example and real TypeScript integration coverage: apply an invalid literal value, inspect error 2322, navigate and undo.
+- These are existing editor reports, not a new full-project type checker or pre-apply semantic verification. No scripts, provider commands or automatic fixes are run.
+
 ## 0.5.2 — explain cleanup in the correct order
 
 - Keep `finally` separate from the try body and display it after catch in both the story and Markdown export.
