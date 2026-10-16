@@ -34,6 +34,8 @@
 
 ## 확인한 근거
 
+기능 소스 `583c8059cd2f9a37a45eaf931d22a8aecedfe46a`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38880264124)는 두 환경 모두 핵심 **178개**, 개발 호스트 **33개**, 새 VSIX 설치본 **33개**, 패키지 분석/측정/Python 읽기 도구 실행에 성공했다. [추출한 원자료](evidence/local-ai/python-source-ci.json). 개발/설치에서 같은 33개 흐름을 실행했으며 별개의 기능 66개로 세지 않는다.
+
 - `tests/python-source.test.ts`: 실제 격리 Python 프로세스로 배송 경계·예외, loop else/try else/finally, 중첩 함수·생성기, Unicode 위치, 정확한 큰 정수·문자열 수정, 문법/범위 오류, 사용자 코드 비실행, 한도·실패·취소를 검사한다.
 - `extension/test/pythonSource.ts`: 실제 VS Code에서 미저장 Python 설명·원문 선택·요청·diff·명시적 적용·재분석·undo·오래된 변경안 거절, 없는 실행기 안내와 복구를 확인한다.
 - [외부 itsdangerous 검사](evidence/local-ai/python-source-project.md): 원본 **297개 통과 → 의도한 잘못된 값으로 38개 실패 → undo·저장 후 297개 통과**. 모델 없는 값 수정과 실제 프로젝트 검사 연결의 근거다. 성능 개선이나 임의 수정의 정확성을 뜻하지 않는다.

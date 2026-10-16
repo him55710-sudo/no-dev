@@ -4,6 +4,8 @@
 
 [Python AST의 모델 없는 읽기·수정](../../PYTHON_SOURCE.md)도 추가했다. [외부 itsdangerous 원자료와 재현](python-source-project.md)은 실제 VS Code에서 원문 값 하나를 바꾸고 upstream 테스트 **297개 통과→38개 실패→undo 후 297개 통과**를 확인한다. 모델 의미 정확성이나 성능 개선으로 집계하지 않는다.
 
+Python 기능 `583c805`의 [Windows·Ubuntu CI 원자료](python-source-ci.json): 각 핵심 **178개**, 개발 호스트·설치본 각각 **33개**, production 모드·런타임 6개 해시와 추출한 도구 3종 실행 성공. [네이티브 화면](python-source-native.md)은 한국어/영어 설명·값 수정·diff·적용·원문 이동·undo를 확인한 별도 기록이다.
+
 JSONC의 소비 동작 추측에 대응해 [모델 없는 데이터 읽기·수정](../../JSON_DATA.md)을 추가했다. 파서가 확인한 키·값과 모델 해석을 구별하며, 실제 VS Code의 원문 보존·diff·큰 정수 수정·undo를 검사한다. 모델의 의미 정확성 개선 점수로 세지 않는다.
 
 `2b0235e`의 [Windows·Ubuntu CI](json-facts-ci.json): 각 핵심 169개·개발/설치 각 31개, production 모드·런타임 해시와 추출한 Worker 검사 성공. [로컬 설치본](json-facts-installed-integration.json)과 [브라우저 실제 조작·제약](../../JSON_DATA.md)은 별도 기록이다. 네이티브 JSON 화면 조작의 추가 시도는 대상 창을 찾지 못해 성공으로 세지 않았다.
