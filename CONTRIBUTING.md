@@ -8,6 +8,8 @@ Use Node.js 24 and pnpm 11.25.0. Run `pnpm install --frozen-lockfile`, then `pnp
 
 Before a PR: run `pnpm test`, `pnpm build`, and `pnpm extension:build`. Run `pnpm extension:test` for changes to document handling, patches, host messages or the extension UI. On Linux use `xvfb-run -a pnpm extension:test`. Check the UI in both languages and at a narrow panel width.
 
+For packaging or runtime changes, run `pnpm extension:package` followed by `pnpm extension:test:installed` (prefix with `xvfb-run -a` on headless Linux). This installs the VSIX into a fresh profile, verifies the installed runtime hashes and production extension mode, and runs the same integration flows. The test driver is a separate development extension. Controlled AI fixtures in this suite do not count as real-model accuracy checks; see [the evidence index](docs/evidence/local-ai/README.md).
+
 ## Useful first contributions
 
 - Add a small JS/TS fixture where the explanation is wrong. Include expected wording and the source line.

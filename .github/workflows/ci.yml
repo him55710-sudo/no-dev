@@ -39,3 +39,9 @@ jobs:
         with:
           name: pureobom-${{ runner.os }}
           path: release/*.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: integration-evidence-${{ runner.os }}
+          path: |
+            test-results/extension-integration.json
+            test-results/installed-extension-integration.json
