@@ -29,7 +29,8 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '25.0.4.1'
+          # Adoptium API SemVer for the JDK reporting 25.0.4.1+1-LTS.
+          java-version: '25.0.4+101.0.LTS'
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm test

@@ -4,6 +4,7 @@
 
 ## 2026-10-16 · Java 파서·정확한 값 수정·실제 라이브러리 회귀 검사
 
+- **공개 CI 준비 실패:** 기능 커밋 `368134a91b65ac055488b93199c8f20cba6d04df`의 [첫 Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38895575908)는 Windows JDK 설치에서 실패했다. `setup-java`가 `25.0.4.1`을 `25.0.4+1`로 해석했지만 Adoptium API의 실제 버전 표기는 `25.0.4+101.0.LTS`였다. 로컬 다운로드 metadata와 설치 로그의 available versions를 대조해 CI와 수동 demo workflow의 고정 버전 입력을 해당 API 표기로 수정했다. 이 실패는 제품 테스트 성공으로 집계하지 않는다.
 - **목적·범위:** P2/P3/P4/P6의 Java 빈칸을 보강했다. [Java 사용법과 한계](JAVA_SOURCE.md), [외부 minimal-json 원자료](evidence/local-ai/java-source-project.md)를 공개한다. 전체 목표 완료, 모델 정확성 또는 최적화 성공으로 세지 않는다. 안정판과 Pages는 0.6.0 그대로다.
 - **제품 구현:** `PureobomJavaSource.java`의 JDK 표준 `JavacTask.parse`, `javaSource.ts`의 별도 프로세스·고정 helper 캐시·한도/취소, controller·AI 제안 문법·KO/EN UI·JDK 설정을 연결했다. 사용자 소스는 컴파일/실행하지 않고 클래스·소스·annotation processor 검색을 배제했다. 타입·의존성·실행 결과 미검증을 명시한다.
 - **원문 수정:** UTF-16 위치, 한글·emoji·CRLF/CR/LF, Java escape·큰 정수·진법·접미사 보존을 확인했다. 단일 값 교체 후 재파싱하며 문법이 맞아도 타입이 틀릴 수 있음을 검사한다. text block/문자/null/주석 숫자식/Unicode 토큰 경계 등은 직접 수정에서 제외한다.
