@@ -4,6 +4,8 @@
 
 ## 2026-10-16 · Go 표준 파서·원문 수정·실제 UUID 프로젝트
 
+공개 기능 커밋 `5b9e5f0f20b0d7fd4ac786db1cdd03b5104d225f`를 명시적으로 `origin main`에 push했다. [Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)의 Windows·Ubuntu가 모두 성공했다. 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시, 저장소 밖에서 추출한 분석/Python 측정/Python AST/Go AST 도구의 실행 성공을 로그에서 대조했다. [CI 원자료](evidence/local-ai/go-source-ci.json). 이후 문서 커밋은 이 정확한 기능 커밋을 가리킨다. 기여 안내에 Python/Go 검사 전제를 명시하고 수동 데모 워크플로에도 같은 SDK 준비 단계를 추가했으며, Pages 배포나 새 안정 릴리스는 실행하지 않았다.
+
 - **범위:** 모델 설명에서 Go의 오류 반환이 누락된 사례에 대응해 P2/P3/P4를 보강했다. [Go 읽기 안내](GO_SOURCE.md)의 로컬 데스크톱 기능이며 전체 언어·전체 계획 완료는 아니다. 유료 API·Ollama·모델이 필요 없는 경로지만 설치 Go SDK가 필요하다.
 - **환경:** 공식 Go 1.27.2 Windows amd64 ZIP을 작업 폴더에만 내려받아 SHA-256 `1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe04f`를 확인했다. 시스템 PATH는 바꾸지 않았다. 소스 [공식 다운로드](https://go.dev/dl/). CI에는 설치 단계 `actions/setup-go@v6`, 1.27.2와 cache false를 추가했다.
 - **구현:** `extension/runtime/go_source.go`, `extension/src/goSource.ts`와 controller/activation/protocol. 표준 라이브러리만 쓰는 고정 helper를 사용자별 캐시에 빌드하고 원문을 stdin으로 전달한다. 사용자 코드·import·init·go:generate를 실행하지 않는다. 프로젝트 GOFLAGS/GOENV/GOWORK·툴체인 자동 다운로드·모듈 프록시·CGO를 사용하지 않는다. helper/SDK/플랫폼별 캐시, shell 없는 실행·취소·시간·입출력 한도를 적용했다.

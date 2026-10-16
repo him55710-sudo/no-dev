@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI 원자료](go-source-ci.json): 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시·패키지 도구 4종 성공. [네이티브 Go 화면](go-source-native.md)과 [외부 프로젝트](go-source-project.md)는 별도 증거다.
+
 [Go AST 읽기·수정](../../GO_SOURCE.md)과 [Google UUID 외부 프로젝트 원자료](go-source-project.md)를 추가했다. 설치된 표준 파서와 실제 편집기/task로 201 pass·1 skip → 고정 오류의 TestUUID 실패 → undo 후 복구를 확인한다. 모델 없이 수행한 검사이며 모델 정확도나 최적화 성공 점수에 합치지 않는다.
 
 현재 자료는 자동 연결 검사, 실제 모델 응답, 외부 프로젝트 연동과 성능 측정을 구별한다. 공개 소스와 합성 예제만 사용했다. 사용자 비공개 코드·키·개인정보는 포함하지 않았다.

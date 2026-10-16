@@ -1,5 +1,7 @@
 # 제품 완성 계획 · Product completion plan
 
+최신 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)는 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [원자료](evidence/local-ai/go-source-ci.json). 전체 P0–P6와 모든 언어 지원은 진행 중이다.
+
 추가 P2/P3/P4 증분: [Go 표준 AST 읽기·문자열/숫자 수정](GO_SOURCE.md)을 로컬 VS Code에 연결했다. 여러 반환값·defer·고루틴·switch/select 구조와 정확한 원문 위치를 읽고 Go 변경안의 문법을 검사한다. [Google UUID 고정 오류 검사](evidence/local-ai/go-source-project.md)는 201 pass·1 skip → TestUUID 실패 → undo 후 201 pass·1 skip을 확인했다. SDK가 필요하며 타입·실행 결과·Go 최적화 측정을 검증한 것은 아니다. 전체 계획은 진행 중이다.
 
 상태 기준: 2026-10-16, 시작 커밋 `7603971`. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 실제 작업과 결과는 [에이전트 작업 기록](AGENT_WORKLOG.md)에 남긴다.

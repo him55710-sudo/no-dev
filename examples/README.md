@@ -1,5 +1,7 @@
 # Changes you can explain
 
+Development desktop readers: open [shipping.go](shipping.go) with a Go SDK or [shipping.py](shipping.py) with Python installed. Read the negative-input path, threshold and final return; change the threshold literal, review the language-specific diff, apply and undo. These readers do not provide the JavaScript calculation simulator. [Go scope and setup](../docs/GO_SOURCE.md) · [Python scope and setup](../docs/PYTHON_SOURCE.md).
+
 Development preview: open [retry.jsonc](local-ai/semantic/retry.jsonc) to inspect literal values without a model. Change `$["retryLimit"]` from `3` to `4`, review the preserved comments and exact diff, apply and undo. The data does not establish how a consuming program retries. [JSON/JSONC guide](../docs/JSON_DATA.md).
 
 [typedShipping.ts](typedShipping.ts) adds an editor check: in VS Code, change `shippingFee` from `3000` to `4000`, apply it and open **Editor reports**. TypeScript reports that the declared type only permits `3000 | 5000`. Jump to the exact source, then undo. [Guide and limits](../docs/EDITOR_REPORTS.md).

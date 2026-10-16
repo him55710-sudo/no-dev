@@ -103,6 +103,8 @@ An unavailable case is not a pass. A correct output for a few inputs does not pr
 
 ## Build and verify
 
+The full test suite requires local Python and Go in addition to Node/pnpm; CI pins Python 3.12 and Go 1.27.2. See [contributor setup](CONTRIBUTING.md). No local AI model is required for these tests.
+
 ```sh
 pnpm test
 pnpm build

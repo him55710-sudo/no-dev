@@ -22,6 +22,8 @@ Go SDK가 필요하다. PATH의 `go`를 사용하거나 VS Code의 `pureobom.ana
 
 ## 실행 구조와 근거
 
+기능 소스 `5b9e5f0f20b0d7fd4ac786db1cdd03b5104d225f`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)가 모두 성공했다. 각 핵심 **185개**, 개발 호스트 **36개**, 새 VSIX 설치본 **36개**와 패키지 도구 4종 실행을 확인했다. [추출한 원자료](evidence/local-ai/go-source-ci.json). 같은 36개 흐름을 두 실행 방식에서 확인했으며 별개 기능 72개로 세지 않는다.
+
 `extension/runtime/go_source.go`는 표준 라이브러리만 사용한다. 호스트는 이 고정 파일만 빌드하고 사용자 소스는 읽기 프로세스의 stdin 데이터로 전달한다. 사용자 import, init, go:generate는 실행하지 않는다. 고정 도구 빌드는 `GOTOOLCHAIN=local`, `GOENV=off`, `GOWORK=off`, `GO111MODULE=off`, `GOPROXY=off`, `GOSUMDB=off`, `GOTELEMETRY=off`, 빈 GOFLAGS, 비활성 CGO와 별도 캐시로 프로젝트 설정·컴파일러 훅·네트워크 자동 가져오기를 배제한다. 프로젝트 검사는 별도로 사용자가 검토한 실제 명령을 실행한다.
 
 설계 참고: [Go 표준 파서](https://pkg.go.dev/go/parser), [defer 명세](https://go.dev/ref/spec#Defer_statements), [raw string AST 위치의 주의점](https://pkg.go.dev/go/ast#BasicLit), [로컬 툴체인 선택](https://go.dev/doc/toolchain).
