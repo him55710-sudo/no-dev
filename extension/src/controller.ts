@@ -60,6 +60,7 @@ export class Controller implements vscode.Disposable {
   private pythonWork?: AbortController;
   private goWork?: AbortController;
   private javaWork?: AbortController;
+  private sqlDialects = new WeakMap<vscode.TextDocument, "sqlite">();
   constructor(
     private client: AnalysisClient,
     private storage?: vscode.Memento,
@@ -104,6 +105,7 @@ export class Controller implements vscode.Disposable {
           return { status: "unavailable", detail: message(error) };
         }
       },
+      (doc) => this.sqlDialects.get(doc),
     );
     this.checks = new ProjectChecks((context) => this.current(context));
     this.checks.changes.event((projectCheck) => this.publish({ projectCheck }));
@@ -212,7 +214,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", html: "html", css: "css" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", html: "html", css: "css", sql: "sql" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {
@@ -364,7 +366,10 @@ export class Controller implements vscode.Disposable {
         );
       if (!this.sources.has(path) && this.sources.size >= 300)
         this.sources.delete(this.sources.keys().next().value!);
-      this.sources.set(path, { uri: doc.uri, file: { path, content } });
+      this.sources.set(path, {
+        uri: doc.uri,
+        file: { path, content, sqlDialect: this.sqlDialects.get(doc) },
+      });
       // Open documents are authoritative, including unsaved editor changes.
       for (const source of this.sources.values()) {
         const open = vscode.workspace.textDocuments.find(
@@ -614,6 +619,14 @@ export class Controller implements vscode.Disposable {
       if (this.javaWork === run) this.javaWork = undefined;
     }
   }
+  async setSqlDialect(contextId: string | undefined, dialect: unknown) {
+    const doc = this.current(contextId);
+    if (doc.languageId !== "sql" || (dialect !== "sqlite" && dialect !== ""))
+      throw Error("Invalid SQL dialect selection");
+    if (dialect === "sqlite") this.sqlDialects.set(doc, "sqlite");
+    else this.sqlDialects.delete(doc);
+    await this.refresh();
+  }
   async prepare(
     contextId: string | undefined,
     payload: Record<string, unknown>,
@@ -621,7 +634,11 @@ export class Controller implements vscode.Disposable {
     const doc = this.current(contextId);
     if (!vscode.workspace.isTrusted)
       throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
-    const file = { path: this.path(doc), content: doc.getText() },
+    const file = {
+        path: this.path(doc),
+        content: doc.getText(),
+        sqlDialect: this.sqlDialects.get(doc),
+      },
       version = doc.version;
     let patch: Patch;
     if (["python", "go", "java"].includes(doc.languageId)) {

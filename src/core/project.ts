@@ -19,7 +19,7 @@ export class ProjectAnalyzer {
     const analyses = files.map((f) => {
       const previous = this.cache.get(f.path);
       const localTerms = entries.filter((e) => e.path === f.path);
-      const glossaryKey = JSON.stringify(localTerms);
+      const glossaryKey = JSON.stringify([localTerms, f.sqlDialect]);
       if (
         previous?.content === f.content &&
         previous.glossaryKey === glossaryKey

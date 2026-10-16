@@ -12,7 +12,11 @@ parentPort!.on("message", ({ id, type, payload }) => {
     if (type === "analyze")
       result = analyzer.analyze(payload.files, payload.glossary);
     else if (type === "validateAssistant")
-      result = validateAssistantChange(payload.language, payload.source);
+      result = validateAssistantChange(
+        payload.language,
+        payload.source,
+        payload.sqlDialect,
+      );
     else if (type === "patch")
       result = makePatch(
         payload.file,

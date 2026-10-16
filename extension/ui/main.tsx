@@ -368,6 +368,15 @@ function App() {
                   lang={lang}
                   onSource={source}
                   onEdit={selectRule}
+                  onSqlDialect={(dialect) =>
+                    void action(() =>
+                      request(
+                        "sqlDialect",
+                        { dialect: dialect || "" },
+                        state.contextId,
+                      ),
+                    )
+                  }
                   onSimulate={(name) => {
                     setFn(name);
                     setSimulation(undefined);
@@ -401,30 +410,35 @@ function App() {
                   </div>
                 </div>
                 <p className="muted">
-                  {a.web
+                  {a.sql
                     ? t(
-                        "일반 HTML 문구·일부 텍스트 속성·CSS 선언 값 하나를 수정합니다. CSS는 단위까지 입력하세요. 화면·접근성·스타일 우선순위는 실제 페이지에서 확인해야 합니다.",
-                        "Edit one ordinary HTML text, selected text attribute or CSS declaration value. Include CSS units. Check rendering, accessibility and cascade in the actual page.",
+                        "SQLite 방언을 선택한 파일의 숫자·작은따옴표 문자열을 수정합니다. 표의 이름 전체(@위치 포함)를 쓰세요. 데이터베이스 결과·제약·성능은 프로젝트 검사에서 확인해야 합니다.",
+                        "Edit numeric and single-quoted string literals after selecting SQLite. Use the full table name including @position. Check database results, constraints and performance with project checks.",
                       )
-                    : a.kind === "json"
+                    : a.web
                       ? t(
-                          "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
-                          "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
+                          "일반 HTML 문구·일부 텍스트 속성·CSS 선언 값 하나를 수정합니다. CSS는 단위까지 입력하세요. 화면·접근성·스타일 우선순위는 실제 페이지에서 확인해야 합니다.",
+                          "Edit one ordinary HTML text, selected text attribute or CSS declaration value. Include CSS units. Check rendering, accessibility and cascade in the actual page.",
                         )
-                      : a.go
+                      : a.kind === "json"
                         ? t(
-                            "이름 하나에 대입한 문자열·숫자 리터럴 하나를 수정합니다. 참거짓 이름·룬·식은 대상이 아닙니다. 타입·범위·실제 동작은 프로젝트 검사에서 확인하세요.",
-                            "Edit one string or numeric literal assigned to a name. Boolean identifiers, runes and expressions are excluded. Check types, ranges and behavior with project checks.",
+                            "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
+                            "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
                           )
-                        : a.python
+                        : a.go
                           ? t(
-                              "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
-                              "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
+                              "이름 하나에 대입한 문자열·숫자 리터럴 하나를 수정합니다. 참거짓 이름·룬·식은 대상이 아닙니다. 타입·범위·실제 동작은 프로젝트 검사에서 확인하세요.",
+                              "Edit one string or numeric literal assigned to a name. Boolean identifiers, runes and expressions are excluded. Check types, ranges and behavior with project checks.",
                             )
-                          : t(
-                              "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                              "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                            )}
+                          : a.python
+                            ? t(
+                                "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
+                                "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
+                              )
+                            : t(
+                                "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
+                                "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
+                              )}
                 </p>
                 <form
                   className="sentence"
@@ -452,7 +466,7 @@ function App() {
                                 '예: $["enabled"]를 false로 변경',
                                 'Example: change $["enabled"] to false',
                               )
-                            : a.python || a.go
+                            : a.python || a.go || a.java || a.sql
                               ? t(
                                   "표의 원문 이름과 새 값을 적어 주세요",
                                   "Use a source name from the table and one new value",

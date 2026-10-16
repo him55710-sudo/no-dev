@@ -22,6 +22,8 @@ An installed Go SDK also enables [Go source reading and exact literal edits](doc
 
 Installed JDK 21+ enables [Java source reading and exact literal edits](docs/JAVA_SOURCE.md), including partial branch, exception and resource-cleanup structure. It parses user text without compiling or executing it. Type, dependency and runtime checks remain separate.
 
+[SQLite source reading and literal edits](docs/SQL_SOURCE.md) work after selecting SQLite explicitly for the current SQL file. The bundled parser needs no model, API or database connection. It reads partial query structure and preserves exact numbers/quoted strings; schema, results and performance still need project checks. Other SQL dialects are not yet analyzed.
+
 The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
 
 It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elapsed-time and peak-memory samples, output hashes, observed variation and local JSON reports. Requires Python 3 and a reviewed repeatable process task; this is measurement evidence, not an automatic optimization guarantee.

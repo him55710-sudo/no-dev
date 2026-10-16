@@ -26,6 +26,9 @@ importers:
       react-dom:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
+      sqlite3-parser:
+        specifier: 0.7.1
+        version: 0.7.1
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1461,6 +1464,10 @@ packages:
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
     engines: {node: '>=0.10.0'}
+
+  sqlite3-parser@0.7.1:
+    resolution: {integrity: sha512-+KcAIcmD9xk4Sz3hNsEI7QEGAMGl3s5PyigIf6ri/u1DzAuAmi5YZInjtnXKqHvx9ySl5e0RYILfCVhTdAeKJg==}
+    hasBin: true
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
@@ -2931,6 +2938,8 @@ snapshots:
   signal-exit@4.1.0: {}
 
   source-map-js@1.2.2: {}
+
+  sqlite3-parser@0.7.1: {}
 
   stackback@0.0.2: {}
 

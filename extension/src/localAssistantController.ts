@@ -52,6 +52,7 @@ export class LocalAssistantController implements vscode.Disposable {
       source: string,
       signal: AbortSignal,
     ) => Promise<AssistantValidation>,
+    private sqlDialect?: (doc: vscode.TextDocument) => "sqlite" | undefined,
   ) {}
   private client() {
     if (vscode.env.remoteName)
@@ -93,6 +94,7 @@ export class LocalAssistantController implements vscode.Disposable {
     const input: AssistantInput = {
       source: doc.getText(),
       language: doc.languageId,
+      sqlDialect: this.sqlDialect?.(doc),
       instruction: inputString(payload.instruction, 2000),
       task: payload.task as AssistantInput["task"],
       lang: payload.lang as AssistantInput["lang"],
@@ -125,6 +127,7 @@ export class LocalAssistantController implements vscode.Disposable {
                   {
                     language: doc.languageId,
                     source: response.proposal.updated,
+                    sqlDialect: input.sqlDialect,
                   },
                 )
         : {

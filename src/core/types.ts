@@ -1,6 +1,10 @@
 export type Lang = "ko" | "en";
 export type Words = { ko: string; en: string };
-export type SourceFile = { path: string; content: string };
+export type SourceFile = {
+  path: string;
+  content: string;
+  sqlDialect?: "sqlite";
+};
 export type Anchor = {
   start: number;
   end: number;
@@ -34,6 +38,7 @@ export type Rule = Anchor & {
     | "python"
     | "go"
     | "java"
+    | "sql"
     | "htmlText"
     | "htmlAttribute"
     | "css";
@@ -85,6 +90,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  sql?: { dialect?: "sqlite"; version: string; truncated: boolean };
   web?: { language: "html" | "css"; truncated: boolean; nodes: number };
   python?: { version: string; truncated: boolean };
   go?: { version: string; truncated: boolean };

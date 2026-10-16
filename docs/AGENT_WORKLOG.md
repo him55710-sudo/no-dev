@@ -2,6 +2,18 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-16 · 명시적 SQLite 분석과 실제 sqlc 재생성·테스트 연결
+
+- **범위:** P2/P3/P4/P6의 SQL 빈칸을 SQLite부터 보강했다. [사용법·한계](SQL_SOURCE.md), [외부 프로젝트](evidence/local-ai/sql-source-project.md), [재현 스크립트](../scripts/fixtures/sqlc/README.md). 모든 SQL 방언·모델 정확성·최적화·전체 목표 완료를 뜻하지 않는다. 공개 안정판과 Pages는 0.6.0이다.
+- **구현:** `src/core/sqlSource.ts`에 MIT `sqlite3-parser@0.7.1`(SQLite 3.53.0 문법)을 포함했다. 전체 원문 파싱과 제한된 AST 구조, 한국어/영어 설명·위치·생략 안내를 제공한다. 128KiB·400 AST·12단계·300값·4096자 한도를 명시했다. 사용자 SQL이나 DB 연결은 실행하지 않는다.
+- **방언 선택:** 기본은 미선택. 현재 SQL 문서에서 SQLite를 명시적으로 선택하며, 캐시 키와 worker 요청에 방언을 포함했다. VS Code는 문서별 WeakMap, 브라우저는 파일 metadata를 사용한다. 다른 문서에 자동 적용하지 않고 방언 변경 시 일반/AI 변경안을 무효화한다. 선택한 방언을 모델 지침과 제안 문법 검사에 전달한다.
+- **수정:** 숫자 원문을 Number로 변환하지 않고 문자열 따옴표를 SQL 규칙으로 인코딩한다. 변경 후 전체 파싱과 동일 위치·종류 리터럴을 확인한다. 매개변수·식별자·NULL·blob·주석 사이 부호 등은 제외했다. 실제 Node 24.19.0/SQLite 3.53.3 엔진으로 SQL 문장을 담은 문자열 비실행과 큰 정수 보존을 확인했다.
+- **발견한 문제:** 기본 파서가 `_` 숫자 구분자를 비활성화해 거절했으므로 명시적으로 켰다. CR을 `--` 주석 종료로 가정했던 테스트 입력은 SQLite 규칙에 맞게 수정했다. 외부 기록 검토에서 INSERT/DELETE 위치가 앞 주석을 가리킨 것을 발견해 파서의 토큰 위치로 보정하고 회귀 검사를 추가했다. DELETE의 WHERE도 적용 가능한 '조건이 참인 행이 대상'으로 설명을 고쳤다. LIMIT의 쉼표형과 OFFSET형을 같은 count/offset 의미로 표시한다.
+- **검증:** 초기 전체 핵심 216개와 개발 호스트 43개 통과, 마지막 위치 보정 후 SQL 전용 9개 통과. [개발 기록](evidence/local-ai/sql-source-development-integration.json)은 위치 보정 전이다. [설치 기록](evidence/local-ai/sql-source-installed-integration.json)은 별도 production 실행·런타임 해시를 기록한다. 동일 43개 흐름을 두 배의 기능 수로 합산하지 않는다. AI 응답은 controlled HTTP fixture이며 새 모델 추론 사례가 아니다. 첫 SQL fixture가 한국어 요청에 영어 reason을 보내 거절됐고, 응답을 한국어로 수정했다. 제품의 언어 검증을 우회하지 않았다.
+- **외부 연동:** sqlc 고정 커밋 `c69308b521a50f92fee48ae623702c5550c49d95`, 공식 sqlc 1.31.1로 현재 SQL을 Go로 재생성하고 기존 TestAuthors를 실행했다. 1 pass → `LIMIT 0`으로 1 fail → native undo·저장 후 1 pass. 미저장 검사 거절, 원본 SQL hash와 깨끗한 checkout 복구를 확인했다. 예제 테스트 한 개의 한계와 examples 모듈/sparse checkout 준비 실패를 공개했다. 생성된 Go 상수를 수동으로 바꾼 검사가 아니다.
+- **패키지·화면:** 라이선스 고지를 포함하고 추출한 Worker에서 SQLite 파서 실행을 검사했다. 최종 위치 보정 후 새 VSIX `5e907fe1…`의 production 모드·런타임 8개 hash·43개 흐름도 통과했다. React 스킬의 UI 파서 분리·파생 상태·label/select·안정된 key·원문 escaping을 검토했다. 브라우저 가져오기 허용 목록에서 SQL이 빠져 있던 것도 발견해 파일 선택기/필터에 추가하고 실제 File→readFiles→분석 검사를 넣었다. 한국어/영어 정적 렌더링과 실제 편집기 통합은 확인했지만 SQL 화면의 수동 클릭·좁은 화면·접근성 검토는 아직 남았다.
+- **남은 범위:** Rust/C#, 다른 SQL 방언·DB 스키마·전체 식 설명, 모델 의미 오류, 실측 최적화와 추가 환경 검증. 공개 상세 기획의 P0–P6를 완료 처리하지 않는다.
+
 ## 2026-10-16 · Java 파서·정확한 값 수정·실제 라이브러리 회귀 검사
 
 최종 기능·CI 설정 소스 `3ecae6e35a31e3d0a87d17b4cf4ed5d9b1a0db7b`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38895781582)가 양쪽 모두 성공했다. 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시·추출 도구 5종을 로그에서 대조하여 [원자료](evidence/local-ai/java-source-ci.json)로 보존했다. 외부 minimal-json과 수동 native UI는 별도 Windows 실행이며 같은 성공 수에 합치지 않는다.

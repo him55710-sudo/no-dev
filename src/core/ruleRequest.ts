@@ -61,15 +61,19 @@ export function parseRequest(
       "단위 없이 숫자를 적어 주세요. 7만 → 70000, 15% → 0.15 / Use plain numbers.",
     );
   const numbers =
-    rule.syntax === "java"
+    rule.syntax === "sql"
       ? rest.match(
-          /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+(?:\.[\da-fA-F_]*)?(?:[pP][+-]?[\d_]+)?[fFdDlL]?|0[bB][01_]+[lL]?|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?[fFdDlL]?)(?![\w.])/g,
+          /(?<![\w.])[+-]?(?:0[xX][\da-fA-F](?:_?[\da-fA-F])*|(?:\d(?:_?\d)*(?:\.(?:\d(?:_?\d)*)?)?|\.\d(?:_?\d)*)(?:[eE][+-]?\d(?:_?\d)*)?)(?![\w.])/g,
         )
-      : rule.syntax === "python" || rule.syntax === "go"
+      : rule.syntax === "java"
         ? rest.match(
-            /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+(?:\.[\da-fA-F_]*)?(?:[pP][+-]?[\d_]+)?|0[oO][0-7_]+|0[bB][01_]+|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?)(?![\w.])/g,
+            /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+(?:\.[\da-fA-F_]*)?(?:[pP][+-]?[\d_]+)?[fFdDlL]?|0[bB][01_]+[lL]?|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?[fFdDlL]?)(?![\w.])/g,
           )
-        : rest.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi);
+        : rule.syntax === "python" || rule.syntax === "go"
+          ? rest.match(
+              /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+(?:\.[\da-fA-F_]*)?(?:[pP][+-]?[\d_]+)?|0[oO][0-7_]+|0[bB][01_]+|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?)(?![\w.])/g,
+            )
+          : rest.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi);
   if (numbers?.length !== 1)
     throw Error("새 값 하나만 적어 주세요. / Provide exactly one new value.");
   return { rule, value: numbers[0] };

@@ -17,7 +17,9 @@ export async function localAssistantChecks(
       | "go-valid"
       | "go-invalid"
       | "java-valid"
-      | "java-invalid" = "normal",
+      | "java-invalid"
+      | "sql-valid"
+      | "sql-invalid" = "normal",
     chatSeen = false;
   const model = {
     name: "fixture:local",
@@ -52,10 +54,21 @@ export async function localAssistantChecks(
     chatSeen = true;
     if (mode === "hold") return;
     const input = JSON.parse(body.messages[1].content);
-    const quote = mode === "invalid" ? "const fee = 3000;" : "fee = 3000";
+    const quote = mode.startsWith("sql-")
+      ? "3000"
+      : mode === "invalid"
+        ? "const fee = 3000;"
+        : "fee = 3000";
     assert.ok(input.source.includes(quote));
-    const edits =
-      mode.startsWith("go-") || mode.startsWith("java-")
+    const edits = mode.startsWith("sql-")
+      ? [
+          {
+            before: quote,
+            after: mode === "sql-valid" ? "4000" : ")",
+            reason: "SQLite 문법 검증용 변경",
+          },
+        ]
+      : mode.startsWith("go-") || mode.startsWith("java-")
         ? [
             {
               before: quote,
@@ -302,6 +315,40 @@ export async function localAssistantChecks(
     assert.equal(javaDoc.getText(), "class Sample { int fee = 3000; }\n");
     reports.push(
       "local AI controlled fixture: actual Java parser accepts valid syntax, rejects a malformed proposal, preserves native Java diff and blocks invalid apply without claiming type or dependency checks",
+    );
+    const sqlDoc = await vscode.workspace.openTextDocument({
+      language: "sql",
+      content: "SELECT 3000 AS fee;",
+    });
+    await vscode.window.showTextDocument(sqlDoc, vscode.ViewColumn.One);
+    await c.setDocument(sqlDoc);
+    await ready();
+    mode = "sql-valid";
+    const unspecified = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(unspecified.validation.status, "unavailable");
+    await c.setSqlDialect(c.state.contextId, "sqlite");
+    await ready();
+    const validSql = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(validSql.validation.status, "syntax-passed");
+    assert.match(
+      validSql.validation.detail,
+      /results and performance unchecked/,
+    );
+    mode = "sql-invalid";
+    const invalidSql = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(invalidSql.validation.status, "syntax-failed");
+    const sqlPreview = await c.assistant.preview(
+      invalidSql.id,
+      c.state.contextId,
+    );
+    assert.ok(sqlPreview.after.endsWith(".sql"));
+    await assert.rejects(
+      c.assistant.apply(invalidSql.id, c.state.contextId, true),
+      /syntax-invalid/,
+    );
+    assert.equal(sqlDoc.getText(), "SELECT 3000 AS fee;");
+    reports.push(
+      "local AI controlled fixture: unspecified SQL remains unchecked, explicitly selected SQLite parses a valid proposal, rejects malformed SQL, preserves SQL diff and blocks invalid apply",
     );
   } finally {
     c.assistant.cancel();

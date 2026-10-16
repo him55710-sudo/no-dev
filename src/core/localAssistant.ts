@@ -4,6 +4,7 @@ export type AssistantTask = "explain" | "edit" | "optimize";
 export type AssistantInput = {
   source: string;
   language: string;
+  sqlDialect?: "sqlite";
   instruction: string;
   task: AssistantTask;
   lang: Lang;
@@ -168,6 +169,11 @@ export function assistantMessages(input: AssistantInput) {
         `Write summary, explanation, reason, risks and checks in ${input.lang === "ko" ? "Korean" : "English"}. Keep source quotes and code exactly as written.`,
         "Use plain language. Do not invent business motives, currency units, callers, server behavior or bugs. Separate shown behavior from unknown surrounding code. Never claim tests ran.",
         languageGuidance(input.language),
+        input.language === "sql"
+          ? input.sqlDialect === "sqlite"
+            ? "The user selected SQLite for this file. Preserve SQLite semantics. Engine version, schema, bindings and execution remain unknown."
+            : "The SQL dialect is unspecified. Do not assume a particular database engine."
+          : "",
         "Citations must copy a nonempty, unique exact substring from the ORIGINAL source. Include enough context to make it unique.",
         "A citation's explanation must describe what the quoted original does now, not what a proposed edit would do. Put effects of changes in edit.reason.",
         input.task === "explain"

@@ -1,5 +1,7 @@
 # Contributing to Pureobom
 
+SQLite source analysis uses a bundled MIT parser and needs no database server. Core SQL tests use Node 24's built-in `node:sqlite`. The optional [external sqlc regression](scripts/fixtures/sqlc/README.md) requires the pinned checkout, Go and official sqlc; it is separate from the default integration count.
+
 Help someone understand a program and make a change they can check. A small, accurate explanation is more useful than a confident guess.
 
 ## Run locally

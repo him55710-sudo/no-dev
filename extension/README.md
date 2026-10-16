@@ -1,5 +1,7 @@
 # 풀어봄 · VS Code 확장 기능
 
+**SQLite 원문 / source:** SQL 파일에서 SQLite를 명시적으로 선택하면 일부 쿼리 구조와 숫자·문자열을 모델/API/DB 연결 없이 읽고 수정합니다. 실제 DB 실행·스키마·성능은 별도 검사해야 합니다. Other SQL dialects are not yet analyzed. [범위·검증 / Guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/SQL_SOURCE.md).
+
 **Pureobom — Read it. Change it. Check it.**
 
 **HTML/CSS 원문 / source:** 0.7 개발판은 포함된 파서로 태그·문구·선택자·선언 값을 읽고 일부 값의 diff·적용·undo를 제공합니다. 모델/API/별도 언어 실행기가 필요 없습니다. 렌더링·스타일 우선순위·접근성은 실제 페이지에서 확인해야 합니다. [범위와 예제 / Guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/HTML_CSS_SOURCE.md).

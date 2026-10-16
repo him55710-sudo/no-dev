@@ -5,6 +5,7 @@ import { terminology } from "./terminology";
 import { analyzeInterface } from "./jsx";
 import { describeJsonData } from "./jsonData";
 import { readWebSource } from "./webSource";
+import { readSqlSource } from "./sqlSource";
 import {
   words,
   type Anchor,
@@ -206,6 +207,10 @@ export function analyzeFile(
     syntaxValid: true,
   };
   const zero = { start: 0, end: 0, line: 1, endLine: 1 };
+  if (/\.sql$/i.test(file.path)) {
+    readSqlSource(file.content, file.sqlDialect, out);
+    return out;
+  }
   if (/\.(?:html?|css)$/i.test(file.path)) {
     readWebSource(
       file.content,

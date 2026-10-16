@@ -74,6 +74,10 @@ const manifest = JSON.parse(
   await vsix.file("extension/package.json").async("string"),
 );
 assert.equal(manifest.version, version);
+assert.match(
+  await vsix.file("extension/THIRD_PARTY_NOTICES.txt").async("string"),
+  /sqlite3-parser 0\.7\.1/,
+);
 for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",
@@ -113,6 +117,7 @@ try {
   for (const [language, source] of [
     ["jsonc", '{ // shipping\n "fee": 3000,\n}'],
     ["html", '<p title="한글 &amp; 😀">Hello</p>'],
+    ["sql", "SELECT 9_007_199_254_740_993, 'O''Brien';"],
     [
       "css",
       ".grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }",
@@ -134,7 +139,11 @@ try {
       shippedWorker.postMessage({
         id: 1,
         type: "validateAssistant",
-        payload: { language, source },
+        payload: {
+          language,
+          source,
+          sqlDialect: language === "sql" ? "sqlite" : undefined,
+        },
       });
     });
     assert.equal(

@@ -2,7 +2,30 @@ import ts from "typescript";
 import { analyzeFile, diagnostics, parse } from "./analyze";
 import { readJsonStructure } from "./jsonData";
 
-export function validateAssistantChange(language: string, source: string) {
+export function validateAssistantChange(
+  language: string,
+  source: string,
+  sqlDialect?: "sqlite",
+) {
+  if (language === "sql") {
+    if (sqlDialect !== "sqlite")
+      return {
+        status: "unavailable",
+        detail:
+          "SQL 방언을 선택하지 않았습니다. / SQL dialect was not selected.",
+      };
+    const analysis = analyzeFile({
+      path: "proposal.sql",
+      content: source,
+      sqlDialect,
+    });
+    return {
+      status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+      detail: analysis.syntaxValid
+        ? `SQLite ${analysis.sql!.version} 문법 파싱 통과. 데이터베이스·열·제약·결과·성능은 미검증입니다. / SQLite syntax parsed; database, columns, constraints, results and performance unchecked.`
+        : analysis.issues.map((issue) => issue.detail.en).join("\n"),
+    };
+  }
   if (language === "html" || language === "css") {
     const analysis = analyzeFile({
       path: `proposal.${language}`,

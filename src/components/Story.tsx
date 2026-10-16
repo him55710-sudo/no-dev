@@ -4,6 +4,7 @@ import { label } from "../core/labels";
 import { Icon } from "./Icon";
 import { InterfaceTree } from "./InterfaceTree";
 import { DataFacts } from "./DataFacts";
+import { SqlStory } from "./SqlStory";
 export function Steps({
   steps,
   lang,
@@ -116,6 +117,7 @@ export function Story({
   onEdit,
   disabled = false,
   editDisabled = disabled,
+  onSqlDialect,
 }: {
   analysis: FileAnalysis;
   lang: Lang;
@@ -124,11 +126,24 @@ export function Story({
   onEdit: (rule: Rule) => void;
   disabled?: boolean;
   editDisabled?: boolean;
+  onSqlDialect?: (dialect: "sqlite" | undefined) => void;
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
   const native = analysis.python || analysis.go || analysis.java;
   const nativeName = analysis.python ? "Python" : analysis.go ? "Go" : "Java";
+  if (analysis.sql)
+    return (
+      <SqlStory
+        analysis={analysis}
+        lang={lang}
+        onSource={onSource}
+        onEdit={onEdit}
+        onDialect={onSqlDialect}
+        disabled={disabled}
+        editDisabled={editDisabled}
+      />
+    );
   if (analysis.web)
     return (
       <div className="story">

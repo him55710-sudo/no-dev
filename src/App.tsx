@@ -798,7 +798,7 @@ export default function App() {
             ref={fileInput}
             hidden
             multiple
-            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.jsonc,.css,.html,.htm,.md,.py,.yaml,.yml,.txt"
+            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.jsonc,.css,.html,.htm,.md,.py,.sql,.yaml,.yml,.txt"
             onChange={(e) => {
               void importFiles(Array.from(e.target.files || []));
               e.target.value = "";
@@ -927,6 +927,17 @@ export default function App() {
                     onSource={setSourceLine}
                     onSimulate={setSimulation}
                     onEdit={(r) => selectRule(selected, r)}
+                    onSqlDialect={(sqlDialect) => {
+                      setPatch(null);
+                      setSelectedRule(null);
+                      setFiles((current) =>
+                        current.map((source) =>
+                          source.path === selected
+                            ? { ...source, sqlDialect }
+                            : source,
+                        ),
+                      );
+                    }}
                   />
                 </>
               )}

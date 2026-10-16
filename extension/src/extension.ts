@@ -153,6 +153,9 @@ export function activate(context: vscode.ExtensionContext) {
           case "prepare":
             result = await controller.prepare(r.contextId, p);
             break;
+          case "sqlDialect":
+            await controller.setSqlDialect(r.contextId, p.dialect);
+            break;
           case "term":
             if (p.lang !== "ko" && p.lang !== "en")
               throw Error("Invalid language");

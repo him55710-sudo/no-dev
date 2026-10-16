@@ -5,6 +5,10 @@ await mkdir("release", { recursive: true });
 const manifest = JSON.parse(await readFile("extension/package.json", "utf8"));
 const licenses = await Promise.all(
   [
+    [
+      "sqlite3-parser 0.7.1 — Jake Teton-Landis",
+      "node_modules/sqlite3-parser/LICENSE",
+    ],
     ["parse5 8.0.1 — Ivan Nikulin", "node_modules/parse5/LICENSE"],
     [
       "entities 8.1.0 — Felix Boehm",
