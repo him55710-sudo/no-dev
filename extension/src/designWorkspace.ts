@@ -222,99 +222,7 @@ export class DesignWorkspace implements vscode.Disposable {
         try {
           const request = requestSchema.parse(raw);
           id = request.id;
-          let result: unknown;
-          if (request.action === "ready") this.emit();
-          else if (request.action === "refresh") await this.refresh();
-          else if (request.action === "source") {
-            const payload = z
-              .object({
-                nodeId: z.string().max(4096),
-                sourceIndex: z.number().int().nonnegative().default(0),
-              })
-              .strict()
-              .parse(request.payload);
-            await this.source(payload.nodeId, payload.sourceIndex);
-          } else if (request.action === "saveSpec")
-            result = await this.save(request.payload);
-          else if (request.action === "implement")
-            result = await this.implement(request.payload);
-          else if (request.action === "jobHistory") await this.loadJobHistory();
-          else if (request.action === "restoreJob") {
-            const payload = z
-              .object({ workspaceId: z.string().uuid() })
-              .strict()
-              .parse(request.payload);
-            if (!this.folder) throw Error("프로젝트가 없습니다.");
-            await this.jobs.restore(
-              this.folder.uri.fsPath,
-              payload.workspaceId,
-            );
-          } else if (request.action === "cancelJob") this.jobs.cancel();
-          else if (request.action === "decideJob") {
-            const payload = z
-              .object({
-                jobId: z.string(),
-                id: z.string(),
-                decision: z.enum(["accept", "decline", "cancel"]),
-              })
-              .strict()
-              .parse(request.payload);
-            if (payload.jobId !== this.state.job?.id)
-              throw Error("현재 작업의 승인 요청이 아닙니다.");
-            this.jobs.decide(payload.id, payload.decision);
-          } else if (request.action === "jobDiff") {
-            const payload = z
-              .object({
-                reviewId: z.string(),
-                index: z.number().int().nonnegative(),
-              })
-              .strict()
-              .parse(request.payload);
-            if (payload.reviewId !== this.state.job?.reviewId)
-              throw Error("현재 검토 중인 작업이 아닙니다.");
-            const file = this.jobs.file(payload.index);
-            const uri = (side: "before" | "after") =>
-              vscode.Uri.from({
-                scheme: "pureobom-design-diff",
-                path: `/${payload.reviewId}/${side}/${file.path}`,
-              });
-            for (const side of ["before", "after"] as const)
-              this.diffContents.set(uri(side).toString(), file[side] ?? "");
-            await vscode.commands.executeCommand(
-              "vscode.diff",
-              uri("before"),
-              uri("after"),
-              file.path,
-              { preview: true },
-            );
-          } else {
-            this.assertExecutionReady();
-            const payload = z
-              .object({ reviewId: z.string() })
-              .strict()
-              .parse(request.payload);
-            const job = this.state.job;
-            if (!job) throw Error("구현 작업이 없습니다.");
-            if (request.action === "applyJob") {
-              await this.loadDesign();
-              this.emit();
-              const current = this.state.specs.specs.find(
-                (spec) => spec.id === job.specId,
-              );
-              if (
-                current?.revision !== job.specRevision ||
-                JSON.stringify(current) !== this.jobs.savedSpec
-              )
-                throw Error(
-                  "구현 중 설계가 바뀌었습니다. 새 설계로 다시 구현해 주세요.",
-                );
-              await this.jobs.apply(payload.reviewId);
-            } else if (request.action === "recoverJob")
-              await this.jobs.recover(payload.reviewId);
-            else await this.jobs.undo(payload.reviewId);
-            await this.refresh();
-            await this.loadJobHistory();
-          }
+          const result = await this.handleRequest(request);
           void panel.webview.postMessage({ type: "response", id, result });
         } catch (error) {
           void panel.webview.postMessage({
@@ -343,6 +251,101 @@ export class DesignWorkspace implements vscode.Disposable {
         )?.id ?? "system";
       this.emit();
     }
+  }
+  /** The Webview and host API share the same validation and execution guards. */
+  async handleRequest(raw: unknown) {
+    const request = requestSchema.parse(raw);
+    let result: unknown;
+    if (request.action === "ready") this.emit();
+    else if (request.action === "refresh") await this.refresh();
+    else if (request.action === "source") {
+      const payload = z
+        .object({
+          nodeId: z.string().max(4096),
+          sourceIndex: z.number().int().nonnegative().default(0),
+        })
+        .strict()
+        .parse(request.payload);
+      await this.source(payload.nodeId, payload.sourceIndex);
+    } else if (request.action === "saveSpec")
+      result = await this.save(request.payload);
+    else if (request.action === "implement")
+      result = await this.implement(request.payload);
+    else if (request.action === "jobHistory") await this.loadJobHistory();
+    else if (request.action === "restoreJob") {
+      const payload = z
+        .object({ workspaceId: z.string().uuid() })
+        .strict()
+        .parse(request.payload);
+      if (!this.folder) throw Error("프로젝트가 없습니다.");
+      await this.jobs.restore(this.folder.uri.fsPath, payload.workspaceId);
+    } else if (request.action === "cancelJob") this.jobs.cancel();
+    else if (request.action === "decideJob") {
+      const payload = z
+        .object({
+          jobId: z.string(),
+          id: z.string(),
+          decision: z.enum(["accept", "decline", "cancel"]),
+        })
+        .strict()
+        .parse(request.payload);
+      if (payload.jobId !== this.state.job?.id)
+        throw Error("현재 작업의 승인 요청이 아닙니다.");
+      this.jobs.decide(payload.id, payload.decision);
+    } else if (request.action === "jobDiff") {
+      const payload = z
+        .object({
+          reviewId: z.string(),
+          index: z.number().int().nonnegative(),
+        })
+        .strict()
+        .parse(request.payload);
+      if (payload.reviewId !== this.state.job?.reviewId)
+        throw Error("현재 검토 중인 작업이 아닙니다.");
+      const file = this.jobs.file(payload.index);
+      const uri = (side: "before" | "after") =>
+        vscode.Uri.from({
+          scheme: "pureobom-design-diff",
+          path: `/${payload.reviewId}/${side}/${file.path}`,
+        });
+      for (const side of ["before", "after"] as const)
+        this.diffContents.set(uri(side).toString(), file[side] ?? "");
+      await vscode.commands.executeCommand(
+        "vscode.diff",
+        uri("before"),
+        uri("after"),
+        file.path,
+        { preview: true },
+      );
+    } else {
+      this.assertExecutionReady();
+      const payload = z
+        .object({ reviewId: z.string() })
+        .strict()
+        .parse(request.payload);
+      const job = this.state.job;
+      if (!job) throw Error("구현 작업이 없습니다.");
+      if (request.action === "applyJob") {
+        await this.loadDesign();
+        this.emit();
+        const current = this.state.specs.specs.find(
+          (spec) => spec.id === job.specId,
+        );
+        if (
+          current?.revision !== job.specRevision ||
+          JSON.stringify(current) !== this.jobs.savedSpec
+        )
+          throw Error(
+            "구현 중 설계가 바뀌었습니다. 새 설계로 다시 구현해 주세요.",
+          );
+        await this.jobs.apply(payload.reviewId);
+      } else if (request.action === "recoverJob")
+        await this.jobs.recover(payload.reviewId);
+      else await this.jobs.undo(payload.reviewId);
+      await this.refresh();
+      await this.loadJobHistory();
+    }
+    return result;
   }
   async refresh() {
     if (!this.folder) return;

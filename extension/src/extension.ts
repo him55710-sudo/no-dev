@@ -322,7 +322,7 @@ export function activate(context: vscode.ExtensionContext) {
     { dispose: () => panel?.dispose() },
   );
   // Public API used by integration tests; all operations retain document/version validation.
-  return { controller, openPanel, designWorkspace };
+  return { controller, openPanel, designWorkspace, runtimeMode: context.extensionMode };
 }
 function html(webview: vscode.Webview, root: vscode.Uri) {
   const script = webview.asWebviewUri(

@@ -33,9 +33,19 @@ jobs:
       - run: pnpm extension:design-test
         if: runner.os == 'Windows'
       - run: pnpm extension:package
+      - run: xvfb-run -a pnpm extension:recovery-test
+        if: runner.os == 'Linux'
+      - run: pnpm extension:recovery-test
+        if: runner.os == 'Windows'
       - run: pnpm release:package
       - run: pnpm release:check
       - uses: actions/upload-artifact@v4
         with:
           name: pureobom-${{ runner.os }}
           path: release/*.vsix
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-recovery-${{ runner.os }}
+          path: test-results/installed-recovery.json
+          if-no-files-found: ignore
