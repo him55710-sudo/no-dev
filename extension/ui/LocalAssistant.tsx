@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Lang } from "../../src/core/types";
+import type { Lang, Words } from "../../src/core/types";
 import {
   assistantLanguages,
   assistantLimits,
@@ -25,9 +25,10 @@ export function LocalAssistant({
   const [instruction, setInstruction] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState<Words>();
   const [generated, setGenerated] = useState<{
     context: string;
+    lang: Lang;
     result: AssistantResult;
   }>();
   const [reviewed, setReviewed] = useState(false);
@@ -37,16 +38,25 @@ export function LocalAssistant({
     output = useRef<HTMLElement>(null);
   const activeContext = useRef(state.contextId);
   activeContext.current = state.contextId;
+  const activeLanguage = useRef(lang);
+  activeLanguage.current = lang;
   const result =
-    generated?.context === state.contextId ? generated.result : undefined;
+    generated?.context === state.contextId && generated.lang === lang
+      ? generated.result
+      : undefined;
   const t = (ko: string, en: string) => (lang === "ko" ? ko : en);
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
-      void request("localCancel").catch(() => {});
     };
   }, []);
+  useEffect(
+    () => () => {
+      void request("localCancel").catch(() => {});
+    },
+    [lang],
+  );
   useEffect(() => {
     if (result) output.current?.focus();
   }, [result]);
@@ -55,12 +65,16 @@ export function LocalAssistant({
     operation.current = true;
     setBusy(true);
     setError("");
-    setNotice("");
+    setNotice(undefined);
     const context = state.contextId;
     try {
       await job();
     } catch (e) {
-      if (mounted.current && activeContext.current === context)
+      if (
+        mounted.current &&
+        activeContext.current === context &&
+        activeLanguage.current === lang
+      )
         setError(e instanceof Error ? e.message : String(e));
     } finally {
       operation.current = false;
@@ -141,14 +155,14 @@ export function LocalAssistant({
               setModel(next.models[0]?.name || "");
               setNotice(
                 next.models.length
-                  ? t(
-                      "로컬 전용 설정을 확인했습니다.",
-                      "Local-only mode confirmed.",
-                    )
-                  : t(
-                      "설치된 로컬 텍스트 모델이 없습니다.",
-                      "No installed local text model found.",
-                    ),
+                  ? {
+                      ko: "로컬 전용 설정을 확인했습니다.",
+                      en: "Local-only mode confirmed.",
+                    }
+                  : {
+                      ko: "설치된 로컬 텍스트 모델이 없습니다.",
+                      en: "No installed local text model found.",
+                    },
               );
             })
           }
@@ -218,7 +232,10 @@ export function LocalAssistant({
         </label>
         {state.busy ? (
           <p role="status">
-            {t("현재 파일을 다시 읽는 중입니다…", "Refreshing the current file…")}
+            {t(
+              "현재 파일을 다시 읽는 중입니다…",
+              "Refreshing the current file…",
+            )}
           </p>
         ) : !eligible ? (
           <p className="banner">
@@ -247,9 +264,14 @@ export function LocalAssistant({
                 );
                 if (
                   mounted.current &&
-                  activeContext.current === state.contextId
+                  activeContext.current === state.contextId &&
+                  activeLanguage.current === lang
                 )
-                  setGenerated({ context: state.contextId, result: response });
+                  setGenerated({
+                    context: state.contextId,
+                    lang,
+                    result: response,
+                  });
               })
             }
           >
@@ -280,10 +302,18 @@ export function LocalAssistant({
         ) : null}
         {notice ? (
           <p role="status" className="banner">
-            {notice}
+            {notice[lang]}
           </p>
         ) : null}
       </div>
+      {generated?.context === state.contextId && generated.lang !== lang ? (
+        <p role="status" className="banner">
+          {t(
+            "이전 응답은 영어로 생성됐습니다. 한국어 설명은 다시 요청해 주세요.",
+            "The previous response was generated in Korean. Send a new request for an English explanation.",
+          )}
+        </p>
+      ) : null}
       {result ? (
         <section
           className="card local-result"
@@ -406,12 +436,10 @@ export function LocalAssistant({
                     );
                     if (mounted.current) {
                       clearProposal();
-                      setNotice(
-                        t(
-                          "적용했습니다. 편집기의 실행 취소로 되돌릴 수 있습니다.",
-                          "Applied. Use editor undo to revert.",
-                        ),
-                      );
+                      setNotice({
+                        ko: "적용했습니다. 편집기의 실행 취소로 되돌릴 수 있습니다.",
+                        en: "Applied. Use editor undo to revert.",
+                      });
                     }
                   })
                 }

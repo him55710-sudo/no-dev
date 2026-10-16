@@ -9,7 +9,7 @@ import { EditorProblems } from "./EditorProblems";
 import { LocalAssistant } from "./LocalAssistant";
 import { ProjectChecks } from "./ProjectChecks";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
-import type { Lang, Rule, Simulation } from "../../src/core/types";
+import type { Lang, Rule, Simulation, Words } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
 import { host, request } from "./bridge";
 import "./style.css";
@@ -28,7 +28,7 @@ function App() {
   });
   const [tab, setTab] = useState<Tab>("story");
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState<Words>();
   const [help, setHelp] = useState(false);
   const [working, setWorking] = useState(false);
   const [edit, setEdit] = useState<Rule>();
@@ -71,11 +71,12 @@ function App() {
   }, []);
   useEffect(() => {
     host.setState({ lang });
+    document.documentElement.lang = lang;
   }, [lang]);
   async function action(job: () => Promise<void>) {
     setWorking(true);
     setError("");
-    setNotice("");
+    setNotice(undefined);
     try {
       await job();
     } catch (e) {
@@ -154,12 +155,11 @@ function App() {
           <span className="pill">
             {state.busy
               ? t("설명 업데이트 중…", "Updating…")
-              : a?.kind === "text"
-                ? t(
-                    "로컬 AI로 설명 요청 가능",
-                    "Local AI explanation available",
-                  )
-                : t("내 컴퓨터에서 분석", "Analyzed locally")}
+              : !a
+                ? t("지원 파일을 기다리는 중", "Waiting for a supported file")
+                : a.kind === "text"
+                  ? t("문법 기반 설명 미제공", "No built-in syntax explanation")
+                  : t("내 컴퓨터에서 분석", "Analyzed locally")}
           </span>
           {state.path && (
             <span>
@@ -197,7 +197,7 @@ function App() {
       )}
       {notice && (
         <p className="banner success" role="status">
-          {notice}
+          {notice[lang]}
         </p>
       )}
       {state.path && state.diagnostics && (
@@ -300,12 +300,10 @@ function App() {
                       { symbolId, label, lang },
                       state.contextId,
                     );
-                    setNotice(
-                      t(
-                        "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
-                        "Your term is now used in explanations. Source names are unchanged.",
-                      ),
-                    );
+                    setNotice({
+                      ko: "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
+                      en: "Your term is now used in explanations. Source names are unchanged.",
+                    });
                   }}
                 />
                 <Story
@@ -547,12 +545,10 @@ function App() {
                               state.contextId,
                             );
                             setPatch(undefined);
-                            setNotice(
-                              t(
-                                "편집기에 적용했습니다. Ctrl+Z로 취소하고, Ctrl+S로 저장하세요.",
-                                "Applied to the editor. Undo with Ctrl+Z; save with Ctrl+S.",
-                              ),
-                            );
+                            setNotice({
+                              ko: "편집기에 적용했습니다. Ctrl+Z로 취소하고, Ctrl+S로 저장하세요.",
+                              en: "Applied to the editor. Undo with Ctrl+Z; save with Ctrl+S.",
+                            });
                           })
                         }
                       >

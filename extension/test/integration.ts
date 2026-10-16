@@ -1,5 +1,7 @@
 import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
+import { createHash } from "node:crypto";
+import { relative, isAbsolute } from "node:path";
 import type { Controller } from "../src/controller";
 import { localAssistantChecks } from "./localAssistant";
 import { projectChecks } from "./projectChecks";
@@ -20,10 +22,49 @@ export async function run() {
   const extension = vscode.extensions.getExtension<{
     controller: Controller;
     openPanel: () => Promise<void>;
+    runtimeMode: vscode.ExtensionMode;
   }>("pureobom-local.pureobom");
-  assert.ok(extension, "extension installed in development host");
+  assert.ok(extension, "Pureobom is available in this VS Code instance");
+  let installation: Record<string, unknown> | undefined;
+  if (process.env.PUREOBOM_EXPECTED_INSTALL) {
+    const expected = JSON.parse(process.env.PUREOBOM_EXPECTED_INSTALL) as {
+      version: string;
+      vsixSha256: string;
+      extensionsPath: string;
+      files: Record<string, string>;
+    };
+    const location = relative(expected.extensionsPath, extension.extensionPath);
+    assert.ok(
+      location && !location.startsWith("..") && !isAbsolute(location),
+      "loads the isolated installed VSIX, not the source checkout",
+    );
+    assert.equal(extension.packageJSON.version, expected.version);
+    for (const [path, digest] of Object.entries(expected.files)) {
+      const bytes = await vscode.workspace.fs.readFile(
+        vscode.Uri.joinPath(extension.extensionUri, path),
+      );
+      assert.equal(
+        createHash("sha256").update(bytes).digest("hex"),
+        digest,
+        `Installed artifact matches VSIX: ${path}`,
+      );
+    }
+    installation = {
+      kind: "installed-vsix",
+      version: expected.version,
+      vsixSha256: expected.vsixSha256,
+      verifiedFiles: expected.files,
+      extensionMode: "production",
+    };
+  }
   const api = await extension.activate(),
     c = api.controller;
+  if (installation)
+    assert.equal(
+      api.runtimeMode,
+      vscode.ExtensionMode.Production,
+      "installed product runs in production extension mode",
+    );
   const root = vscode.workspace.workspaceFolders![0].uri;
   const uri = vscode.Uri.joinPath(root, "shipping.ts");
   const doc = await vscode.workspace.openTextDocument(uri);
@@ -577,6 +618,7 @@ export async function run() {
   await projectChecks(c, ready, reports);
   await benchmarkChecks(c, ready, reports);
   const report = {
+    installation,
     vscode: vscode.version,
     checks: reports,
     passed: reports.length,
