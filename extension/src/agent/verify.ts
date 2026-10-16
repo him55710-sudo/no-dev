@@ -109,7 +109,9 @@ export async function verifyWorkspace(
       },
     );
     let output = "",
-      timedOut = false;
+      timedOut = false,
+      settled = false,
+      windowsTreeStopped = false;
     let terminationTimer: ReturnType<typeof setTimeout> | undefined;
     let stopDetails = "종료 요청을 전달했습니다.";
     const append = (chunk: Buffer) => {
@@ -118,9 +120,37 @@ export async function verifyWorkspace(
     child.stdout.on("data", append);
     child.stderr.on("data", append);
     child.stdin.end();
+    const finish = (code: number | null) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      if (signal.aborted) {
+        reject(Error("검증을 취소했습니다."));
+        return;
+      }
+      resolveDone({
+        name,
+        status: timedOut ? "timeout" : code === 0 ? "passed" : "failed",
+        ...(code === null ? {} : { exitCode: code }),
+        output,
+        elapsedMs: Date.now() - start,
+      });
+    };
+    const finishStoppedTree = () => {
+      // On Windows inherited output handles can outlive the terminated tree.
+      // Only release them after BOTH taskkill /T /F succeeds and our child exits.
+      // An exit alone is not evidence that its descendants have stopped.
+      if (windowsTreeStopped && child.exitCode !== null) {
+        child.stdout.destroy();
+        child.stderr.destroy();
+        finish(child.exitCode);
+      }
+    };
     const stop = () => {
-      if (terminationTimer) return;
+      if (terminationTimer || settled) return;
       terminationTimer = setTimeout(() => {
+        if (settled) return;
+        settled = true;
         cleanup();
         reject(
           Error(
@@ -149,6 +179,8 @@ export async function verifyWorkspace(
         });
         killer.on("exit", (code) => {
           stopDetails += ` (taskkill exit ${code})`;
+          windowsTreeStopped = code === 0;
+          finishStoppedTree();
           if (code !== 0 && child.exitCode === null) child.kill();
         });
       } else {
@@ -171,22 +203,15 @@ export async function verifyWorkspace(
       signal.removeEventListener("abort", abort);
     };
     child.on("error", (error) => {
+      if (settled) return;
+      settled = true;
       cleanup();
       reject(error);
     });
+    child.on("exit", finishStoppedTree);
     child.on("close", (code) => {
-      cleanup();
-      if (signal.aborted) {
-        reject(Error("검증을 취소했습니다."));
-        return;
-      }
-      resolveDone({
-        name,
-        status: timedOut ? "timeout" : code === 0 ? "passed" : "failed",
-        ...(code === null ? {} : { exitCode: code }),
-        output,
-        elapsedMs: Date.now() - start,
-      });
+      if (windows && terminationTimer && !windowsTreeStopped) return;
+      finish(code);
     });
     if (signal.aborted) stop();
   });

@@ -39,22 +39,29 @@ export async function readRecord<T>(
 }
 
 /** An OS-owned, process-lifetime lease. No stale lock files or PID-based deletion.
- * Hash collisions with another project/service conservatively refuse concurrent writes.
+ * Windows pipes and Linux abstract sockets avoid TCP port reservations/collisions.
+ * Other platforms retain the conservative loopback fallback.
  * This coordinates this extension's mutations; external editors still use hash guards. */
 export async function projectLease(canonicalRoot: string) {
   const key =
     process.platform === "win32" ? canonicalRoot.toLowerCase() : canonicalRoot;
   const port = 32768 + (Number.parseInt(digest(key).slice(0, 8), 16) % 28000);
+  const endpoint =
+    process.platform === "win32"
+      ? { path: "\\\\.\\pipe\\pureobom-project-" + digest(key) }
+      : process.platform === "linux"
+        ? { path: "\0pureobom-project-" + digest(key) }
+        : { host: "127.0.0.1", port };
   const server = createServer((socket) => socket.destroy());
   await new Promise<void>((done, reject) => {
-    server.once("error", () =>
+    server.once("error", (error: NodeJS.ErrnoException) =>
       reject(
         Error(
-          "다른 작업이 이 프로젝트를 사용 중이거나 작업 잠금을 사용할 수 없습니다. 잠시 뒤 다시 확인해 주세요.",
+          `다른 작업이 이 프로젝트를 사용 중이거나 작업 잠금을 사용할 수 없습니다. 잠시 뒤 다시 확인해 주세요. (${error.code ?? "unknown"})`,
         ),
       ),
     );
-    server.listen({ host: "127.0.0.1", port, exclusive: true }, done);
+    server.listen({ ...endpoint, exclusive: true }, done);
   });
   server.unref();
   return () =>

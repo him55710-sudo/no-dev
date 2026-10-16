@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { build } from "esbuild";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
+import { createServer } from "node:net";
 import { promisify } from "node:util";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -14,11 +15,16 @@ import {
   inspectRecovery,
   recoverJobReview,
 } from "../extension/src/agent/gitWorkspace";
-import { writeRecord, projectLease } from "../extension/src/agent/records";
+import {
+  digest,
+  writeRecord,
+  projectLease,
+} from "../extension/src/agent/records";
 import { ImplementationJobs } from "../extension/src/agent/jobs";
 import type { ChangeRequest, LivingSpec } from "../src/workspace/spec";
 const exec = promisify(execFile);
 let bundle: string;
+let leaseBundle: string;
 const parent = resolve("test-results/agent-recovery");
 beforeAll(async () => {
   await mkdir(parent, { recursive: true });
@@ -27,6 +33,15 @@ beforeAll(async () => {
   await build({
     entryPoints: ["extension/src/agent/gitWorkspace.ts"],
     outfile: bundle,
+    bundle: true,
+    platform: "node",
+    format: "cjs",
+    logLevel: "silent",
+  });
+  leaseBundle = resolve(directory, "records.cjs");
+  await build({
+    entryPoints: ["extension/src/agent/records.ts"],
+    outfile: leaseBundle,
     bundle: true,
     platform: "node",
     format: "cjs",
@@ -296,7 +311,7 @@ describe("durable implementation recovery", { timeout: 60000 }, () => {
     await expect(readApplyJournal(f.workspace)).rejects.toThrow();
     expect(await git(f.source, "status", "--porcelain")).toBe("");
   });
-  it("excludes a second writer and releases the OS lease when the owner exits", async () => {
+  it("excludes a second writer until its lease is released", async () => {
     const f = await fixture();
     const release = await projectLease(f.workspace.source);
     await expect(applyJobReview(f.workspace, f.review)).rejects.toThrow(
@@ -307,4 +322,95 @@ describe("durable implementation recovery", { timeout: 60000 }, () => {
     await undoJobReview(f.workspace, f.review);
     expect(await git(f.source, "status", "--porcelain")).toBe("");
   });
+  it("excludes another process and releases the lease after its owner is killed", async () => {
+    const source = await mkdtemp(resolve(parent, "lease-owner-"));
+    const child = spawn(
+      process.execPath,
+      [
+        "-e",
+        `
+      require(process.argv[1]).projectLease(process.argv[2]).then(() => {
+        process.send('ready'); setInterval(() => {}, 1000);
+      }).catch(error => { console.error(error); process.exit(1); });
+    `,
+        leaseBundle,
+        source,
+      ],
+      {
+        windowsHide: true,
+        stdio: ["ignore", "ignore", "pipe", "ipc"],
+      },
+    );
+    let diagnostic = "";
+    child.stderr!.on("data", (chunk) => {
+      diagnostic += chunk;
+    });
+    const exited = new Promise<void>((done) =>
+      child.once("exit", () => done()),
+    );
+    try {
+      await new Promise<void>((done, reject) => {
+        child.once("message", (message) =>
+          message === "ready" ? done() : reject(Error(String(message))),
+        );
+        child.once("error", reject);
+        child.once("exit", () =>
+          reject(Error(diagnostic || "Lease owner exited before readiness")),
+        );
+      });
+      const alias =
+        process.platform === "win32" ? source.toUpperCase() : source;
+      await expect(projectLease(alias)).rejects.toThrow(/다른 작업/);
+      const releaseOther = await projectLease(source + "-other");
+      await releaseOther();
+      expect(child.kill("SIGKILL")).toBe(true);
+      await exited;
+      const release = await projectLease(source);
+      await release();
+    } finally {
+      if (child.exitCode === null && child.signalCode === null)
+        child.kill("SIGKILL");
+      await exited;
+    }
+  });
+  it.skipIf(!["win32", "linux"].includes(process.platform))(
+    "can acquire an IPC lease while an unrelated service holds the former TCP port",
+    async () => {
+      const directory = await mkdtemp(resolve(parent, "lease-port-"));
+      // Find an available port from the former mapping, then keep it occupied.
+      // This also works on hosts that reserve part of the dynamic TCP range.
+      for (let attempt = 0; attempt < 100; attempt++) {
+        const source = resolve(directory, String(attempt));
+        const key =
+          process.platform === "win32" ? source.toLowerCase() : source;
+        const port =
+          32768 + (Number.parseInt(digest(key).slice(0, 8), 16) % 28000);
+        const service = createServer((socket) => socket.destroy());
+        const listening = await new Promise<boolean>((done) => {
+          service.once("error", () => done(false));
+          service.listen({ host: "127.0.0.1", port, exclusive: true }, () =>
+            done(true),
+          );
+        });
+        if (!listening) continue;
+        try {
+          const release = await projectLease(source);
+          try {
+            await expect(projectLease(source)).rejects.toThrow(/다른 작업/);
+            expect(service.listening).toBe(true);
+          } finally {
+            await release();
+          }
+        } finally {
+          await new Promise<void>((done, reject) =>
+            service.close((error) => (error ? reject(error) : done())),
+          );
+        }
+        return;
+      }
+      throw Error(
+        "Could not bind a TCP port for the occupied-port regression test",
+      );
+    },
+  );
 });
