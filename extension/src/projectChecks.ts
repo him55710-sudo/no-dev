@@ -30,7 +30,7 @@ export type ProjectCheck = {
   stale: boolean;
   staleReason?: string;
 };
-type Choice = { task: vscode.Task; fingerprint: string; uri: string };
+type Choice = { fingerprint: string; settings: string; uri: string };
 type Run = {
   id: string;
   uri: vscode.Uri;
@@ -278,8 +278,8 @@ export class ProjectChecks implements vscode.Disposable {
       .map((task) => {
         const id = randomUUID();
         this.choices.set(id, {
-          task,
           fingerprint: fingerprint(task),
+          settings: executionSettings(task),
           uri: doc.uri.toString(),
         });
         return view(task, id);
@@ -300,7 +300,7 @@ export class ProjectChecks implements vscode.Disposable {
       (task) =>
         eligible(task, folder) && fingerprint(task) === choice.fingerprint,
     );
-    if (!selected)
+    if (!selected || executionSettings(selected) !== choice.settings)
       throw Error(
         "검사 명령이 바뀌었습니다. 목록을 새로 읽으세요. / Task configuration changed. Refresh the list.",
       );
