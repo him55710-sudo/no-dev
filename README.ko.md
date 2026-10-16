@@ -1,5 +1,7 @@
 # 풀어봄 — 코드가, 말이 되다
 
+**0.7 개발 증분:** [HTML/CSS 원문 읽기·값 수정](docs/HTML_CSS_SOURCE.md)은 브라우저와 VS Code에 포함된 파서로 동작합니다. 태그·문구·선택자·선언을 원문에서 읽고 일부 값의 변경안·적용·undo를 지원합니다. API나 모델은 필요 없으며 실제 화면과 동작은 별도 확인해야 합니다.
+
 **제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). 0.7 개발 소스에 선택형 [Ollama 로컬 설명·수정](docs/LOCAL_AI.md)을 추가했습니다. 실제 Python 프로젝트 검증과, 성능이 느려져 채택하지 않은 제안도 공개합니다. 공개 0.6.0 설치본과 브라우저 데모에는 로컬 AI가 없습니다.
 
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)

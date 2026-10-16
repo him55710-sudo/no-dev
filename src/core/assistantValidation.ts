@@ -1,8 +1,20 @@
 import ts from "typescript";
-import { diagnostics, parse } from "./analyze";
+import { analyzeFile, diagnostics, parse } from "./analyze";
 import { readJsonStructure } from "./jsonData";
 
 export function validateAssistantChange(language: string, source: string) {
+  if (language === "html" || language === "css") {
+    const analysis = analyzeFile({
+      path: `proposal.${language}`,
+      content: source,
+    });
+    return {
+      status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+      detail: analysis.syntaxValid
+        ? "HTML/CSS 원문 파싱 통과. 렌더링·접근성·스타일 우선순위·속성값의 유효성·성능은 미검증입니다. / HTML/CSS source parsing passed; rendering, accessibility, cascade, property value validity and performance are unchecked."
+        : analysis.issues.map((issue) => issue.detail.en).join("\n"),
+    };
+  }
   const extensions: Record<string, string> = {
     javascript: "js",
     javascriptreact: "jsx",

@@ -798,7 +798,7 @@ export default function App() {
             ref={fileInput}
             hidden
             multiple
-            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.jsonc,.css,.html,.md,.py,.yaml,.yml,.txt"
+            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.jsonc,.css,.html,.htm,.md,.py,.yaml,.yml,.txt"
             onChange={(e) => {
               void importFiles(Array.from(e.target.files || []));
               e.target.value = "";
@@ -1189,28 +1189,38 @@ export default function App() {
                         setPatch(null);
                       }}
                       placeholder={
-                        active?.kind === "json"
+                        active?.web
                           ? t(
-                              '예: $["enabled"]를 false로 변경',
-                              'Example: change $["enabled"] to false',
+                              "표의 이름 전체와 큰따옴표로 감싼 새 값",
+                              "Full table name and a new value in double quotes",
                             )
-                          : t(
-                              "예: 무료 배송 기준을 70000으로 변경",
-                              "Example: change freeShippingThreshold to 70000",
-                            )
+                          : active?.kind === "json"
+                            ? t(
+                                '예: $["enabled"]를 false로 변경',
+                                'Example: change $["enabled"] to false',
+                              )
+                            : t(
+                                "예: 무료 배송 기준을 70000으로 변경",
+                                "Example: change freeShippingThreshold to 70000",
+                              )
                       }
                       rows={4}
                     />
                     <span className="field-help">
-                      {active?.kind === "json"
+                      {active?.web
                         ? t(
-                            "키 경로 전체와 새 값 하나를 적어 주세요. 문자열은 큰따옴표로 감싸 주세요.",
-                            "Use the full key path and one new value. Put strings in double quotes.",
+                            '이름 전체(@위치 포함)와 새 값 하나를 적어 주세요. CSS 값은 단위까지 포함하세요. 예: "24px"',
+                            'Use the full name including @position and one quoted value. Include CSS units, e.g. "24px".',
                           )
-                        : t(
-                            "현재 파일의 규칙 이름 + 새 값. 일반적인 기능 생성 요청은 아직 지원하지 않습니다.",
-                            "Use a rule name in the current file + one new value. General feature generation is not supported yet.",
-                          )}
+                        : active?.kind === "json"
+                          ? t(
+                              "키 경로 전체와 새 값 하나를 적어 주세요. 문자열은 큰따옴표로 감싸 주세요.",
+                              "Use the full key path and one new value. Put strings in double quotes.",
+                            )
+                          : t(
+                              "현재 파일의 규칙 이름 + 새 값. 일반적인 기능 생성 요청은 아직 지원하지 않습니다.",
+                              "Use a rule name in the current file + one new value. General feature generation is not supported yet.",
+                            )}
                     </span>
                     <div className="suggestion-chips">
                       {active?.rules

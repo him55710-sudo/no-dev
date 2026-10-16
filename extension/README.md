@@ -2,6 +2,8 @@
 
 **Pureobom — Read it. Change it. Check it.**
 
+**HTML/CSS 원문 / source:** 0.7 개발판은 포함된 파서로 태그·문구·선택자·선언 값을 읽고 일부 값의 diff·적용·undo를 제공합니다. 모델/API/별도 언어 실행기가 필요 없습니다. 렌더링·스타일 우선순위·접근성은 실제 페이지에서 확인해야 합니다. [범위와 예제 / Guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/HTML_CSS_SOURCE.md).
+
 **0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 언어별 모델의 의미 정확성과 새 설치·사용 조합은 계속 검증 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
 
 Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. Optional local AI proposes broader changes. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.

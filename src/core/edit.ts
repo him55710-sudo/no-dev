@@ -3,6 +3,7 @@ import { operators } from "./labels";
 import { words, type Patch, type SourceFile } from "./types";
 import type { GlossaryEntry } from "./glossary";
 import { readJsonStructure, jsonDataLimits } from "./jsonData";
+import { webReplacement } from "./webSource";
 export function makePatch(
   file: SourceFile,
   ruleId: string,
@@ -22,7 +23,9 @@ export function makePatch(
       "값은 4096자 이내로 입력해 주세요. / Enter a value up to 4096 characters.",
     );
   let value: string;
-  if (r.type === "number") {
+  if (a.web) {
+    value = webReplacement(r, input);
+  } else if (r.type === "number") {
     if (r.syntax === "json") {
       // Preserve numeric lexemes, including integers outside JS's safe range.
       if (!/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(input.trim()))
@@ -56,7 +59,10 @@ export function makePatch(
   if (value === r.raw) throw Error("현재 값과 같습니다. / No change.");
   const updated =
     file.content.slice(0, r.start) + value + file.content.slice(r.end);
-  if (r.syntax === "json") {
+  if (a.web) {
+    if (!analyzeFile({ ...file, content: updated }).syntaxValid)
+      throw Error("변경 후 원문을 읽을 수 없습니다. / Invalid updated source.");
+  } else if (r.syntax === "json") {
     readJsonStructure(updated, /\.jsonc$/i.test(file.path));
   } else if (diagnostics(parse({ ...file, content: updated })).length)
     throw Error(

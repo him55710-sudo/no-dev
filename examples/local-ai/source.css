@@ -1,0 +1,10 @@
+/* Read the declaration, then check the actual page to see its effect. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  --accent: #5d58ac;
+}
+@media (min-width: 700px) {
+  .cards { gap: 24px !important; }
+}

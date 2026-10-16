@@ -102,30 +102,39 @@ const shippedWorker = new Worker(workerFile, {
   env: { ...process.env, NODE_PATH: "" },
 });
 try {
-  const result = await new Promise((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(Error("Packaged worker startup timed out")),
-      20000,
+  for (const [language, source] of [
+    ["jsonc", '{ // shipping\n "fee": 3000,\n}'],
+    ["html", '<p title="한글 &amp; 😀">Hello</p>'],
+    [
+      "css",
+      ".grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }",
+    ],
+  ]) {
+    const result = await new Promise((resolve, reject) => {
+      const timer = setTimeout(
+        () => reject(Error("Packaged worker startup timed out")),
+        20000,
+      );
+      shippedWorker.once("error", (error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+      shippedWorker.once("message", (message) => {
+        clearTimeout(timer);
+        message.error ? reject(Error(message.error)) : resolve(message.result);
+      });
+      shippedWorker.postMessage({
+        id: 1,
+        type: "validateAssistant",
+        payload: { language, source },
+      });
+    });
+    assert.equal(
+      result.status,
+      "syntax-passed",
+      `Packaged ${language} parser runs without node_modules`,
     );
-    shippedWorker.once("error", (error) => {
-      clearTimeout(timer);
-      reject(error);
-    });
-    shippedWorker.once("message", (message) => {
-      clearTimeout(timer);
-      message.error ? reject(Error(message.error)) : resolve(message.result);
-    });
-    shippedWorker.postMessage({
-      id: 1,
-      type: "validateAssistant",
-      payload: { language: "jsonc", source: '{ // shipping\n "fee": 3000,\n}' },
-    });
-  });
-  assert.equal(
-    result.status,
-    "syntax-passed",
-    "Packaged JSONC parser runs without node_modules",
-  );
+  }
 } finally {
   await shippedWorker.terminate();
   await unlink(workerFile);

@@ -1,5 +1,7 @@
 # 제품 완성 계획 · Product completion plan
 
+추가 P2/P3/P4 증분: [HTML/CSS 원문 파서와 값 수정](HTML_CSS_SOURCE.md)을 브라우저·VS Code에 연결했다. 모델이 CSS 열 개수를 추측했던 사례에 대응해 원문 선언과 실제 화면을 구분한다. 일부 문구·속성·CSS 값의 정확한 범위 수정과 제안 파싱을 지원한다. 외부 웹 프로젝트의 렌더링/동작 검증과 Rust·Java·C#·SQL 도구는 남아 있으며 전체 P0–P6 완료가 아니다.
+
 최신 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)는 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [원자료](evidence/local-ai/go-source-ci.json). 전체 P0–P6와 모든 언어 지원은 진행 중이다.
 
 추가 P2/P3/P4 증분: [Go 표준 AST 읽기·문자열/숫자 수정](GO_SOURCE.md)을 로컬 VS Code에 연결했다. 여러 반환값·defer·고루틴·switch/select 구조와 정확한 원문 위치를 읽고 Go 변경안의 문법을 검사한다. [Google UUID 고정 오류 검사](evidence/local-ai/go-source-project.md)는 201 pass·1 skip → TestUUID 실패 → undo 후 201 pass·1 skip을 확인했다. SDK가 필요하며 타입·실행 결과·Go 최적화 측정을 검증한 것은 아니다. 전체 계획은 진행 중이다.

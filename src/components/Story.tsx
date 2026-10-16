@@ -129,6 +129,45 @@ export function Story({
   const ko = lang === "ko";
   const native = analysis.python || analysis.go;
   const nativeName = analysis.python ? "Python" : "Go";
+  if (analysis.web)
+    return (
+      <div className="story">
+        <p className="card data-facts">
+          {ko
+            ? "원문의 태그·문구·스타일 선언을 로컬 파서로 읽었습니다. API나 모델 없이 작동하며, 실행 결과를 예측하지 않습니다. 직접 수정은 일반 HTML 문구·일부 텍스트 속성·CSS 선언 값만 지원합니다."
+            : "A local parser reads tags, text and style declarations without an API or model. It does not predict runtime outcomes. Direct editing covers ordinary HTML text, selected text attributes and CSS declaration values."}
+        </p>
+        {analysis.issues.length > 0 ? (
+          <section className="card" role="status">
+            {analysis.issues.map((issue) => (
+              <p key={issue.id}>
+                {issue.detail[lang]}{" "}
+                <button
+                  className="line-link"
+                  onClick={() => onSource(issue.line)}
+                >
+                  L{issue.line}
+                </button>
+              </p>
+            ))}
+          </section>
+        ) : null}
+        <InterfaceTree
+          analysis={analysis}
+          lang={lang}
+          onSource={onSource}
+          onEdit={onEdit}
+          editDisabled={editDisabled}
+        />
+        {!analysis.interface?.roots.length && analysis.syntaxValid ? (
+          <p>
+            {ko
+              ? "표시할 원문 항목이 없습니다."
+              : "No source entries to display."}
+          </p>
+        ) : null}
+      </div>
+    );
   if (analysis.kind === "json")
     return (
       <DataFacts
@@ -250,6 +289,7 @@ export function Story({
         lang={lang}
         onSource={onSource}
         onEdit={onEdit}
+        editDisabled={editDisabled}
       />
       {analysis.functions.length === 0 ? (
         <section className="card setup-card">

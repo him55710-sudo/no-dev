@@ -1,5 +1,7 @@
 import { build } from "esbuild";
 import { mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
 await mkdir("extension/out", { recursive: true });
 const common = { bundle: true, sourcemap: false, logLevel: "info" };
 await Promise.all([
@@ -19,6 +21,9 @@ await Promise.all([
     platform: "node",
     // jsonc-parser's UMD entry hides relative requires from the bundler.
     mainFields: ["module", "main"],
+    // CSS Tree's ESM loader uses createRequire(import.meta.url). Its CJS entry
+    // has static requires, so grammar data can be included in this CJS worker.
+    alias: { "css-tree": require.resolve("css-tree") },
     format: "cjs",
     target: "node20",
     minify: true,
