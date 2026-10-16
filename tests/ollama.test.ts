@@ -104,6 +104,30 @@ describe("Ollama loopback protocol (controlled HTTP fixture, not real inference)
     ).rejects.toThrow(/OLLAMA_NO_CLOUD/);
     expect(seen).toEqual(["/api/status"]);
   });
+  it("requests direct answers only when the model advertises a supported off switch", async () => {
+    for (const thinking of [
+      { values: [false, true], default: true },
+      { values: ["low", "medium", "high"], default: "medium" },
+      { values: [true], default: true },
+      undefined,
+    ]) {
+      let chat: any;
+      const port = await server((req, res, body) => {
+        if (req.url === "/api/chat") chat = body;
+        reply(
+          res,
+          req.url === "/api/show"
+            ? { ...fixture(req.url), thinking }
+            : fixture(req.url),
+        );
+      });
+      await new OllamaClient(port).generate(model.name, input);
+      if (thinking?.values.some((value) => value === false))
+        expect(chat.think).toBe(false);
+      else expect(chat).not.toHaveProperty("think");
+      expect(chat.options.num_predict).toBe(4096);
+    }
+  });
   it("filters cloud aliases and rejects remote metadata before chat", async () => {
     let chat = false;
     const port = await server((req, res) => {

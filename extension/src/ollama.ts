@@ -209,12 +209,19 @@ export class OllamaClient {
     await this.localOnly(signal);
     const messages = assistantMessages(input);
     const contextSize = assistantContextSize(messages);
+    // Reserve our bounded output for the final structured answer. Only request
+    // this switch when the server explicitly advertises it; some models have
+    // named reasoning levels or do not permit disabling thinking.
+    const thinkingValues = object(info.thinking).values;
+    const canDisableThinking =
+      Array.isArray(thinkingValues) && thinkingValues.includes(false);
     const started = Date.now();
     const result = await this.json(
       "/api/chat",
       {
         model: model.name,
         stream: false,
+        ...(canDisableThinking ? { think: false } : {}),
         messages,
         format: assistantSchema,
         options: {
