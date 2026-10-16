@@ -707,6 +707,51 @@ textarea {
 .spec-focused .design-center {
   visibility: hidden;
 }
+.baseline-review {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--design-accent);
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+.baseline-review h3 {
+  margin: 0 0 8px;
+}
+.baseline-review small,
+.baseline-history small {
+  display: block;
+  opacity: 0.75;
+}
+.baseline-targets,
+.baseline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+.baseline-search {
+  max-height: 190px;
+  overflow: auto;
+  margin: 8px 0 16px;
+}
+.baseline-search label {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  align-items: start;
+}
+.baseline-search input {
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+.baseline-review details,
+.baseline-history {
+  margin: 12px 0;
+}
+.baseline-proposal {
+  padding-top: 12px;
+  border-top: 1px solid var(--design-line);
+}
 .spec-focused .spec-editor {
   max-width: 850px;
   margin: auto;

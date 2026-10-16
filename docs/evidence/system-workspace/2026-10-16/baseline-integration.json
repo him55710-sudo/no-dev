@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-10-16T08:57:02.326Z",
+  "checks": [
+    "real compiler graph",
+    "alias/re-export shared policy",
+    "node to exact source",
+    "source to node",
+    "durable design save",
+    "stale design rejected",
+    "unsaved source invalidation",
+    "observed drift preserves intent",
+    "restored source reconnects",
+    "project verification script discovery",
+    "documentation save never starts agent",
+    "external data choice required",
+    "dirty editor blocks implementation",
+    "dirty editor blocks baseline acceptance",
+    "stale baseline comparison and stale spec revision are rejected",
+    "renamed declaration explicitly reconnects with stable spec identity",
+    "baseline history and desired intent survive subsequent document edits",
+    "baseline acceptance never starts an agent"
+  ],
+  "nodes": 42,
+  "edges": 21
+}

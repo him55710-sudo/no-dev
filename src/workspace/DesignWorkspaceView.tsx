@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { ancestors, type StructureGraph, type StructureNode } from "./model";
 import {
-  draftSpec,
+  specForTargets,
   observeSpec,
   implementationScope,
   type LivingSpec,
   type SpecContent,
+  type BaselineRequest,
 } from "./spec";
+import { BaselineReview } from "./BaselineReview";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
 import { jobIsActive, type VerificationName } from "./job";
@@ -21,13 +23,16 @@ export type DesignActions = {
     targets: string[],
     content: SpecContent,
     revision: number,
+    specId?: string,
   ) => Promise<LivingSpec>;
   implement?: (
     targets: string[],
     content: SpecContent,
     revision: number,
     checks: VerificationName[],
+    specId?: string,
   ) => Promise<unknown>;
+  acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
   jobAction?: (
     action: JobAction,
     payload?: Record<string, unknown>,
@@ -123,6 +128,7 @@ function SpecEditor({
   onSave,
   onSource,
   implementation,
+  acceptBaseline,
 }: {
   spec: LivingSpec;
   graph: StructureGraph;
@@ -134,7 +140,9 @@ function SpecEditor({
   onSave: () => void;
   onSource: (id: string, index: number) => void;
   implementation?: React.ReactNode;
+  acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
 }) {
+  const [reviewing, setReviewing] = useState(false);
   const observation = observeSpec(spec, graph);
   const fields: [
     keyof Pick<
@@ -206,6 +214,53 @@ function SpecEditor({
             ));
           })}
         </div>
+        {acceptBaseline && spec.revision > 0 ? (
+          <>
+            <button
+              disabled={dirty || saving || readOnly}
+              onClick={() => setReviewing(true)}
+            >
+              기준 코드 비교·다시 연결
+            </button>
+            {dirty ? (
+              <p>작성 중인 설계를 먼저 저장한 뒤 기준 코드를 비교해 주세요.</p>
+            ) : null}
+            {reviewing ? (
+              <BaselineReview
+                key={spec.id}
+                spec={spec}
+                graph={graph}
+                disabled={dirty || saving || readOnly}
+                accept={acceptBaseline}
+                close={() => setReviewing(false)}
+                source={onSource}
+              />
+            ) : null}
+          </>
+        ) : null}
+        {spec.baselineHistory?.length ? (
+          <details className="baseline-history">
+            <summary>이전 기준 {spec.baselineHistory.length}개</summary>
+            {spec.baselineHistory
+              .slice()
+              .reverse()
+              .map((entry) => (
+                <details key={entry.revision}>
+                  <summary>
+                    설계 v{entry.revision} ·{" "}
+                    {new Date(entry.replacedAt).toLocaleString()}
+                  </summary>
+                  <p>{entry.baseline.observed}</p>
+                  {entry.baseline.sources.map((ref, i) => (
+                    <p key={i}>
+                      {ref.path}:{ref.line} · {ref.symbol}
+                      <small>코드 해시 {ref.contentHash.slice(0, 12)}</small>
+                    </p>
+                  ))}
+                </details>
+              ))}
+          </details>
+        ) : null}
       </section>
       {fields.map(([key, label, placeholder]) => (
         <label
@@ -264,7 +319,12 @@ export function DesignWorkspaceView({
   state: DesignWorkspaceState;
   actions: DesignActions;
 }) {
-  const [selection, setSelection] = useState(state.selectedId);
+  const [selection, updateSelection] = useState(state.selectedId);
+  const [savedSpecId, setSavedSpecId] = useState<string>();
+  const setSelection = (id: string) => {
+    updateSelection(id);
+    setSavedSpecId(undefined);
+  };
   const [connections, setConnections] = useState<string[]>([]);
   const [scope, setScope] = useState("system");
   const [search, setSearch] = useState("");
@@ -288,15 +348,16 @@ export function DesignWorkspaceView({
   const targetIds = included.length ? included : selected ? [selected.id] : [];
   const targetsKey = targetIds.slice().sort().join("|");
   const spec = useMemo(() => {
-    if (!graph || !targetIds.length) return undefined;
-    const existing = state.specs.specs.find((item) => item.id === targetsKey);
-    if (existing) return existing;
+    if (!graph) return undefined;
+    const pinned = state.specs.specs.find((item) => item.id === savedSpecId);
+    if (pinned) return pinned;
+    if (!targetIds.length) return undefined;
     try {
-      return draftSpec(graph, targetIds);
+      return specForTargets(state.specs, graph, targetIds);
     } catch {
       return undefined;
     }
-  }, [graph, state.specs, targetsKey]);
+  }, [graph, state.specs, targetsKey, savedSpecId]);
   const content = spec ? (drafts[spec.id] ?? spec.content) : undefined;
   const related = useMemo(
     () =>
@@ -326,8 +387,19 @@ export function DesignWorkspaceView({
     };
     const request =
       implement && actions.implement
-        ? actions.implement(spec.targetIds, cleaned, spec.revision, checks)
-        : actions.save(spec.targetIds, cleaned, spec.revision);
+        ? actions.implement(
+            spec.targetIds,
+            cleaned,
+            spec.revision,
+            checks,
+            spec.revision ? spec.id : undefined,
+          )
+        : actions.save(
+            spec.targetIds,
+            cleaned,
+            spec.revision,
+            spec.revision ? spec.id : undefined,
+          );
     void request
       .then(() => {
         setDrafts((current) => {
@@ -440,6 +512,7 @@ export function DesignWorkspaceView({
                       onClick={() => {
                         setIncluded(item.targetIds);
                         setSelection(item.targetIds[0]);
+                        setSavedSpecId(item.id);
                       }}
                     >
                       {item.content.title}
@@ -576,13 +649,14 @@ export function DesignWorkspaceView({
                 {typeNames[selected.kind]} · {selected.label}
               </span>
               <button
-                onClick={() =>
+                onClick={() => {
+                  setSavedSpecId(undefined);
                   setIncluded((old) =>
                     old.includes(selected.id)
                       ? old.filter((id) => id !== selected.id)
                       : [...old, selected.id],
-                  )
-                }
+                  );
+                }}
               >
                 {included.includes(selected.id)
                   ? "대상에서 제외"
@@ -593,7 +667,14 @@ export function DesignWorkspaceView({
           {included.length ? (
             <div className="included-targets">
               <span>{included.length}개 대상을 함께 설계</span>
-              <button onClick={() => setIncluded([])}>선택 해제</button>
+              <button
+                onClick={() => {
+                  setSavedSpecId(undefined);
+                  setIncluded([]);
+                }}
+              >
+                선택 해제
+              </button>
             </div>
           ) : null}
           {selected && graph ? (
@@ -636,6 +717,7 @@ export function DesignWorkspaceView({
           ) : null}
           {spec && content && graph ? (
             <SpecEditor
+              key={spec.id}
               spec={spec}
               graph={graph}
               content={content}
@@ -647,6 +729,21 @@ export function DesignWorkspaceView({
               }
               onSave={() => save()}
               onSource={source}
+              acceptBaseline={
+                actions.acceptBaseline &&
+                !jobIsActive(state.job) &&
+                state.job?.phase !== "recovery"
+                  ? async (request) => {
+                      await actions.acceptBaseline!(request);
+                      updateSelection(request.targetIds[0]);
+                      setIncluded(request.targetIds);
+                      setSavedSpecId(request.specId);
+                      setFeedback(
+                        "검토한 코드를 새 기준으로 저장했습니다. 설계 목표는 그대로 유지됩니다.",
+                      );
+                    }
+                  : undefined
+              }
               implementation={
                 actions.implement ? (
                   <section
@@ -703,6 +800,7 @@ export function DesignWorkspaceView({
                         !state.trusted ||
                         state.stale ||
                         state.busy ||
+                        observeSpec(spec, graph).status !== "unchanged" ||
                         jobIsActive(state.job) ||
                         state.job?.phase === "recovery" ||
                         !content.desired.trim() ||

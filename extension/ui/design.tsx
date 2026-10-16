@@ -32,20 +32,23 @@ function DesignApp() {
         refresh: () => request("refresh"),
         source: (nodeId, sourceIndex) =>
           request("source", { nodeId, sourceIndex }),
-        save: (targetIds, content, expectedRevision) =>
+        save: (targetIds, content, expectedRevision, specId) =>
           request<LivingSpec>("saveSpec", {
             targetIds,
             content,
             expectedRevision,
+            specId,
           }),
-        implement: (targetIds, content, expectedRevision, checks) =>
+        implement: (targetIds, content, expectedRevision, checks, specId) =>
           request("implement", {
             targetIds,
             content,
             expectedRevision,
             checks,
             allowExternal: true,
+            specId,
           }),
+        acceptBaseline: (payload) => request("acceptBaseline", payload),
         jobAction: (action, payload) => request(action, payload),
       }}
     />

@@ -2,7 +2,7 @@ import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import { observeSpec } from "../../src/workspace/spec";
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 export async function run() {
   const extension = vscode.extensions.getExtension<{
@@ -133,6 +133,102 @@ export async function run() {
   await vscode.workspace.applyEdit(restore);
   await workspace.refresh();
   assert.equal(observeSpec(saved, workspace.state.graph!).status, "unchanged");
+  // Rename the linked declaration after saving, then explicitly reconnect it.
+  const renamed = new vscode.WorkspaceEdit();
+  renamed.replace(
+    file.uri,
+    new vscode.Range(
+      file.positionAt(0),
+      file.positionAt(file.getText().length),
+    ),
+    original.replace("function canEdit(", "function mayEdit("),
+  );
+  await vscode.workspace.applyEdit(renamed);
+  await assert.rejects(
+    workspace.handleRequest({
+      id: "dirty-baseline",
+      action: "acceptBaseline",
+      payload: {
+        specId: saved.id,
+        expectedRevision: 1,
+        expectedGraphRevision: workspace.state.graph!.revision,
+        targetIds: targets,
+      },
+    }),
+    /저장한 뒤/,
+  );
+  await file.save();
+  await workspace.refresh();
+  async function settled() {
+    let readySince = 0;
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      if (workspace.state.busy || workspace.state.stale) readySince = 0;
+      else readySince ||= Date.now();
+      if (readySince && Date.now() - readySince > 1000) return;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw Error("Analysis did not settle");
+  }
+  await settled();
+  const renamedGraph = workspace.state.graph!;
+  const replacement = renamedGraph.nodes.find(
+    (node) => node.label === "mayEdit" && node.kind === "symbol",
+  )!;
+  assert.ok(replacement);
+  assert.equal(observeSpec(saved, renamedGraph).status, "reconnect");
+  const reconnect = {
+    specId: saved.id,
+    expectedRevision: 1,
+    expectedGraphRevision: renamedGraph.revision,
+    targetIds: [replacement.id],
+  };
+  await assert.rejects(
+    workspace.handleRequest({
+      id: "stale-preview",
+      action: "acceptBaseline",
+      payload: { ...reconnect, expectedGraphRevision: graph.revision },
+    }),
+    /코드가 바뀌었/,
+  );
+  const reconnected = (await workspace.handleRequest({
+    id: "reconnect",
+    action: "acceptBaseline",
+    payload: reconnect,
+  })) as typeof saved;
+  assert.equal(reconnected.id, saved.id);
+  assert.equal(reconnected.revision, 2);
+  assert.deepEqual(reconnected.content, saved.content);
+  assert.deepEqual(reconnected.targetIds, [replacement.id]);
+  assert.deepEqual(reconnected.baselineHistory![0].baseline, saved.baseline);
+  assert.equal(
+    observeSpec(reconnected, workspace.state.graph!).status,
+    "unchanged",
+  );
+  assert.equal(
+    workspace.state.job,
+    undefined,
+    "baseline acceptance never starts the agent",
+  );
+  await assert.rejects(
+    workspace.handleRequest({
+      id: "stale-spec",
+      action: "acceptBaseline",
+      payload: reconnect,
+    }),
+    /설계가 바뀌었/,
+  );
+  const afterEdit = await workspace.save({
+    specId: saved.id,
+    targetIds: [replacement.id],
+    content: { ...content, title: "다시 연결한 공유 권한" },
+    expectedRevision: 2,
+  });
+  assert.equal(afterEdit.revision, 3);
+  const persisted = JSON.parse(await readFile(designUri.fsPath, "utf8"))
+    .specs[0];
+  assert.equal(persisted.id, saved.id);
+  assert.deepEqual(persisted.baselineHistory, reconnected.baselineHistory);
   const report = {
     checkedAt: new Date().toISOString(),
     checks: [
@@ -149,6 +245,11 @@ export async function run() {
       "documentation save never starts agent",
       "external data choice required",
       "dirty editor blocks implementation",
+      "dirty editor blocks baseline acceptance",
+      "stale baseline comparison and stale spec revision are rejected",
+      "renamed declaration explicitly reconnects with stable spec identity",
+      "baseline history and desired intent survive subsequent document edits",
+      "baseline acceptance never starts an agent",
     ],
     nodes: graph.nodes.length,
     edges: graph.edges.length,

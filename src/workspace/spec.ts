@@ -20,19 +20,43 @@ export const specContentSchema = z
     acceptance: lines,
   })
   .strict();
+const targetIdsSchema = z.array(z.string().min(1).max(4096)).min(1).max(100);
+const baselineSchema = z
+  .object({
+    graphRevision: z.string().regex(/^[a-f0-9]{64}$/),
+    observed: text,
+    sources: z.array(sourceRefSchema).max(1000),
+  })
+  .strict();
+export const baselineRequestSchema = z
+  .object({
+    specId: z.string().min(1).max(4096),
+    expectedRevision: z.number().int().positive(),
+    expectedGraphRevision: z.string().regex(/^[a-f0-9]{64}$/),
+    targetIds: targetIdsSchema,
+  })
+  .strict();
+export type BaselineRequest = z.infer<typeof baselineRequestSchema>;
 export const livingSpecSchema = z
   .object({
     id: z.string().min(1).max(4096),
-    targetIds: z.array(z.string().min(1).max(4096)).min(1).max(100),
+    targetIds: targetIdsSchema,
     revision: z.number().int().nonnegative(),
     content: specContentSchema,
-    baseline: z
-      .object({
-        graphRevision: z.string().regex(/^[a-f0-9]{64}$/),
-        observed: text,
-        sources: z.array(sourceRefSchema).max(1000),
-      })
-      .strict(),
+    baseline: baselineSchema,
+    baselineHistory: z
+      .array(
+        z
+          .object({
+            revision: z.number().int().positive(),
+            targetIds: targetIdsSchema,
+            baseline: baselineSchema,
+            replacedAt: z.string().datetime(),
+          })
+          .strict(),
+      )
+      .max(100)
+      .optional(),
     updatedAt: z.string().datetime(),
   })
   .strict();
@@ -121,6 +145,27 @@ export function draftSpec(
   });
 }
 
+/** Find the design for these targets without reusing an ID retained by a reconnected design. */
+export function specForTargets(
+  document: SpecDocument,
+  graph: StructureGraph,
+  targetIds: string[],
+): LivingSpec {
+  const key = targetIds.slice().sort().join("|");
+  const existing = document.specs.find(
+    (spec) => spec.targetIds.slice().sort().join("|") === key,
+  );
+  if (existing) return existing;
+  const draft = draftSpec(graph, targetIds);
+  // A reconnected design keeps its old ID; its former target may need a new design.
+  let suffix = 2;
+  while (document.specs.some((spec) => spec.id === draft.id)) {
+    const tail = `#${suffix++}`;
+    draft.id = key.slice(0, 4096 - tail.length) + tail;
+  }
+  return draft;
+}
+
 /** Refresh observed evidence without ever rewriting the user's desired behavior. */
 export function observeSpec(
   spec: LivingSpec,
@@ -174,6 +219,19 @@ export function observeSpec(
       "연결된 소스가 없는 구조입니다. 새 분석에서 대상을 다시 선택해 주세요.",
     );
   }
+  if (
+    status !== "reconnect" &&
+    spec.targetIds.every((id) => graph.nodes.some((n) => n.id === id))
+  ) {
+    const current = draftSpec(graph, spec.targetIds);
+    const known = new Set(sources.map(sourceKey));
+    if (current.baseline.sources.some((ref) => !known.has(sourceKey(ref)))) {
+      status = "changed";
+      details.push(
+        "설계 대상에 새로운 구현 근거가 추가되었습니다. 범위를 다시 검토해 주세요.",
+      );
+    }
+  }
   return { status, sources, details };
 }
 
@@ -188,7 +246,10 @@ export function saveSpec(
     throw Error("다른 편집으로 설계가 바뀌었습니다. 다시 열어 비교해 주세요.");
   if (
     previous &&
-    JSON.stringify(previous.baseline) !== JSON.stringify(parsed.baseline)
+    (JSON.stringify(previous.baseline) !== JSON.stringify(parsed.baseline) ||
+      JSON.stringify(previous.targetIds) !== JSON.stringify(parsed.targetIds) ||
+      JSON.stringify(previous.baselineHistory) !==
+        JSON.stringify(parsed.baselineHistory))
   )
     throw Error("설계 편집은 기존 구현 기준선을 덮어쓸 수 없습니다.");
   const saved = {
@@ -199,6 +260,52 @@ export function saveSpec(
   return specDocumentSchema.parse({
     schemaVersion: 1,
     specs: [...document.specs.filter((spec) => spec.id !== saved.id), saved],
+  });
+}
+
+/** Explicitly accept reviewed code evidence. This never asserts that intent is satisfied. */
+export function acceptBaseline(
+  document: SpecDocument,
+  graph: StructureGraph,
+  raw: BaselineRequest,
+  now = new Date().toISOString(),
+): SpecDocument {
+  const request = baselineRequestSchema.parse(raw);
+  const previous = document.specs.find((spec) => spec.id === request.specId);
+  if (!previous || previous.revision !== request.expectedRevision)
+    throw Error("검토 중 설계가 바뀌었습니다. 비교를 다시 열어 주세요.");
+  if (graph.revision !== request.expectedGraphRevision)
+    throw Error(
+      "검토 중 코드가 바뀌었습니다. 기준 코드 비교를 다시 열어 주세요.",
+    );
+  const candidate = draftSpec(graph, [...new Set(request.targetIds)], now);
+  if (!candidate.baseline.sources.length)
+    throw Error(
+      "연결할 구현 근거가 없습니다. 코드가 있는 대상을 선택해 주세요.",
+    );
+  if ((previous.baselineHistory?.length ?? 0) >= 100)
+    throw Error(
+      "기준선 기록이 100개에 도달했습니다. 기존 기록을 보관한 뒤 정리해 주세요.",
+    );
+  const saved = livingSpecSchema.parse({
+    ...previous,
+    revision: previous.revision + 1,
+    targetIds: candidate.targetIds,
+    baseline: candidate.baseline,
+    baselineHistory: [
+      ...(previous.baselineHistory ?? []),
+      {
+        revision: previous.revision,
+        targetIds: previous.targetIds,
+        baseline: previous.baseline,
+        replacedAt: now,
+      },
+    ],
+    updatedAt: now,
+  });
+  return specDocumentSchema.parse({
+    schemaVersion: 1,
+    specs: document.specs.map((spec) => (spec.id === saved.id ? saved : spec)),
   });
 }
 

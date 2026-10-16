@@ -113,8 +113,53 @@ export async function run() {
       "user's staged and unstaged status is preserved",
     );
   }
-  async function startImplementation() {
+  async function stableAnalysis() {
     await workspace.refresh();
+    // File watchers can invalidate an explicit refresh while undo events arrive.
+    // Match the UI's enabled state and let the 700ms analysis debounce settle.
+    let readySince = 0;
+    await waitFor(() => {
+      if (
+        workspace.state.busy ||
+        workspace.state.stale ||
+        !workspace.state.graph
+      ) {
+        readySince = 0;
+        return false;
+      }
+      readySince ||= Date.now();
+      return Date.now() - readySince >= 1000;
+    }, "stable analysis before the next user implementation action");
+  }
+  async function acceptCurrentBaseline() {
+    await stableAnalysis();
+    const before = workspace.state.specs.specs.find(
+      (spec) => spec.id === "system",
+    )!;
+    const currentJob = workspace.state.job!.id;
+    const accepted = (await dispatch("acceptBaseline", {
+      specId: before.id,
+      expectedRevision: before.revision,
+      expectedGraphRevision: workspace.state.graph!.revision,
+      targetIds: before.targetIds,
+    })) as typeof before;
+    assert.equal(accepted.revision, before.revision + 1);
+    assert.deepEqual(accepted.content, before.content);
+    assert.deepEqual(
+      accepted.baselineHistory!.at(-1)!.baseline,
+      before.baseline,
+    );
+    assert.equal(
+      workspace.state.job!.id,
+      currentJob,
+      "accepting evidence never starts another agent",
+    );
+    checks.push(
+      "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+    );
+  }
+  async function startImplementation() {
+    await stableAnalysis();
     const previous = workspace.state.specs.specs.find(
       (spec) => spec.id === "system",
     );
@@ -252,6 +297,12 @@ export async function run() {
       { cwd: source, windowsHide: true },
     );
     assert.match(verified.stdout, /viewer reads|viewer controls/);
+    assert.equal(
+      workspace.state.specs.specs[0].baselineHistory,
+      undefined,
+      "apply does not automatically accept new code as the design baseline",
+    );
+    await acceptCurrentBaseline();
     checks.push(
       "review restored after VS Code restart",
       "native diff opened",
@@ -263,6 +314,11 @@ export async function run() {
     const job = checkpoint.firstJob!;
     await dispatch("restoreJob", { workspaceId: job.id });
     assert.equal(workspace.state.job?.phase, "applied");
+    assert.equal(
+      workspace.state.specs.specs[0].baselineHistory?.length,
+      1,
+      "accepted baseline survives a fresh VS Code launch",
+    );
     const path = resolve(source, "service.js"),
       applied = await readFile(path, "utf8");
     await writeFile(path, applied + "\n// subsequent user edit\n");
@@ -284,7 +340,9 @@ export async function run() {
       "undo preserves subsequent user edits",
       "undo restores exact original bytes and staged/unstaged status",
     );
+    await acceptCurrentBaseline();
     checkpoint.crashJob = await startImplementation();
+    checks.push("next implementation uses the explicitly accepted baseline");
   } else if (phase === "crash-during-apply") {
     const job = checkpoint.crashJob!;
     await dispatch("restoreJob", { workspaceId: job.id });

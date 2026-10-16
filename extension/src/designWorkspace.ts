@@ -19,7 +19,9 @@ import {
   type StructureGraph,
 } from "../../src/workspace/model";
 import {
-  draftSpec,
+  specForTargets,
+  acceptBaseline,
+  baselineRequestSchema,
   prepareChange,
   saveSpec,
   specContentSchema,
@@ -38,6 +40,7 @@ const requestSchema = z
       "refresh",
       "source",
       "saveSpec",
+      "acceptBaseline",
       "implement",
       "cancelJob",
       "decideJob",
@@ -53,6 +56,7 @@ const requestSchema = z
   .strict();
 const saveSchema = z
   .object({
+    specId: z.string().min(1).max(4096).optional(),
     targetIds: z.array(z.string().max(4096)).min(1).max(100),
     content: specContentSchema,
     expectedRevision: z.number().int().nonnegative(),
@@ -179,7 +183,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!folder || folder.uri.scheme !== "file")
       throw Error("로컬 프로젝트 폴더를 먼저 열어 주세요.");
     if (this.folder?.uri.toString() !== folder.uri.toString()) {
-      if (this.jobs.isRunning)
+      if (this.jobs.isRunning || this.saving)
         throw Error("진행 중인 구현 작업이 끝난 뒤 프로젝트를 바꿔 주세요.");
       this.jobs.dispose();
       this.jobs = new ImplementationJobs(
@@ -269,6 +273,8 @@ export class DesignWorkspace implements vscode.Disposable {
       await this.source(payload.nodeId, payload.sourceIndex);
     } else if (request.action === "saveSpec")
       result = await this.save(request.payload);
+    else if (request.action === "acceptBaseline")
+      result = await this.acceptBaseline(request.payload);
     else if (request.action === "implement")
       result = await this.implement(request.payload);
     else if (request.action === "jobHistory") await this.loadJobHistory();
@@ -495,16 +501,80 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.stale || this.state.busy)
       throw Error("현재 구조 분석이 완료된 뒤 저장해 주세요.");
     const payload = saveSchema.parse(raw);
-    const original = draftSpec(graph, payload.targetIds);
-    const previous = this.state.specs.specs.find(
-      (spec) => spec.id === original.id,
-    );
+    const previous = payload.specId
+      ? this.state.specs.specs.find((spec) => spec.id === payload.specId)
+      : undefined;
+    if (payload.specId && !previous) throw Error("저장된 설계가 없습니다.");
+    const original =
+      previous ?? specForTargets(this.state.specs, graph, payload.targetIds);
+    if (
+      previous &&
+      JSON.stringify(payload.targetIds) !== JSON.stringify(previous.targetIds)
+    )
+      throw Error(
+        "설계 대상을 바꾸려면 기준 코드 비교에서 다시 연결해 주세요.",
+      );
     const next: SpecDocument = saveSpec(
       this.state.specs,
-      { ...(previous ?? original), content: payload.content },
+      { ...original, content: payload.content },
       payload.expectedRevision,
     );
     this.saving = true;
+    try {
+      return await this.persistDesign(next, original.id);
+    } finally {
+      this.saving = false;
+    }
+  }
+  async acceptBaseline(raw: unknown) {
+    this.assertExecutionReady();
+    if (this.saving) throw Error("설계를 저장하는 중입니다.");
+    if (this.jobs.isRunning || this.state.job?.phase === "recovery")
+      throw Error("진행 중인 구현·복구를 마친 뒤 기준 코드를 확정해 주세요.");
+    const request = baselineRequestSchema.parse(raw);
+    const folder = this.folder;
+    this.saving = true;
+    try {
+      // Re-scan instead of trusting a potentially delayed filesystem event.
+      await this.refresh();
+      this.assertExecutionReady();
+      const graph = this.state.graph;
+      if (
+        !graph ||
+        this.state.busy ||
+        this.state.stale ||
+        this.folder !== folder
+      )
+        throw Error("구조 분석이 갱신 중입니다. 비교를 다시 열어 주세요.");
+      const serial = this.serial;
+      // Clean editor buffers can briefly lag disk changes. Check physical bytes too.
+      const root = await realpath(folder!.uri.fsPath);
+      for (const file of graph.files) {
+        const path = await realpath(resolve(root, file.path));
+        const rel = relative(root, path);
+        if (
+          rel.startsWith(".." + sep) ||
+          isAbsolute(rel) ||
+          (await sha256(await readFile(path, "utf8"))) !== file.hash
+        )
+          throw Error("검토 중 코드가 바뀌었습니다. 비교를 다시 열어 주세요.");
+      }
+      const next = acceptBaseline(this.state.specs, graph, request);
+      return await this.persistDesign(next, request.specId, () => {
+        this.assertExecutionReady();
+        if (this.serial !== serial || this.folder !== folder)
+          throw Error("검토 중 코드가 바뀌었습니다. 비교를 다시 열어 주세요.");
+      });
+    } finally {
+      this.saving = false;
+    }
+  }
+  private async persistDesign(
+    next: SpecDocument,
+    specId: string,
+    validate = () => {},
+  ) {
+    const folder = this.folder;
     let temporary: string | undefined;
     try {
       const path = await this.designPath(true);
@@ -517,16 +587,27 @@ export class DesignWorkspace implements vscode.Disposable {
         );
       }
       const text = JSON.stringify(next, null, 2) + "\n";
+      if (Buffer.byteLength(text, "utf8") > 1024 * 1024)
+        throw Error(
+          "설계와 기준선 기록이 1MB를 초과합니다. 기존 기록을 보관한 뒤 정리해 주세요.",
+        );
+      validate();
       temporary = `${path}.${randomBytes(8).toString("hex")}.tmp`;
       await writeFile(temporary, text, { flag: "wx" });
+      if ((await this.readDesign(path)) !== current)
+        throw Error(
+          "저장 중 설계 파일이 외부에서 바뀌었습니다. 다시 열어 비교해 주세요.",
+        );
+      validate();
+      if (this.folder !== folder)
+        throw Error("저장 중 프로젝트가 바뀌었습니다.");
       await rename(temporary, path);
       temporary = undefined;
       this.diskDesign = text;
       this.state.specs = next;
       this.emit();
-      return next.specs.find((spec) => spec.id === original.id)!;
+      return next.specs.find((spec) => spec.id === specId)!;
     } finally {
-      this.saving = false;
       if (temporary) await unlink(temporary).catch(() => {});
     }
   }
@@ -563,6 +644,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (payload.checks.some((name) => !available.includes(name)))
       throw Error("선택한 검사 명령이 프로젝트에 없습니다.");
     const saved = await this.save({
+      specId: payload.specId,
       targetIds: payload.targetIds,
       content: payload.content,
       expectedRevision: payload.expectedRevision,

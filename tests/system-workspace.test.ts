@@ -3,6 +3,8 @@ import { analyzeStructure } from "../src/workspace/analyze";
 import { sourceNode } from "../src/workspace/model";
 import {
   draftSpec,
+  acceptBaseline,
+  specForTargets,
   observeSpec,
   prepareChange,
   saveSpec,
@@ -142,6 +144,123 @@ describe("source-backed system structure", () => {
 });
 
 describe("living design and observed implementation", () => {
+  it("accepts reviewed evidence without rewriting intent, and permits the next change", async () => {
+    const graph = await analyzeStructure(fixture);
+    const spec = draftSpec(graph, ["system"]);
+    spec.content.desired = "viewer 편집 거절";
+    spec.content.acceptance = ["권한 없는 변경 거절"];
+    const document = saveSpec({ schemaVersion: 1, specs: [] }, spec, 0);
+    const changed = await analyzeStructure([
+      ...fixture,
+      { path: "audit.ts", content: "export const audit = true;" },
+    ]);
+    expect(observeSpec(document.specs[0], changed).status).toBe("changed");
+    const next = acceptBaseline(document, changed, {
+      specId: spec.id,
+      expectedRevision: 1,
+      expectedGraphRevision: changed.revision,
+      targetIds: ["system"],
+    });
+    expect(next.specs[0].content).toEqual(document.specs[0].content);
+    expect(next.specs[0].revision).toBe(2);
+    expect(next.specs[0].baselineHistory![0].baseline).toEqual(
+      document.specs[0].baseline,
+    );
+    expect(document.specs[0].baselineHistory).toBeUndefined();
+    expect(observeSpec(next.specs[0], changed).status).toBe("unchanged");
+    expect(
+      prepareChange(next.specs[0], changed, "behavior")!.scopePaths,
+    ).toContain("audit.ts");
+    expect(
+      prepareChange(next.specs[0], changed, "documentation"),
+    ).toBeUndefined();
+    expect(specDocumentSchema.parse(JSON.parse(JSON.stringify(next)))).toEqual(
+      next,
+    );
+  });
+  it("reconnects a renamed declaration by explicit selection, preserving identity and history", async () => {
+    const graph = await analyzeStructure([
+      { path: "old.ts", content: "export function permission(){return true;}" },
+    ]);
+    const spec = draftSpec(graph, [
+      graph.nodes.find((n) => n.label === "permission")!.id,
+    ]);
+    spec.content.desired = "계속 조회만 허용";
+    spec.content.acceptance = ["쓰기 거절"];
+    const document = saveSpec({ schemaVersion: 1, specs: [] }, spec, 0);
+    const changed = await analyzeStructure(
+      ["first.ts", "second.ts"].map((path) => ({
+        path,
+        content: "export function mayWrite(){return false;}",
+      })),
+    );
+    expect(observeSpec(document.specs[0], changed).status).toBe("reconnect");
+    const target = changed.nodes.find(
+      (n) => n.label === "mayWrite" && n.sources[0].path === "second.ts",
+    )!;
+    const next = acceptBaseline(document, changed, {
+      specId: spec.id,
+      expectedRevision: 1,
+      expectedGraphRevision: changed.revision,
+      targetIds: [target.id],
+    });
+    expect(next.specs[0].id).toBe(spec.id);
+    expect(next.specs[0].targetIds).toEqual([target.id]);
+    expect(next.specs[0].baselineHistory![0].targetIds).toEqual(spec.targetIds);
+    expect(next.specs[0].content).toEqual(spec.content);
+    const formerTarget = specForTargets(next, graph, spec.targetIds);
+    expect(formerTarget.id).not.toBe(spec.id);
+    const added = saveSpec(next, formerTarget, 0);
+    expect(added.specs).toHaveLength(2);
+    expect(added.specs[0]).toEqual(next.specs[0]);
+    expect(
+      prepareChange(next.specs[0], changed, "behavior")!.scopePaths,
+    ).toEqual(["second.ts"]);
+    const saved = saveSpec(
+      next,
+      { ...next.specs[0], content: { ...spec.content, title: "연결 유지" } },
+      2,
+    );
+    expect(saved.specs[0].baselineHistory).toEqual(
+      next.specs[0].baselineHistory,
+    );
+    expect(() =>
+      saveSpec(saved, { ...saved.specs[0], baselineHistory: [] }, 3),
+    ).toThrow(/기준선/);
+    expect(() =>
+      saveSpec(saved, { ...saved.specs[0], targetIds: ["system"] }, 3),
+    ).toThrow(/기준선/);
+  });
+  it("rejects stale code/design previews and unavailable targets without changing saved evidence", async () => {
+    const graph = await analyzeStructure(fixture);
+    const spec = draftSpec(graph, ["system"]);
+    const document = saveSpec({ schemaVersion: 1, specs: [] }, spec, 0);
+    const original = structuredClone(document);
+    const request = {
+      specId: spec.id,
+      expectedRevision: 1,
+      expectedGraphRevision: graph.revision,
+      targetIds: ["system"],
+    };
+    const changed = await analyzeStructure(fixture.slice(0, -1));
+    expect(() => acceptBaseline(document, changed, request)).toThrow(
+      /コード|코드/,
+    );
+    expect(() =>
+      acceptBaseline(document, graph, { ...request, expectedRevision: 2 }),
+    ).toThrow(/설계/);
+    expect(() =>
+      acceptBaseline(document, graph, { ...request, targetIds: ["missing"] }),
+    ).toThrow(/구조/);
+    const empty = await analyzeStructure([]);
+    expect(() =>
+      acceptBaseline(document, empty, {
+        ...request,
+        expectedGraphRevision: empty.revision,
+      }),
+    ).toThrow(/근거/);
+    expect(document).toEqual(original);
+  });
   it("preserves confirmed intent while code drifts and rejects a stale implementation request", async () => {
     const graph = await analyzeStructure(fixture);
     const node = graph.nodes.find((n) => n.label === "canEdit")!;
