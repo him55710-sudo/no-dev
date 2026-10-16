@@ -4,6 +4,8 @@
 
 ## 2026-10-16 · Java 파서·정확한 값 수정·실제 라이브러리 회귀 검사
 
+최종 기능·CI 설정 소스 `3ecae6e35a31e3d0a87d17b4cf4ed5d9b1a0db7b`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38895781582)가 양쪽 모두 성공했다. 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시·추출 도구 5종을 로그에서 대조하여 [원자료](evidence/local-ai/java-source-ci.json)로 보존했다. 외부 minimal-json과 수동 native UI는 별도 Windows 실행이며 같은 성공 수에 합치지 않는다.
+
 - **공개 CI 준비 실패:** 기능 커밋 `368134a91b65ac055488b93199c8f20cba6d04df`의 [첫 Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38895575908)는 Windows JDK 설치에서 실패했다. `setup-java`가 `25.0.4.1`을 `25.0.4+1`로 해석했지만 Adoptium API의 실제 버전 표기는 `25.0.4+101.0.LTS`였다. 로컬 다운로드 metadata와 설치 로그의 available versions를 대조해 CI와 수동 demo workflow의 고정 버전 입력을 해당 API 표기로 수정했다. 이 실패는 제품 테스트 성공으로 집계하지 않는다.
 - **목적·범위:** P2/P3/P4/P6의 Java 빈칸을 보강했다. [Java 사용법과 한계](JAVA_SOURCE.md), [외부 minimal-json 원자료](evidence/local-ai/java-source-project.md)를 공개한다. 전체 목표 완료, 모델 정확성 또는 최적화 성공으로 세지 않는다. 안정판과 Pages는 0.6.0 그대로다.
 - **제품 구현:** `PureobomJavaSource.java`의 JDK 표준 `JavacTask.parse`, `javaSource.ts`의 별도 프로세스·고정 helper 캐시·한도/취소, controller·AI 제안 문법·KO/EN UI·JDK 설정을 연결했다. 사용자 소스는 컴파일/실행하지 않고 클래스·소스·annotation processor 검색을 배제했다. 타입·의존성·실행 결과 미검증을 명시한다.
@@ -13,7 +15,8 @@
 - **외부 프로젝트:** minimal-json commit `5518c876226ae07f8291d6b41209bc3c979f4a55`, Temurin 25.0.4.1+1, VS Code 1.96.4/Windows에서 452 pass → 고정 숫자 오류로 13 fail → native undo·저장 후 452 pass. 원본 SHA-256·깨끗한 checkout 복구, 미저장 검사 차단과 실제 task exit 0/1/0을 확인했다. upstream 라이브러리 테스트 전부를 실행했지만 Maven 전체 빌드·성능 모듈은 별개다.
 - **외부 준비 실패:** 테스트 하위 패키지를 잘못 붙인 ClassNotFoundException을 고쳤다. 원래 Mockito로 최신 JDK에서 첫 기준선 447 pass/5 fail; 별도 테스트 JVM의 java.io 접근 호환 설정을 추가하여 452 pass. 두 실패와 원래 경고를 원자료에 보존했다. 사용자 제품 JVM은 이 호환 설정을 사용하지 않는다.
 - **도구·재현:** Adoptium API의 Windows JDK ZIP SHA-256 `00c847d804f4a78e9f04f2683faf14fed898535b177b7fc704486cb0284e9283` 확인 후 ignored 폴더에 설치했다. 시스템 PATH/JAVA_HOME은 바꾸지 않았다. Google Java Format 1.37.0 공개 배포 hash를 확인하여 helper를 정리했다. 두 도구와 외부 jar는 배포물에 포함하지 않는다. CI에는 Temurin 25.0.4.1 준비를 추가하고, 패키지 검사는 추출 Java helper의 독립 실행을 추가했다.
-- **남은 범위:** Java 수동 네이티브 화면 검토·다른 JDK/OS 외부 프로젝트, 전체 타입/의미 분석, Rust/C#/SQL 전용 도구·실제 사례, 모델의 의미 오류와 실측 최적화는 계속 남는다. 이 절의 로컬 결과를 교차 운영체제 결과로 주장하지 않는다.
+- **수동 설치 화면:** [한국어/영어 설명·원문 이동·값 입력·Java diff·적용·undo](evidence/local-ai/java-source-native.md)를 실제 Windows 입력으로 확인했다. 시험용 버퍼의 임시 필드 추가도 undo하여 원본으로 복구했다. 원래 return 식의 리터럴은 직접 수정 목록에 없고, 영어 native diff 제목에 한국어가 남으며 좁은 분할 화면에서 긴 줄이 가려지는 제약을 기록했다.
+- **남은 범위:** 영어 diff 제목 지역화·원문 수정 범위와 좁은 화면 개선, 다른 JDK/OS 외부 프로젝트, 전체 타입/의미 분석, Rust/C#/SQL 전용 도구·실제 사례, 모델의 의미 오류와 실측 최적화는 계속 남는다. 이 절의 로컬 결과를 교차 운영체제 결과로 주장하지 않는다.
 - **패키지 독립 실행:** 최종 문서 포함 VSIX 1,364,260 bytes, SHA-256 `0d9906092814e399034f70fb129463939f5248cf39e86eff311e3e7521e4ad3c`. `release:check`가 분석 Worker·Python 측정·Python AST·Go AST·새 Java AST를 저장소 밖에서 실행하고 읽기/정확한 수정과 manifest/checksum을 확인했다. source/demo ZIP도 생성했다. 실제 UI 수동 조작은 이 자동 검사에 포함하지 않는다.
 
 ## 2026-10-16 · 실제 외부 HTML/CSS 프로젝트와 반복 검사 복구

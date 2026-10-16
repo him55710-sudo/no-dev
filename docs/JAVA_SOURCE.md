@@ -24,6 +24,8 @@ JDK 21 이상이 필요하다. `pureobom.analysisJavaHome` 사용자 설정에 J
 
 ## 실행 구조와 검증
 
+기능·CI 설정 소스 `3ecae6e35a31e3d0a87d17b4cf4ed5d9b1a0db7b`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38895781582)가 모두 성공했다. 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시와 패키지 도구 5종 실행을 확인했다. [CI 원자료](evidence/local-ai/java-source-ci.json). 실제 외부 Java 프로젝트와 수동 화면은 별도 Windows 기록이다.
+
 `extension/runtime/PureobomJavaSource.java`는 JDK 표준 API만 사용한다. `JavacTask.parse()`로 사용자 입력을 읽으며 `analyze`, `generate`, 컴파일 task의 `call`은 실행하지 않는다. 사용자 코드를 컴파일·실행하거나 import한 클래스를 로드하지 않는다. 클래스/소스/annotation processor 검색 경로를 비우고 annotation processing을 끈다. 호스트는 JVM 실행 훅 환경 변수와 CLASSPATH를 전달하지 않는다. 실제 프로젝트 검사는 사용자가 검토한 별도 명령으로 코드를 실행한다.
 
 설계 근거: [JavacTask의 파싱·분석·생성 API](https://docs.oracle.com/en/java/javase/25/docs/api/jdk.compiler/com/sun/source/util/JavacTask.html), [원문 위치 API](https://docs.oracle.com/en/java/javase/25/docs/api/jdk.compiler/com/sun/source/util/SourcePositions.html), [switch case API](https://docs.oracle.com/en/java/javase/25/docs/api/jdk.compiler/com/sun/source/tree/CaseTree.html).
@@ -32,6 +34,7 @@ JDK 21 이상이 필요하다. `pureobom.analysisJavaHome` 사용자 설정에 J
 - `extension/test/javaSource.ts`, `localAssistant.ts`: 실제 편집기 읽기·원문 이동·Java diff·적용·재분석·undo·오래된 변경안 차단·JDK 실패/복구와 AI 제안 문법 차단을 확인한다.
 - 설치 검사는 VSIX의 production 모드와 런타임 8개 해시를 확인한다. 패키지 검사는 추출한 Java 도구를 저장소 밖에서 빌드하여 읽기와 정확한 값 수정을 실행한다. [작업 기록](AGENT_WORKLOG.md)에 실제 실행 결과와 실패를 남긴다.
 - [외부 minimal-json 검사](evidence/local-ai/java-source-project.md)는 원래 라이브러리 테스트와 실제 편집기 흐름을 연결한다. 고정 회귀를 발견하고 undo로 복구하는 검사이며 최적화 성공 사례가 아니다.
+- [설치본의 수동 화면 검사](evidence/local-ai/java-source-native.md)는 한국어/영어 설명·원문 이동·실제 값 입력·native diff·적용·undo를 확인했다. 영어 diff 제목의 한국어 잔존과 좁은 분할 화면의 제약도 공개한다.
 
 ## English scope
 

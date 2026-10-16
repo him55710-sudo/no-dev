@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+Java 기능·CI 설정 소스 `3ecae6e`의 [Windows·Ubuntu CI 원자료](java-source-ci.json): 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시·추출 도구 5종 성공. [Java 실제 화면](java-source-native.md)은 한국어/영어·원문 이동·값 수정·diff·적용·undo와 남은 사용성 제약을 별도로 기록한다.
+
 [Java 원문 파서](../../JAVA_SOURCE.md)의 [개발 41개](java-source-development-integration.json)·[설치 41개](java-source-installed-integration.json), production 모드·런타임 8개 해시를 추가했다. [외부 minimal-json](java-source-project.md)은 원본 452 pass → 고정 오류 13 fail → undo 후 452 pass와 정확한 파일 복구를 확인했다. 최신 JDK에서 원래 테스트 도구를 실행하기 위한 호환 설정과 준비 실패도 보존했다. 모델 정확성·최적화 성공 점수로 합산하지 않는다.
 
 외부 검증 도구·기록 소스 `493cd04`의 [Windows·Ubuntu CI 원자료](web-project-ci.json): 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·추출 도구 실행 성공. 아래 외부 Chrome 검사는 이 CI의 집계에 포함되지 않는다.
