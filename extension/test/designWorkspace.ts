@@ -363,6 +363,10 @@ export async function run() {
     feature,
     "saving design preserves feature metadata",
   );
+  // Saving the design can still deliver a filesystem watcher notification.
+  // Start the deliberate overlapping-refresh case only once that work settles,
+  // just as the UI waits until its feature controls are enabled again.
+  await settled();
   let overlappingRefresh: Promise<void> | undefined;
   const duringRemoval = workspace.changes.event((state) => {
     if (!state.busy) return;
