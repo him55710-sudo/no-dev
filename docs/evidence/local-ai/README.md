@@ -13,6 +13,7 @@
 | [JSONC 보강 후 VS Code 통합](vscode-jsonc-integration.json) | 새 테스트 프로필에서 20개 검사. JSONC 미저장 문서·문법 오류·undo 검사 추가 | 제어된 AI HTTP 검사와 실제 모델 응답 기록은 별도 |
 | [프로젝트 검사 기능의 외부 연동](itsdangerous-project-checks.json) | VS Code task로 pytest 실행: 297개 통과 → 의도적인 오류로 실패(exit 1) → undo·저장 후 297개 통과. 미저장 실행 차단 확인 | 모델 제안이 아닌 검토한 고정 오류를 넣은 검사. UI는 종료 코드만 기록하고 이 개발 검증 스크립트가 JUnit XML에서 개수를 읽음 |
 | [프로젝트 검사 보강 후 VS Code 통합](vscode-project-checks-integration.json) | 실제 VS Code 통합 25개. 실제 process/shell 성공·실패, 미저장·중복 실행 차단, 다른 파일 변경, 빠른 취소·재실행, 명령 변경 시 재검토 | 합성 명령으로 검사 연결을 확인. 외부 Python 프로젝트 기록과 별도 |
+| [최종 Windows·Ubuntu CI](project-checks-ci.json) | `a3e6f84`에서 각 OS 핵심 152개·VS Code 통합 25개와 패키지 Worker 검사 성공. 실제 설정값 변경과 셸 인용 수정 포함 | 실제 모델·외부 프로젝트 테스트는 CI 밖의 별도 기록. 모든 언어/환경 보장 아님 |
 | [보강 전 외부 사례](itsdangerous-before-citation-guard.json) | 실제 Ollama + VS Code + itsdangerous 전후 297개 테스트 성공 | 품질 검토에서 관련 없는 import 인용과 불필요한 조건 발견. 성공한 최적화로 세지 않음 |
 | [보강 후 외부 사례](itsdangerous-integration.json) | 변경-인용 연결 검증 후 실제 Ollama + VS Code + Python 문법 검사 + 전후 297개 테스트 + 원본 복구 | 여전히 불필요한 조건이 있어 성능 측정을 추가함 |
 | [성능 원자료](optimization-benchmark.json) | 실제 제안 전후, 입력·예외·객체 동일성 10개 확인, 사례별 15회 × 10만 호출, 교대 순서와 워밍업 | 단일 함수·PC 측정. 문자열 입력에서 약 24~38% 느림. 제안 미채택 |
