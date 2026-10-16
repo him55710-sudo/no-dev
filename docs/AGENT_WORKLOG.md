@@ -4,6 +4,10 @@
 
 ## 2026-10-16 · HTML/CSS 원문 파서와 값 수정
 
+기능 소스 `20de7143a8dcacef6e5e535ae5bfa1dc6b73cf55`의 [Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)에서 Windows·Ubuntu가 모두 성공했다. 각 핵심 **200개/21파일**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시, 추출한 분석/Python 측정/Python AST/Go AST 도구 실행 성공을 실제 로그에서 대조했다. [정규화한 CI 원자료](evidence/local-ai/web-source-ci.json). 후속 문서 커밋은 이 기능 커밋을 가리키며 안정 릴리스/Pages는 변경하지 않았다.
+
+마지막 CSS 주석/식별자 수정 후 [최종 로컬 설치본](evidence/local-ai/web-source-final-installed-integration.json)에서도 **38개**가 통과했다. VSIX `8876110903dd7db930c982191383cca01e0ec7d1b4e2ec0930bc867e5dab1064`, production 모드·런타임 7개 해시를 확인했다. 최종 패키지는 1,353,584바이트이며 release:package/release:check의 체크섬·추출 Worker/도구 실행도 성공했다. 공개 기능 소스는 `20de7143a8dcacef6e5e535ae5bfa1dc6b73cf55`로 `origin main`에 push했다.
+
 - **문제와 범위:** 실제 모델의 CSS 열 개수 설명 오류에 대응해 HTML 태그·속성·문구와 CSS 선택자·앳 규칙·선언 값을 원문에서 읽는 경로를 추가했다. 브라우저/VS Code 공통 Worker이며 API·모델·별도 언어 실행기가 필요 없다. 렌더링·접근성·캐스케이드·외부 웹 프로젝트의 동작 검증은 남아 있다.
 - **구현:** `src/core/webSource.ts`, analyze/edit/assistantValidation/types, 공유 Story/InterfaceTree, 브라우저·확장 입력 안내와 untitled 확장자 매핑. parse5 8.0.1과 CSS Tree 3.2.1 및 전이 의존성의 라이선스를 패키지에 포함했다. 입력은 실행/렌더링하지 않고 URL도 가져오지 않는다. 요소/값 범위는 UTF-16 위치로 연결한다.
 - **직접 수정:** 일반 HTML 텍스트와 일부 텍스트 속성은 엔티티/따옴표 인코딩, CSS는 값 하나의 파싱과 제한적인 속성 문법 검사 후 정확한 범위만 교체한다. script/style/특수 텍스트/SVG/MathML/template, 모호하게 합쳐진 텍스트, 값 내부 주석은 수정 제외다. CSS 우선순위·다른 선언·주변 공백은 유지한다. 반복 선언 식별자에 닫는 구분자를 넣어 짧은 위치가 긴 위치 이름과 겹치지 않도록 했다.
@@ -13,6 +17,8 @@
 - **실제 편집기/패키지:** [개발 38개](evidence/local-ai/web-source-development-integration.json), [설치 38개](evidence/local-ai/web-source-installed-integration.json) 통과. 원문 이동, native HTML/CSS diff, 정확한 값/엔티티 수정, 적용/재분석/undo, 사용한/오래된 변경안·CSS 선언 탈출 거절 확인. 설치본은 production 모드와 런타임 7개 해시를 대조했다. 같은 38개 흐름을 76개 제품 기능으로 세지 않는다. 저장소 밖으로 추출한 Worker에서 JSONC/HTML/CSS 파서를 실행하고 기존 Python 측정/Python AST/Go AST 도구도 확인했다.
 - **실제 UI:** [설치 화면 기록](evidence/local-ai/web-source-native.md)의 한국어/영어 CSS 설명, 12px→18px diff·적용·Ctrl+Z, 영어 HTML 구조·속성·본문·script 수정 제외를 확인했다. 언어 팝업의 한 클릭 거절은 재관찰 후 키보드로 해결했다. 480px 패널의 표 가로 스크롤·중복 이름 표시도 기록한다. UI 설치본은 마지막 주석/이름 수정 전이며 후속 검증과 구분한다.
 - **배포 범위/비용:** 기능과 기획·지원 표·예제를 공개 소스로 제공한다. 설치 UI에 쓴 VSIX는 1,353,438바이트로 이전 1,213,038바이트보다 증가했다. 새 파서 지원의 비용이며 최적화 성과로 표현하지 않는다. 안정판/Pages는 여전히 0.6.0이다. 전체 P0–P6 완료가 아니며 외부 HTML/CSS 프로젝트와 다른 언어 도구가 남는다.
+
+외부 웹 프로젝트의 다음 검증을 위해 modern-normalize v3.0.1을 작업용 폴더에 clone하고 실제 commit `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`를 확인했다. 태그는 annotated tag이므로 tag object `a6a0a501…`와 소스 commit을 구분한다. 원본 Chrome/TestCafe 테스트와 CSS/HTML fixture를 읽었고 checkout은 깨끗하다. 의존성 설치나 브라우저 테스트 실행은 아직 하지 않았으며 통과 사례로 집계하지 않는다. 일부 upstream 테스트는 assertion 없는 TODO이므로 후속 실행 시 전체 pass 개수와 실질 검증 범위를 구별해야 한다.
 
 ## 2026-10-16 · Go 표준 파서·원문 수정·실제 UUID 프로젝트
 

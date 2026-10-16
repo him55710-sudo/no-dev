@@ -1,6 +1,10 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](web-source-ci.json)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·패키지 도구 실행에 성공했다. [실제 화면](web-source-native.md), 로컬 설치본 및 아직 수행하지 않은 외부 웹 프로젝트 검증과 구분한다.
+
 [HTML/CSS 파서 읽기·값 수정](../../HTML_CSS_SOURCE.md)의 [개발 38개](web-source-development-integration.json), [설치 38개](web-source-installed-integration.json), [실제 화면](web-source-native.md)을 추가했다. API/모델 없이 원문 값과 diff·적용·undo를 확인한 자료이며, 실제 모델 응답 수나 외부 페이지 동작 검증 수에 합치지 않는다. 마지막 주석/식별자 수정 전 화면 설치본과 이후 검증은 구분한다.
+
+마지막 CSS 주석/식별자 수정 후 [새 설치본 38개](web-source-final-installed-integration.json)도 통과했다. VSIX `88761109…`, production 모드와 런타임 7개 해시를 대조했다. 이전 설치/화면의 VSIX `109782f6…`와 같은 파일로 취급하지 않는다.
 
 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI 원자료](go-source-ci.json): 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시·패키지 도구 4종 성공. [네이티브 Go 화면](go-source-native.md)과 [외부 프로젝트](go-source-project.md)는 별도 증거다.
 

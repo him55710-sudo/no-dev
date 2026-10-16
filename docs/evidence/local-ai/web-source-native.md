@@ -19,3 +19,5 @@ HTML 예제로 전환해 영어 트리의 html/head/body/main/p 구조, `title="
 검증 뒤 전용 창은 정상 종료했다. 디스크 복사본과 원본의 SHA-256은 일치했다: CSS `a364a3ba0f7ac67b65aa686b7bcda57592ccf75dda2291c7d8f3120e7603b06d`, HTML `3b6257bcfa7444aa958966255a5b7c2bba22278cfe2a8dcb3f5035b8495b4363`.
 
 이 화면 이후 CSS 문자열 속 주석 기호를 실제 주석과 구분하고, 반복 선언 이름의 위치 표기에 닫는 구분자를 추가했다. 해당 후속 변경의 최종 패키지/CI 검증은 별도 기록하며 이 화면 설치본과 같은 해시라고 주장하지 않는다.
+
+후속 검증: [최종 로컬 설치 38개](web-source-final-installed-integration.json), [Windows·Ubuntu CI 각 200개·개발/설치 38개](web-source-ci.json).

@@ -1,5 +1,7 @@
 # 제품 완성 계획 · Product completion plan
 
+HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [CI 원자료](evidence/local-ai/web-source-ci.json). 해당 커밋의 검증이며 전체 언어·외부 페이지 동작·전체 P0–P6 완료를 뜻하지 않는다.
+
 추가 P2/P3/P4 증분: [HTML/CSS 원문 파서와 값 수정](HTML_CSS_SOURCE.md)을 브라우저·VS Code에 연결했다. 모델이 CSS 열 개수를 추측했던 사례에 대응해 원문 선언과 실제 화면을 구분한다. 일부 문구·속성·CSS 값의 정확한 범위 수정과 제안 파싱을 지원한다. 외부 웹 프로젝트의 렌더링/동작 검증과 Rust·Java·C#·SQL 도구는 남아 있으며 전체 P0–P6 완료가 아니다.
 
 최신 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)는 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [원자료](evidence/local-ai/go-source-ci.json). 전체 P0–P6와 모든 언어 지원은 진행 중이다.

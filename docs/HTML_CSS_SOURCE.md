@@ -1,5 +1,7 @@
 # HTML/CSS 원문 읽기와 값 수정
 
+기능 소스 `20de714`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338): 각 핵심 200개, 개발/설치 각 38개, 패키지 도구 실행 통과. [상세 원자료](evidence/local-ai/web-source-ci.json).
+
 0.7 개발 소스의 기능이다. 공개 안정판 0.6.0과 기존 Pages 데모에는 아직 반영되지 않았다. 브라우저와 데스크톱 VS Code의 공통 분석 Worker에서 동작하며 API 키·Ollama·별도 언어 실행기가 필요 없다.
 
 ## 읽기 범위
@@ -42,3 +44,5 @@ pnpm release:check
 ```
 
 전체 통합 검사에는 기존 Python/Go 기능의 실행기도 필요하다. HTML/CSS 파싱 자체에는 필요하지 않다. 외부 실제 웹 프로젝트의 동작·렌더링 검증과 모델 설명의 의미 정확성은 별도 과제로 남는다. 구현·실패·검증 결과는 [작업 기록](AGENT_WORKLOG.md)에서 추적한다.
+
+마지막 CSS 주석/반복 선언 식별자 수정 후 [설치 통합 38개](evidence/local-ai/web-source-final-installed-integration.json)가 통과했다. VSIX `88761109…`의 production 모드와 7개 런타임 해시를 확인했다. [실제 한국어/영어 화면](evidence/local-ai/web-source-native.md)의 설치본은 이 후속 수정 전이며 별도 해시로 기록했다.
