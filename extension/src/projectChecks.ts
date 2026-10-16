@@ -28,6 +28,7 @@ export type ProjectCheck = {
     | "unknown";
   exitCode?: number;
   stale: boolean;
+  staleReason?: string;
 };
 type Choice = { task: vscode.Task; fingerprint: string; uri: string };
 type Run = {
@@ -141,11 +142,13 @@ export class ProjectChecks implements vscode.Disposable {
       }),
       vscode.workspace.onDidChangeWorkspaceFolders(() => {
         this.choices.clear();
-        this.markStale();
+        this.markStale("workspace folders changed");
       }),
-      vscode.workspace.onDidChangeConfiguration(() => {
+      vscode.workspace.onDidChangeConfiguration((event) => {
         this.choices.clear();
-        this.markStale();
+        this.markStale(
+          `settings changed: ${["tasks", "terminal", "typescript", "editor", "files"].filter((key) => event.affectsConfiguration(key)).join(", ") || "other"}`,
+        );
       }),
       vscode.tasks.onDidEndTaskProcess((e) => {
         if (this.matches(e.execution)) void this.finish(e.exitCode);
@@ -173,12 +176,13 @@ export class ProjectChecks implements vscode.Disposable {
     this.result = { ...this.result, ...next };
     this.changes.fire(this.result);
   }
-  private markStale() {
-    if (this.result && !this.result.stale) this.publish({ stale: true });
+  private markStale(staleReason: string) {
+    if (this.result && !this.result.stale)
+      this.publish({ stale: true, staleReason });
   }
   private changed(uri: vscode.Uri) {
     if (uri.toString() === this.resultUri) {
-      this.markStale();
+      this.markStale(`file changed: ${this.result?.file}`);
       return;
     }
     const folder = this.resultFolder;
@@ -189,7 +193,8 @@ export class ProjectChecks implements vscode.Disposable {
     )
       return;
     const path = uri.path.slice(folder.uri.path.length).split("/");
-    if (!path.some((part) => ignored.has(part))) this.markStale();
+    if (!path.some((part) => ignored.has(part)))
+      this.markStale(`file changed: ${path.filter(Boolean).join("/")}`);
   }
   private context(context: string | undefined) {
     if (!vscode.workspace.isTrusted || vscode.env.remoteName)
@@ -327,10 +332,11 @@ export class ProjectChecks implements vscode.Disposable {
     clearTimeout(run.timer);
     try {
       const bytes = await vscode.workspace.fs.readFile(run.uri);
-      if (hash(bytes) !== this.result?.sourceSha256) this.markStale();
+      if (hash(bytes) !== this.result?.sourceSha256)
+        this.markStale("source disk hash changed");
       this.requireSaved(run.folder);
     } catch {
-      this.markStale();
+      this.markStale("source unavailable or unsaved files");
     }
     if (this.active !== run) return;
     this.publish({

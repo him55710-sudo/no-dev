@@ -63,7 +63,7 @@ export async function projectChecks(
   );
   assert.equal(c.checks.result?.exitCode, 0);
   assert.match(c.checks.result!.sourceSha256, /^[a-f0-9]{64}$/);
-  assert.equal(c.checks.result?.stale, false);
+  assert.equal(c.checks.result?.stale, false, JSON.stringify(c.checks.result));
   assert.equal(c.state.projectCheck?.id, c.checks.result!.id);
   reports.push(
     "project check: configured process runs in VS Code; review and known task ID required; real exit 0 and saved-file SHA-256 recorded",
