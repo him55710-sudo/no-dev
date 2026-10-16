@@ -4,6 +4,8 @@
 
 추가 자료: [분기·경계·데이터 의미의 모델 비교](semantic-review.md), [외부 JavaScript clsx 검사 연결](clsx-review.md). 모델 비교에는 실패와 누락을 보존하고, clsx에는 Node 24 준비 실패와 호환 런타임에서의 실제 32개 검사·고정 오류 발견·undo 복구를 함께 공개한다.
 
+기능 소스 `a184b68`의 [Windows·Ubuntu CI](semantic-ci.json)는 각각 핵심 162개·개발 실행 30개·설치 실행 30개·추출 Worker 검사를 확인한다. [로컬 설치본 원자료](semantic-installed-integration.json)와 실제 설명 60회(한국어 50, 영어 10)는 서로 다른 검증이다. 둘을 합쳐 모델 정확도 점수로 쓰지 않는다.
+
 | 자료 | 실제 확인 내용 | 해석 한계 |
 | --- | --- | --- |
 | [Python 설명](python-explain.json) | Ollama 0.40.5, qwen2.5-coder:3b, 한글 설명과 원문 인용 | 합성 배송 예제 1회, 의미 정확성 전체 보장 아님 |
