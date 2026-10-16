@@ -24,6 +24,8 @@
 
 ## 재현
 
+측정 기능 커밋 `d819c49`의 [Windows·Ubuntu CI 증거](benchmark-ci.json)는 각 161개 핵심 검사·30개 실제 VS Code 통합 흐름·추출한 분석 및 Python 측정 Worker 실행 성공을 기록한다. 통합 검사의 로컬 AI 응답은 제어된 fixture이며 실제 Ollama 응답 자료와 구별한다. 새 측정 화면을 설치본에서 클릭·키보드로 모두 검증했다는 뜻은 아니다.
+
 사용자용 전후 측정 기능의 실제 자료도 추가했다. [최초 설정 실패](itsdangerous-command-benchmark-setup-failure.json), [실행기 메모리를 잘못 해석할 수 있었던 첫 측정](itsdangerous-command-benchmark-before-memory-fix.json), [실행기 메모리 제외 후 재측정](itsdangerous-command-benchmark.json). 전후·복구 후 pytest 각 297개를 확인했고 같은 제안의 실행 시간은 두 차례 모두 늘었다(약 14.1%, 21.1%). 최종 기록은 Windows 가상환경 실행기 때문에 메모리 비교가 없다. 이 숫자는 전체 명령·프로세스 시작을 포함하며 앞선 함수 단위 교대 측정과 다르다. [측정 방식](../../BENCHMARKS.md).
 
 같은 고정 외부 저장소와 Python 환경에서 `node scripts/test-local-project.mjs --benchmark-only`로 재현한다. Ollama는 필요 없으며 이미 검토한 특정 변경 한 건만 재현한다. tasks.json은 없을 때만 VS Code 시작 전에 생성하고 검증 종료 후 제거한다. 다른 파일은 덮어쓰지 않는다.
