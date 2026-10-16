@@ -8,6 +8,7 @@ import { projectChecks } from "./projectChecks";
 import { benchmarkChecks } from "./benchmarks";
 import { pythonSourceChecks } from "./pythonSource";
 import { goSourceChecks } from "./goSource";
+import { javaSourceChecks } from "./javaSource";
 import { webSourceChecks } from "./webSource";
 const reports: string[] = [];
 async function until(
@@ -578,6 +579,7 @@ export async function run() {
   );
   await pythonSourceChecks(c, ready, reports);
   await goSourceChecks(c, ready, reports);
+  await javaSourceChecks(c, ready, reports);
   await localAssistantChecks(c, ready, reports);
   const jsoncSource =
     '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';

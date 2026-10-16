@@ -33,6 +33,7 @@ export type Rule = Anchor & {
     | "json"
     | "python"
     | "go"
+    | "java"
     | "htmlText"
     | "htmlAttribute"
     | "css";
@@ -87,6 +88,7 @@ export type FileAnalysis = {
   web?: { language: "html" | "css"; truncated: boolean; nodes: number };
   python?: { version: string; truncated: boolean };
   go?: { version: string; truncated: boolean };
+  java?: { version: string; truncated: boolean };
   data?: import("./jsonData").JsonDataFacts;
   interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];

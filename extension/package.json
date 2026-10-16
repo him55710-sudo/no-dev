@@ -60,6 +60,12 @@
     "configuration": {
       "title": "Pureobom",
       "properties": {
+        "pureobom.analysisJavaHome": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Absolute JDK 21+ directory for model-free Java syntax reading, literal edits and proposal parsing. Empty uses JAVA_HOME, then java/javac on PATH. Only the bundled helper is compiled in extension storage. User source is parsed without annotation processing, class loading or dependency downloads; types and runtime behavior are not checked."
+        },
         "pureobom.analysisGo": {
           "type": "string",
           "default": "",

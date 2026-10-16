@@ -286,9 +286,27 @@ function App() {
                 )}
               </p>
             ) : null}
-            {state.pythonNotice || state.goNotice ? (
+            {state.language === "java" && state.busy ? (
+              <p role="status">
+                {t(
+                  "Java 구문을 읽고 있습니다. 처음 사용할 때는 설치된 JDK로 읽기 도구를 준비합니다.",
+                  "Reading Java syntax. The first use prepares the reader with the installed JDK.",
+                )}
+              </p>
+            ) : null}
+            {state.pythonNotice || state.goNotice || state.javaNotice ? (
               <section className="card" role="status">
-                <p>{state.pythonNotice || state.goNotice}</p>
+                <p>
+                  {state.pythonNotice || state.goNotice || state.javaNotice}
+                </p>
+                {state.javaNotice ? (
+                  <p>
+                    {t(
+                      "JDK 21 이상을 설치하세요. 필요한 경우 pureobom.analysisJavaHome에 JDK 폴더의 절대 경로를 지정할 수 있습니다. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install JDK 21 or later. Optionally set the absolute JDK directory in pureobom.analysisJavaHome. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
                 {state.goNotice ? (
                   <p>
                     {t(

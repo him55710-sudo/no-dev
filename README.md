@@ -20,6 +20,8 @@ In desktop VS Code, it also reads [Python statement structure and exact literals
 
 An installed Go SDK also enables [Go source reading and exact literal edits](docs/GO_SOURCE.md), including multiple returns, defer and source-linked branches. A fixed local parser reads user code as data. The Google UUID regression test demonstrates a wrong edit failing upstream tests and undo restoring them; this is not full Go type checking.
 
+Installed JDK 21+ enables [Java source reading and exact literal edits](docs/JAVA_SOURCE.md), including partial branch, exception and resource-cleanup structure. It parses user text without compiling or executing it. Type, dependency and runtime checks remain separate.
+
 The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
 
 It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elapsed-time and peak-memory samples, output hashes, observed variation and local JSON reports. Requires Python 3 and a reviewed repeatable process task; this is measurement evidence, not an automatic optimization guarantee.

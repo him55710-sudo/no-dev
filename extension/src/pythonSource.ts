@@ -131,7 +131,7 @@ export async function pythonSource(
 export function validateAnalysis(
   value: unknown,
   file: SourceFile,
-  syntax: "python" | "go" = "python",
+  syntax: "python" | "go" | "java" = "python",
 ): FileAnalysis {
   const a = value as FileAnalysis;
   const fail = () => {
