@@ -12,6 +12,8 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 [HTML/CSS source facts and value edits](docs/HTML_CSS_SOURCE.md) now use bundled parsers in the browser and VS Code. They read tags, text, selectors and declarations without executing scripts or guessing rendered layout. Ordinary text, selected attributes and CSS values support preview, apply and undo; actual page behavior still needs checking.
 
+The [external modern-normalize check](docs/evidence/local-ai/web-source-project.md) runs all 54 upstream Chrome tests through VS Code: a deliberate CSS edit adds two failures, and undo restores the baseline. Seven pre-existing failures and eight assertion-free TODOs are disclosed; this is not an all-tests-passed claim.
+
 The development source reads [JSON/JSONC values without a model](docs/JSON_DATA.md): exact key paths, types and source lines, plus preview/apply/undo for individual values. It preserves numeric spelling and comments, marks duplicate keys, and does not infer what a consuming program does.
 
 In desktop VS Code, it also reads [Python statement structure and exact literals](docs/PYTHON_SOURCE.md) using an installed isolated Python interpreter. No model/API is needed. Branches, exceptions and source-linked value edits are partial static support; upstream tests caught a deliberate wrong edit and passed again after undo.

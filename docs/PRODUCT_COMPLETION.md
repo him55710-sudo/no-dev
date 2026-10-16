@@ -1,42 +1,17 @@
 # 제품 완성 계획 · Product completion plan
 
-HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [CI 원자료](evidence/local-ai/web-source-ci.json). 해당 커밋의 검증이며 전체 언어·외부 페이지 동작·전체 P0–P6 완료를 뜻하지 않는다.
+상태 기준: **2026-10-16 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
 
-추가 P2/P3/P4 증분: [HTML/CSS 원문 파서와 값 수정](HTML_CSS_SOURCE.md)을 브라우저·VS Code에 연결했다. 모델이 CSS 열 개수를 추측했던 사례에 대응해 원문 선언과 실제 화면을 구분한다. 일부 문구·속성·CSS 값의 정확한 범위 수정과 제안 파싱을 지원한다. 외부 웹 프로젝트의 렌더링/동작 검증과 Rust·Java·C#·SQL 도구는 남아 있으며 전체 P0–P6 완료가 아니다.
+## 현재 상태
 
-최신 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38884588820)는 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시와 추출한 도구 4종 실행에 성공했다. [원자료](evidence/local-ai/go-source-ci.json). 전체 P0–P6와 모든 언어 지원은 진행 중이다.
+- **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
+- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
+- **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다.
+- **남은 우선순위:** Rust·Java·C#·SQL의 전용 도구와 실제 프로젝트, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
-추가 P2/P3/P4 증분: [Go 표준 AST 읽기·문자열/숫자 수정](GO_SOURCE.md)을 로컬 VS Code에 연결했다. 여러 반환값·defer·고루틴·switch/select 구조와 정확한 원문 위치를 읽고 Go 변경안의 문법을 검사한다. [Google UUID 고정 오류 검사](evidence/local-ai/go-source-project.md)는 201 pass·1 skip → TestUUID 실패 → undo 후 201 pass·1 skip을 확인했다. SDK가 필요하며 타입·실행 결과·Go 최적화 측정을 검증한 것은 아니다. 전체 계획은 진행 중이다.
-
-상태 기준: 2026-10-16, 시작 커밋 `7603971`. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 실제 작업과 결과는 [에이전트 작업 기록](AGENT_WORKLOG.md)에 남긴다.
-
-추가 P2/P3/P4 증분: [Python AST 읽기·리터럴 수정](PYTHON_SOURCE.md)을 로컬 VS Code에 연결했다. 모델 없이 설치 Python이 분기·반복문 else·예외·finally의 구조와 정확한 값 위치를 읽는다. [외부 itsdangerous](evidence/local-ai/python-source-project.md)에서 값 수정→실제 검사 실패 38개→undo·저장→297개 통과를 확인했다. Python 타입·import 지도·시뮬레이션·전체 구문 설명은 아직 미제공이며 다른 언어의 분석기·외부 검증도 남아 있다.
-
-최신 Python 기능 소스 `583c805`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38880264124)는 각 핵심 **178개**, 개발/설치 각 **33개**와 패키지 도구 3종 실행에 성공했다. [원자료](evidence/local-ai/python-source-ci.json). 이 증분의 공개 검증이며 전체 P0–P6 완료로 바꾸지 않는다.
-
-현재 0.7 개발판에는 로컬 Ollama 연결, 다중 범위 편집, 문법 검사, 프로젝트 명령 실행, 전후 시간·메모리 측정과 설치본 검사가 구현돼 있다. 외부 Python itsdangerous와 JavaScript clsx에서 각각 검사 흐름을 확인했다. 측정한 모델 최적화 제안은 느려져 채택하지 않았다. 모델 설명의 경계·분기·데이터 해석 오류가 남아 있으며 전체 P0–P6 완료를 뜻하지 않는다. [현재 증거](evidence/local-ai/README.md). 아래 '시작 상태'는 최초 기준선이다.
-
-최신 JSON 데이터 기능 소스 `2b0235e`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38876047129)는 각 핵심 169개·개발/설치 각 31개·패키지 Worker 검사를 통과했다. [원자료](evidence/local-ai/json-facts-ci.json). 모델 없는 사실 읽기·범위 수정의 근거이며 소비 코드·모든 언어의 의미 정확성을 확인한 것은 아니다.
-
-추가 P2/P4 증분: [설명 의미 비교](evidence/local-ai/semantic-review.md)에서 분기·예외·데이터 선언 지시를 보강했지만 여러 모델의 오류가 남음을 확인했다. 모델 크기나 원문 인용 통과를 의미 정확성으로 세지 않는다. [외부 JavaScript clsx](evidence/local-ai/clsx-review.md)는 실제 프로젝트 검사로 원본 32개 통과→고정 오류 25개 실패→undo 후 32개 통과를 확인했다. 구형 테스트 실행기의 Node 24 실패와 별도 호환 런타임 사용도 공개한다. 전체 언어 지원이나 최적화 성공을 뜻하지 않는다.
-
-앞선 기능·검증 도구 소스 `a184b68`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38872584322)는 각 핵심 162개·개발/설치 각 30개·패키지 Worker 검사를 통과했다. [원자료](evidence/local-ai/semantic-ci.json). 한국어 50회·영어 10회의 실제 설명은 별도 의미 검토이며 통합 검사 수로 정확도를 표현하지 않는다.
-
-상세 기획은 `68f5c51`, 첫 기능은 `3710ea1`로 공개했다. 이후 P0 공개 기록·P1 연결·P3 편집에 P4 명령 실행·P5 측정·P6 설치/실패 검사 근거를 추가했다. JSON/JSONC의 반복된 소비 동작 추측에 대응해 [파서 기반 실제 값 읽기·수정](JSON_DATA.md)을 보강했다. 키·자료형·원문 위치와 정확한 숫자 표기를 보여 주며, 모델 없는 diff·적용·undo를 연결했다. 소비 코드의 동작을 분석한 것은 아니다. 다음 우선순위에는 P2의 다른 언어 분기·예외·경계 설명, 추가 언어 도구·프로젝트 검증이 남아 있다. 한 단계의 구현이 전체 계획 완료를 뜻하지 않는다.
+HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)는 각각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/web-source-ci.json). 외부 Chrome 프로젝트는 별도로 Windows에서 실행한 기록이며 CI의 성공 수에 합치지 않는다. 이전 증분의 커밋별 CI와 설치본·실제 모델·화면 기록은 작업 기록에서 추적한다.
 
 ## 요청과 우선순위
-
-추가 P6 증분: 새 VSIX를 격리된 프로필에 설치한 뒤 실제 production 모드와 런타임 해시를 확인하는 검사를 추가했다. [네이티브 화면 관찰](evidence/local-ai/installed-ui-states.md)에서 한국어/영어 안내, 진행 중 언어 전환 취소, 이전 언어 결과 숨김, 큰 파일·미지원 파일 처리를 확인했다. 모델 응답의 중요한 분기 누락은 계속 남아 있다. 설치 통합과 실제 모델 의미 검토는 별개다.
-
-`b1743a6`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38866248270)는 각각 핵심 161개·개발 호스트 30개·설치본 30개와 패키지 Worker 검사에 성공했다. [원자료](evidence/local-ai/installed-ci.json). 연결 실패·빈 모델 목록도 별도의 실제 Ollama/네이티브 화면에서 확인하고 테스트 환경을 복구했다. P6의 첫 설치·실패 조합 근거를 갖췄으며, 모든 환경 조합의 보증은 아니다. 남은 제품 우선순위는 P2 의미 정확성과 추가 언어/프로젝트 검증이다.
-
-추가 P5 증분: [변경 전후 측정](BENCHMARKS.md)의 첫 구현을 연결했다. 선택한 process 작업을 준비 1회 + 측정 7회 실행해 시간·최대 메모리·출력 해시·관측 변동·실제 검사 근거를 표시하고 JSON 원자료를 제공한다. Python 표준 라이브러리만 사용한다. 측정 기능의 구현과 모든 모델 제안의 최적화 성공은 구분하며, 검증·실패·실제 외부 사례는 작업 기록에서 추적한다.
-
-측정 구현 `d819c49`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38863193178)는 각각 핵심 161개·실제 VS Code 통합 30개와 추출한 패키지 Worker 실행에 성공했다. [원자료](evidence/local-ai/benchmark-ci.json). itsdangerous의 297개 테스트는 전후·복구 후 모두 통과했지만 측정한 수정안은 느려져 채택하지 않았다. P2 의미 정확성·P6 새 화면의 설치본 사용 조합은 남아 있다.
-
-추가 P4 증분: [실제 프로젝트 검사](PROJECT_CHECKS.md)의 첫 구현은 VS Code에 등록한 일회성 test/build 명령을 명시적으로 실행하고, 종료 코드·저장된 파일 해시·후속 파일 변경 여부를 표시한다. itsdangerous에서 297개 통과 → 검증용 오류 1개 발견 → 원본 복구 후 297개 통과를 확인했다. 이것은 개별 언어의 파서·타입 검사기나 사용자용 성능 측정까지 완성했다는 뜻은 아니다.
-
-`a3e6f84`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38858730263)는 양쪽에서 핵심 152개·실제 VS Code 통합 25개·패키지 Worker 검사에 성공했다. [증거](evidence/local-ai/project-checks-ci.json). 확인한 구현 범위와 전체 P0–P6 완료를 계속 구분한다.
 
 비개발자가 AI로 만든 코드를 자신의 말로 이해하고, 설명에서 수정하고, 결과를 검증하며 최적화한다. 주 제품은 VS Code 확장이다. API 사용료 없이 사용할 수 있어야 하며, 여러 프로그래밍 언어와 실제 프로젝트에서 작동해야 한다. 사용자는 Ollama 로컬 모델 활용을 허용했다. 공개 기획과 에이전트의 변경·실패·검증 기록을 먼저 갖춘다. 모집·홍보·Marketplace 계정은 이 개발의 선행 조건이 아니다.
 

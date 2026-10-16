@@ -1,6 +1,8 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
-HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](web-source-ci.json)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·패키지 도구 실행에 성공했다. [실제 화면](web-source-native.md), 로컬 설치본 및 아직 수행하지 않은 외부 웹 프로젝트 검증과 구분한다.
+[외부 modern-normalize HTML/CSS 검증](web-source-project.md)을 추가했다. 실제 VS Code에서 CSS 값 하나 변경 후 Chrome 실패 7→9→undo 후 7을 확인했다. 원본 실패 7개와 assertion 없는 TODO 8개, 브라우저 연결 실패 두 번, 실행기 종료 코드·프로필 격리 보강도 원자료에 보존한다. 전체 upstream 통과나 최적화 성공 사례는 아니다.
+
+HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](web-source-ci.json)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·패키지 도구 실행에 성공했다. [실제 화면](web-source-native.md), 로컬 설치본과 외부 웹 프로젝트 검증은 별도 기록이다.
 
 [HTML/CSS 파서 읽기·값 수정](../../HTML_CSS_SOURCE.md)의 [개발 38개](web-source-development-integration.json), [설치 38개](web-source-installed-integration.json), [실제 화면](web-source-native.md)을 추가했다. API/모델 없이 원문 값과 diff·적용·undo를 확인한 자료이며, 실제 모델 응답 수나 외부 페이지 동작 검증 수에 합치지 않는다. 마지막 주석/식별자 수정 전 화면 설치본과 이후 검증은 구분한다.
 

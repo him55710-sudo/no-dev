@@ -10,6 +10,8 @@ Before a PR: run `pnpm test`, `pnpm build`, and `pnpm extension:build`. Run `pnp
 
 The full development test suite also needs Python 3.12 and Go 1.27.2 (the versions pinned in CI). They run fixed standard-library readers and measurement helpers; no Ollama model is required for core/integration tests. Put `python` (Windows) or `python3` (Linux) and `go` on PATH. `PUREOBOM_TEST_GO` can select a separate Go executable for core and Go project fixtures; extension integration also needs Go on PATH or the appropriate test-profile setting. Building or browsing the web demo alone does not require these SDKs.
 
+The opt-in [modern-normalize browser fixture](scripts/fixtures/modern-normalize/README.md) uses a separate pinned dependency lock and an installed Chrome. It is not part of the default test count. Read its evidence: the upstream baseline contains failures and assertion-free TODOs; the harness checks an added regression and exact undo recovery.
+
 For packaging or runtime changes, run `pnpm extension:package` followed by `pnpm extension:test:installed` (prefix with `xvfb-run -a` on headless Linux). This installs the VSIX into a fresh profile, verifies the installed runtime hashes and production extension mode, and runs the same integration flows. The test driver is a separate development extension. Controlled AI fixtures in this suite do not count as real-model accuracy checks; see [the evidence index](docs/evidence/local-ai/README.md).
 
 ## Useful first contributions

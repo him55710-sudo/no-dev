@@ -43,6 +43,6 @@ pnpm release:package
 pnpm release:check
 ```
 
-전체 통합 검사에는 기존 Python/Go 기능의 실행기도 필요하다. HTML/CSS 파싱 자체에는 필요하지 않다. 외부 실제 웹 프로젝트의 동작·렌더링 검증과 모델 설명의 의미 정확성은 별도 과제로 남는다. 구현·실패·검증 결과는 [작업 기록](AGENT_WORKLOG.md)에서 추적한다.
+전체 통합 검사에는 기존 Python/Go 기능의 실행기도 필요하다. HTML/CSS 파싱 자체에는 필요하지 않다. [외부 modern-normalize 검증](evidence/local-ai/web-source-project.md)은 실제 VS Code에서 CSS 값 변경 후 Chrome 검사 실패가 7개에서 9개로 늘고 undo 후 원래 7개로 복구되는 것을 확인했다. 원본부터 있던 실패와 assertion 없는 TODO 8개를 공개한다. HTML은 원문 읽기만 확인했으며 전체 렌더링·접근성·모든 브라우저·모델 설명의 의미 정확성 검증은 남는다. 구현·실패·검증 결과는 [작업 기록](AGENT_WORKLOG.md)에서 추적한다.
 
 마지막 CSS 주석/반복 선언 식별자 수정 후 [설치 통합 38개](evidence/local-ai/web-source-final-installed-integration.json)가 통과했다. VSIX `88761109…`의 production 모드와 7개 런타임 해시를 확인했다. [실제 한국어/영어 화면](evidence/local-ai/web-source-native.md)의 설치본은 이 후속 수정 전이며 별도 해시로 기록했다.

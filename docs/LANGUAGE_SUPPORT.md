@@ -16,10 +16,10 @@
 | Rust | 미제공 | 합성 설명·수정 기록. 코드에 없는 사업적 이유 추측 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
 | Java | 미제공 | 합성 설명·수정 기록. 한 정적 메서드 사례 한정 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
 | C# | 미제공 | 합성 설명·수정 기록. 한 정적 메서드 사례 한정 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
-| HTML / CSS | [포함된 파서로 태그·문구·속성·선택자·선언 값 읽기 및 일부 값 수정](HTML_CSS_SOURCE.md). 브라우저와 VS Code; 스크립트 비실행 | 기존 합성 설명·수정 기록의 CSS 열 개수 오류는 별도로 남음 | 원문 파싱·CSS 토큰 닫힘 검사. 직접 CSS 수정은 알려진 속성 문법도 일부 확인. 문서 적합성·렌더링·우선순위 검사 아님 | 외부 웹 프로젝트 동작은 미검증. 합성 파일의 실제 VS Code diff·수정·undo 별도 검사 | 공통 process 측정 연결 제공. 브라우저 렌더링 성능 미검증 |
+| HTML / CSS | [포함된 파서로 태그·문구·속성·선택자·선언 값 읽기 및 일부 값 수정](HTML_CSS_SOURCE.md). 브라우저와 VS Code; 스크립트 비실행 | 기존 합성 설명·수정 기록의 CSS 열 개수 오류는 별도로 남음 | 원문 파싱·CSS 토큰 닫힘 검사. 직접 CSS 수정은 알려진 속성 문법도 일부 확인. 문서 적합성·렌더링·우선순위 검사 아님 | [modern-normalize v3.0.1](evidence/local-ai/web-source-project.md): HTML 읽기, CSS 값 수정→Chrome 전체 54개 중 실패 7→9→undo 후 7. 원본 실패·TODO 8개 보존. Windows/Chrome 한 조합 | 공통 process 측정 연결 제공. 브라우저 렌더링 성능 미검증 |
 | SQL | 미제공 | 3B 수정은 근거 불일치 거절; 7B 추가 1회는 정확한 원문 인용과 기대 수정 일치. 방언별 실행 검증 없음 | 미제공 | 미검증 | 공통 process 측정 연결 제공. DB 쿼리 성능 미검증 |
 | JSON / JSONC | [모델 없는 키 경로·자료형·실제 값·원문 줄](JSON_DATA.md), 문자열·숫자·참거짓의 범위 수정. 숫자 표기·JSONC 주석·끝 쉼표 보존; 중복 키 수정 제한 | 각 형식의 합성 설명·수정 기록. JSONC의 실제 적용 방식에 잘못된 추측 | JSON 및 JSONC 제안 문법 검사. 데이터 의미·소비 프로그램 검증 아님 | 소비 프로그램은 미검증. 실제 VS Code의 모델 없는 데이터 수정·diff·undo 별도 확인 | 소비 프로그램의 등록 process 명령 측정 가능, 실제 소비 사례 미검증 |
 
 설명 UI는 한국어와 영어다. 프로그래밍 언어 지원과 UI 언어 지원은 다른 항목이다. 기존 0.6.0의 검증은 [릴리스 기록](RELEASE_VALIDATION.md), 새 구현 순서는 [완성 계획](PRODUCT_COMPLETION.md), 실제 작업은 [작업 기록](AGENT_WORKLOG.md)을 따른다.
 
-개발판의 [실제 프로젝트 검사](PROJECT_CHECKS.md)는 언어와 무관하게 사용자가 등록한 VS Code test/build 명령을 연결한다. 언어 도구·의존성이 설치돼 있어야 하며 풀어봄이 해당 언어의 검사기를 제공한다는 뜻은 아니다. 실제 외부 검증은 Python itsdangerous, [JavaScript clsx](evidence/local-ai/clsx-review.md), [Go Google UUID](evidence/local-ai/go-source-project.md)의 고정 사례다. 종료 코드와 파일 변경 관찰을 기록하며 최적화 효과를 판정하지 않는다.
+개발판의 [실제 프로젝트 검사](PROJECT_CHECKS.md)는 언어와 무관하게 사용자가 등록한 VS Code test/build 명령을 연결한다. 언어 도구·의존성이 설치돼 있어야 하며 풀어봄이 해당 언어의 검사기를 제공한다는 뜻은 아니다. 실제 외부 검증은 Python itsdangerous, [JavaScript clsx](evidence/local-ai/clsx-review.md), [Go Google UUID](evidence/local-ai/go-source-project.md), [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)의 고정 사례다. 종료 코드와 파일 변경 관찰을 기록하며 최적화 효과를 판정하지 않는다.

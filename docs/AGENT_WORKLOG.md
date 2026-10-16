@@ -2,6 +2,19 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-16 · 실제 외부 HTML/CSS 프로젝트와 반복 검사 복구
+
+- **대상과 목적:** [modern-normalize v3.0.1](evidence/local-ai/web-source-project.md), 소스 commit `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`에서 P2/P3/P4의 원문 읽기·값 수정·실제 브라우저 검사·undo를 연결했다. HTML은 읽기만, CSS는 고정된 의도적 오류를 적용했다. 모델/최적화 성공이나 전체 P0–P6 완료로 세지 않는다.
+- **공개 구현:** `scripts/run-modern-normalize-tests.mjs`, `scripts/test-web-source-project.mjs`, `extension/test/webSourceProject.ts`, 외부 fixture의 pnpm 잠금 파일·재현 안내. 제품 런타임 의존성을 늘리지 않고 opt-in 검사로 분리했다. 전체 원자료·양언어 트리·정확한 범위·라이선스를 공개했다.
+- **준비 실패:** 부모 workspace 때문에 첫 pnpm 명령은 외부 의존성을 설치하지 않았다. 명시적 외부 경로와 `--ignore-workspace --prod=false --ignore-scripts`로 557개 패키지를 설치했다. upstream 범위 버전의 최초 해석 결과를 잠금 파일에 보존했고 이후에는 frozen 설치로 재현한다. 7개 전이 패키지의 deprecation 경고가 있었다.
+- **원본 결과:** 필터 없는 원본 Chrome 테스트 54개는 **47 pass·7 fail**. 8개는 assertion 없는 TODO다. 스타일 직렬화·접두어 속성·원본 기대값 차이를 숨기지 않았으며 원본 실패를 수정 후 회귀로 세지 않았다. Firefox/Safari/stylelint/test:all은 이번 사례에서 실행하지 않았다.
+- **실행기 종료 결함:** 첫 독립 실행은 JSON exitCode 1에도 실제 프로세스 종료가 0이었다. TestCafe의 async-exit-hook 1.1.2가 beforeExit의 코드를 0으로 덮는 원인을 읽고, 정리·기록 후 명시적으로 종료하도록 adapter를 고쳤다. 실제 task와 JSON 종료 코드를 대조해 확인했다.
+- **브라우저 반복 실행 결함:** 편집기 첫 시도와 다음 시도의 변경본에서 Chrome 연결 2분 제한으로 실패했다. 전용 임시 프로필을 재사용하면서 이전 Chrome이 남는 것을 확인했다. Electron crashpad pipe 상속 제거, 매 실행 별도 임시 경로, Windows에서 그 경로에 속한 Chrome만 종료하는 정리를 추가했다. 두 실패 보고서도 원자료에 보존했다.
+- **최종 실제 흐름:** VS Code 1.96.4/Windows/Chrome 155에서 HTML 표시 81개, CSS 표시 51개·수정 가능 값 31개를 읽었다. `border-box→content-box`의 native diff·정확한 범위 적용·자동 저장 없음·미저장 검사 차단 후 **47 pass/7 fail → 45 pass/9 fail → undo 후 47 pass/7 fail**. 추가 실패는 box-sizing과 hr 높이다. 세 task 모두 exit 1이며 harness는 원래 실패 집합과 파일 해시 복구를 확인해 exit 0으로 끝났다.
+- **복구·검증 범위:** CSS 원본 SHA-256 복구, 임시 tasks.json 제거, 기존 untracked pnpm 잠금만 남음을 확인했다. 최종 서버 8080과 해당 테스트 Chrome은 남지 않았다. 확장 TypeScript/번들 빌드, 새 스크립트 문법 검사를 통과했다. 외부 브라우저 실행은 Windows 한 조합이며 앞선 Windows·Ubuntu 제품 CI와 별도다.
+- **패키지:** 소스 ZIP을 새 기록과 재현 도구까지 포함해 재생성했다. 첫 release:check는 현재 셸 PATH에 Go가 없어 기존 Go 패키지 검사에서 실패했다. 검증용 Go 1.27.2 경로를 해당 명령 환경에만 추가한 뒤 체크섬·manifest·라이선스와 추출 분석/Python 측정/Python AST/Go AST 실행을 모두 통과했다. VSIX는 기존 `88761109…`와 동일하며 제품 런타임을 변경한 배포가 아니다.
+- **문서:** 상세 기획의 누적된 중복 상태 문단을 현재 기능·근거·남은 우선순위로 정리했다. 역사적 근거는 이 기록과 기존 자료에 보존했다. README 양언어·언어 지원 표·HTML/CSS 안내·프로젝트 검사 안내에 성공 범위와 남은 실패를 연결했다. 공개 안정판/Pages는 변경하지 않았다.
+
 ## 2026-10-16 · HTML/CSS 원문 파서와 값 수정
 
 기능 소스 `20de7143a8dcacef6e5e535ae5bfa1dc6b73cf55`의 [Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)에서 Windows·Ubuntu가 모두 성공했다. 각 핵심 **200개/21파일**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시, 추출한 분석/Python 측정/Python AST/Go AST 도구 실행 성공을 실제 로그에서 대조했다. [정규화한 CI 원자료](evidence/local-ai/web-source-ci.json). 후속 문서 커밋은 이 기능 커밋을 가리키며 안정 릴리스/Pages는 변경하지 않았다.
@@ -18,7 +31,7 @@
 - **실제 UI:** [설치 화면 기록](evidence/local-ai/web-source-native.md)의 한국어/영어 CSS 설명, 12px→18px diff·적용·Ctrl+Z, 영어 HTML 구조·속성·본문·script 수정 제외를 확인했다. 언어 팝업의 한 클릭 거절은 재관찰 후 키보드로 해결했다. 480px 패널의 표 가로 스크롤·중복 이름 표시도 기록한다. UI 설치본은 마지막 주석/이름 수정 전이며 후속 검증과 구분한다.
 - **배포 범위/비용:** 기능과 기획·지원 표·예제를 공개 소스로 제공한다. 설치 UI에 쓴 VSIX는 1,353,438바이트로 이전 1,213,038바이트보다 증가했다. 새 파서 지원의 비용이며 최적화 성과로 표현하지 않는다. 안정판/Pages는 여전히 0.6.0이다. 전체 P0–P6 완료가 아니며 외부 HTML/CSS 프로젝트와 다른 언어 도구가 남는다.
 
-외부 웹 프로젝트의 다음 검증을 위해 modern-normalize v3.0.1을 작업용 폴더에 clone하고 실제 commit `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`를 확인했다. 태그는 annotated tag이므로 tag object `a6a0a501…`와 소스 commit을 구분한다. 원본 Chrome/TestCafe 테스트와 CSS/HTML fixture를 읽었고 checkout은 깨끗하다. 의존성 설치나 브라우저 테스트 실행은 아직 하지 않았으며 통과 사례로 집계하지 않는다. 일부 upstream 테스트는 assertion 없는 TODO이므로 후속 실행 시 전체 pass 개수와 실질 검증 범위를 구별해야 한다.
+외부 웹 프로젝트의 다음 검증을 위해 modern-normalize v3.0.1을 작업용 폴더에 clone하고 실제 commit `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`를 확인했다. 태그는 annotated tag이므로 tag object `a6a0a501…`와 소스 commit을 구분한다. 원본 Chrome/TestCafe 테스트와 CSS/HTML fixture를 읽었고 checkout은 깨끗하다. 이 준비 시점에는 의존성 설치나 브라우저 테스트 실행을 하지 않았고 통과 사례로 집계하지 않았다. 후속 실행 결과는 위 외부 프로젝트 항목에서 추적한다. 일부 upstream 테스트는 assertion 없는 TODO이므로 후속 실행 시 전체 pass 개수와 실질 검증 범위를 구별해야 한다.
 
 ## 2026-10-16 · Go 표준 파서·원문 수정·실제 UUID 프로젝트
 
