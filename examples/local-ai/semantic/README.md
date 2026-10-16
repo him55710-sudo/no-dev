@@ -18,3 +18,5 @@ Ollama는 클라우드를 끄고 로컬 포트에서 실행해야 한다. `all` 
 검토 기준의 언어 의미는 [Python 타입 힌트](https://docs.python.org/3/library/typing.html), [Go 반환문](https://go.dev/ref/spec#Return_statements), [CSS 열 정의](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/grid-template-columns), [JavaScript nullish 연산자](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)와 실제 원문을 기준으로 한다. 예제의 작은 범위를 전체 프레임워크·브라우저·SQL 방언 동작으로 확대하지 않는다.
 
 English: these are public synthetic fixtures for manual semantic review. The runner freezes its implementation, records one real local inference per selected case, and preserves failures. Quote coverage is a source-string check only; it is not an accuracy score. No generated code is applied or executed.
+
+후속 실행은 로컬 중계기로 실제 요청과 최종 텍스트를 보존해 형식 검사에서 거절한 답변도 검토할 수 있다. 모델 사고 과정은 저장하지 않는다. 공개용 합성 예제 전용 도구이며 제품은 사용자 코드를 자동 기록하지 않는다. 이전 중계기 없는 실행은 거절 이유만 기록했으므로 과거 거절 전 답변을 재구성하지 않는다.

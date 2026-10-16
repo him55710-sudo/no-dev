@@ -1,0 +1,50 @@
+{
+  "installation": {
+    "kind": "installed-vsix",
+    "version": "0.7.0",
+    "vsixSha256": "e7fd781063ba53f67a1146606a87cf9f5c8635a0a347fc74f7128b76353a685c",
+    "verifiedFiles": {
+      "out/extension.cjs": "81cf11a1bbb181ecb38e5c67f094a9db77f45baa0639fe1238708e8bd371f56e",
+      "out/worker.cjs": "4c371875e6ab3812faa6b17a8f1939c2dadf70f4fb20eaa00441c32e6e07c4a4",
+      "runtime/benchmark.py": "bb136c4c7bdd452aa7a75d216aa5998c41c98fc2cf9cfc089e2edae5ae80c6f9",
+      "media/view.js": "7a58cda9a0b41cde005e518a2d6b6cd2d52c72a84cbc8ba2fbb312785a177286",
+      "media/view.css": "7ae601b365e506af57752ded788ece38fd4e932d4b0c15d0e64812cfef2e443b"
+    },
+    "extensionMode": "production"
+  },
+  "vscode": "1.96.4",
+  "checks": [
+    "activation, real webview panel and initial explanation",
+    "unsaved document changes trigger fresh Korean analysis",
+    "native VS Code diff shows correct before/after without mutation",
+    "scenario matrix compares actual pending patch without changing the editor",
+    "apply changes editor only; native undo restores the previous value",
+    "stale preview rejected after an intervening editor change",
+    "workspace graph resolves relative imports, restricts navigation and simulates inputs",
+    "natural-language change prepared; switching files invalidates it",
+    "explanation source link selects the correct editor line",
+    "custom project term changes explanations and sentence editing; source stays intact and old patches expire",
+    "terminology survives file switches, stays scoped to its document and resets to the default",
+    "React example command, TSX structure, source line, inert text diff, editor apply, reanalysis and native undo",
+    "worker preserves separate cleanup branch, pending returns and finalizer source navigation without code mutation",
+    "editor provider reports preserve context, source, severity and exact source selection",
+    "edited reports, replaced report IDs and file switches reject stale navigation; removed reports clear",
+    "built-in TypeScript reports an actual 2322 error after a rule edit; source selection and undo clear it",
+    "local AI controlled fixture: actual Python document, source quote selection, native diff, explicit apply, two-range undo and no implicit save",
+    "local AI controlled fixture: stale proposal blocked and in-flight request cancelled without changing source",
+    "local AI controlled fixture: malformed TypeScript proposal remains reviewable but cannot be applied",
+    "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
+    "project check: configured process runs in VS Code; review and known task ID required; real exit 0 and saved-file SHA-256 recorded",
+    "project check: actual nonzero exit 7 is a failure, never a pass",
+    "project check: unsaved edits block execution without saving; concurrent run rejected; a different file edit invalidates an otherwise successful result",
+    "project check: explicit cancellation terminates its actual task and is not reported as success",
+    "project check: shell task works after cancellation; background tasks excluded; changed command rejected until reviewed again",
+    "measurement: real process task, variable resolution, review required, missing baseline rejected, checks cannot overlap, seven elapsed/peak-memory samples published",
+    "measurement: unsaved code blocked; saved target edit preserves baseline; actual project-check evidence and seven candidate samples exported with matching output",
+    "measurement: later target edit marks candidate stale; changed stdout prevents an improvement percentage",
+    "measurement: immediate cancellation rejects partial results and permits retry; another file edit invalidates comparison even after undo",
+    "measurement: stale prepared command cannot run; actual exit 7 is a failure without a fabricated baseline"
+  ],
+  "passed": 30,
+  "timestamp": "2026-10-16T08:08:29.484Z"
+}
