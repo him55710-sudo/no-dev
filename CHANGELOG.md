@@ -6,7 +6,9 @@
 - Ground citations and edits in unique original source ranges, require changed-source evidence, bound requests, and cancel stale work. Review the native diff and unchecked behavior before explicit apply; use normal editor undo.
 - Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Other language checks remain unavailable.
 - Publish the implementation plan, agent work log, actual Python/model/editor evidence and a failed optimization: itsdangerous tests passed before and after, but the proposed function was slower and was not adopted.
-- This is not verified support for every language, a project test runner, or automatic optimization. See [local AI setup and limitations](docs/LOCAL_AI.md).
+- Add explicitly reviewed project test/build commands through VS Code tasks, with saved-file checks, real exit codes, cancellation and stale-result notices. Validate itsdangerous tests passing, a known regression failing and undo restoring 297 passing tests. See [project checks](docs/PROJECT_CHECKS.md).
+- Preserve TSX/JSX source extensions in native rule diffs instead of labeling every preview as TypeScript.
+- This is not verified support for every language or automatic optimization. See [local AI setup and limitations](docs/LOCAL_AI.md).
 - Add JSONC structure and proposal syntax checks with comments/trailing commas, preserving strict JSON rules. Validate the packaged worker outside project dependencies and isolate each VS Code test profile.
 - Publish 28 actual local-model responses across 14 language identifiers with semantic errors and rejected edits included. Choose model context size from bounded request size; do not claim universal quality or measured speedups.
 

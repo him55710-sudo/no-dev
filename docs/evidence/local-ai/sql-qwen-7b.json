@@ -1,0 +1,59 @@
+{
+  "startedAt": "2026-10-16T05:24:42.061Z",
+  "model": "qwen2.5-coder:7b",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "implementation": {
+    "transportSha256": "17f42b92f0f03a7a714baa4915a134aa00391744ca7a7629c6be7479012c84d7",
+    "protocolSha256": "4aff8cbbb7ea1cc438b487e93f988569c217c35d264733101a254d2f4c26d8f0"
+  },
+  "kind": "actual Ollama on public synthetic fixtures; no code applied or executed",
+  "limitations": "One run per case; exact text matching is not semantic accuracy. Explanation prose requires human review. Runtime, compilation and project integration are not tested here.",
+  "results": [
+    {
+      "file": "orders.sql",
+      "language": "sql",
+      "task": "edit",
+      "sourceSha256": "8abdcc813a494f60795a6ae83e5339c3ab997f347a97a6f479c3275f7d0725d3",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 59653,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "무료 배송 기준을 70000으로 변경하고 paid 상태 필터를 유지합니다.",
+          "citations": [
+            {
+              "quote": "CASE WHEN subtotal >= 50000 THEN 0 ELSE 3000 END AS shipping_fee",
+              "explanation": "기존 코드에서 무료 배송 기준이 50000이었으므로, 이를 70000으로 변경합니다.",
+              "start": 28,
+              "end": 92,
+              "line": 2
+            }
+          ],
+          "edits": [
+            {
+              "before": "subtotal >= 50000",
+              "after": "subtotal >= 70000",
+              "reason": "무료 배송 기준을 70000으로 변경합니다.",
+              "start": 38,
+              "end": 55
+            }
+          ],
+          "updated": "SELECT id, subtotal,\n       CASE WHEN subtotal >= 70000 THEN 0 ELSE 3000 END AS shipping_fee\nFROM orders\nWHERE status = 'paid';\n",
+          "risks": [],
+          "checks": [
+            "주문 상태가 'paid'인 경우에만 무료 배송 기준이 적용되는지 확인합니다."
+          ]
+        }
+      },
+      "protocolAccepted": true,
+      "expectedSource": "SELECT id, subtotal,\n       CASE WHEN subtotal >= 70000 THEN 0 ELSE 3000 END AS shipping_fee\nFROM orders\nWHERE status = 'paid';\n",
+      "matchesExpectedText": true
+    }
+  ],
+  "completedAt": "2026-10-16T05:25:41.805Z"
+}

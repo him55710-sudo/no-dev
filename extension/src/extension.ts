@@ -58,6 +58,19 @@ export function activate(context: vscode.ExtensionContext) {
         const p = r.payload || {};
         let result: unknown;
         switch (r.action) {
+          case "projectTasks":
+            result = await controller.checks.list(r.contextId);
+            break;
+          case "projectRun":
+            result = await controller.checks.start(
+              r.contextId,
+              inputString(p.id, 100),
+              p.reviewed,
+            );
+            break;
+          case "projectCancel":
+            controller.checks.cancel();
+            break;
           case "localModels":
             result = await controller.assistant.models();
             break;

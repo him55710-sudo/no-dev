@@ -43,6 +43,20 @@
     }
   },
   "contributes": {
+    "taskDefinitions": [
+      {
+        "type": "pureobom-check",
+        "required": [
+          "pureobomRun"
+        ],
+        "properties": {
+          "pureobomRun": {
+            "type": "string",
+            "description": "Internal identifier for an explicitly reviewed Pureobom project check."
+          }
+        }
+      }
+    ],
     "configuration": {
       "title": "Pureobom",
       "properties": {

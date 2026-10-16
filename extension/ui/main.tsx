@@ -7,6 +7,7 @@ import { Terminology } from "../../src/components/Terminology";
 import { ProductHelp } from "../../src/components/ProductHelp";
 import { EditorProblems } from "./EditorProblems";
 import { LocalAssistant } from "./LocalAssistant";
+import { ProjectChecks } from "./ProjectChecks";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
@@ -267,7 +268,10 @@ function App() {
           </nav>
           <main aria-busy={state.busy}>
             {a && tab === "local" && (
-              <LocalAssistant state={state} lang={lang} />
+              <>
+                <LocalAssistant state={state} lang={lang} />
+                <ProjectChecks state={state} lang={lang} />
+              </>
             )}
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
@@ -338,8 +342,8 @@ function App() {
                 </div>
                 <p className="muted">
                   {t(
-                    "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 복잡한 기능을 새로 생성하는 AI는 아직 연결하지 않았습니다.",
-                    "Edit constants, text, booleans and comparisons. General AI code generation is not connected.",
+                    "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
+                    "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
                   )}
                 </p>
                 <form
@@ -561,6 +565,7 @@ function App() {
             )}
             {a && tab === "checks" && (
               <>
+                <ProjectChecks state={state} lang={lang} />
                 {state.diagnostics && (
                   <EditorProblems
                     snapshot={state.diagnostics}

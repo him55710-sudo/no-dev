@@ -10,6 +10,8 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 **VS Code extension · Korean / English · Local processing · MIT**
 
+The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
+
 [한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
 [![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)

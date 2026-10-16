@@ -2,11 +2,16 @@ import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 import type { Controller } from "../src/controller";
 import { localAssistantChecks } from "./localAssistant";
+import { projectChecks } from "./projectChecks";
 const reports: string[] = [];
-async function until(check: () => boolean, description: string) {
+async function until(
+  check: () => boolean,
+  description: string,
+  timeout = 25000,
+) {
   const start = Date.now();
   while (!check()) {
-    if (Date.now() - start > 25000) throw Error(`Timed out: ${description}`);
+    if (Date.now() - start > timeout) throw Error(`Timed out: ${description}`);
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }
@@ -266,6 +271,11 @@ export async function run() {
     vscode.Uri.parse(jsxPreview.after),
   );
   assert.ok(jsxAfter.getText().includes('{"14일 무료 체험"}</button>'));
+  assert.equal(
+    jsxAfter.languageId,
+    "typescriptreact",
+    "TSX diff must preserve source language instead of becoming TypeScript",
+  );
   assert.equal(screen.getText(), screenBefore);
   await c.apply(textChange.id, c.state.contextId);
   assert.ok(screen.getText().includes('{"14일 무료 체험"}</button>'));
@@ -426,6 +436,16 @@ export async function run() {
   const typescript = vscode.extensions.getExtension(
     "vscode.typescript-language-features",
   );
+  // Earlier diff fixtures create virtual TS projects. Close only our preview
+  // tabs before waiting for a real language-server report on the source file.
+  const previewTabs = vscode.window.tabGroups.all
+    .flatMap((group) => group.tabs)
+    .filter(
+      (tab) =>
+        tab.input instanceof vscode.TabInputTextDiff &&
+        tab.input.original.scheme === "pureobom-preview",
+    );
+  await vscode.window.tabGroups.close(previewTabs, true);
   assert.ok(typescript, "built-in TypeScript extension is available");
   await typescript.activate();
   const typedUri = vscode.Uri.joinPath(root, "typed-fee.ts");
@@ -445,13 +465,20 @@ export async function run() {
     value: "4000",
   });
   await c.apply(typedPatch.id, c.state.contextId);
-  await until(
-    () =>
-      c.state.diagnostics?.items.some(
-        (d) => d.source === "ts" && d.code === "2322",
-      ) === true,
-    "real TypeScript assignment error after applying rule edit",
-  );
+  try {
+    await until(
+      () =>
+        c.state.diagnostics?.items.some(
+          (d) => d.source === "ts" && d.code === "2322",
+        ) === true,
+      "real TypeScript assignment error after applying rule edit",
+      60000,
+    );
+  } catch (error) {
+    throw Error(
+      `${String(error)}: ${JSON.stringify({ path: c.state.path, current: typedDoc.getText(), diagnostics: c.state.diagnostics, raw: vscode.languages.getDiagnostics(typedUri) })}`,
+    );
+  }
   const typeSnapshot = c.state.diagnostics!;
   const typeError = typeSnapshot.items.find(
     (d) => d.source === "ts" && d.code === "2322",
@@ -522,6 +549,7 @@ export async function run() {
   reports.push(
     "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
   );
+  await projectChecks(c, ready, reports);
   const report = {
     vscode: vscode.version,
     checks: reports,
@@ -529,7 +557,9 @@ export async function run() {
     timestamp: new Date().toISOString(),
   };
   await vscode.workspace.fs.writeFile(
-    vscode.Uri.joinPath(root, "..", "extension-integration.json"),
+    process.env.PUREOBOM_INTEGRATION_REPORT
+      ? vscode.Uri.file(process.env.PUREOBOM_INTEGRATION_REPORT)
+      : vscode.Uri.joinPath(root, "..", "extension-integration.json"),
     Buffer.from(JSON.stringify(report, null, 2)),
   );
   console.log("PUREOBOM INTEGRATION PASSED", JSON.stringify(report));

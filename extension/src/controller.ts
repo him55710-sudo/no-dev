@@ -17,6 +17,7 @@ import { editorDiagnostics } from "../../src/core/editorDiagnostics";
 import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
 import { assistantLanguages } from "../../src/core/localAssistant";
 import { LocalAssistantController } from "./localAssistantController";
+import { ProjectChecks } from "./projectChecks";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
 
 const FILE_BYTES = 512 * 1024,
@@ -30,6 +31,7 @@ type PendingPatch = {
 };
 export class Controller implements vscode.Disposable {
   readonly assistant: LocalAssistantController;
+  readonly checks: ProjectChecks;
   readonly changes = new vscode.EventEmitter<ViewState>();
   state: ViewState = {
     contextId: "",
@@ -56,6 +58,8 @@ export class Controller implements vscode.Disposable {
       (context) => this.current(context),
       client,
     );
+    this.checks = new ProjectChecks((context) => this.current(context));
+    this.checks.changes.event((projectCheck) => this.publish({ projectCheck }));
     try {
       this.glossary = normalizeGlossary(storage?.get("pureobom.glossary.v1"));
     } catch {
@@ -474,13 +478,15 @@ export class Controller implements vscode.Disposable {
   }
   async preview(id: string, contextId: string | undefined) {
     const pending = this.pending(id, contextId);
+    const suffix =
+      this.path(pending.doc).match(/\.[a-zA-Z0-9]+$/)?.[0] || ".txt";
     const before = vscode.Uri.from({
       scheme: "pureobom-preview",
-      path: `/${id}/before.ts`,
+      path: `/${id}/before${suffix}`,
     });
     const after = vscode.Uri.from({
       scheme: "pureobom-preview",
-      path: `/${id}/after.ts`,
+      path: `/${id}/after${suffix}`,
     });
     if (this.previews.size > 20) this.previews.clear();
     this.previews.set(before.toString(), pending.patch.original);
@@ -598,6 +604,7 @@ export class Controller implements vscode.Disposable {
     return report;
   }
   dispose() {
+    this.checks.dispose();
     this.assistant.dispose();
     clearTimeout(this.timer);
     this.registration.dispose();

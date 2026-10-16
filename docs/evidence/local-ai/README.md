@@ -11,6 +11,8 @@
 | [언어별 28회 응답과 의미 검토](language-review.md) | 14개 언어 식별자의 합성 파일에 실제 설명·수정 요청. SQL 수정 1건은 원문 근거 불일치로 거절 | CSS·JSONC 등의 틀린 설명, JS의 잘못된 확인 항목, Python/Go 설명 누락 발견. 형식 통과를 의미 정확성으로 세지 않음 |
 | [VS Code 통합](vscode-controlled-integration.json) | 19개 실제 VS Code 검사. 새 AI 검사는 제어된 HTTP 응답으로 다중 편집·undo·오래된 제안·취소·문법 오류 적용 거절 확인 | 새 AI 3개 사례는 실제 모델 추론이 아님 |
 | [JSONC 보강 후 VS Code 통합](vscode-jsonc-integration.json) | 새 테스트 프로필에서 20개 검사. JSONC 미저장 문서·문법 오류·undo 검사 추가 | 제어된 AI HTTP 검사와 실제 모델 응답 기록은 별도 |
+| [프로젝트 검사 기능의 외부 연동](itsdangerous-project-checks.json) | VS Code task로 pytest 실행: 297개 통과 → 의도적인 오류로 실패(exit 1) → undo·저장 후 297개 통과. 미저장 실행 차단 확인 | 모델 제안이 아닌 검토한 고정 오류를 넣은 검사. UI는 종료 코드만 기록하고 이 개발 검증 스크립트가 JUnit XML에서 개수를 읽음 |
+| [프로젝트 검사 보강 후 VS Code 통합](vscode-project-checks-integration.json) | 실제 VS Code 통합 25개. 실제 process/shell 성공·실패, 미저장·중복 실행 차단, 다른 파일 변경, 빠른 취소·재실행, 명령 변경 시 재검토 | 합성 명령으로 검사 연결을 확인. 외부 Python 프로젝트 기록과 별도 |
 | [보강 전 외부 사례](itsdangerous-before-citation-guard.json) | 실제 Ollama + VS Code + itsdangerous 전후 297개 테스트 성공 | 품질 검토에서 관련 없는 import 인용과 불필요한 조건 발견. 성공한 최적화로 세지 않음 |
 | [보강 후 외부 사례](itsdangerous-integration.json) | 변경-인용 연결 검증 후 실제 Ollama + VS Code + Python 문법 검사 + 전후 297개 테스트 + 원본 복구 | 여전히 불필요한 조건이 있어 성능 측정을 추가함 |
 | [성능 원자료](optimization-benchmark.json) | 실제 제안 전후, 입력·예외·객체 동일성 10개 확인, 사례별 15회 × 10만 호출, 교대 순서와 워밍업 | 단일 함수·PC 측정. 문자열 입력에서 약 24~38% 느림. 제안 미채택 |
@@ -28,3 +30,5 @@
 5. `python scripts/benchmark-local-proposal.py`는 검토한 특정 변경만 허용한다. 모델이 다른 변경을 반환하면 먼저 코드를 검토해야 하며, 스크립트는 알 수 없는 제안을 실행하지 않는다. 결과는 `test-results/local-optimization-benchmark.json`이다.
 
 단일 파일 추론만 확인하려면 `node scripts/probe-local-assistant.mjs examples/shipping.py python qwen2.5-coder:3b 11435 explain`. 이 명령은 수정 내용을 적용하거나 실행하지 않는다. 모델 출력은 반복 실행마다 달라질 수 있으며, 현재 결과가 미래 실행의 성공을 보장하지 않는다.
+
+프로젝트 검사 기능만 재현하려면 같은 고정 외부 저장소·Python 가상 환경을 준비하고 `pnpm extension:build`, `node scripts/test-local-project.mjs --checks-only`를 실행한다. Ollama는 필요 없다. 검증용 tasks.json은 없을 때만 임시 생성하고 끝나면 지운다. 실제 편집기로 고정 오류를 적용·저장해 실패를 확인하고 undo·저장 후 다시 검사한다. 종료 후 외부 복사본의 `git status --porcelain`이 빈 결과인지 확인했다.

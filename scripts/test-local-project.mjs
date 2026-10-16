@@ -3,6 +3,8 @@ import { runTests } from "@vscode/test-electron";
 import { build } from "esbuild";
 import { resolve } from "node:path";
 import { execFileSync } from "node:child_process";
+import { mkdir, mkdtemp } from "node:fs/promises";
+const checksOnly = process.argv.includes("--checks-only");
 const root = resolve("test-results/projects/itsdangerous");
 const expected = "096c8d42545d3b68ea21a4f890fb2b2d8979c0bd";
 if (
@@ -29,11 +31,18 @@ await build({
   external: ["vscode"],
   logLevel: "silent",
 });
+await mkdir(resolve("test-results/local-project-profiles"), {
+  recursive: true,
+});
+const profile = await mkdtemp(
+  resolve("test-results/local-project-profiles/run-"),
+);
 await runTests({
   version: "1.96.4",
   extensionDevelopmentPath: resolve("extension"),
   extensionTestsPath: resolve("extension/out/real-project.cjs"),
   extensionTestsEnv: {
+    PUREOBOM_PROJECT_CHECKS_ONLY: checksOnly ? "1" : "0",
     PUREOBOM_PROJECT_PORT: process.env.PUREOBOM_PROJECT_PORT || "11435",
     PUREOBOM_PROJECT_MODEL:
       process.env.PUREOBOM_PROJECT_MODEL || "qwen2.5-coder:3b",
@@ -42,7 +51,11 @@ await runTests({
         ? "test-results/python-venv/Scripts/python.exe"
         : "test-results/python-venv/bin/python",
     ),
-    PUREOBOM_PROJECT_REPORT: resolve("test-results/local-project-report.json"),
+    PUREOBOM_PROJECT_REPORT: resolve(
+      checksOnly
+        ? "test-results/local-project-checks.json"
+        : "test-results/local-project-report.json",
+    ),
   },
   launchArgs: [
     root,
@@ -52,7 +65,7 @@ await runTests({
     "--skip-release-notes",
     "--disable-updates",
     "--user-data-dir",
-    resolve("test-results/local-project-vscode-user"),
+    profile,
     "--extensions-dir",
     resolve("test-results/local-project-vscode-extensions"),
   ],

@@ -4,7 +4,9 @@
 
 **0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 다른 언어의 실제 모델 품질, 전체 프로젝트 검사, 성능 측정 UI는 아직 검증·구현 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
 
-Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. All analysis runs locally. This is a restricted preview, not general code generation or an application test runner. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.
+Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. Optional local AI proposes broader changes. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.
+
+**프로젝트 검사 / Project checks:** 0.7 개발판은 등록한 VS Code test/build 명령의 실행도 연결합니다. 명령을 검토하고 파일을 저장한 뒤 실행하며, 실제 종료 코드와 파일 변경 여부를 표시합니다. 로컬 AI 연결은 필요 없습니다. Runs an explicitly reviewed project command; an exit code is not a guarantee of correctness. [설정·범위 / Setup and limits](https://github.com/him55710-sudo/pureobom/blob/main/docs/PROJECT_CHECKS.md).
 
 코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON은 유효성과 개요를 보여 줍니다.
 

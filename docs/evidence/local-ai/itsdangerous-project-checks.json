@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-16T05:42:18.562Z",
+  "kind": "actual VS Code project-check workflow; known regression; no model",
+  "project": "https://github.com/pallets/itsdangerous",
+  "commit": "096c8d42545d3b68ea21a4f890fb2b2d8979c0bd",
+  "vscode": "1.96.4",
+  "sourceSha256": "6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac",
+  "command": "python -m pytest -x -q --junitxml=<outside-workspace>",
+  "baseline": {
+    "result": {
+      "id": "94a008fc-75f7-49a2-b235-7056adb26d0a",
+      "name": "itsdangerous pytest",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/encoding.py",
+      "sourceSha256": "6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac",
+      "startedAt": "2026-10-16T05:42:22.648Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 5801
+    },
+    "counts": {
+      "tests": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "unsavedBlocked": true,
+  "regression": {
+    "result": {
+      "id": "f7f7d651-8414-4f0e-bcb2-81f131bfba66",
+      "name": "itsdangerous pytest",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/encoding.py",
+      "sourceSha256": "38de9921de4aa9debcd1b911018d751daf5e196c094c00b8b594df5ec2649275",
+      "startedAt": "2026-10-16T05:42:29.575Z",
+      "status": "failed",
+      "stale": false,
+      "exitCode": 1,
+      "elapsedMs": 3461
+    },
+    "counts": {
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "restored": {
+    "result": {
+      "id": "dc9b6a8c-c00b-449f-ba62-5e76e46b5d1c",
+      "name": "itsdangerous pytest",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/encoding.py",
+      "sourceSha256": "6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac",
+      "startedAt": "2026-10-16T05:42:33.987Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 4810
+    },
+    "counts": {
+      "tests": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "originalRestored": true
+}

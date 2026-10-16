@@ -14,6 +14,7 @@ export type ViewState = {
   busy: boolean;
   analysis?: FileAnalysis;
   diagnostics?: import("../../src/core/editorDiagnostics").EditorDiagnostics;
+  projectCheck?: import("./projectChecks").ProjectCheck;
   project?: ProjectAnalysis;
   scanNote?: string;
   error?: string;

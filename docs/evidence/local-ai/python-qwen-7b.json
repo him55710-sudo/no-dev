@@ -1,0 +1,75 @@
+{
+  "startedAt": "2026-10-16T05:21:48.934Z",
+  "model": "qwen2.5-coder:7b",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "implementation": {
+    "transportSha256": "17f42b92f0f03a7a714baa4915a134aa00391744ca7a7629c6be7479012c84d7",
+    "protocolSha256": "4aff8cbbb7ea1cc438b487e93f988569c217c35d264733101a254d2f4c26d8f0"
+  },
+  "kind": "actual Ollama on public synthetic fixtures; no code applied or executed",
+  "limitations": "One run per case; exact text matching is not semantic accuracy. Explanation prose requires human review. Runtime, compilation and project integration are not tested here.",
+  "results": [
+    {
+      "file": "shipping.py",
+      "language": "python",
+      "task": "explain",
+      "sourceSha256": "59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 80361,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 코드는 주어진 총액에 따라 배송비를 계산하는 간단한 Python 함수입니다. 배송비는 총액이 5만원 미만이면 3,000원, 5만원 이상이면 무료입니다.",
+          "citations": [
+            {
+              "quote": "FREE_SHIPPING_THRESHOLD = 50_000",
+              "explanation": "배송비가 무료가 되는 최소 총액을 정의합니다.",
+              "start": 89,
+              "end": 121,
+              "line": 3
+            },
+            {
+              "quote": "SHIPPING_FEE = 3_000",
+              "explanation": "배송비의 금액을 정의합니다.",
+              "start": 122,
+              "end": 142,
+              "line": 4
+            },
+            {
+              "quote": "if subtotal < 0:",
+              "explanation": "총액이 음수일 경우 ValueError를 발생시킵니다.",
+              "start": 195,
+              "end": 211,
+              "line": 8
+            },
+            {
+              "quote": "if subtotal >= FREE_SHIPPING_THRESHOLD:",
+              "explanation": "총액이 무료 배송 기준 이상일 경우 배송비를 0으로 반환합니다.",
+              "start": 274,
+              "end": 313,
+              "line": 10
+            },
+            {
+              "quote": "return SHIPPING_FEE",
+              "explanation": "총액이 무료 배송 기준 미만일 경우 배송비를 3,000원으로 반환합니다.",
+              "start": 335,
+              "end": 354,
+              "line": 12
+            }
+          ],
+          "edits": [],
+          "updated": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 50_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true
+    }
+  ],
+  "completedAt": "2026-10-16T05:23:09.368Z"
+}
