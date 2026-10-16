@@ -95,6 +95,8 @@ export class DesignWorkspace implements vscode.Disposable {
   private diffContents = new Map<string, string>();
   private serial = 0;
   private timer?: ReturnType<typeof setTimeout>;
+  private refreshWork?: Promise<void>;
+  private disposed = false;
   private saving = false;
   private diskDesign = "";
   private disposables: vscode.Disposable[] = [];
@@ -372,9 +374,40 @@ export class DesignWorkspace implements vscode.Disposable {
     return result;
   }
   async refresh() {
-    if (!this.folder) return;
+    if (!this.folder || this.disposed) return;
     clearTimeout(this.timer);
     this.timer = undefined;
+    ++this.serial;
+    this.state.stale = true;
+    if (!this.refreshWork) {
+      // Publish the shared promise before emitting busy state. A panel-ready or
+      // filesystem callback may request another refresh during that emission.
+      this.refreshWork = Promise.resolve().then(async () => {
+        const deadline = Date.now() + 30000;
+        try {
+          do {
+            clearTimeout(this.timer);
+            this.timer = undefined;
+            await this.refreshOnce();
+            if (this.state.stale && Date.now() > deadline)
+              throw Error(
+                "프로젝트가 계속 바뀌고 있습니다. 편집을 마친 뒤 구조를 다시 읽어 주세요.",
+              );
+          } while (!this.disposed && this.folder && this.state.stale);
+        } catch (error) {
+          if (!this.disposed) this.fail(error);
+          throw error;
+        } finally {
+          this.refreshWork = undefined;
+        }
+      });
+    }
+    // All callers wait for the latest requested analysis, including requests
+    // superseded by file events. Never acknowledge a feature edit with old graph data.
+    await this.refreshWork;
+  }
+  private async refreshOnce() {
+    if (!this.folder || this.disposed) return;
     const serial = ++this.serial;
     const folder = this.folder;
     this.state.busy = true;
@@ -439,7 +472,8 @@ export class DesignWorkspace implements vscode.Disposable {
         this.state.specs.features ?? [],
       );
       const checks = (await availableChecks(folder.uri.fsPath)).names;
-      if (serial !== this.serial || this.folder !== folder) return;
+      if (serial !== this.serial || this.folder !== folder || this.disposed)
+        return;
       this.state.graph = graph;
       this.state.checks = checks;
       this.state.notices = notices;
@@ -447,8 +481,10 @@ export class DesignWorkspace implements vscode.Disposable {
       this.state.busy = false;
       this.emit();
     } catch (error) {
-      if (serial === this.serial) this.fail(error);
-      throw error;
+      // A rename/delete can invalidate an in-flight read as well as its result.
+      // Let the shared refresh loop analyze the new revision in that case.
+      if (serial === this.serial && this.folder === folder && !this.disposed)
+        throw error;
     }
   }
   async source(nodeId: string, sourceIndex = 0) {
@@ -765,6 +801,7 @@ export class DesignWorkspace implements vscode.Disposable {
     return `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; font-src ${webview.cspSource};"><link rel="stylesheet" href="${resource("design.css")}"><title>풀어봄 · 시스템 설계</title></head><body><div id="root"></div><script nonce="${nonce}" src="${resource("design.js")}"></script></body></html>`;
   }
   dispose() {
+    this.disposed = true;
     clearTimeout(this.timer);
     this.serial++;
     this.panel?.dispose();

@@ -281,6 +281,12 @@ export async function run() {
     feature,
     "saving design preserves feature metadata",
   );
+  let overlappingRefresh: Promise<void> | undefined;
+  const duringRemoval = workspace.changes.event((state) => {
+    if (!state.busy) return;
+    duringRemoval.dispose();
+    overlappingRefresh = workspace.refresh();
+  });
   await workspace.handleRequest({
     id: "remove-feature",
     action: "removeFeature",
@@ -290,6 +296,17 @@ export async function run() {
       expectedGraphRevision: workspace.state.graph!.revision,
     },
   });
+  duringRemoval.dispose();
+  assert.ok(
+    overlappingRefresh,
+    "a second refresh was requested while removal was analyzing",
+  );
+  assert.equal(
+    workspace.state.busy,
+    false,
+    "feature edit waits for the latest analysis",
+  );
+  assert.equal(workspace.state.stale, false);
   assert.equal(workspace.state.specs.features!.length, 0);
   assert.equal(
     workspace.state.specs.specs.some((spec) => spec.id === groupedSpec.id),
@@ -299,6 +316,7 @@ export async function run() {
     observeSpec(groupedSpec, workspace.state.graph!).status,
     "reconnect",
   );
+  await overlappingRefresh;
   assert.equal(await readFile(file.uri.fsPath, "utf8"), sourceBeforeGrouping);
   const diskEdit =
     sourceBeforeGrouping.replace(/\r?\n/g, "\r\n") +
@@ -341,6 +359,7 @@ export async function run() {
       "stale feature edits are rejected",
       "design save preserves feature metadata",
       "feature removal preserves code and marks saved design for reconnection",
+      "feature removal waits for an overlapping analysis before acknowledging completion",
       "external atomic replacement is analyzed from disk while the document is open",
     ],
     nodes: graph.nodes.length,
