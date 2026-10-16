@@ -5,6 +5,7 @@ tsconfig.json
 out/integration.cjs
 out/real-project.cjs
 out/design-integration.cjs
+out/bundle-inputs.json
 node_modules/**
 **/*.map
 .DS_Store

@@ -20,17 +20,32 @@ import {
 } from "../../src/workspace/model";
 import {
   draftSpec,
+  prepareChange,
   saveSpec,
   specContentSchema,
   specDocumentSchema,
   type SpecDocument,
 } from "../../src/workspace/spec";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
+import { jobIsActive } from "../../src/workspace/job";
+import { ImplementationJobs } from "./agent/jobs";
+import { availableChecks } from "./agent/verify";
 
 const requestSchema = z
   .object({
     id: z.string().max(100),
-    action: z.enum(["ready", "refresh", "source", "saveSpec"]),
+    action: z.enum([
+      "ready",
+      "refresh",
+      "source",
+      "saveSpec",
+      "implement",
+      "cancelJob",
+      "decideJob",
+      "jobDiff",
+      "applyJob",
+      "undoJob",
+    ]),
     payload: z.unknown().optional(),
   })
   .strict();
@@ -60,6 +75,9 @@ export class DesignWorkspace implements vscode.Disposable {
   private panel?: vscode.WebviewPanel;
   private folder?: vscode.WorkspaceFolder;
   private worker: AnalysisClient;
+  private jobs: ImplementationJobs;
+  private diffContents = new Map<string, string>();
+  private implementationSpec?: string;
   private serial = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private saving = false;
@@ -67,6 +85,22 @@ export class DesignWorkspace implements vscode.Disposable {
   private disposables: vscode.Disposable[] = [];
   constructor(private context: vscode.ExtensionContext) {
     this.worker = new AnalysisClient(context.asAbsolutePath("out/worker.cjs"));
+    this.jobs = new ImplementationJobs(
+      resolve(context.globalStorageUri.fsPath, "implementation-jobs"),
+      (job) => {
+        this.state.job = job;
+        this.emit();
+      },
+    );
+    this.disposables.push(
+      vscode.workspace.registerTextDocumentContentProvider(
+        "pureobom-design-diff",
+        {
+          provideTextDocumentContent: (uri) =>
+            this.diffContents.get(uri.toString()) ?? "",
+        },
+      ),
+    );
     const watcher = vscode.workspace.createFileSystemWatcher("**/*");
     const changed = (uri: vscode.Uri) => {
       if (!this.panel || !this.folder || uri.scheme !== "file") return;
@@ -144,6 +178,16 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!folder || folder.uri.scheme !== "file")
       throw Error("로컬 프로젝트 폴더를 먼저 열어 주세요.");
     if (this.folder?.uri.toString() !== folder.uri.toString()) {
+      if (jobIsActive(this.state.job))
+        throw Error("진행 중인 구현 작업이 끝난 뒤 프로젝트를 바꿔 주세요.");
+      this.jobs.dispose();
+      this.jobs = new ImplementationJobs(
+        resolve(this.context.globalStorageUri.fsPath, "implementation-jobs"),
+        (job) => {
+          this.state.job = job;
+          this.emit();
+        },
+      );
       this.folder = folder;
       this.diskDesign = "";
       this.state = {
@@ -188,7 +232,73 @@ export class DesignWorkspace implements vscode.Disposable {
               .strict()
               .parse(request.payload);
             await this.source(payload.nodeId, payload.sourceIndex);
-          } else result = await this.save(request.payload);
+          } else if (request.action === "saveSpec")
+            result = await this.save(request.payload);
+          else if (request.action === "implement")
+            result = await this.implement(request.payload);
+          else if (request.action === "cancelJob") this.jobs.cancel();
+          else if (request.action === "decideJob") {
+            const payload = z
+              .object({
+                jobId: z.string(),
+                id: z.string(),
+                decision: z.enum(["accept", "decline", "cancel"]),
+              })
+              .strict()
+              .parse(request.payload);
+            if (payload.jobId !== this.state.job?.id)
+              throw Error("현재 작업의 승인 요청이 아닙니다.");
+            this.jobs.decide(payload.id, payload.decision);
+          } else if (request.action === "jobDiff") {
+            const payload = z
+              .object({
+                reviewId: z.string(),
+                index: z.number().int().nonnegative(),
+              })
+              .strict()
+              .parse(request.payload);
+            if (payload.reviewId !== this.state.job?.reviewId)
+              throw Error("현재 검토 중인 작업이 아닙니다.");
+            const file = this.jobs.file(payload.index);
+            const uri = (side: "before" | "after") =>
+              vscode.Uri.from({
+                scheme: "pureobom-design-diff",
+                path: `/${payload.reviewId}/${side}/${file.path}`,
+              });
+            for (const side of ["before", "after"] as const)
+              this.diffContents.set(uri(side).toString(), file[side] ?? "");
+            await vscode.commands.executeCommand(
+              "vscode.diff",
+              uri("before"),
+              uri("after"),
+              file.path,
+              { preview: true },
+            );
+          } else {
+            this.assertExecutionReady();
+            const payload = z
+              .object({ reviewId: z.string() })
+              .strict()
+              .parse(request.payload);
+            const job = this.state.job;
+            if (!job) throw Error("구현 작업이 없습니다.");
+            if (request.action === "applyJob") {
+              await this.loadDesign();
+              this.emit();
+              const current = this.state.specs.specs.find(
+                (spec) => spec.id === job.specId,
+              );
+              if (
+                current?.revision !== job.specRevision ||
+                JSON.stringify(current) !== this.implementationSpec
+              )
+                throw Error(
+                  "구현 중 설계가 바뀌었습니다. 새 설계로 다시 구현해 주세요.",
+                );
+              await this.jobs.apply(payload.reviewId);
+            } else await this.jobs.undo(payload.reviewId);
+            await this.refresh();
+          }
           void panel.webview.postMessage({ type: "response", id, result });
         } catch (error) {
           void panel.webview.postMessage({
@@ -220,6 +330,8 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   async refresh() {
     if (!this.folder) return;
+    clearTimeout(this.timer);
+    this.timer = undefined;
     const serial = ++this.serial;
     const folder = this.folder;
     this.state.busy = true;
@@ -275,8 +387,10 @@ export class DesignWorkspace implements vscode.Disposable {
       const graph = await this.worker.call<StructureGraph>("structure", {
         files,
       });
+      const checks = (await availableChecks(folder.uri.fsPath)).names;
       if (serial !== this.serial || this.folder !== folder) return;
       this.state.graph = graph;
+      this.state.checks = checks;
       this.state.notices = notices;
       this.state.stale = false;
       this.state.busy = false;
@@ -397,6 +511,53 @@ export class DesignWorkspace implements vscode.Disposable {
       if (temporary) await unlink(temporary).catch(() => {});
     }
   }
+  private assertExecutionReady() {
+    if (!this.folder || !vscode.workspace.isTrusted)
+      throw Error("신뢰한 로컬 프로젝트에서만 구현할 수 있습니다.");
+    const dirty = vscode.workspace.textDocuments.filter(
+      (doc) =>
+        doc.uri.scheme === "file" &&
+        doc.isDirty &&
+        vscode.workspace.getWorkspaceFolder(doc.uri)?.uri.toString() ===
+          this.folder!.uri.toString(),
+    );
+    if (dirty.length)
+      throw Error(
+        "편집 중인 파일을 저장한 뒤 구현·반영해 주세요. 저장되지 않은 내용을 덮어쓰지 않습니다.",
+      );
+  }
+  async implement(raw: unknown) {
+    this.assertExecutionReady();
+    if (jobIsActive(this.state.job))
+      throw Error("현재 구현 작업이 끝난 뒤 다시 시작해 주세요.");
+    const payload = saveSchema
+      .extend({
+        allowExternal: z.literal(true),
+        checks: z
+          .array(z.enum(["test", "build", "typecheck", "check"]))
+          .min(1)
+          .max(4),
+      })
+      .strict()
+      .parse(raw);
+    const available = (await availableChecks(this.folder!.uri.fsPath)).names;
+    if (payload.checks.some((name) => !available.includes(name)))
+      throw Error("선택한 검사 명령이 프로젝트에 없습니다.");
+    const saved = await this.save({
+      targetIds: payload.targetIds,
+      content: payload.content,
+      expectedRevision: payload.expectedRevision,
+    });
+    const change = prepareChange(saved, this.state.graph!, "behavior")!;
+    this.implementationSpec = JSON.stringify(saved);
+    const configuration = vscode.workspace.getConfiguration("pureobom");
+    return this.jobs.start(this.folder!.uri.fsPath, change, {
+      executable: configuration.get<string>("codexPath") || "codex",
+      model: configuration.get<string>("codexModel") || undefined,
+      checks: [...new Set(payload.checks)],
+      allowExternal: payload.allowExternal,
+    });
+  }
   private html(webview: vscode.Webview) {
     const nonce = randomBytes(24).toString("base64");
     const resource = (name: string) =>
@@ -410,6 +571,7 @@ export class DesignWorkspace implements vscode.Disposable {
     this.serial++;
     this.panel?.dispose();
     this.worker.dispose();
+    this.jobs.dispose();
     this.changes.dispose();
     this.disposables.forEach((d) => d.dispose());
   }

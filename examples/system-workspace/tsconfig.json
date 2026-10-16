@@ -1,1 +1,16 @@
-{"compilerOptions":{"baseUrl":".","paths":{"@/*":["./*"]},"jsx":"preserve","moduleResolution":"bundler","module":"esnext"}}
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@/*": ["./*"] },
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "dist"]
+}

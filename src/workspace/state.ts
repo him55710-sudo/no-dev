@@ -1,5 +1,6 @@
 import type { StructureGraph } from "./model";
 import type { SpecDocument } from "./spec";
+import type { ImplementationJob, VerificationName } from "./job";
 export type DesignWorkspaceState = {
   projectName: string;
   graph?: StructureGraph;
@@ -10,4 +11,6 @@ export type DesignWorkspaceState = {
   trusted: boolean;
   error?: string;
   notices: string[];
+  checks?: VerificationName[];
+  job?: ImplementationJob;
 };

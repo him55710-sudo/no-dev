@@ -51,12 +51,14 @@ export function StructureCanvas({
   selectedId,
   onSelect,
   onEnter,
+  onConnection,
 }: {
   graph: StructureGraph;
   scopeId: string;
   selectedId: string;
   onSelect: (id: string) => void;
   onEnter: (id: string) => void;
+  onConnection: (ids: string[]) => void;
 }) {
   const [positions, setPositions] = useState<
     Record<string, { x: number; y: number }>
@@ -83,7 +85,7 @@ export function StructureCanvas({
         source: string;
         target: string;
         label: string;
-        data: { original: string };
+        data: { originals: string[] };
         count: number;
       }
     >();
@@ -94,6 +96,7 @@ export function StructureCanvas({
       const key = `${source}|${target}`;
       const previous = connections.get(key);
       if (previous) {
+        previous.data.originals.push(edge.id);
         previous.count++;
         previous.label = `${previous.count}개 연결`;
       } else
@@ -107,7 +110,7 @@ export function StructureCanvas({
               : edge.kind === "calls"
                 ? "호출"
                 : "화면 구성",
-          data: { original: edge.id },
+          data: { originals: [edge.id] },
           count: 1,
         });
     }
@@ -152,7 +155,10 @@ export function StructureCanvas({
   }));
   const updatePositions = (changes: NodeChange<Card>[]) =>
     setPositions((current) => {
-      if (!changes.some((change) => change.type === "position" && change.position)) return current;
+      if (
+        !changes.some((change) => change.type === "position" && change.position)
+      )
+        return current;
       const next = { ...current };
       for (const change of changes)
         if (change.type === "position" && change.position)
@@ -168,7 +174,7 @@ export function StructureCanvas({
       onNodesChange={updatePositions}
       onNodeClick={(_, node) => onSelect(node.id)}
       onNodeDoubleClick={(_, node) => onEnter(node.id)}
-      onEdgeClick={(_, edge) => onSelect(edge.id)}
+      onEdgeClick={(_, edge) => onConnection(edge.data!.originals as string[])}
       nodesConnectable={false}
       edgesReconnectable={false}
       deleteKeyCode={null}

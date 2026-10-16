@@ -585,12 +585,109 @@ textarea {
   padding: 25px;
   text-align: center;
 }
-.related-structure { padding: 12px 18px; border-bottom: 1px solid var(--design-line); font-size: 11px; }
-.related-structure summary { cursor: pointer; font-weight: 650; }
-.related-structure button { width: 100%; display: grid; gap: 5px; text-align: left; margin-top: 8px; }
-.related-structure button span, .related-structure small { color: var(--design-muted); font-size: 10px; display: block; overflow-wrap: anywhere; line-height: 1.7; }
+.related-structure {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--design-line);
+  font-size: 11px;
+}
+.related-structure summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.related-structure button {
+  width: 100%;
+  display: grid;
+  gap: 5px;
+  text-align: left;
+  margin-top: 8px;
+}
+.related-structure button span,
+.related-structure small {
+  color: var(--design-muted);
+  font-size: 10px;
+  display: block;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
 .spec-focused .design-content {
   grid-template-columns: 225px 0 minmax(330px, 1fr);
+}
+.implementation-options {
+  border-top: 1px solid var(--design-line);
+  margin-top: 18px;
+  padding-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+.implementation-options label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.6;
+}
+.implementation-options input[type="checkbox"] {
+  width: auto;
+  margin-top: 4px;
+}
+.implementation-options fieldset {
+  border: 1px solid var(--design-line);
+  border-radius: 6px;
+}
+.implementation-job {
+  flex: none;
+  max-height: 36vh;
+  overflow: auto;
+  border-top: 1px solid var(--design-line);
+  background: var(--design-panel);
+  padding: 12px 20px;
+}
+.implementation-job > header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.implementation-job > header > span {
+  color: var(--design-muted);
+  margin-right: auto;
+}
+.job-columns {
+  display: flex;
+  gap: 22px;
+  margin-top: 10px;
+}
+.job-columns > details {
+  flex: 1;
+  min-width: 0;
+}
+.job-columns button {
+  display: block;
+  margin-top: 5px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.implementation-job summary {
+  cursor: pointer;
+  line-height: 1.8;
+}
+.implementation-job pre {
+  font-size: 11px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 220px;
+  overflow: auto;
+}
+.implementation-job small {
+  overflow-wrap: anywhere;
+  color: var(--design-muted);
+}
+.job-approval {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--design-accent);
+  border-radius: 6px;
+}
+.job-approval button {
+  margin: 8px 8px 0 0;
 }
 .spec-focused .design-center {
   visibility: hidden;

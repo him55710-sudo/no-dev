@@ -1,13 +1,22 @@
 import { build } from "esbuild";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 await mkdir("extension/out", { recursive: true });
-const common = { bundle: true, sourcemap: false, logLevel: "info" };
-await Promise.all([
+const common = {
+  bundle: true,
+  sourcemap: false,
+  logLevel: "info",
+  metafile: true,
+};
+const results = await Promise.all([
   build({
     ...common,
     entryPoints: ["extension/ui/design.tsx"],
     outfile: "extension/media/design.js",
-    platform: "browser", format: "iife", target: "chrome120", jsx: "automatic", minify: true,
+    platform: "browser",
+    format: "iife",
+    target: "chrome120",
+    jsx: "automatic",
+    minify: true,
     define: { "process.env.NODE_ENV": '"production"' },
   }),
   build({
@@ -51,3 +60,25 @@ await Promise.all([
     external: ["vscode"],
   }),
 ]);
+const inputs = [
+  ...new Set(
+    results
+      .filter(
+        (result) =>
+          !Object.keys(result.metafile.outputs).some((path) =>
+            path.endsWith("integration.cjs"),
+          ),
+      )
+      .flatMap((result) =>
+        Object.values(result.metafile.outputs).flatMap((output) =>
+          Object.entries(output.inputs)
+            .filter(([, input]) => input.bytesInOutput > 0)
+            .map(([path]) => path),
+        ),
+      ),
+  ),
+].sort();
+await writeFile(
+  "extension/out/bundle-inputs.json",
+  JSON.stringify(inputs, null, 2) + "\n",
+);

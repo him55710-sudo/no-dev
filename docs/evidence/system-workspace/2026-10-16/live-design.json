@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-16T07:47:32.370Z",
+  "fixture": "examples/system-workspace",
+  "phase": "review",
+  "provider": "Codex Desktop/0.162.0-alpha.17.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)",
+  "files": [
+    {
+      "path": "app/api/projects/route.ts",
+      "kind": "modified"
+    },
+    {
+      "path": "components/ProjectEditor.tsx",
+      "kind": "modified"
+    },
+    {
+      "path": "features/sharing/policy.ts",
+      "kind": "modified"
+    },
+    {
+      "path": "features/sharing/service.ts",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/sharing-permissions.test.tsx",
+      "kind": "added"
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "✓ Lockfile passes supply-chain policies (verified 58m ago)\nDone in 2.2s using pnpm v11.25.0\n$ vitest run\n\n RUN  v4.1.11 <worktree>\n\n\n Test Files  3 passed (3)\n      Tests  28 passed (28)\n   Start at  16:47:19\n   Duration  1.35s (transform 504ms, setup 0ms, import 1.03s, tests 377ms, environment 1ms)\n\n",
+      "elapsedMs": 7402
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ tsc --noEmit\n",
+      "elapsedMs": 5836
+    },
+    {
+      "name": "build",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ vite build\nvite v7.3.7 building client environment for production...\ntransforming...\n✓ 29 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                  0.34 kB │ gzip:  0.26 kB\ndist/assets/index-DjfGlaAr.js  193.57 kB │ gzip: 60.89 kB\n✓ built in 2.14s\n",
+      "elapsedMs": 4791
+    }
+  ],
+  "applyUndo": "passed",
+  "scope": "Synthetic React/Vite UI, API functions and per-project permission service. Not a deployed Next.js server or production authentication.",
+  "dependencyEnvironment": "Reused installed dependencies from the host repository. Clean dependency installation outside the host repository remains unverified.",
+  "lockedAcceptanceSha256": "ab2ff04db3422314f074e5dd8ffe89c61ef9e6caff469a45f4f0fcedb75a4b3e",
+  "lockedAcceptanceUnchanged": true
+}

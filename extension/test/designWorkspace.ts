@@ -2,6 +2,7 @@ import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import { observeSpec } from "../../src/workspace/spec";
+import { writeFile } from "node:fs/promises";
 
 export async function run() {
   const extension = vscode.extensions.getExtension<{
@@ -11,6 +12,11 @@ export async function run() {
   const workspace = api.designWorkspace;
   await workspace.open();
   const graph = workspace.state.graph!;
+  assert.deepEqual(workspace.state.checks?.slice().sort(), [
+    "build",
+    "test",
+    "typecheck",
+  ]);
   assert.ok(graph.nodes.length > 15);
   const policy = graph.nodes.find(
     (node) => node.kind === "symbol" && node.label === "canEdit",
@@ -45,6 +51,25 @@ export async function run() {
     expectedRevision: 0,
   });
   assert.equal(saved.revision, 1);
+  assert.equal(
+    workspace.state.job,
+    undefined,
+    "saving documentation never starts an agent",
+  );
+  await assert.rejects(
+    workspace.implement({
+      targetIds: targets,
+      content,
+      expectedRevision: 1,
+      checks: ["test"],
+      allowExternal: false,
+    }),
+  );
+  assert.equal(
+    workspace.state.job,
+    undefined,
+    "external execution requires the explicit implementation action and data choice",
+  );
   const designUri = vscode.Uri.joinPath(
     vscode.workspace.workspaceFolders![0].uri,
     ".pureobom/specs.json",
@@ -70,6 +95,16 @@ export async function run() {
     original.replace("return role !== undefined;", "return true;"),
   );
   await vscode.workspace.applyEdit(edit);
+  await assert.rejects(
+    workspace.implement({
+      targetIds: targets,
+      content,
+      expectedRevision: 1,
+      checks: ["test"],
+      allowExternal: true,
+    }),
+    /저장한 뒤/,
+  );
   await assert.rejects(workspace.source(policy.id), /갱신|바뀌었/);
   await workspace.refresh();
   assert.equal(workspace.state.specs.specs[0].content.desired, content.desired);
@@ -98,22 +133,30 @@ export async function run() {
   await vscode.workspace.applyEdit(restore);
   await workspace.refresh();
   assert.equal(observeSpec(saved, workspace.state.graph!).status, "unchanged");
-  console.log(
-    "PUREOBOM DESIGN WORKSPACE PASSED",
-    JSON.stringify({
-      checks: [
-        "real compiler graph",
-        "alias/re-export shared policy",
-        "node to exact source",
-        "source to node",
-        "durable design save",
-        "stale design rejected",
-        "unsaved source invalidation",
-        "observed drift preserves intent",
-        "restored source reconnects",
-      ],
-      nodes: graph.nodes.length,
-      edges: graph.edges.length,
-    }),
-  );
+  const report = {
+    checkedAt: new Date().toISOString(),
+    checks: [
+      "real compiler graph",
+      "alias/re-export shared policy",
+      "node to exact source",
+      "source to node",
+      "durable design save",
+      "stale design rejected",
+      "unsaved source invalidation",
+      "observed drift preserves intent",
+      "restored source reconnects",
+      "project verification script discovery",
+      "documentation save never starts agent",
+      "external data choice required",
+      "dirty editor blocks implementation",
+    ],
+    nodes: graph.nodes.length,
+    edges: graph.edges.length,
+  };
+  if (process.env.PUREOBOM_DESIGN_REPORT)
+    await writeFile(
+      process.env.PUREOBOM_DESIGN_REPORT,
+      JSON.stringify(report, null, 2) + "\n",
+    );
+  console.log("PUREOBOM DESIGN WORKSPACE PASSED", JSON.stringify(report));
 }

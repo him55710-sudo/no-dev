@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-16T07:48:30.547Z",
+  "checks": [
+    "real compiler graph",
+    "alias/re-export shared policy",
+    "node to exact source",
+    "source to node",
+    "durable design save",
+    "stale design rejected",
+    "unsaved source invalidation",
+    "observed drift preserves intent",
+    "restored source reconnects",
+    "project verification script discovery",
+    "documentation save never starts agent",
+    "external data choice required",
+    "dirty editor blocks implementation"
+  ],
+  "nodes": 42,
+  "edges": 21
+}

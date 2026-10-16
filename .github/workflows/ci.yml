@@ -28,6 +28,10 @@ jobs:
         if: runner.os == 'Linux'
       - run: pnpm extension:test
         if: runner.os == 'Windows'
+      - run: xvfb-run -a pnpm extension:design-test
+        if: runner.os == 'Linux'
+      - run: pnpm extension:design-test
+        if: runner.os == 'Windows'
       - run: pnpm extension:package
       - run: pnpm release:package
       - run: pnpm release:check

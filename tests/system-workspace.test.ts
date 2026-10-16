@@ -185,6 +185,12 @@ describe("living design and observed implementation", () => {
     ]);
     expect(observeSpec(spec, moved).status).toBe("unchanged");
     expect(observeSpec(spec, moved).sources[0].path).toBe("b.ts");
+    spec.content.desired = "같은 기능을 유지한다.";
+    spec.content.acceptance = ["반환값은 1이다."];
+    const request = prepareChange(spec, moved, "behavior")!;
+    expect(request.scopePaths).toEqual(["b.ts"]);
+    expect(request.sources.length).toBeGreaterThan(0);
+    expect(request.sources.every((ref) => ref.path === "b.ts")).toBe(true);
     const ambiguous = await analyzeStructure(
       ["b.ts", "c.ts"].map((path) => ({
         path,
@@ -239,5 +245,32 @@ describe("living design and observed implementation", () => {
     ]);
     expect(change.invariants).toEqual(spec.content.invariants);
     expect(prepareChange(spec, graph, "documentation")).toBeUndefined();
+  });
+  it("expands a single policy to its API and UI callers without unrelated modules", async () => {
+    const graph = await analyzeStructure([
+      ...fixture,
+      {
+        path: "unrelated.ts",
+        content: "export function canEdit() { return false; }",
+      },
+    ]);
+    const target = graph.nodes.find(
+      (n) =>
+        n.kind === "symbol" &&
+        n.label === "canEdit" &&
+        n.sources[0].path.startsWith("src/"),
+    )!;
+    const spec = draftSpec(graph, [target.id]);
+    spec.content.desired = "viewer 편집 거절";
+    spec.content.acceptance = ["UI와 API에서 거절"];
+    spec.content.policies = "권한은 프로젝트별로 판단";
+    const request = prepareChange(spec, graph, "behavior")!;
+    expect(request.scopePaths).toEqual([
+      "src/api/update.ts",
+      "src/sharing/policy.ts",
+      "src/ui/EditButton.tsx",
+      "src/ui/Page.tsx",
+    ]);
+    expect(request.content.policies).toBe(spec.content.policies);
   });
 });

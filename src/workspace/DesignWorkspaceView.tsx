@@ -9,6 +9,8 @@ import {
 } from "./spec";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
+import { jobIsActive, type VerificationName } from "./job";
+import { JobTray } from "./JobTray";
 import "@xyflow/react/dist/style.css";
 import "./design.css";
 
@@ -20,6 +22,16 @@ export type DesignActions = {
     content: SpecContent,
     revision: number,
   ) => Promise<LivingSpec>;
+  implement?: (
+    targets: string[],
+    content: SpecContent,
+    revision: number,
+    checks: VerificationName[],
+  ) => Promise<unknown>;
+  jobAction?: (
+    action: "cancelJob" | "decideJob" | "jobDiff" | "applyJob" | "undoJob",
+    payload?: Record<string, unknown>,
+  ) => Promise<unknown>;
 };
 const typeNames: Record<string, string> = {
   system: "프로젝트",
@@ -110,6 +122,7 @@ function SpecEditor({
   onChange,
   onSave,
   onSource,
+  implementation,
 }: {
   spec: LivingSpec;
   graph: StructureGraph;
@@ -120,6 +133,7 @@ function SpecEditor({
   onChange: (content: SpecContent) => void;
   onSave: () => void;
   onSource: (id: string, index: number) => void;
+  implementation?: React.ReactNode;
 }) {
   const observation = observeSpec(spec, graph);
   const fields: [
@@ -234,12 +248,10 @@ function SpecEditor({
           onClick={onSave}
           disabled={saving || readOnly || !content.title.trim()}
         >
-          {saving ? "저장 중…" : "설계 저장"}
+          {saving ? "저장 중…" : "설계만 저장"}
         </button>
-        <p>
-          설계는 프로젝트의 <code>.pureobom/specs.json</code>에 저장됩니다. 이
-          개발 단계에서는 에이전트 구현을 시작하지 않습니다.
-        </p>
+        <p>설계만 저장하면 구현을 실행하지 않습니다.</p>
+        {implementation}
       </footer>
     </div>
   );
@@ -253,6 +265,7 @@ export function DesignWorkspaceView({
   actions: DesignActions;
 }) {
   const [selection, setSelection] = useState(state.selectedId);
+  const [connections, setConnections] = useState<string[]>([]);
   const [scope, setScope] = useState("system");
   const [search, setSearch] = useState("");
   const [included, setIncluded] = useState<string[]>([]);
@@ -260,6 +273,8 @@ export function DesignWorkspaceView({
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [focus, setFocus] = useState(false);
+  const [allowExternal, setAllowExternal] = useState(false);
+  const [checks, setChecks] = useState<VerificationName[]>([]);
   useEffect(() => {
     setSelection(state.selectedId);
   }, [state.selectedId]);
@@ -283,7 +298,11 @@ export function DesignWorkspaceView({
     }
   }, [graph, state.specs, targetsKey]);
   const content = spec ? (drafts[spec.id] ?? spec.content) : undefined;
-  const related = useMemo(() => graph && spec ? implementationScope(graph, spec.targetIds) : undefined, [graph, spec]);
+  const related = useMemo(
+    () =>
+      graph && spec ? implementationScope(graph, spec.targetIds) : undefined,
+    [graph, spec],
+  );
   const perform = (work: () => Promise<unknown>) => {
     setFeedback("");
     void work().catch((e) =>
@@ -296,7 +315,7 @@ export function DesignWorkspaceView({
   };
   const source = (id: string, index: number) =>
     perform(() => actions.source(id, index));
-  const save = () => {
+  const save = (implement = false) => {
     if (!spec || !content) return;
     setSaving(true);
     setFeedback("");
@@ -305,8 +324,11 @@ export function DesignWorkspaceView({
       invariants: content.invariants.map((v) => v.trim()).filter(Boolean),
       acceptance: content.acceptance.map((v) => v.trim()).filter(Boolean),
     };
-    void actions
-      .save(spec.targetIds, cleaned, spec.revision)
+    const request =
+      implement && actions.implement
+        ? actions.implement(spec.targetIds, cleaned, spec.revision, checks)
+        : actions.save(spec.targetIds, cleaned, spec.revision);
+    void request
       .then(() => {
         setDrafts((current) => {
           const next = { ...current };
@@ -314,7 +336,9 @@ export function DesignWorkspaceView({
           return next;
         });
         setFeedback(
-          "설계를 저장했습니다. 현재 구현과 목표는 별도로 유지됩니다.",
+          implement
+            ? "설계를 저장하고 구현 작업을 시작했습니다."
+            : "설계를 저장했습니다. 현재 구현과 목표는 별도로 유지됩니다.",
         );
       })
       .catch((e) => setFeedback(e instanceof Error ? e.message : String(e)))
@@ -469,6 +493,10 @@ export function DesignWorkspaceView({
                 selectedId={selectedId}
                 onSelect={setSelection}
                 onEnter={enter}
+                onConnection={(ids) => {
+                  setConnections(ids);
+                  setSelection(ids[0]);
+                }}
               />
             ) : (
               <div className="canvas-empty">
@@ -491,6 +519,26 @@ export function DesignWorkspaceView({
           </header>
           {edge && graph ? (
             <div className="edge-inspector">
+              {connections.includes(edge.id) && connections.length > 1 ? (
+                <nav aria-label="묶인 연결의 근거">
+                  <p>이 선에 포함된 {connections.length}개 연결</p>
+                  {connections.map((id) => {
+                    const item = graph.edges.find(
+                      (candidate) => candidate.id === id,
+                    );
+                    return item ? (
+                      <button
+                        key={id}
+                        aria-current={edge.id === id ? "true" : undefined}
+                        onClick={() => setSelection(id)}
+                      >
+                        {item.kind} · {item.sources[0]?.path}:
+                        {item.sources[0]?.line}
+                      </button>
+                    ) : null;
+                  })}
+                </nav>
+              ) : null}
               <span className="eyebrow">{edge.kind.toUpperCase()}</span>
               <h2>
                 {graph.nodes.find((node) => node.id === edge.source)?.label} →{" "}
@@ -548,17 +596,44 @@ export function DesignWorkspaceView({
               <button onClick={() => setIncluded([])}>선택 해제</button>
             </div>
           ) : null}
-          {selected && graph ? <details className="related-structure"><summary>직접 연결된 구현</summary>
-            {graph.edges.filter((item) => item.source === selected.id || item.target === selected.id).map((item) => {
-              const id = item.source === selected.id ? item.target : item.source;
-              const node = graph.nodes.find((n) => n.id === id)!;
-              return <button key={item.id} onClick={() => { setSelection(node.id); setScope(node.parentId ?? "system"); }}>
-                <strong>{item.source === selected.id ? "→ " : "← "}{node.label}</strong><span>{node.sources[0]?.path} · {item.kind}</span>
-              </button>;
-            })}
-            <p>호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}개</p>
-            {related?.paths.map((path) => <small key={path}>{path}</small>)}
-          </details> : null}
+          {selected && graph ? (
+            <details className="related-structure">
+              <summary>직접 연결된 구현</summary>
+              {graph.edges
+                .filter(
+                  (item) =>
+                    item.source === selected.id || item.target === selected.id,
+                )
+                .map((item) => {
+                  const id =
+                    item.source === selected.id ? item.target : item.source;
+                  const node = graph.nodes.find((n) => n.id === id)!;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setSelection(node.id);
+                        setScope(node.parentId ?? "system");
+                      }}
+                    >
+                      <strong>
+                        {item.source === selected.id ? "→ " : "← "}
+                        {node.label}
+                      </strong>
+                      <span>
+                        {node.sources[0]?.path} · {item.kind}
+                      </span>
+                    </button>
+                  );
+                })}
+              <p>
+                호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}개
+              </p>
+              {related?.paths.map((path) => (
+                <small key={path}>{path}</small>
+              ))}
+            </details>
+          ) : null}
           {spec && content && graph ? (
             <SpecEditor
               spec={spec}
@@ -570,8 +645,74 @@ export function DesignWorkspaceView({
               onChange={(next) =>
                 setDrafts((old) => ({ ...old, [spec.id]: next }))
               }
-              onSave={save}
+              onSave={() => save()}
               onSource={source}
+              implementation={
+                actions.implement ? (
+                  <section
+                    className="implementation-options"
+                    aria-label="구현 설정"
+                  >
+                    <strong>Codex로 구현</strong>
+                    <p>
+                      별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
+                      반영하면 원본 프로젝트에 적용됩니다.
+                    </p>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={allowExternal}
+                        onChange={(e) => setAllowExternal(e.target.checked)}
+                      />
+                      설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사
+                      명령을 실행합니다.
+                    </label>
+                    <fieldset>
+                      <legend>구현 후 실행할 검사</legend>
+                      {state.checks?.length ? (
+                        state.checks.map((name) => (
+                          <label key={name}>
+                            <input
+                              type="checkbox"
+                              checked={checks.includes(name)}
+                              onChange={(e) =>
+                                setChecks((current) =>
+                                  e.target.checked
+                                    ? [...current, name]
+                                    : current.filter((item) => item !== name),
+                                )
+                              }
+                            />
+                            {name}
+                          </label>
+                        ))
+                      ) : (
+                        <p>
+                          package.json에 test, build, typecheck 또는 check
+                          명령이 필요합니다.
+                        </p>
+                      )}
+                    </fieldset>
+                    <button
+                      className="primary"
+                      onClick={() => save(true)}
+                      disabled={
+                        !allowExternal ||
+                        !checks.length ||
+                        saving ||
+                        !state.trusted ||
+                        state.stale ||
+                        state.busy ||
+                        jobIsActive(state.job) ||
+                        !content.desired.trim() ||
+                        !content.acceptance.some((line) => line.trim())
+                      }
+                    >
+                      저장하고 구현
+                    </button>
+                  </section>
+                ) : undefined
+              }
             />
           ) : !edge ? (
             <p className="empty-message">
@@ -580,6 +721,14 @@ export function DesignWorkspaceView({
           ) : null}
         </aside>
       </div>
+      {state.job && actions.jobAction ? (
+        <JobTray
+          job={state.job}
+          action={(action, payload) =>
+            perform(() => actions.jobAction!(action, payload))
+          }
+        />
+      ) : null}
       <footer className="design-statusbar">
         <span className="status-dot" />
         <span role="status">

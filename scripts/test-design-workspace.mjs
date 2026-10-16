@@ -19,6 +19,9 @@ await runTests({
   version: "1.96.4",
   extensionDevelopmentPath: resolve("extension"),
   extensionTestsPath: resolve("extension/out/design-integration.cjs"),
+  extensionTestsEnv: {
+    PUREOBOM_DESIGN_REPORT: resolve("test-results/design-integration.json"),
+  },
   launchArgs: [
     workspace,
     "--disable-extensions",

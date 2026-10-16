@@ -1,0 +1,124 @@
+import { jobIsActive, type ImplementationJob } from "./job";
+const phaseNames: Record<ImplementationJob["phase"], string> = {
+  preparing: "작업 공간 준비",
+  running: "구현 중",
+  approval: "실행 선택 필요",
+  checking: "검사 중",
+  repairing: "실패 원인 수정 중",
+  review: "변경 검토",
+  applying: "반영 중",
+  applied: "원본 반영됨",
+  undone: "변경 되돌림",
+  cancelling: "취소 중",
+  cancelled: "취소됨",
+  failed: "작업 중단",
+};
+type Action = "cancelJob" | "decideJob" | "jobDiff" | "applyJob" | "undoJob";
+export function JobTray({
+  job,
+  action,
+}: {
+  job: ImplementationJob;
+  action: (name: Action, payload?: Record<string, unknown>) => void;
+}) {
+  return (
+    <section className="implementation-job" aria-label="구현 작업">
+      <header>
+        <strong>{phaseNames[job.phase]}</strong>
+        <span>설계 v{job.specRevision}</span>
+        {jobIsActive(job) && !["applying", "cancelling"].includes(job.phase) ? (
+          <button onClick={() => action("cancelJob")}>작업 취소</button>
+        ) : null}
+        {job.phase === "review" ? (
+          <button
+            className="primary"
+            disabled={
+              !job.checks.length ||
+              job.checks.some((check) => check.status !== "passed")
+            }
+            onClick={() => action("applyJob", { reviewId: job.reviewId })}
+          >
+            검토한 변경 반영
+          </button>
+        ) : null}
+        {job.phase === "applied" ? (
+          <button onClick={() => action("undoJob", { reviewId: job.reviewId })}>
+            이번 변경 되돌리기
+          </button>
+        ) : null}
+      </header>
+      {job.approvals.map((approval) => (
+        <div className="job-approval" key={approval.id}>
+          <strong>
+            {approval.kind === "command" ? "명령 실행 요청" : "파일 변경 요청"}
+          </strong>
+          {approval.command ? <pre>{approval.command}</pre> : null}
+          <p>{approval.reason}</p>
+          <small>{approval.cwd}</small>
+          <button
+            onClick={() =>
+              action("decideJob", {
+                jobId: job.id,
+                id: approval.id,
+                decision: "accept",
+              })
+            }
+          >
+            이번 요청 허용
+          </button>
+          <button
+            onClick={() =>
+              action("decideJob", {
+                jobId: job.id,
+                id: approval.id,
+                decision: "decline",
+              })
+            }
+          >
+            거절
+          </button>
+        </div>
+      ))}
+      <div className="job-columns">
+        <details open={job.phase === "failed" || job.phase === "cancelled"}>
+          <summary>진행 내용</summary>
+          <pre>{job.message}</pre>
+          {job.worktree ? <small>작업 복사본: {job.worktree}</small> : null}
+        </details>
+        {job.checks.length ? (
+          <details open>
+            <summary>
+              실제 검사{" "}
+              {job.checks.filter((check) => check.status === "passed").length}/
+              {job.checks.length} 통과
+            </summary>
+            {job.checks.map((check, i) => (
+              <details key={`${check.name}:${i}`}>
+                <summary>
+                  {check.name} · {check.status} ·{" "}
+                  {(check.elapsedMs / 1000).toFixed(1)}초
+                </summary>
+                <pre>{check.output}</pre>
+              </details>
+            ))}
+          </details>
+        ) : null}
+        {job.files.length ? (
+          <details open>
+            <summary>변경 파일 {job.files.length}개</summary>
+            {job.files.map((file, index) => (
+              <button
+                key={file.path}
+                onClick={() =>
+                  action("jobDiff", { reviewId: job.reviewId, index })
+                }
+              >
+                {file.kind} · {file.path} ↗
+              </button>
+            ))}
+          </details>
+        ) : null}
+      </div>
+    </section>
+  );
+}

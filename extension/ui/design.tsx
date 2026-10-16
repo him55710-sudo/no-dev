@@ -38,6 +38,15 @@ function DesignApp() {
             content,
             expectedRevision,
           }),
+        implement: (targetIds, content, expectedRevision, checks) =>
+          request("implement", {
+            targetIds,
+            content,
+            expectedRevision,
+            checks,
+            allowExternal: true,
+          }),
+        jobAction: (action, payload) => request(action, payload),
       }}
     />
   );
