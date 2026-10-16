@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { sourceRefSchema, type SourceRef, type StructureGraph } from "./model";
+import {
+  relativePath,
+  sourceRefSchema,
+  type SourceRef,
+  type StructureGraph,
+} from "./model";
 
 const text = z.string().max(12000);
 const lines = z.array(z.string().min(1).max(2000)).max(100);
@@ -197,18 +202,21 @@ export function saveSpec(
   });
 }
 
-export type ChangeRequest = {
-  id: string;
-  specId: string;
-  specRevision: number;
-  graphRevision: string;
-  content: SpecContent;
-  desired: string;
-  invariants: string[];
-  acceptance: string[];
-  sources: SourceRef[];
-  scopePaths: string[];
-};
+export const changeRequestSchema = z
+  .object({
+    id: z.string().max(8192),
+    specId: z.string().max(4096),
+    specRevision: z.number().int().nonnegative(),
+    graphRevision: z.string().regex(/^[a-f0-9]{64}$/),
+    content: specContentSchema,
+    desired: text,
+    invariants: lines,
+    acceptance: lines,
+    sources: z.array(sourceRefSchema).max(24000),
+    scopePaths: z.array(relativePath).max(5000),
+  })
+  .strict();
+export type ChangeRequest = z.infer<typeof changeRequestSchema>;
 
 /** Follow compiler-backed calls/renders in both directions, including enclosing declarations.
  * This is a reviewable static scope, not a claim of complete runtime impact. */

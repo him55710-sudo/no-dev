@@ -5,7 +5,8 @@ import {
   availableChecks,
   verifyWorkspace,
 } from "../extension/src/agent/verify";
-describe("independent implementation verification", { timeout: 30000 }, () => {
+// Includes separate manager startups and Windows descendant-process termination.
+describe("independent implementation verification", { timeout: 120000 }, () => {
   it("records real exits, refuses missing or replaced scripts, and terminates timed-out commands", async () => {
     const parent = resolve("test-results/agent-checks");
     await mkdir(parent, { recursive: true });
@@ -29,10 +30,10 @@ describe("independent implementation verification", { timeout: 30000 }, () => {
       "check",
       "test",
     ]);
-    const passed = await verifyWorkspace(root, "test", signal);
+    const passed = await verifyWorkspace(root, "test", signal, 30000);
     expect(passed.status).toBe("passed");
     expect(passed.output).toContain("123");
-    expect((await verifyWorkspace(root, "check", signal)).status).toBe(
+    expect((await verifyWorkspace(root, "check", signal, 30000)).status).toBe(
       "failed",
     );
     expect((await verifyWorkspace(root, "typecheck", signal)).status).toBe(

@@ -10,7 +10,7 @@ import {
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
 import { jobIsActive, type VerificationName } from "./job";
-import { JobTray } from "./JobTray";
+import { JobTray, phaseNames, type JobAction } from "./JobTray";
 import "@xyflow/react/dist/style.css";
 import "./design.css";
 
@@ -29,7 +29,7 @@ export type DesignActions = {
     checks: VerificationName[],
   ) => Promise<unknown>;
   jobAction?: (
-    action: "cancelJob" | "decideJob" | "jobDiff" | "applyJob" | "undoJob",
+    action: JobAction,
     payload?: Record<string, unknown>,
   ) => Promise<unknown>;
 };
@@ -704,6 +704,7 @@ export function DesignWorkspaceView({
                         state.stale ||
                         state.busy ||
                         jobIsActive(state.job) ||
+                        state.job?.phase === "recovery" ||
                         !content.desired.trim() ||
                         !content.acceptance.some((line) => line.trim())
                       }
@@ -721,6 +722,43 @@ export function DesignWorkspaceView({
           ) : null}
         </aside>
       </div>
+      {actions.jobAction ? (
+        <details className="implementation-history">
+          <summary>이전 구현 작업 {state.jobHistory?.length ?? 0}개</summary>
+          <button
+            disabled={jobIsActive(state.job)}
+            onClick={() => perform(() => actions.jobAction!("jobHistory"))}
+          >
+            작업 기록 새로고침
+          </button>
+          {state.jobHistory?.map((entry) => (
+            <button
+              key={entry.workspaceId}
+              disabled={jobIsActive(state.job)}
+              onClick={() =>
+                perform(() =>
+                  actions.jobAction!("restoreJob", {
+                    workspaceId: entry.workspaceId,
+                  }),
+                )
+              }
+            >
+              {new Date(entry.startedAt).toLocaleString()} · {entry.specId} ·{" "}
+              마지막 기록: {phaseNames[entry.phase]}
+            </button>
+          ))}
+          {state.jobHistoryErrors?.length ? (
+            <details>
+              <summary>
+                불러오지 못한 기록 {state.jobHistoryErrors.length}개
+              </summary>
+              {state.jobHistoryErrors.map((error, index) => (
+                <p key={index}>{error}</p>
+              ))}
+            </details>
+          ) : null}
+        </details>
+      ) : null}
       {state.job && actions.jobAction ? (
         <JobTray
           job={state.job}

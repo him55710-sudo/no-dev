@@ -1,5 +1,5 @@
 import { jobIsActive, type ImplementationJob } from "./job";
-const phaseNames: Record<ImplementationJob["phase"], string> = {
+export const phaseNames: Record<ImplementationJob["phase"], string> = {
   preparing: "작업 공간 준비",
   running: "구현 중",
   approval: "실행 선택 필요",
@@ -12,14 +12,24 @@ const phaseNames: Record<ImplementationJob["phase"], string> = {
   cancelling: "취소 중",
   cancelled: "취소됨",
   failed: "작업 중단",
+  interrupted: "이전 실행 연결 확인 필요",
+  recovery: "파일 복구 필요",
 };
-type Action = "cancelJob" | "decideJob" | "jobDiff" | "applyJob" | "undoJob";
+export type JobAction =
+  | "cancelJob"
+  | "decideJob"
+  | "jobDiff"
+  | "applyJob"
+  | "undoJob"
+  | "recoverJob"
+  | "restoreJob"
+  | "jobHistory";
 export function JobTray({
   job,
   action,
 }: {
   job: ImplementationJob;
-  action: (name: Action, payload?: Record<string, unknown>) => void;
+  action: (name: JobAction, payload?: Record<string, unknown>) => void;
 }) {
   return (
     <section className="implementation-job" aria-label="구현 작업">
@@ -44,6 +54,14 @@ export function JobTray({
         {job.phase === "applied" ? (
           <button onClick={() => action("undoJob", { reviewId: job.reviewId })}>
             이번 변경 되돌리기
+          </button>
+        ) : null}
+        {job.phase === "recovery" ? (
+          <button
+            disabled={job.recovery?.some((file) => file.state === "conflict")}
+            onClick={() => action("recoverJob", { reviewId: job.reviewId })}
+          >
+            반영 전 파일로 복구
           </button>
         ) : null}
       </header>
@@ -80,6 +98,21 @@ export function JobTray({
         </div>
       ))}
       <div className="job-columns">
+        {job.recovery?.length ? (
+          <details open>
+            <summary>현재 파일 상태</summary>
+            {job.recovery.map((file) => (
+              <p key={file.path}>
+                {file.path} ·{" "}
+                {file.state === "before"
+                  ? "변경 전"
+                  : file.state === "after"
+                    ? "변경 후"
+                    : "다른 편집과 충돌 · 보존됨"}
+              </p>
+            ))}
+          </details>
+        ) : null}
         <details open={job.phase === "failed" || job.phase === "cancelled"}>
           <summary>진행 내용</summary>
           <pre>{job.message}</pre>

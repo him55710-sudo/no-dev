@@ -689,6 +689,21 @@ textarea {
 .job-approval button {
   margin: 8px 8px 0 0;
 }
+.implementation-history {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  border-top: 1px solid var(--design-line);
+  background: var(--design-panel);
+  max-height: 180px;
+  overflow: auto;
+}
+.implementation-history > button {
+  display: block;
+  margin-top: 6px;
+  text-align: left;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
 .spec-focused .design-center {
   visibility: hidden;
 }

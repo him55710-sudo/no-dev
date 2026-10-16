@@ -1,9 +1,17 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { mkdir, realpath } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { ChangeRequest } from "../../../src/workspace/spec";
+import { z } from "zod";
+import {
+  changeRequestSchema,
+  livingSpecSchema,
+  type ChangeRequest,
+  type LivingSpec,
+} from "../../../src/workspace/spec";
 import {
   jobIsActive,
+  jobSchema,
+  type JobHistoryEntry,
   type ImplementationJob,
   type VerificationName,
 } from "../../../src/workspace/job";
@@ -13,10 +21,28 @@ import {
   reviewJobWorkspace,
   applyJobReview,
   undoJobReview,
+  recoverJobReview,
+  readApplyJournal,
+  inspectRecovery,
+  loadJobWorkspace,
+  jobDirectories,
+  reviewSchema,
   type JobWorkspace,
   type ChangeReview,
 } from "./gitWorkspace";
 import { availableChecks, verifyWorkspace } from "./verify";
+import { readRecord, writeRecord } from "./records";
+
+export const jobRecordSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    source: z.string().max(4096),
+    request: changeRequestSchema,
+    state: jobSchema,
+    specSnapshot: livingSpecSchema.optional(),
+    review: reviewSchema.optional(),
+  })
+  .strict();
 
 export class ImplementationJobs {
   state?: ImplementationJob;
@@ -25,12 +51,60 @@ export class ImplementationJobs {
   private abort?: AbortController;
   private server?: CodexAppServer;
   private executing = false;
+  private source?: string;
+  private request?: ChangeRequest;
+  private specSnapshot?: LivingSpec;
+  private recordDirectory?: string;
+  private pending: Promise<void> = Promise.resolve();
+  private storageError?: Error;
+  private disposed = false;
+  get isRunning() {
+    return this.executing || jobIsActive(this.state);
+  }
+  get savedSpec() {
+    return this.specSnapshot ? JSON.stringify(this.specSnapshot) : undefined;
+  }
   constructor(
     private storage: string,
     private changed: (job: ImplementationJob) => void,
   ) {}
-  private emit() {
-    if (this.state) this.changed(structuredClone(this.state));
+  private emit(persist = true) {
+    if (this.state) this.state.message = this.state.message.slice(0, 32000);
+    if (this.state && !this.disposed) this.changed(structuredClone(this.state));
+    if (
+      !persist ||
+      !this.state ||
+      !this.recordDirectory ||
+      !this.source ||
+      !this.request
+    )
+      return;
+    const path = resolve(this.recordDirectory, "job.json");
+    const record = structuredClone({
+      schemaVersion: 1,
+      source: this.source,
+      request: this.request,
+      state: this.state,
+      specSnapshot: this.specSnapshot,
+      review: this.review,
+    });
+    this.pending = this.pending
+      .then(async () => {
+        await writeRecord(path, jobRecordSchema.parse(record));
+      })
+      .catch((error) => {
+        this.storageError =
+          error instanceof Error ? error : Error(String(error));
+        this.abort?.abort();
+        if (this.state) {
+          this.state.message = `작업 기록을 저장하지 못했습니다. ${this.storageError.message}`;
+          if (!this.disposed) this.changed(structuredClone(this.state));
+        }
+      });
+  }
+  async flush() {
+    await this.pending;
+    if (this.storageError) throw this.storageError;
   }
   start(
     root: string,
@@ -40,6 +114,7 @@ export class ImplementationJobs {
       model?: string;
       checks: VerificationName[];
       allowExternal: boolean;
+      specSnapshot?: LivingSpec;
     },
   ) {
     if (!options.allowExternal)
@@ -48,7 +123,16 @@ export class ImplementationJobs {
       throw Error("구현 후 실행할 검사 명령을 선택해 주세요.");
     if (this.executing || jobIsActive(this.state))
       throw Error("이미 구현 작업이 실행 중입니다.");
+    if (this.state?.phase === "recovery")
+      throw Error("미완료 파일 변경을 먼저 복구해 주세요.");
+    this.request = changeRequestSchema.parse(request);
+    this.specSnapshot = options.specSnapshot
+      ? livingSpecSchema.parse(options.specSnapshot)
+      : undefined;
     this.executing = true;
+    this.source = undefined;
+    this.recordDirectory = undefined;
+    this.storageError = undefined;
     this.workspace = undefined;
     this.review = undefined;
     this.abort = new AbortController();
@@ -75,10 +159,18 @@ export class ImplementationJobs {
   ) {
     const state = this.state!;
     try {
+      this.source = await realpath(root);
+      await mkdir(this.storage, { recursive: true });
+      this.storage = await realpath(this.storage);
+      this.recordDirectory = resolve(this.storage, state.id);
+      await mkdir(this.recordDirectory);
+      this.emit();
+      await this.flush();
       const verification = await availableChecks(root);
       const workspace = (this.workspace = await createJobWorkspace(
         root,
         this.storage,
+        state.id,
       ));
       signal.throwIfAborted();
       for (const ref of request.sources)
@@ -97,6 +189,7 @@ export class ImplementationJobs {
         state.phase = attempt ? "repairing" : "running";
         state.approvals = [];
         this.emit();
+        await this.flush();
         const server = (this.server = new CodexAppServer({
           executable: options.executable,
           cwd: workspace.path,
@@ -108,7 +201,7 @@ export class ImplementationJobs {
             typeof params.delta === "string"
           ) {
             state.message = (state.message + params.delta).slice(-8000);
-            this.emit();
+            this.emit(false);
           }
         });
         server.onApproval((approval) => {
@@ -186,11 +279,8 @@ export class ImplementationJobs {
       state.message += state.checks.every((check) => check.status === "passed")
         ? "\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요."
         : "\n검사가 통과하지 못했습니다. 변경을 검토할 수 있지만 원본에 반영할 수 없습니다.";
-      await writeFile(
-        resolve(workspace.directory, "job.json"),
-        JSON.stringify({ request, state, review: this.review }, null, 2) + "\n",
-      );
       this.emit();
+      await this.flush();
     } catch (error) {
       state.phase = signal.aborted ? "cancelled" : "failed";
       state.message = error instanceof Error ? error.message : String(error);
@@ -203,6 +293,7 @@ export class ImplementationJobs {
         this.emit();
       });
       this.server = undefined;
+      await this.pending;
       this.executing = false;
     }
   }
@@ -243,15 +334,17 @@ export class ImplementationJobs {
     this.state.phase = "applying";
     this.emit();
     try {
+      await this.flush();
       await applyJobReview(this.workspace, this.review);
-      this.state.phase = "applied";
+      await this.reconcileJournal();
       this.state.message = "원본 프로젝트에 반영했습니다.";
     } catch (error) {
-      this.state.phase = "failed";
+      await this.reconcileJournal();
       this.state.message = String(error);
       throw error;
     } finally {
       this.emit();
+      await this.flush();
     }
   }
   async undo(reviewId: string) {
@@ -265,18 +358,209 @@ export class ImplementationJobs {
     this.state.phase = "applying";
     this.emit();
     try {
+      await this.flush();
       await undoJobReview(this.workspace, this.review);
-      this.state.phase = "undone";
+      await this.reconcileJournal();
       this.state.message = "이번 작업의 변경을 되돌렸습니다.";
     } catch (error) {
-      this.state.phase = "failed";
+      await this.reconcileJournal();
       this.state.message = String(error);
       throw error;
     } finally {
       this.emit();
+      await this.flush();
+    }
+  }
+  private async reconcileJournal() {
+    if (!this.workspace || !this.state) return;
+    const journal = await readApplyJournal(this.workspace);
+    if (!journal) {
+      this.state.phase = "failed";
+      return;
+    }
+    this.review = journal.review;
+    this.state.reviewId = journal.review.id;
+    this.state.files = journal.review.files.map((file) => ({
+      path: file.path,
+      kind:
+        file.before === null
+          ? "added"
+          : file.after === null
+            ? "deleted"
+            : "modified",
+    }));
+    const files = await inspectRecovery(this.workspace, journal.review);
+    if (journal.state === "applied") {
+      this.state.phase = "applied";
+      this.state.recovery = files;
+    } else if (journal.state === "undone" || journal.state === "rolled-back") {
+      this.state.phase = "undone";
+      this.state.recovery = files;
+    } else {
+      this.state.phase = "recovery";
+      this.state.recovery = files;
+    }
+  }
+  async history(
+    root: string,
+  ): Promise<{ entries: JobHistoryEntry[]; errors: string[] }> {
+    const source = await realpath(root),
+      entries: JobHistoryEntry[] = [],
+      errors: string[] = [];
+    for (const id of await jobDirectories(this.storage)) {
+      try {
+        const record = await readRecord(
+          resolve(this.storage, id, "job.json"),
+          jobRecordSchema,
+        );
+        if (record.source !== source) continue;
+        if (record.state.id !== id) throw Error("작업 ID가 폴더와 다릅니다.");
+        entries.push({
+          id: record.state.id,
+          workspaceId: id,
+          startedAt: record.state.startedAt,
+          specId: record.state.specId,
+          phase: record.state.phase,
+        });
+      } catch (error) {
+        errors.push(`${id}: ${String(error).slice(0, 250)}`);
+      }
+    }
+    entries.sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+    return { entries, errors };
+  }
+  async restore(root: string, id: string) {
+    if (this.isRunning)
+      throw Error("진행 중인 작업이 끝난 뒤 기록을 열어 주세요.");
+    await this.flush();
+    z.string().uuid().parse(id);
+    const source = await realpath(root);
+    const directory = resolve(await realpath(this.storage), id);
+    if ((await realpath(directory)) !== directory)
+      throw Error("작업 기록 경로가 바뀌었습니다.");
+    const record = await readRecord(
+      resolve(directory, "job.json"),
+      jobRecordSchema,
+    );
+    if (
+      record.source !== source ||
+      record.state.id !== id ||
+      record.state.specId !== record.request.specId ||
+      record.state.specRevision !== record.request.specRevision ||
+      (record.review && record.review.workspaceId !== id)
+    )
+      throw Error("작업 기록이 서로 일치하지 않습니다.");
+    if (
+      record.specSnapshot &&
+      (record.specSnapshot.id !== record.request.specId ||
+        record.specSnapshot.revision !== record.request.specRevision ||
+        JSON.stringify(record.specSnapshot.content) !==
+          JSON.stringify(record.request.content))
+    )
+      throw Error("저장한 설계와 구현 요청이 다릅니다.");
+    let workspace: JobWorkspace;
+    try {
+      workspace = await loadJobWorkspace(this.storage, id, source);
+    } catch (error) {
+      if (
+        (error as NodeJS.ErrnoException).code !== "ENOENT" ||
+        record.state.worktree ||
+        record.review
+      )
+        throw error;
+      this.source = source;
+      this.recordDirectory = directory;
+      this.request = record.request;
+      this.specSnapshot = record.specSnapshot;
+      this.workspace = undefined;
+      this.review = undefined;
+      this.state = record.state;
+      this.state.approvals = [];
+      if (jobIsActive(this.state)) {
+        this.state.phase = "interrupted";
+        this.state.message =
+          "작업 공간 준비가 끝나기 전에 연결이 끊겼습니다. 원본에 반영한 기록은 없습니다.";
+      }
+      this.emit(false);
+      return this.state;
+    }
+    // Validate the transaction before replacing the selected in-memory job.
+    const journal = await readApplyJournal(workspace);
+    let reviewMatches = true;
+    if (!journal && record.state.phase === "review")
+      reviewMatches =
+        !!record.review &&
+        record.review.id === record.state.reviewId &&
+        (await reviewJobWorkspace(workspace)).id === record.review.id;
+    this.source = source;
+    this.workspace = workspace;
+    this.request = record.request;
+    this.specSnapshot = record.specSnapshot;
+    this.recordDirectory = workspace.directory;
+    this.state = record.state;
+    this.state.worktree = workspace.path;
+    this.review = record.review;
+    if (this.review)
+      this.state.files = this.review.files.map((file) => ({
+        path: file.path,
+        kind:
+          file.before === null
+            ? "added"
+            : file.after === null
+              ? "deleted"
+              : "modified",
+      }));
+    this.state.approvals = [];
+    if (jobIsActive(this.state) && this.state.phase !== "applying") {
+      this.state.phase = "interrupted";
+      this.state.checks = [];
+      this.state.message =
+        "이전 실행 연결을 확인할 수 없습니다. 승인과 구현을 자동으로 재개하지 않습니다. 작업 복사본과 변경을 확인해 주세요.";
+      // Old request IDs cannot authorize a new process. Interrupted code is never applyable.
+    }
+    if (journal) {
+      await this.reconcileJournal();
+      this.state.message =
+        this.state.phase === "recovery"
+          ? "중간에 끊긴 파일 변경이 있습니다. 실제 파일 상태를 확인한 뒤 반영 전 상태로 복구할 수 있습니다."
+          : "저장된 반영 기록과 현재 파일 상태를 다시 확인했습니다.";
+    } else if (this.state.phase === "applying") {
+      this.state.phase = "interrupted";
+      this.state.message =
+        "반영이 시작됐는지 확인할 기록이 없습니다. 원본을 자동으로 변경하지 않습니다.";
+    } else if (this.state.phase === "review") {
+      if (!reviewMatches) {
+        this.state.phase = "interrupted";
+        this.state.checks = [];
+        this.state.message =
+          "검토 이후 작업 복사본이 바뀌었습니다. 기존 검사 결과로 반영할 수 없습니다.";
+      }
+    }
+    this.emit(false);
+    return this.state;
+  }
+  async recover(reviewId: string) {
+    if (
+      !this.workspace ||
+      this.state?.phase !== "recovery" ||
+      this.state.reviewId !== reviewId
+    )
+      throw Error("현재 복구할 작업이 아닙니다.");
+    this.state.phase = "applying";
+    this.emit();
+    try {
+      await this.flush();
+      await recoverJobReview(this.workspace, reviewId);
+      this.state.message =
+        "반영 전 파일로 복구했습니다. 기존 사용자 변경은 보존했습니다.";
+    } finally {
+      await this.reconcileJournal();
+      this.emit();
+      await this.flush();
     }
   }
   dispose() {
+    this.disposed = true;
     this.abort?.abort();
     void this.server?.close().catch(() => {});
   }

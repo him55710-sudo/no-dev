@@ -110,6 +110,8 @@ export async function verifyWorkspace(
     );
     let output = "",
       timedOut = false;
+    let terminationTimer: ReturnType<typeof setTimeout> | undefined;
+    let stopDetails = "종료 요청을 전달했습니다.";
     const append = (chunk: Buffer) => {
       output = (output + chunk.toString("utf8")).slice(-24000);
     };
@@ -117,14 +119,38 @@ export async function verifyWorkspace(
     child.stderr.on("data", append);
     child.stdin.end();
     const stop = () => {
+      if (terminationTimer) return;
+      terminationTimer = setTimeout(() => {
+        cleanup();
+        reject(
+          Error(
+            `검사 프로세스 종료를 확인하지 못했습니다 (PID ${child.pid}, exit ${child.exitCode}). ${stopDetails} 검사 통과로 처리하지 않습니다.`,
+          ),
+        );
+      }, 20000);
+      // A parent can exit while descendants still hold its pipes. That must not
+      // leave the verification promise pending forever either.
       if (!child.pid || child.exitCode !== null) return;
       if (windows) {
         const killer = spawn(
           "taskkill.exe",
           ["/PID", String(child.pid), "/T", "/F"],
-          { windowsHide: true, stdio: "ignore" },
+          { windowsHide: true, stdio: "pipe" },
         );
-        killer.on("error", () => child.kill());
+        const detail = (chunk: Buffer) => {
+          stopDetails = (stopDetails + chunk.toString("utf8")).slice(-2000);
+        };
+        killer.stdout.on("data", detail);
+        killer.stderr.on("data", detail);
+        killer.stdin.end();
+        killer.on("error", (error) => {
+          stopDetails = String(error);
+          child.kill();
+        });
+        killer.on("exit", (code) => {
+          stopDetails += ` (taskkill exit ${code})`;
+          if (code !== 0 && child.exitCode === null) child.kill();
+        });
       } else {
         try {
           process.kill(-child.pid, "SIGKILL");
@@ -141,6 +167,7 @@ export async function verifyWorkspace(
     signal.addEventListener("abort", abort, { once: true });
     const cleanup = () => {
       clearTimeout(timeout);
+      clearTimeout(terminationTimer);
       signal.removeEventListener("abort", abort);
     };
     child.on("error", (error) => {

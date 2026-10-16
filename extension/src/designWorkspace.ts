@@ -27,7 +27,6 @@ import {
   type SpecDocument,
 } from "../../src/workspace/spec";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
-import { jobIsActive } from "../../src/workspace/job";
 import { ImplementationJobs } from "./agent/jobs";
 import { availableChecks } from "./agent/verify";
 
@@ -45,6 +44,9 @@ const requestSchema = z
       "jobDiff",
       "applyJob",
       "undoJob",
+      "recoverJob",
+      "restoreJob",
+      "jobHistory",
     ]),
     payload: z.unknown().optional(),
   })
@@ -77,7 +79,6 @@ export class DesignWorkspace implements vscode.Disposable {
   private worker: AnalysisClient;
   private jobs: ImplementationJobs;
   private diffContents = new Map<string, string>();
-  private implementationSpec?: string;
   private serial = 0;
   private timer?: ReturnType<typeof setTimeout>;
   private saving = false;
@@ -178,7 +179,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!folder || folder.uri.scheme !== "file")
       throw Error("로컬 프로젝트 폴더를 먼저 열어 주세요.");
     if (this.folder?.uri.toString() !== folder.uri.toString()) {
-      if (jobIsActive(this.state.job))
+      if (this.jobs.isRunning)
         throw Error("진행 중인 구현 작업이 끝난 뒤 프로젝트를 바꿔 주세요.");
       this.jobs.dispose();
       this.jobs = new ImplementationJobs(
@@ -200,6 +201,7 @@ export class DesignWorkspace implements vscode.Disposable {
         trusted: vscode.workspace.isTrusted,
       };
       await this.loadDesign();
+      await this.loadJobHistory();
     }
     if (!this.panel) {
       const panel = (this.panel = vscode.window.createWebviewPanel(
@@ -236,7 +238,18 @@ export class DesignWorkspace implements vscode.Disposable {
             result = await this.save(request.payload);
           else if (request.action === "implement")
             result = await this.implement(request.payload);
-          else if (request.action === "cancelJob") this.jobs.cancel();
+          else if (request.action === "jobHistory") await this.loadJobHistory();
+          else if (request.action === "restoreJob") {
+            const payload = z
+              .object({ workspaceId: z.string().uuid() })
+              .strict()
+              .parse(request.payload);
+            if (!this.folder) throw Error("프로젝트가 없습니다.");
+            await this.jobs.restore(
+              this.folder.uri.fsPath,
+              payload.workspaceId,
+            );
+          } else if (request.action === "cancelJob") this.jobs.cancel();
           else if (request.action === "decideJob") {
             const payload = z
               .object({
@@ -290,14 +303,17 @@ export class DesignWorkspace implements vscode.Disposable {
               );
               if (
                 current?.revision !== job.specRevision ||
-                JSON.stringify(current) !== this.implementationSpec
+                JSON.stringify(current) !== this.jobs.savedSpec
               )
                 throw Error(
                   "구현 중 설계가 바뀌었습니다. 새 설계로 다시 구현해 주세요.",
                 );
               await this.jobs.apply(payload.reviewId);
-            } else await this.jobs.undo(payload.reviewId);
+            } else if (request.action === "recoverJob")
+              await this.jobs.recover(payload.reviewId);
+            else await this.jobs.undo(payload.reviewId);
             await this.refresh();
+            await this.loadJobHistory();
           }
           void panel.webview.postMessage({ type: "response", id, result });
         } catch (error) {
@@ -528,7 +544,7 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   async implement(raw: unknown) {
     this.assertExecutionReady();
-    if (jobIsActive(this.state.job))
+    if (this.jobs.isRunning)
       throw Error("현재 구현 작업이 끝난 뒤 다시 시작해 주세요.");
     const payload = saveSchema
       .extend({
@@ -549,14 +565,21 @@ export class DesignWorkspace implements vscode.Disposable {
       expectedRevision: payload.expectedRevision,
     });
     const change = prepareChange(saved, this.state.graph!, "behavior")!;
-    this.implementationSpec = JSON.stringify(saved);
     const configuration = vscode.workspace.getConfiguration("pureobom");
     return this.jobs.start(this.folder!.uri.fsPath, change, {
       executable: configuration.get<string>("codexPath") || "codex",
       model: configuration.get<string>("codexModel") || undefined,
       checks: [...new Set(payload.checks)],
       allowExternal: payload.allowExternal,
+      specSnapshot: saved,
     });
+  }
+  async loadJobHistory() {
+    if (!this.folder) return;
+    const history = await this.jobs.history(this.folder.uri.fsPath);
+    this.state.jobHistory = history.entries;
+    this.state.jobHistoryErrors = history.errors;
+    this.emit();
   }
   private html(webview: vscode.Webview) {
     const nonce = randomBytes(24).toString("base64");

@@ -1,6 +1,10 @@
 import type { StructureGraph } from "./model";
 import type { SpecDocument } from "./spec";
-import type { ImplementationJob, VerificationName } from "./job";
+import type {
+  ImplementationJob,
+  VerificationName,
+  JobHistoryEntry,
+} from "./job";
 export type DesignWorkspaceState = {
   projectName: string;
   graph?: StructureGraph;
@@ -13,4 +17,6 @@ export type DesignWorkspaceState = {
   notices: string[];
   checks?: VerificationName[];
   job?: ImplementationJob;
+  jobHistory?: JobHistoryEntry[];
+  jobHistoryErrors?: string[];
 };
