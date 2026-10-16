@@ -1,0 +1,1752 @@
+{
+  "startedAt": "2026-10-16T10:44:39.768Z",
+  "finishedAt": "2026-10-16T10:55:46.962Z",
+  "upstream": "https://github.com/nextjs/saas-starter/tree/6e33e58b1e553a41fe22e6b941a7229a002de361",
+  "sourceCommit": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "productCommit": "738638835ab964a3441e7d503e9bf243b121e3b8",
+  "nodeVersion": "v24.19.0",
+  "provider": "Codex Desktop/0.162.0-alpha.17.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)",
+  "graph": {
+    "files": 50,
+    "nodes": 464,
+    "edges": 270,
+    "notices": [
+      {
+        "path": "app/(dashboard)/dashboard/activity/page.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/page.tsx",
+        "line": 31,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/page.tsx",
+        "line": 103,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 8,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 11,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: swr"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 12,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: fetch"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 65,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSWR"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "line": 76,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/link"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 7,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: usePathname"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 15,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useState"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 34,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setIsSidebarOpen"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "line": 58,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setIsSidebarOpen"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 13,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 16,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: swr"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 17,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 21,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 28,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: fetch"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 41,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSWR"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 97,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSWR"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 98,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 191,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSWR"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "line": 193,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "line": 7,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "line": 8,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "line": 26,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "line": 31,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/link"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 6,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 15,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 17,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: swr"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 19,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: fetch"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 22,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useState"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 23,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSWR"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 24,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useRouter"
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "line": 28,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: mutate"
+      },
+      {
+        "path": "app/(dashboard)/page.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/pricing/page.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/pricing/submit-button.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/pricing/submit-button.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react-dom"
+      },
+      {
+        "path": "app/(dashboard)/pricing/submit-button.tsx",
+        "line": 8,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useFormStatus"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 7,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useState"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 8,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useState"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 18,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useEffect"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 19,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setTimeout"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 20,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setTerminalStep"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 25,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: clearTimeout"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 30,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setCopied"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 31,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setTimeout"
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "line": 31,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: setCopied"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: zod"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 20,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 21,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/headers"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 61,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 62,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 63,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 100,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 115,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 154,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 155,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 155,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: parseInt"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 156,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 157,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 169,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 176,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 221,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 228,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cookies"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 281,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 323,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 329,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 330,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 331,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 336,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cookies"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 337,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 353,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 378,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 379,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 380,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 412,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 414,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 414,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 414,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 427,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 428,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 429,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "line": 430,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/link"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 9,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useSearchParams"
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "line": 18,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: useActionState"
+      },
+      {
+        "path": "app/(login)/sign-in/page.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/(login)/sign-up/page.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/server"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 7,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: stripe"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: URL"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 60,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 72,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 87,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 89,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 92,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: URL"
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "line": 95,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: URL"
+      },
+      {
+        "path": "app/api/stripe/webhook/route.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: stripe"
+      },
+      {
+        "path": "app/api/stripe/webhook/route.ts",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/server"
+      },
+      {
+        "path": "app/layout.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: ./globals.css"
+      },
+      {
+        "path": "app/layout.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next"
+      },
+      {
+        "path": "app/layout.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/font/google"
+      },
+      {
+        "path": "app/layout.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: swr"
+      },
+      {
+        "path": "app/layout.tsx",
+        "line": 16,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Manrope"
+      },
+      {
+        "path": "app/not-found.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/link"
+      },
+      {
+        "path": "app/not-found.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "components/ui/avatar.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/avatar.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: radix-ui"
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: radix-ui"
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: class-variance-authority"
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "line": 7,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cva"
+      },
+      {
+        "path": "components/ui/card.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/dropdown-menu.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/dropdown-menu.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: radix-ui"
+      },
+      {
+        "path": "components/ui/dropdown-menu.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "components/ui/input.tsx",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/label.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/label.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: radix-ui"
+      },
+      {
+        "path": "components/ui/radio-group.tsx",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: react"
+      },
+      {
+        "path": "components/ui/radio-group.tsx",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: radix-ui"
+      },
+      {
+        "path": "components/ui/radio-group.tsx",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react"
+      },
+      {
+        "path": "drizzle.config.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-kit"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: zod"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 27,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: action"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 52,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: action"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 65,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "line": 73,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: action"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: bcryptjs"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: jose"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/headers"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 6,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: TextEncoder"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 10,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: hash"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 17,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: compare"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 26,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: SignJWT"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 34,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: jwtVerify"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 41,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cookies"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 47,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "line": 53,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cookies"
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm/postgres-js"
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: postgres"
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: dotenv"
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "line": 12,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: postgres"
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "line": 13,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: drizzle"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/headers"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 8,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: cookies"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 22,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 22,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 29,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: and"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 29,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 29,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: isNull"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 43,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 62,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 64,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 74,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 75,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 96,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 97,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 98,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: desc"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "line": 109,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: eq"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm/pg-core"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 9,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 11,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: pgTable"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 12,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: serial"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 13,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 15,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: text"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 16,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 17,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 18,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 19,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 22,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: pgTable"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 23,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: serial"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 24,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 25,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 26,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 27,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: text"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 28,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: text"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 29,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: text"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 30,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 31,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 34,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: pgTable"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 35,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: serial"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 36,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 39,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 42,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 43,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 46,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: pgTable"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 47,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: serial"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 48,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 51,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 52,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: text"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 53,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 54,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 57,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: pgTable"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 58,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: serial"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 59,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 62,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 63,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 64,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: integer"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 67,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: timestamp"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 68,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: varchar"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 71,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: relations"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 72,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: many"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 73,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: many"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 74,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: many"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 77,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: relations"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 78,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: many"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 79,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: many"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 82,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: relations"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 83,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 87,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 93,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: relations"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 94,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 98,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 104,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: relations"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 105,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "line": 109,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: one"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:child_process"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:fs"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:util"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 4,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:readline"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 5,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:crypto"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 6,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:path"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 7,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: node:os"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 9,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: promisify"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 17,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Promise"
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "line": 20,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: resolve"
+      },
+      {
+        "path": "lib/payments/actions.ts",
+        "line": 3,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "lib/payments/actions.ts",
+        "line": 14,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: stripe"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 10,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Stripe"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 24,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 46,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "line": 51,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: redirect"
+      },
+      {
+        "path": "lib/utils.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: clsx"
+      },
+      {
+        "path": "lib/utils.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: tailwind-merge"
+      },
+      {
+        "path": "lib/utils.ts",
+        "line": 5,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: twMerge"
+      },
+      {
+        "path": "lib/utils.ts",
+        "line": 5,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: clsx"
+      },
+      {
+        "path": "middleware.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/server"
+      },
+      {
+        "path": "middleware.ts",
+        "line": 2,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next/server"
+      },
+      {
+        "path": "middleware.ts",
+        "line": 13,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: URL"
+      },
+      {
+        "path": "middleware.ts",
+        "line": 21,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: Date"
+      },
+      {
+        "path": "middleware.ts",
+        "line": 38,
+        "message": "호출 대상을 정적으로 확인하지 못했습니다: URL"
+      },
+      {
+        "path": "next.config.ts",
+        "line": 1,
+        "message": "가져온 범위 밖의 모듈 또는 미해석 경로: next"
+      }
+    ]
+  },
+  "scopePaths": [
+    "app/(dashboard)/dashboard/activity/loading.tsx",
+    "app/(dashboard)/dashboard/activity/page.tsx",
+    "app/(dashboard)/dashboard/general/page.tsx",
+    "app/(dashboard)/dashboard/layout.tsx",
+    "app/(dashboard)/dashboard/page.tsx",
+    "app/(dashboard)/dashboard/security/page.tsx",
+    "app/(dashboard)/layout.tsx",
+    "app/(dashboard)/page.tsx",
+    "app/(dashboard)/pricing/page.tsx",
+    "app/(dashboard)/pricing/submit-button.tsx",
+    "app/(dashboard)/terminal.tsx",
+    "app/(login)/actions.ts",
+    "app/(login)/login.tsx",
+    "app/(login)/sign-in/page.tsx",
+    "app/(login)/sign-up/page.tsx",
+    "app/api/stripe/checkout/route.ts",
+    "app/api/team/route.ts",
+    "app/api/user/route.ts",
+    "app/layout.tsx",
+    "components/ui/avatar.tsx",
+    "components/ui/button.tsx",
+    "components/ui/card.tsx",
+    "components/ui/dropdown-menu.tsx",
+    "components/ui/input.tsx",
+    "components/ui/label.tsx",
+    "components/ui/radio-group.tsx",
+    "lib/auth/middleware.ts",
+    "lib/auth/session.ts",
+    "lib/db/queries.ts",
+    "lib/db/seed.ts",
+    "lib/payments/actions.ts",
+    "lib/payments/stripe.ts",
+    "lib/utils.ts",
+    "middleware.ts"
+  ],
+  "desired": "현재 팀의 owner만 구성원 초대와 제거를 할 수 있다. 일반 member는 팀 정보와 명단을 조회만 할 수 있다. 화면의 초대·제거 제어와 직접 호출한 서버 액션에 같은 팀별 권한 규칙을 적용한다. 계정 전역 role이나 다른 팀의 owner 권한으로 현재 팀 권한을 대신하지 않는다. 기존 Next.js 구조와 팀 데이터 모델을 사용한다.",
+  "files": [
+    {
+      "path": "app/(dashboard)/dashboard/page.tsx",
+      "kind": "modified"
+    },
+    {
+      "path": "app/(login)/actions.ts",
+      "kind": "modified"
+    },
+    {
+      "path": "lib/auth/team-permissions.ts",
+      "kind": "added"
+    },
+    {
+      "path": "lib/db/queries.ts",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/team-permissions.test.tsx",
+      "kind": "added"
+    },
+    {
+      "path": "tests/vitest.config.mts",
+      "kind": "added"
+    }
+  ],
+  "checks": [
+    {
+      "name": "test",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/AppData/Local/Temp/pureobom-external-next/implementation-runs/run-uOLQHu/jobs/8af9352d-2b18-4203-9d9b-56e6f57bbe18/worktree\n\n\n Test Files  1 passed (1)\n      Tests  9 passed (9)\n   Start at  19:54:24\n   Duration  3.77s (transform 279ms, setup 0ms, import 134ms, tests 3.35s, environment 0ms)\n\n",
+      "elapsedMs": 5007
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ tsc --noEmit\n",
+      "elapsedMs": 3368
+    }
+  ],
+  "assessment": {
+    "jobId": "8af9352d-2b18-4203-9d9b-56e6f57bbe18",
+    "reviewId": "d42d55ed45451fa75e367c7b27139f4d1d895e7ec1f3ada24aa67a8f7dfb4fb8",
+    "files": [
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "outsideScope": false
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "outsideScope": false
+      },
+      {
+        "path": "lib/auth/team-permissions.ts",
+        "outsideScope": true
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "outsideScope": false
+      },
+      {
+        "path": "tests/team-permissions.test.tsx",
+        "outsideScope": true,
+        "verification": "test"
+      },
+      {
+        "path": "tests/vitest.config.mts",
+        "outsideScope": true,
+        "verification": "test"
+      }
+    ],
+    "criteria": [
+      {
+        "id": "acceptance:0",
+        "kind": "acceptance",
+        "text": "일반 member는 실제 팀 API에서 자기 팀 명단을 조회한다."
+      },
+      {
+        "id": "acceptance:1",
+        "kind": "acceptance",
+        "text": "일반 member의 직접 초대·제거 요청은 실패하며 SQL 데이터와 성공 활동 기록을 변경하지 않는다."
+      },
+      {
+        "id": "acceptance:2",
+        "kind": "acceptance",
+        "text": "현재 팀 owner의 초대·FormData 제거가 동작한다. 계정 전역 member 표시는 이를 막지 않는다."
+      },
+      {
+        "id": "acceptance:3",
+        "kind": "acceptance",
+        "text": "다른 팀의 owner 권한이나 제거 대상 memberId로 현재 팀 경계를 넘지 못한다."
+      },
+      {
+        "id": "acceptance:4",
+        "kind": "acceptance",
+        "text": "팀 member 화면은 초대·제거를 막고 이유를 표시하며 팀 owner 화면은 정상 편집을 허용한다."
+      },
+      {
+        "id": "acceptance:5",
+        "kind": "acceptance",
+        "text": "고정한 독립 인수 검사 9개와 typecheck를 실제로 통과한다."
+      },
+      {
+        "id": "invariant:0",
+        "kind": "invariant",
+        "text": "인증·결제·계정 변경의 기존 동작을 유지한다. 배포·push·외부 서비스 요청을 하지 않는다."
+      },
+      {
+        "id": "invariant:1",
+        "kind": "invariant",
+        "text": "pureobom-validation/permissions.test.tsx와 vitest.config.mts, package.json의 test/typecheck 명령을 바꾸거나 삭제하지 않는다. 검사 무효화나 skip으로 통과시키지 않는다."
+      },
+      {
+        "id": "invariant:2",
+        "kind": "invariant",
+        "text": "의존성은 이 작업 복사본에서 pnpm install --offline --frozen-lockfile --ignore-scripts로 설치한다. 원본이나 다른 프로젝트 node_modules를 연결하지 않는다."
+      }
+    ]
+  },
+  "reviewDecision": {
+    "jobId": "8af9352d-2b18-4203-9d9b-56e6f57bbe18",
+    "reviewId": "d42d55ed45451fa75e367c7b27139f4d1d895e7ec1f3ada24aa67a8f7dfb4fb8",
+    "approvedScopePaths": [
+      "lib/auth/team-permissions.ts",
+      "tests/team-permissions.test.tsx",
+      "tests/vitest.config.mts"
+    ],
+    "reviewedVerificationPaths": [
+      "tests/team-permissions.test.tsx",
+      "tests/vitest.config.mts"
+    ],
+    "acceptUnverified": true,
+    "criteria": [
+      {
+        "id": "acceptance:0",
+        "outcome": "confirmed",
+        "note": "Validation reviewer: locked test calls actual GET and SQL-backed membership; returns team 1 and members 1,2,3.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "acceptance:1",
+        "outcome": "confirmed",
+        "note": "Locked direct-action tests reject member invitation/removal and compare members, invitations and activity snapshots.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "acceptance:2",
+        "outcome": "confirmed",
+        "note": "Locked owner cases pass despite account-wide member role; invitation and browser FormData removal persist expected SQL changes.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "acceptance:3",
+        "outcome": "confirmed",
+        "note": "Locked cross-team removal test and member/global-owner fixtures pass. Additional independently rerun 25 cases cover foreign targets and revoked roles.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "acceptance:4",
+        "outcome": "unverified",
+        "note": "Both real React SSR cases pass, including disabled controls and owner controls. Interactive browser hydration, clicks and post-action refresh are not verified.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "acceptance:5",
+        "outcome": "confirmed",
+        "note": "Product independently ran 9 locked tests and tsc with exit 0. Harness, selected commands and lockfile remain byte-identical.",
+        "checkNames": [
+          "test",
+          "typecheck"
+        ]
+      },
+      {
+        "id": "invariant:0",
+        "outcome": "unverified",
+        "note": "No deployment or upstream publication performed. Full authentication, account and payment regression is not covered; shared team-selector change needs broader validation.",
+        "checkNames": []
+      },
+      {
+        "id": "invariant:1",
+        "outcome": "confirmed",
+        "note": "Both locked harness files, package test/typecheck commands and lockfile were independently compared with source and are unchanged; no skipped locked cases.",
+        "checkNames": [
+          "test"
+        ]
+      },
+      {
+        "id": "invariant:2",
+        "outcome": "unverified",
+        "note": "Actual node_modules realpaths for Next, React, TypeScript, Vitest and PGlite are inside the job worktree. Exact installation flags are reported by the agent; the independent job log does not preserve that command transcript.",
+        "checkNames": []
+      }
+    ]
+  },
+  "reviewer": "Codex assistant acting as the reviewer of this isolated validation run; not a human usability study",
+  "locked": {
+    "pureobom-validation/permissions.test.tsx": "d80ec4bd04c88fd079c8dd9b95e0701ae396fccb74ff8adab988d20d760ac74c",
+    "pureobom-validation/vitest.config.mts": "06006d7323059d97577d9796ec697b87fcbf9d17209b4cee199aab9dd0acafd4"
+  },
+  "additionalTests": {
+    "checkedAt": "2026-10-16T10:54:43.296Z",
+    "total": 25,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "title": "rejects invalid FormData memberId null without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \" \" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"0\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"-1\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"2.5\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"2garbage\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"2e0\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"0x2\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"NaN\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"Infinity\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"2147483648\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects invalid FormData memberId \"9007199254740993\" without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects a file as memberId without changing SQL or activity",
+        "status": "passed"
+      },
+      {
+        "title": "rejects a foreign or absent member 3 without a success log",
+        "status": "passed"
+      },
+      {
+        "title": "rejects a foreign or absent member 999 without a success log",
+        "status": "passed"
+      },
+      {
+        "title": "removes the second listed member once and preserves their other team membership",
+        "status": "passed"
+      },
+      {
+        "title": "keeps both team selectors on the same membership after a row update",
+        "status": "passed"
+      },
+      {
+        "title": "does not trust a submitted owner role or team ID for authorization",
+        "status": "passed"
+      },
+      {
+        "title": "checks the latest database role after ownership is revoked",
+        "status": "passed"
+      },
+      {
+        "title": "denies a global owner without any team and returns no roster",
+        "status": "passed"
+      },
+      {
+        "title": "rejects unauthenticated removal without any writes",
+        "status": "passed"
+      },
+      {
+        "title": "preserves owner invitation roles, current team, and duplicate protection",
+        "status": "passed"
+      },
+      {
+        "title": "enables removal for an owner with only two listed members",
+        "status": "passed"
+      },
+      {
+        "title": "disables every management control for members and explains both restrictions",
+        "status": "passed"
+      }
+    ]
+  },
+  "independentDependencies": [
+    {
+      "name": "next",
+      "resolvesInsideWorktree": true
+    },
+    {
+      "name": "react",
+      "resolvesInsideWorktree": true
+    },
+    {
+      "name": "typescript",
+      "resolvesInsideWorktree": true
+    },
+    {
+      "name": "vitest",
+      "resolvesInsideWorktree": true
+    },
+    {
+      "name": "@electric-sql/pglite",
+      "resolvesInsideWorktree": true
+    }
+  ],
+  "afterApply": {
+    "observation": "changed",
+    "desiredPreserved": true
+  },
+  "afterUndo": {
+    "observation": "unchanged"
+  },
+  "applyUndo": "passed",
+  "restoredPhase": "undone",
+  "limitations": [
+    "independent harness added to upstream; not upstream tests",
+    "PGlite test database, not a production PostgreSQL instance",
+    "Next request cookies supplied by test harness; real JWT and database code",
+    "React server rendering, not installed Webview or browser pointer flow",
+    "build, Stripe, HTTP server actions and production authentication not verified",
+    "This driver reanalyses the baseline tracked application file set after apply/undo; newly added files are not included in that rescan.",
+    "Exact agent dependency installation commands are not independently preserved by the product event log.",
+    "SSR UI interaction, full auth/account/payment regressions and install-command transcript remain explicitly unverified in the review record."
+  ],
+  "sourceSha256": {
+    "scripts/test-external-design.mjs": "3a6e671c72845e5398575447a2a34d6ac061bad05f4def702378ccc6e4a09160",
+    "validation/next-saas-starter/prepare.mjs": "e3ed504b428e977dff522d06c377eabaaa55e0845e820112068ad648a37b1fbd",
+    "validation/next-saas-starter/permissions.fixture.tsx": "d80ec4bd04c88fd079c8dd9b95e0701ae396fccb74ff8adab988d20d760ac74c",
+    "validation/next-saas-starter/vitest.config.fixture.mts": "06006d7323059d97577d9796ec697b87fcbf9d17209b4cee199aab9dd0acafd4",
+    "validation/next-saas-starter/serve.mjs": "c1c742e071d520532746cdcc80f194fed9e80eb0666ece6faa710e740435b436",
+    "extension/src/agent/jobs.ts": "746774ee3285ec2cfd7659c49f579dfa2b906937da46013521e27f1c02ba14df",
+    "extension/src/agent/gitWorkspace.ts": "46f071c5f1a240be6e5f6dad3899b8959f295360ecad186e361c660900fd5ff4",
+    "src/workspace/analyze.ts": "9478f51713ae088b1f2b94b7ebc7f1742c6420e37789368ad907d9cd05fd2315",
+    "src/workspace/review.ts": "5eb5366551f9e209de87cb0a8a5ce74cbc89ded96324354b9d9f778a787e3853"
+  },
+  "ci": {
+    "run": "https://github.com/him55710-sudo/no-dev/actions/runs/38888491018",
+    "commit": "738638835ab964a3441e7d503e9bf243b121e3b8",
+    "windows": "success",
+    "ubuntu": "success",
+    "note": "Product CI; does not run the opt-in external model validation."
+  }
+}

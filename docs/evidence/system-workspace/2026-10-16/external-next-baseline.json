@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-10-16T10:43:10.267Z",
+  "upstream": "https://github.com/nextjs/saas-starter/tree/6e33e58b1e553a41fe22e6b941a7229a002de361",
+  "baselineCommit": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "numTotalTests": 9,
+  "numPassedTests": 5,
+  "numFailedTests": 4,
+  "numPendingTests": 0,
+  "cases": [
+    {
+      "title": "member reads the real team endpoint and its SQL-backed member list",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "title": "member direct server-action invitation is denied without database or audit mutation",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected { Object (success) } to have property \"error\"\n    at C:/Users/user/AppData/Local/Temp/pureobom-external-next/source/pureobom-validation/permissions.test.tsx:105:28"
+      ]
+    },
+    {
+      "title": "member direct removal is denied without database or audit mutation",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "title": "team owner can invite even when the account-wide role is member",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "title": "team owner can remove a member using real browser FormData",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected { Object (error) } to have property \"success\"\n    at C:/Users/user/AppData/Local/Temp/pureobom-external-next/source/pureobom-validation/permissions.test.tsx:120:29"
+      ]
+    },
+    {
+      "title": "owner of another team cannot remove a member from this team or record a successful mutation",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "title": "unauthenticated direct action cannot invite",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "title": "member UI disables invitation and removal despite owning another team and the global owner label",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected '<input type=\"email\" data-slot=\"input\"…' to match /\\bdisabled(?:=|\\s|>)/\n    at C:/Users/user/AppData/Local/Temp/pureobom-external-next/source/pureobom-validation/permissions.test.tsx:140:19"
+      ]
+    },
+    {
+      "title": "team owner UI enables invitation despite the global member label",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected '<input type=\"email\" data-slot=\"input\"…' not to match /\\bdisabled(?:=|\\s|>)/\n    at C:/Users/user/AppData/Local/Temp/pureobom-external-next/source/pureobom-validation/permissions.test.tsx:149:23"
+      ]
+    }
+  ],
+  "lockSha256": "7e8717f28205a7e36cd3f278dfad02e1b61eabd0ed980126f7226e2eb4613dc4",
+  "notes": [
+    "Independent acceptance harness added; application source unchanged before agent run.",
+    "Baseline has four expected unmet acceptance cases, not a passing result.",
+    "PGlite SQL and actual app actions/JWT; Next request cookies supplied by harness."
+  ]
+}
