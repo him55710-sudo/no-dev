@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+외부 검증 도구·기록 소스 `493cd04`의 [Windows·Ubuntu CI 원자료](web-project-ci.json): 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·추출 도구 실행 성공. 아래 외부 Chrome 검사는 이 CI의 집계에 포함되지 않는다.
+
 [외부 modern-normalize HTML/CSS 검증](web-source-project.md)을 추가했다. 실제 VS Code에서 CSS 값 하나 변경 후 Chrome 실패 7→9→undo 후 7을 확인했다. 원본 실패 7개와 assertion 없는 TODO 8개, 브라우저 연결 실패 두 번, 실행기 종료 코드·프로필 격리 보강도 원자료에 보존한다. 전체 upstream 통과나 최적화 성공 사례는 아니다.
 
 HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](web-source-ci.json)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·패키지 도구 실행에 성공했다. [실제 화면](web-source-native.md), 로컬 설치본과 외부 웹 프로젝트 검증은 별도 기록이다.

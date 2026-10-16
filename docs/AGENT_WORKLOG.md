@@ -4,6 +4,8 @@
 
 ## 2026-10-16 · 실제 외부 HTML/CSS 프로젝트와 반복 검사 복구
 
+공개 소스·검증 도구 커밋 `493cd04f1b635205201fd6d91ef3708f65a48650`를 `origin main`에 push했다. [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/38891611946)는 각각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/web-project-ci.json). 외부 Chrome의 54개 검사는 이 자동 검사에 포함되지 않으며 Windows에서 별도로 수행한 자료다. 이 후속 문서 커밋은 위 소스 커밋의 결과를 가리킨다.
+
 - **대상과 목적:** [modern-normalize v3.0.1](evidence/local-ai/web-source-project.md), 소스 commit `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`에서 P2/P3/P4의 원문 읽기·값 수정·실제 브라우저 검사·undo를 연결했다. HTML은 읽기만, CSS는 고정된 의도적 오류를 적용했다. 모델/최적화 성공이나 전체 P0–P6 완료로 세지 않는다.
 - **공개 구현:** `scripts/run-modern-normalize-tests.mjs`, `scripts/test-web-source-project.mjs`, `extension/test/webSourceProject.ts`, 외부 fixture의 pnpm 잠금 파일·재현 안내. 제품 런타임 의존성을 늘리지 않고 opt-in 검사로 분리했다. 전체 원자료·양언어 트리·정확한 범위·라이선스를 공개했다.
 - **준비 실패:** 부모 workspace 때문에 첫 pnpm 명령은 외부 의존성을 설치하지 않았다. 명시적 외부 경로와 `--ignore-workspace --prod=false --ignore-scripts`로 557개 패키지를 설치했다. upstream 범위 버전의 최초 해석 결과를 잠금 파일에 보존했고 이후에는 frozen 설치로 재현한다. 7개 전이 패키지의 deprecation 경고가 있었다.

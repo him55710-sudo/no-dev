@@ -9,7 +9,7 @@
 - **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다.
 - **남은 우선순위:** Rust·Java·C#·SQL의 전용 도구와 실제 프로젝트, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
-HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38888312338)는 각각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/web-source-ci.json). 외부 Chrome 프로젝트는 별도로 Windows에서 실행한 기록이며 CI의 성공 수에 합치지 않는다. 이전 증분의 커밋별 CI와 설치본·실제 모델·화면 기록은 작업 기록에서 추적한다.
+외부 검증 도구·기록 소스 `493cd04`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38891611946)는 각각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/web-project-ci.json). 외부 Chrome 프로젝트는 별도로 Windows에서 실행한 기록이며 CI의 성공 수에 합치지 않는다. 이전 증분의 커밋별 CI와 설치본·실제 모델·화면 기록은 작업 기록에서 추적한다.
 
 ## 요청과 우선순위
 

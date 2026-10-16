@@ -2,6 +2,8 @@
 
 2026-10-16, Windows 11 · Node 24.19.0 · VS Code 1.96.4 · Chrome 실행 파일 155.0.8059.79 · TestCafe 3.7.6. [원자료](web-source-project.json), [재현 명령과 의존성 잠금](../../../scripts/fixtures/modern-normalize/README.md), [upstream MIT 라이선스](MODERN_NORMALIZE_LICENSE.txt).
 
+검증 도구와 이 기록은 `493cd04`로 공개했다. 해당 커밋의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38891611946)는 각 핵심 200개·개발/설치 각 38개와 패키지 도구 실행에 성공했다. [CI 원자료](web-project-ci.json). 아래 외부 브라우저 실행은 별도 Windows 기록이며 일반 CI에 포함되지 않는다.
+
 대상은 [modern-normalize v3.0.1](https://github.com/sindresorhus/modern-normalize/tree/3faa07fc91b8ffbe6243bc4f91e880a00185d0a2), 소스 커밋 `3faa07fc91b8ffbe6243bc4f91e880a00185d0a2`다. annotated tag 자체의 object ID와 구분한다. 브라우저 테스트 파일과 HTML은 수정하지 않았다.
 
 ## 확인한 흐름
