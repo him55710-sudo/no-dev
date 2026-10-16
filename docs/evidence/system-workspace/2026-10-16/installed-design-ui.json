@@ -1,0 +1,1921 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T11:46:20.854Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "74c326cc527b8b5f6c19fde1c5c35ca8de06012903f2ad8dacb6e7a593cb2729",
+    "files": {
+      "out/extension.cjs": "df38b4840000ac2cf57fdcb0f10a2fef67d9a9198da8d89453830636291ca9e4",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "647eba9729b00db3191b413de169a308a094b0bc3303e19b143f170717a52859",
+      "media/design.css": "c5891ad9ad1b3795732ab5d8e082ec730b7f7792ce0df6cf1d21bf51aca3b5c5"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "Explicit deterministic stdio fixture; no external inference.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-16T11:37:51.240Z",
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-16T11:43:20.965Z",
+      "ok": true
+    },
+    {
+      "action": "saveFeature",
+      "at": "2026-10-16T11:43:42.927Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-16T11:43:53.076Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-16T11:43:53.117Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-16T11:43:53.143Z",
+      "ok": true
+    },
+    {
+      "action": "saveSpec",
+      "at": "2026-10-16T11:43:54.121Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-16T11:43:58.951Z",
+      "ok": true
+    },
+    {
+      "action": "removeDraft",
+      "at": "2026-10-16T11:44:07.128Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-16T11:44:07.323Z",
+      "ok": true
+    },
+    {
+      "action": "checkConnection",
+      "at": "2026-10-16T11:44:08.138Z",
+      "ok": true
+    },
+    {
+      "action": "saveExecution",
+      "at": "2026-10-16T11:44:35.301Z",
+      "ok": true
+    },
+    {
+      "action": "implement",
+      "at": "2026-10-16T11:44:36.343Z",
+      "ok": true,
+      "job": {
+        "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+        "specRevision": 2,
+        "phase": "preparing",
+        "startedAt": "2026-10-16T11:44:36.431Z",
+        "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+        "checks": [],
+        "files": [],
+        "approvals": []
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+            "targetIds": [
+              "feature:3c2470af-11fd-403b-abcf-e2efe2099064"
+            ],
+            "revision": 2,
+            "content": {
+              "title": "프로젝트 공유 권한",
+              "purpose": "",
+              "desired": "viewer는 프로젝트를 조회만 할 수 있고 수정할 수 없다. owner와 editor의 편집은 유지한다. 화면에서 편집을 막고 직접 수정 API 요청도 403으로 거절한다.",
+              "policies": "프로젝트의 owner와 editor만 수정한다. viewer는 조회할 수 있고, 직접 수정 요청에는 403을 반환한다.",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [
+                "owner와 editor의 편집 유지",
+                "viewer의 프로젝트 조회 유지",
+                "test.js의 고정 인수 검사를 바꾸지 않는다."
+              ],
+              "acceptance": [
+                "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다.",
+                "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다.",
+                "owner와 editor는 정상 수정한다.",
+                "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9",
+              "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\npolicy.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nservice.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nui.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ]
+            },
+            "updatedAt": "2026-10-16T11:44:36.387Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "3c2470af-11fd-403b-abcf-e2efe2099064",
+            "revision": 1,
+            "title": "프로젝트 공유 권한",
+            "description": "조회·수정 API와 공유 권한, 편집 화면을 연결합니다.",
+            "members": [
+              {
+                "nodeId": "file:policy.js:",
+                "label": "policy.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 103,
+                    "line": 1,
+                    "endLine": 4,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:service.js:",
+                "label": "service.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 338,
+                    "line": 1,
+                    "endLine": 11,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:ui.js:",
+                "label": "ui.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 147,
+                    "line": 1,
+                    "endLine": 6,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-16T11:43:42.929Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "c5b3d429fd8dca6d6f7a7ee1a43d54827311128e344bcc04ada89f02e28acf1c",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9"
+      },
+      "observations": [
+        {
+          "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+          "status": "unchanged"
+        }
+      ]
+    },
+    {
+      "action": "decideJob",
+      "at": "2026-10-16T11:44:44.377Z",
+      "ok": true
+    },
+    {
+      "action": "reviewJob",
+      "at": "2026-10-16T11:45:24.228Z",
+      "ok": true
+    },
+    {
+      "action": "applyJob",
+      "at": "2026-10-16T11:45:34.595Z",
+      "ok": true,
+      "job": {
+        "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+        "specRevision": 2,
+        "phase": "applied",
+        "startedAt": "2026-10-16T11:44:36.431Z",
+        "message": "원본 프로젝트에 반영했습니다.",
+        "checks": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+            "elapsedMs": 683
+          }
+        ],
+        "files": [
+          {
+            "path": "policy.js",
+            "kind": "modified"
+          },
+          {
+            "path": "service.js",
+            "kind": "modified"
+          },
+          {
+            "path": "ui.js",
+            "kind": "modified"
+          }
+        ],
+        "approvals": [],
+        "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+        "provider": "Pureobom deterministic installed-recovery protocol fixture",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "assessment": {
+          "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+          "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+          "files": [
+            {
+              "path": "policy.js",
+              "outsideScope": false
+            },
+            {
+              "path": "service.js",
+              "outsideScope": false
+            },
+            {
+              "path": "ui.js",
+              "outsideScope": false
+            }
+          ],
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "kind": "acceptance",
+              "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+            },
+            {
+              "id": "acceptance:1",
+              "kind": "acceptance",
+              "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+            },
+            {
+              "id": "acceptance:2",
+              "kind": "acceptance",
+              "text": "owner와 editor는 정상 수정한다."
+            },
+            {
+              "id": "acceptance:3",
+              "kind": "acceptance",
+              "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+            },
+            {
+              "id": "invariant:0",
+              "kind": "invariant",
+              "text": "owner와 editor의 편집 유지"
+            },
+            {
+              "id": "invariant:1",
+              "kind": "invariant",
+              "text": "viewer의 프로젝트 조회 유지"
+            },
+            {
+              "id": "invariant:2",
+              "kind": "invariant",
+              "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+            }
+          ]
+        },
+        "reviewDecision": {
+          "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+          "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+          "approvedScopePaths": [],
+          "reviewedVerificationPaths": [],
+          "acceptUnverified": true,
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:1",
+              "outcome": "unverified",
+              "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:3",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:0",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:1",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+              "checkNames": [
+                "test"
+              ]
+            }
+          ]
+        },
+        "recovery": [
+          {
+            "path": "policy.js",
+            "state": "after"
+          },
+          {
+            "path": "service.js",
+            "state": "after"
+          },
+          {
+            "path": "ui.js",
+            "state": "after"
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+            "targetIds": [
+              "feature:3c2470af-11fd-403b-abcf-e2efe2099064"
+            ],
+            "revision": 2,
+            "content": {
+              "title": "프로젝트 공유 권한",
+              "purpose": "",
+              "desired": "viewer는 프로젝트를 조회만 할 수 있고 수정할 수 없다. owner와 editor의 편집은 유지한다. 화면에서 편집을 막고 직접 수정 API 요청도 403으로 거절한다.",
+              "policies": "프로젝트의 owner와 editor만 수정한다. viewer는 조회할 수 있고, 직접 수정 요청에는 403을 반환한다.",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [
+                "owner와 editor의 편집 유지",
+                "viewer의 프로젝트 조회 유지",
+                "test.js의 고정 인수 검사를 바꾸지 않는다."
+              ],
+              "acceptance": [
+                "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다.",
+                "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다.",
+                "owner와 editor는 정상 수정한다.",
+                "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9",
+              "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\npolicy.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nservice.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nui.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ]
+            },
+            "updatedAt": "2026-10-16T11:44:36.387Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "3c2470af-11fd-403b-abcf-e2efe2099064",
+            "revision": 1,
+            "title": "프로젝트 공유 권한",
+            "description": "조회·수정 API와 공유 권한, 편집 화면을 연결합니다.",
+            "members": [
+              {
+                "nodeId": "file:policy.js:",
+                "label": "policy.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 103,
+                    "line": 1,
+                    "endLine": 4,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:service.js:",
+                "label": "service.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 338,
+                    "line": 1,
+                    "endLine": 11,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:ui.js:",
+                "label": "ui.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 147,
+                    "line": 1,
+                    "endLine": 6,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-16T11:43:42.929Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "0d184d0c42fe3c576d25bdfe06b06b94e859d65567f30653cfc5ee2f7f41e51f",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "c5b3d429fd8dca6d6f7a7ee1a43d54827311128e344bcc04ada89f02e28acf1c",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "e9acb963c8678be0ddc973db98d3b9def0cb451315763a4c0b1d1b3421d5a6bf",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "d43f06c3b80a741e45b88f9245ed434bc1e8cf9ac9e5f59384f5b56776d35d69",
+            "supported": true
+          }
+        ],
+        "revision": "62fb4b84d50b7459a5c52a832777c19f012f0e66d20db8ad8fc171b767efd7bd"
+      },
+      "observations": [
+        {
+          "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+          "status": "changed"
+        }
+      ]
+    },
+    {
+      "action": "undoJob",
+      "at": "2026-10-16T11:46:10.547Z",
+      "ok": true,
+      "job": {
+        "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+        "specRevision": 2,
+        "phase": "undone",
+        "startedAt": "2026-10-16T11:44:36.431Z",
+        "message": "이번 작업의 변경을 되돌렸습니다.",
+        "checks": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+            "elapsedMs": 683
+          }
+        ],
+        "files": [
+          {
+            "path": "policy.js",
+            "kind": "modified"
+          },
+          {
+            "path": "service.js",
+            "kind": "modified"
+          },
+          {
+            "path": "ui.js",
+            "kind": "modified"
+          }
+        ],
+        "approvals": [],
+        "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+        "provider": "Pureobom deterministic installed-recovery protocol fixture",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "assessment": {
+          "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+          "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+          "files": [
+            {
+              "path": "policy.js",
+              "outsideScope": false
+            },
+            {
+              "path": "service.js",
+              "outsideScope": false
+            },
+            {
+              "path": "ui.js",
+              "outsideScope": false
+            }
+          ],
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "kind": "acceptance",
+              "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+            },
+            {
+              "id": "acceptance:1",
+              "kind": "acceptance",
+              "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+            },
+            {
+              "id": "acceptance:2",
+              "kind": "acceptance",
+              "text": "owner와 editor는 정상 수정한다."
+            },
+            {
+              "id": "acceptance:3",
+              "kind": "acceptance",
+              "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+            },
+            {
+              "id": "invariant:0",
+              "kind": "invariant",
+              "text": "owner와 editor의 편집 유지"
+            },
+            {
+              "id": "invariant:1",
+              "kind": "invariant",
+              "text": "viewer의 프로젝트 조회 유지"
+            },
+            {
+              "id": "invariant:2",
+              "kind": "invariant",
+              "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+            }
+          ]
+        },
+        "reviewDecision": {
+          "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+          "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+          "approvedScopePaths": [],
+          "reviewedVerificationPaths": [],
+          "acceptUnverified": true,
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:1",
+              "outcome": "unverified",
+              "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:3",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:0",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:1",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "invariant:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+              "checkNames": [
+                "test"
+              ]
+            }
+          ]
+        },
+        "recovery": [
+          {
+            "path": "policy.js",
+            "state": "before"
+          },
+          {
+            "path": "service.js",
+            "state": "before"
+          },
+          {
+            "path": "ui.js",
+            "state": "before"
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+            "targetIds": [
+              "feature:3c2470af-11fd-403b-abcf-e2efe2099064"
+            ],
+            "revision": 2,
+            "content": {
+              "title": "프로젝트 공유 권한",
+              "purpose": "",
+              "desired": "viewer는 프로젝트를 조회만 할 수 있고 수정할 수 없다. owner와 editor의 편집은 유지한다. 화면에서 편집을 막고 직접 수정 API 요청도 403으로 거절한다.",
+              "policies": "프로젝트의 owner와 editor만 수정한다. viewer는 조회할 수 있고, 직접 수정 요청에는 403을 반환한다.",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [
+                "owner와 editor의 편집 유지",
+                "viewer의 프로젝트 조회 유지",
+                "test.js의 고정 인수 검사를 바꾸지 않는다."
+              ],
+              "acceptance": [
+                "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다.",
+                "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다.",
+                "owner와 editor는 정상 수정한다.",
+                "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9",
+              "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\npolicy.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nservice.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nui.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ]
+            },
+            "updatedAt": "2026-10-16T11:44:36.387Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "3c2470af-11fd-403b-abcf-e2efe2099064",
+            "revision": 1,
+            "title": "프로젝트 공유 권한",
+            "description": "조회·수정 API와 공유 권한, 편집 화면을 연결합니다.",
+            "members": [
+              {
+                "nodeId": "file:policy.js:",
+                "label": "policy.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 103,
+                    "line": 1,
+                    "endLine": 4,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:service.js:",
+                "label": "service.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 338,
+                    "line": 1,
+                    "endLine": 11,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:ui.js:",
+                "label": "ui.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 147,
+                    "line": 1,
+                    "endLine": 6,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-16T11:43:42.929Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "c5b3d429fd8dca6d6f7a7ee1a43d54827311128e344bcc04ada89f02e28acf1c",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9"
+      },
+      "observations": [
+        {
+          "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+          "status": "unchanged"
+        }
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "preparing",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "running",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree"
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "approval",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree"
+        }
+      ],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture"
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "running",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture"
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "checking",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.",
+      "checks": [],
+      "files": [],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture"
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "review",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+          "elapsedMs": 683
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "assessment": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor는 정상 수정한다."
+          },
+          {
+            "id": "acceptance:3",
+            "kind": "acceptance",
+            "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          },
+          {
+            "id": "invariant:0",
+            "kind": "invariant",
+            "text": "owner와 editor의 편집 유지"
+          },
+          {
+            "id": "invariant:1",
+            "kind": "invariant",
+            "text": "viewer의 프로젝트 조회 유지"
+          },
+          {
+            "id": "invariant:2",
+            "kind": "invariant",
+            "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+          }
+        ]
+      }
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "applying",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+          "elapsedMs": 683
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "assessment": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor는 정상 수정한다."
+          },
+          {
+            "id": "acceptance:3",
+            "kind": "acceptance",
+            "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          },
+          {
+            "id": "invariant:0",
+            "kind": "invariant",
+            "text": "owner와 editor의 편집 유지"
+          },
+          {
+            "id": "invariant:1",
+            "kind": "invariant",
+            "text": "viewer의 프로젝트 조회 유지"
+          },
+          {
+            "id": "invariant:2",
+            "kind": "invariant",
+            "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "unverified",
+            "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:3",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "applied",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "원본 프로젝트에 반영했습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+          "elapsedMs": 683
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "assessment": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor는 정상 수정한다."
+          },
+          {
+            "id": "acceptance:3",
+            "kind": "acceptance",
+            "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          },
+          {
+            "id": "invariant:0",
+            "kind": "invariant",
+            "text": "owner와 editor의 편집 유지"
+          },
+          {
+            "id": "invariant:1",
+            "kind": "invariant",
+            "text": "viewer의 프로젝트 조회 유지"
+          },
+          {
+            "id": "invariant:2",
+            "kind": "invariant",
+            "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "unverified",
+            "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:3",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "after"
+        },
+        {
+          "path": "service.js",
+          "state": "after"
+        },
+        {
+          "path": "ui.js",
+          "state": "after"
+        }
+      ]
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "applying",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "원본 프로젝트에 반영했습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+          "elapsedMs": 683
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "assessment": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor는 정상 수정한다."
+          },
+          {
+            "id": "acceptance:3",
+            "kind": "acceptance",
+            "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          },
+          {
+            "id": "invariant:0",
+            "kind": "invariant",
+            "text": "owner와 editor의 편집 유지"
+          },
+          {
+            "id": "invariant:1",
+            "kind": "invariant",
+            "text": "viewer의 프로젝트 조회 유지"
+          },
+          {
+            "id": "invariant:2",
+            "kind": "invariant",
+            "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "unverified",
+            "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:3",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "after"
+        },
+        {
+          "path": "service.js",
+          "state": "after"
+        },
+        {
+          "path": "ui.js",
+          "state": "after"
+        }
+      ]
+    },
+    {
+      "id": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+      "specId": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+      "specRevision": 2,
+      "phase": "undone",
+      "startedAt": "2026-10-16T11:44:36.431Z",
+      "message": "이번 작업의 변경을 되돌렸습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (1.3515ms)\n✔ alice retains editing (0.1003ms)\n✔ bob retains editing (0.0689ms)\n✔ membership in another project does not grant access (0.1181ms)\n✔ viewer controls are disabled with an explanation (0.1202ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 97.9494\n",
+          "elapsedMs": 683
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "approvals": [],
+      "worktree": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-dgm7W4\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\eef7aeb0-8db8-48ab-8a07-ace5f199e3ce\\worktree",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "assessment": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor는 정상 수정한다."
+          },
+          {
+            "id": "acceptance:3",
+            "kind": "acceptance",
+            "text": "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          },
+          {
+            "id": "invariant:0",
+            "kind": "invariant",
+            "text": "owner와 editor의 편집 유지"
+          },
+          {
+            "id": "invariant:1",
+            "kind": "invariant",
+            "text": "viewer의 프로젝트 조회 유지"
+          },
+          {
+            "id": "invariant:2",
+            "kind": "invariant",
+            "text": "test.js의 고정 인수 검사를 바꾸지 않는다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "eef7aeb0-8db8-48ab-8a07-ace5f199e3ce",
+        "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: viewer reads but cannot edit 테스트 통과와 service.js의 status 403 및 데이터 비교를 확인했다. 합성 서비스 함수 범위이며 HTTP 서버 검증은 아님.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "unverified",
+            "note": "editControls 반환값 검사는 통과했으나 이 합성 예제에는 실제 앱 화면이 없다. 실제 사용자 화면 동작은 미확인으로 유지한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: alice retains editing, bob retains editing 테스트 통과와 policy.js의 owner/editor 허용을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:3",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: membership in another project does not grant access 테스트에서 현재 프로젝트 멤버만 검사하고 변경을 거절한다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:0",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: owner/editor 두 수정 테스트가 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 첫 테스트의 readProject 결과 before와 수정 거절 후 데이터 보존을 확인했다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "invariant:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 확인: 원본과 분리 작업 공간 test.js의 SHA-256이 b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359로 일치한다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "before"
+        },
+        {
+          "path": "service.js",
+          "state": "before"
+        },
+        {
+          "path": "ui.js",
+          "state": "before"
+        }
+      ]
+    }
+  ],
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "feature:3c2470af-11fd-403b-abcf-e2efe2099064",
+        "targetIds": [
+          "feature:3c2470af-11fd-403b-abcf-e2efe2099064"
+        ],
+        "revision": 2,
+        "content": {
+          "title": "프로젝트 공유 권한",
+          "purpose": "",
+          "desired": "viewer는 프로젝트를 조회만 할 수 있고 수정할 수 없다. owner와 editor의 편집은 유지한다. 화면에서 편집을 막고 직접 수정 API 요청도 403으로 거절한다.",
+          "policies": "프로젝트의 owner와 editor만 수정한다. viewer는 조회할 수 있고, 직접 수정 요청에는 403을 반환한다.",
+          "inputsOutputs": "",
+          "failures": "",
+          "invariants": [
+            "owner와 editor의 편집 유지",
+            "viewer의 프로젝트 조회 유지",
+            "test.js의 고정 인수 검사를 바꾸지 않는다."
+          ],
+          "acceptance": [
+            "viewer 수정 요청은 403이며 데이터가 바뀌지 않는다.",
+            "viewer 화면은 편집 불가와 읽기 전용 이유를 표시한다.",
+            "owner와 editor는 정상 수정한다.",
+            "다른 프로젝트의 멤버 권한은 이 프로젝트에 적용되지 않는다."
+          ]
+        },
+        "baseline": {
+          "graphRevision": "823062b4877accd1a7ace53d158d278554bbf3b0c92c462e66c6c32393c2c7e9",
+          "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\npolicy.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nservice.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.\n\nui.js: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.",
+          "sources": [
+            {
+              "path": "policy.js",
+              "symbol": "",
+              "start": 0,
+              "end": 103,
+              "line": 1,
+              "endLine": 4,
+              "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+              "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+            },
+            {
+              "path": "service.js",
+              "symbol": "",
+              "start": 0,
+              "end": 338,
+              "line": 1,
+              "endLine": 11,
+              "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+              "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+            },
+            {
+              "path": "ui.js",
+              "symbol": "",
+              "start": 0,
+              "end": 147,
+              "line": 1,
+              "endLine": 6,
+              "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+              "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+            }
+          ]
+        },
+        "updatedAt": "2026-10-16T11:44:36.387Z"
+      }
+    ],
+    "features": [
+      {
+        "id": "3c2470af-11fd-403b-abcf-e2efe2099064",
+        "revision": 1,
+        "title": "프로젝트 공유 권한",
+        "description": "조회·수정 API와 공유 권한, 편집 화면을 연결합니다.",
+        "members": [
+          {
+            "nodeId": "file:policy.js:",
+            "label": "policy.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "policy.js",
+                "symbol": "",
+                "start": 0,
+                "end": 103,
+                "line": 1,
+                "endLine": 4,
+                "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+              }
+            ]
+          },
+          {
+            "nodeId": "file:service.js:",
+            "label": "service.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "service.js",
+                "symbol": "",
+                "start": 0,
+                "end": 338,
+                "line": 1,
+                "endLine": 11,
+                "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+              }
+            ]
+          },
+          {
+            "nodeId": "file:ui.js:",
+            "label": "ui.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "ui.js",
+                "symbol": "",
+                "start": 0,
+                "end": 147,
+                "line": 1,
+                "endLine": 6,
+                "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-16T11:43:42.929Z"
+      }
+    ]
+  },
+  "originalRestored": true
+}

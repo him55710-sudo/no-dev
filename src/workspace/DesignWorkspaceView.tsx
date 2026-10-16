@@ -917,7 +917,7 @@ export function DesignWorkspaceView({
               <>
                 {draft ? (
                   <DraftNotice
-                    key={spec.id}
+                    key={`draft:${spec.id}`}
                     draft={draft}
                     current={currentSpec}
                     graphRevision={graph.revision}
@@ -954,7 +954,7 @@ export function DesignWorkspaceView({
                   />
                 ) : null}
                 <SpecEditor
-                  key={spec.id}
+                  key={`editor:${spec.id}`}
                   spec={spec}
                   graph={graph}
                   content={content}
