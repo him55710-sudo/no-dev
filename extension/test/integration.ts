@@ -75,6 +75,17 @@ export async function run() {
 
   await c.scan();
   await ready();
+  assert.ok(
+    c.state.project?.files.some(
+      (file) => file.path === "workspace-1/helper.ts",
+    ),
+  );
+  assert.ok(
+    !c.state.project?.files.some((file) => file.path.includes(".private/")),
+  );
+  reports.push(
+    "workspace scan reads normal files beneath a hidden parent while excluding hidden project contents",
+  );
   const rule = () =>
     c.state.analysis!.rules.find((r) => r.name === "freeShippingThreshold")!;
   const prepared = await c.prepare(c.state.contextId, {
@@ -108,6 +119,7 @@ export async function run() {
   assert.deepEqual(
     comparison.rows.map((r) => r.status),
     ["same", "changed", "same"],
+    JSON.stringify(comparison.rows),
   );
   assert.equal(comparison.rows[1].before.result, 0);
   assert.equal(comparison.rows[1].after?.result, 3000);

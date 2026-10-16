@@ -357,7 +357,11 @@ export class Controller implements vscode.Disposable {
     let total = 0,
       skipped = 0;
     for (const uri of uris.slice(0, 300)) {
-      if (/(?:^|\/)(?:\.[^/]+|package-lock\.json)(?:\/|$)/.test(uri.path)) {
+      // Hidden ancestors of the workspace (for example .codex/worktrees) do
+      // not make every project source hidden. Exclude only project contents.
+      if (
+        /(?:^|\/)(?:\.[^/]+|package-lock\.json)(?:\/|$)/.test(this.pathFor(uri))
+      ) {
         skipped++;
         continue;
       }

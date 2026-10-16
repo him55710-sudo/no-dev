@@ -1,7 +1,8 @@
 import { runTests } from "@vscode/test-electron";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-const workspaces = resolve("test-results/extension-workspaces");
+// A workspace may itself live inside an editor's hidden worktree directory.
+const workspaces = resolve("test-results/extension-workspaces/.hidden-parent");
 await mkdir(workspaces, { recursive: true });
 const workspace = await mkdtemp(resolve(workspaces, "run-"));
 await writeFile(
@@ -22,6 +23,11 @@ await writeFile(
   `import { helper } from './helper';\nconst freeShippingThreshold = 50000;\nconst shippingFee = 3000;\nexport function calculateShipping(subtotal: number) {\n  if (subtotal < 0) throw new Error('negative');\n  if (subtotal >= freeShippingThreshold) return 0;\n  return shippingFee;\n}\n`,
 );
 await writeFile(resolve(workspace, "helper.ts"), "export const helper = 1;\n");
+await mkdir(resolve(workspace, ".private"));
+await writeFile(
+  resolve(workspace, ".private/hidden.ts"),
+  "export const hidden = 1;\n",
+);
 await mkdir(resolve(workspace, ".vscode"), { recursive: true });
 await writeFile(
   resolve(workspace, ".vscode/tasks.json"),
