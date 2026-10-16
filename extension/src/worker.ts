@@ -4,12 +4,15 @@ import { analyzeFile } from "../../src/core/analyze";
 import { makePatch, parseRequest } from "../../src/core/edit";
 import { simulate } from "../../src/core/simulate";
 import { compareScenarios } from "../../src/core/scenarios";
+import { validateAssistantChange } from "../../src/core/assistantValidation";
 const analyzer = new ProjectAnalyzer();
 parentPort!.on("message", ({ id, type, payload }) => {
   try {
     let result: unknown;
     if (type === "analyze")
       result = analyzer.analyze(payload.files, payload.glossary);
+    else if (type === "validateAssistant")
+      result = validateAssistantChange(payload.language, payload.source);
     else if (type === "patch")
       result = makePatch(
         payload.file,

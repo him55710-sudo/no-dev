@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0 — local AI development preview (unreleased)
+
+- Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.
+- Ground citations and edits in unique original source ranges, require changed-source evidence, bound requests, and cancel stale work. Review the native diff and unchecked behavior before explicit apply; use normal editor undo.
+- Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Other language checks remain unavailable.
+- Publish the implementation plan, agent work log, actual Python/model/editor evidence and a failed optimization: itsdangerous tests passed before and after, but the proposed function was slower and was not adopted.
+- This is not verified support for every language, a project test runner, or automatic optimization. See [local AI setup and limitations](docs/LOCAL_AI.md).
+
 ## 0.6.0 — understand the editor's reports
 
 - Connect current-file VS Code diagnostics to a compact summary and the Review view, with provider, severity, original message and exact source navigation.

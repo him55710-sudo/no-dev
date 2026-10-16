@@ -2,7 +2,7 @@
   "name": "pureobom",
   "displayName": "Pureobom · 풀어봄",
   "description": "%description%",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "pureobom-local",
   "license": "MIT",
   "repository": {
@@ -43,7 +43,25 @@
     }
   },
   "contributes": {
+    "configuration": {
+      "title": "Pureobom",
+      "properties": {
+        "pureobom.ollamaPort": {
+          "type": "integer",
+          "default": 11434,
+          "minimum": 1024,
+          "maximum": 65535,
+          "scope": "application",
+          "description": "Local Ollama port on 127.0.0.1. Start Ollama with OLLAMA_NO_CLOUD=1. No external hosts or paid API fallback."
+        }
+      }
+    },
     "commands": [
+      {
+        "command": "pureobom.localAI",
+        "title": "%command.localAI%",
+        "icon": "$(sparkle)"
+      },
       {
         "command": "pureobom.explain",
         "title": "%command.explain%",

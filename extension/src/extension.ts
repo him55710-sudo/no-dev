@@ -16,6 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
   const refreshEditor = async () => {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc && Controller.accepts(doc)) await controller.setDocument(doc);
+    else if (
+      doc &&
+      !["pureobom-preview", "pureobom-local-preview"].includes(doc.uri.scheme)
+    )
+      controller.clearDocument();
     else await controller.refresh();
   };
   const openPanel = async () => {
@@ -53,6 +58,35 @@ export function activate(context: vscode.ExtensionContext) {
         const p = r.payload || {};
         let result: unknown;
         switch (r.action) {
+          case "localModels":
+            result = await controller.assistant.models();
+            break;
+          case "localGenerate":
+            result = await controller.assistant.generate(r.contextId, p);
+            break;
+          case "localCancel":
+            controller.assistant.cancel();
+            break;
+          case "localPreview":
+            result = await controller.assistant.preview(
+              inputString(p.id, 100),
+              r.contextId,
+            );
+            break;
+          case "localApply":
+            result = await controller.assistant.apply(
+              inputString(p.id, 100),
+              r.contextId,
+              p.acknowledgeUnchecked,
+            );
+            break;
+          case "localSource":
+            await controller.assistant.source(
+              inputString(p.id, 100),
+              r.contextId,
+              p.index,
+            );
+            break;
           case "ready":
             await currentPanel.webview.postMessage({
               type: "state",
@@ -182,6 +216,7 @@ export function activate(context: vscode.ExtensionContext) {
         ["작업 공간 연결 지도", "pureobom.map", "type-hierarchy"],
         ["예제로 시작하기", "pureobom.example", "beaker"],
         ["React 화면 문구 바꿔보기", "pureobom.interfaceExample", "layout"],
+        ["로컬 AI로 설명·수정", "pureobom.localAI", "sparkle"],
       ].map(([label, command, icon]) => {
         const item = new vscode.TreeItem(label);
         item.command = { command, title: label };
@@ -193,6 +228,13 @@ export function activate(context: vscode.ExtensionContext) {
     controller,
     vscode.window.registerTreeDataProvider("pureobom.start", sidebar),
     vscode.commands.registerCommand("pureobom.explain", handle(openPanel)),
+    vscode.commands.registerCommand(
+      "pureobom.localAI",
+      handle(async () => {
+        await openPanel();
+        controller.openAssistant();
+      }),
+    ),
     vscode.commands.registerCommand(
       "pureobom.map",
       handle(async () => {
@@ -229,6 +271,17 @@ export function activate(context: vscode.ExtensionContext) {
       }),
     ),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
+      if (
+        panel &&
+        editor &&
+        !Controller.accepts(editor.document) &&
+        !["pureobom-preview", "pureobom-local-preview"].includes(
+          editor.document.uri.scheme,
+        )
+      ) {
+        controller.clearDocument();
+        return;
+      }
       if (panel && editor && Controller.accepts(editor.document)) {
         if (
           controller.isActive(editor.document) &&

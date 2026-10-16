@@ -1,6 +1,6 @@
 # 풀어봄 — 코드가, 말이 되다
 
-**제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). Ollama 로컬 설명·자유로운 수정·실제 프로젝트 최적화를 개발합니다. 공개된 0.6.0에는 아직 포함되지 않았습니다.
+**제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). 0.7 개발 소스에 선택형 [Ollama 로컬 설명·수정](docs/LOCAL_AI.md)을 추가했습니다. 실제 Python 프로젝트 검증과, 성능이 느려져 채택하지 않은 제안도 공개합니다. 공개 0.6.0 설치본과 브라우저 데모에는 로컬 AI가 없습니다.
 
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 

@@ -15,18 +15,13 @@ import {
 import { AnalysisClient } from "./analysisClient";
 import { editorDiagnostics } from "../../src/core/editorDiagnostics";
 import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
+import { assistantLanguages } from "../../src/core/localAssistant";
+import { LocalAssistantController } from "./localAssistantController";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
 
 const FILE_BYTES = 512 * 1024,
   TOTAL_BYTES = 8 * 1024 * 1024;
-const LANGS = new Set([
-  "javascript",
-  "javascriptreact",
-  "typescript",
-  "typescriptreact",
-  "json",
-  "jsonc",
-]);
+const LANGS = new Set(Object.keys(assistantLanguages));
 type PendingPatch = {
   patch: Patch;
   uri: vscode.Uri;
@@ -34,6 +29,7 @@ type PendingPatch = {
   contextId: string;
 };
 export class Controller implements vscode.Disposable {
+  readonly assistant: LocalAssistantController;
   readonly changes = new vscode.EventEmitter<ViewState>();
   state: ViewState = {
     contextId: "",
@@ -56,6 +52,10 @@ export class Controller implements vscode.Disposable {
     private client: AnalysisClient,
     private storage?: vscode.Memento,
   ) {
+    this.assistant = new LocalAssistantController(
+      (context) => this.current(context),
+      client,
+    );
     try {
       this.glossary = normalizeGlossary(storage?.get("pureobom.glossary.v1"));
     } catch {
@@ -215,6 +215,7 @@ export class Controller implements vscode.Disposable {
     await this.refresh();
   }
   private invalidate() {
+    this.assistant.invalidate();
     this.epoch++;
     this.patches.clear();
     this.publish({
@@ -232,6 +233,8 @@ export class Controller implements vscode.Disposable {
       path: vscode.workspace.asRelativePath(doc.uri),
       version: doc.version,
       dirty: doc.isDirty,
+      language: doc.languageId,
+      sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
       analysis: undefined,
       diagnostics: changedDocument
         ? undefined
@@ -242,6 +245,23 @@ export class Controller implements vscode.Disposable {
     });
     if (changedDocument || !this.state.diagnostics) this.readDiagnostics();
     await this.refresh();
+  }
+  clearDocument() {
+    this.invalidate();
+    this.active = undefined;
+    this.publish({
+      path: "",
+      language: undefined,
+      sourceBytes: undefined,
+      analysis: undefined,
+      diagnostics: undefined,
+      busy: false,
+      dirty: false,
+      version: 0,
+    });
+  }
+  openAssistant() {
+    this.publish({ tab: "local" });
   }
   documentChanged(doc: vscode.TextDocument) {
     if (
@@ -312,6 +332,8 @@ export class Controller implements vscode.Disposable {
         busy: false,
         version: doc.version,
         dirty: doc.isDirty,
+        language: doc.languageId,
+        sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
       });
     } catch (e) {
       if (epoch === this.epoch)
@@ -576,6 +598,7 @@ export class Controller implements vscode.Disposable {
     return report;
   }
   dispose() {
+    this.assistant.dispose();
     clearTimeout(this.timer);
     this.registration.dispose();
     this.diagnosticRegistration.dispose();

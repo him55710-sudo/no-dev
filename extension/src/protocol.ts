@@ -6,6 +6,8 @@ import type {
 export type ViewState = {
   contextId: string;
   path: string;
+  language?: string;
+  sourceBytes?: number;
   version: number;
   dirty: boolean;
   trusted: boolean;
@@ -15,7 +17,7 @@ export type ViewState = {
   project?: ProjectAnalysis;
   scanNote?: string;
   error?: string;
-  tab?: "story" | "map";
+  tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {
   id: string;

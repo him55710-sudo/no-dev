@@ -3,6 +3,7 @@ ui/**
 test/**
 tsconfig.json
 out/integration.cjs
+out/real-project.cjs
 node_modules/**
 **/*.map
 .DS_Store

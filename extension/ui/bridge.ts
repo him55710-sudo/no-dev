@@ -29,14 +29,17 @@ export function request<T = void>(
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     const id = String(++sequence);
-    const timer = setTimeout(() => {
-      pending.delete(id);
-      reject(
-        Error(
-          "응답이 없습니다. 설명을 다시 열어 주세요. / No response; reopen the explanation.",
-        ),
-      );
-    }, 60000);
+    const timer = setTimeout(
+      () => {
+        pending.delete(id);
+        reject(
+          Error(
+            "응답이 없습니다. 설명을 다시 열어 주세요. / No response; reopen the explanation.",
+          ),
+        );
+      },
+      action === "localGenerate" ? 240000 : 60000,
+    );
     pending.set(id, { resolve, reject, timer });
     host.postMessage({ id, action, payload, contextId });
   });

@@ -2,6 +2,8 @@
 
 **Pureobom — Read it. Change it. Check it.**
 
+**0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 다른 언어의 실제 모델 품질, 전체 프로젝트 검사, 성능 측정 UI는 아직 검증·구현 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
+
 Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. All analysis runs locally. This is a restricted preview, not general code generation or an application test runner. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.
 
 코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON은 유효성과 개요를 보여 줍니다.
@@ -11,11 +13,11 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 0.5에서는 **풀어봄: React 화면 문구 바꿔보기 / Pureobom: Edit React interface text** 명령도 제공합니다. 화면 요소·문구·조건·이벤트 속성을 펼쳐 읽고 문구를 선택해 실제 코드의 변경안을 만드세요. 화면을 실행하거나 최종 디자인을 재현하지는 않습니다.
 
 1. VS Code 1.96 이상에서 확장 탭을 엽니다. (`Ctrl+Shift+X`)
-2. 상단 `…` → **VSIX에서 설치… / Install from VSIX…** 를 선택하고 `pureobom-0.6.0.vsix`를 엽니다.
+2. 상단 `…` → **VSIX에서 설치… / Install from VSIX…** 를 선택하고 내려받거나 직접 빌드한 VSIX를 엽니다. 0.7 개발 소스를 빌드하면 `pureobom-0.7.0.vsix`가 생성되며, 공개 0.6.0에는 로컬 AI가 없습니다.
 3. `.ts` 또는 `.js` 파일을 열고, `Ctrl+Shift+P` → **풀어봄: 현재 파일 설명 열기**를 실행합니다. 편집기 오른쪽 위 책 아이콘으로도 열 수 있습니다.
 4. 처음이라면 왼쪽 풀어봄 아이콘 → **예제로 시작하기**를 누르세요.
 
-Node.js 별도 설치, API 키, 웹 서버가 필요하지 않습니다. 분석과 수정은 확장 기능 안에서 처리합니다. 이 확장 기능이 사용자 코드를 외부 서버로 보내지 않습니다.
+기본 문법 분석에는 Node.js 별도 설치, API 키, 웹 서버가 필요하지 않습니다. 선택형 로컬 AI에는 설치한 Ollama와 로컬 모델이 필요하며, Python 변경안 문법 검사에는 로컬 Python이 필요합니다. 모델 없이 기존 기능을 사용할 수 있습니다. 확장 기능은 사용자 코드를 외부 호스트로 보내지 않습니다.
 
 상단 **도움말·피드백 / Help & feedback**에서 설치 안내와 저장소를 열거나, 완료·막힘·미지원 경험을 남길 요약을 만들 수 있습니다. 작성한 내용과 버전·환경·언어만 미리 보고 복사합니다. 코드·파일명은 자동 첨부하지 않으며, GitHub에 공유하려면 직접 붙여 넣고 제출해야 합니다.
 
@@ -36,15 +38,15 @@ Node.js 별도 설치, API 키, 웹 서버가 필요하지 않습니다. 분석�
 
 ## 현재 범위
 
-이 버전은 **구문 분석 기반 MVP**입니다. 생성형 AI 모델은 연결하지 않았습니다. 이름은 작은 한국어·영어 용어 사전으로 설명하며, 작성 의도를 추측해서 확정하지 않습니다.
+기본 읽기는 **구문 분석과 용어 사전**을 사용합니다. 별도의 **로컬 AI** 탭은 사용자가 선택한 Ollama 모델의 추론을 사용합니다. 모델 없이 기존 읽기·규칙 수정도 사용할 수 있습니다. 모델 설명과 최적화 제안의 의미·품질은 별도 검토가 필요합니다.
 
 | 항목 | 지원 범위 |
 | --- | --- |
-| 수정 | 숫자·문자열·불리언 리터럴과 비교 연산자 한 곳. 새로운 기능 생성, 다중 파일 리팩터링 미지원 |
+| 수정 | 기본 모드는 숫자·문자열·불리언 리터럴과 비교 연산자 한 곳. 로컬 AI는 현재 파일에서 최대 8개 정확한 범위 변경 제안. 다중 파일 리팩터링 미지원 |
 | 검사 | 문법 파싱·검토 패턴과 VS Code의 현재 파일 알림 연결. 변경안의 사전 타입 검사·전체 프로젝트 검사·보안 감사·실제 테스트 실행 미지원 |
 | 모의 실행 | 제한된 순수 계산. 네트워크, DOM, 비동기, 외부 패키지, 반복문 등 미지원 구문은 거부 |
 | 연결 | 정적인 상대 경로 import/export. 별칭, require, 동적 import 미해석. 그래프 최대 40개 파일 |
-| 크기 | 파일당 512KB, 최대 300개, 합계 8MB. 숨김·의존성·빌드 파일은 작업 공간 검색에서 제외 |
+| 크기 | 기존 읽기는 파일당 512KB, 최대 300개, 합계 8MB. 로컬 AI는 현재 파일 24KB와 합산 요청 예산을 별도 제한. 숨김·의존성·빌드 파일은 작업 공간 검색에서 제외 |
 | 제한 모드 | 설명 열람 가능. 수정안 생성·적용은 신뢰한 작업 공간에서 가능 |
 | 환경 | 데스크톱 VS Code의 Node 확장 호스트. vscode.dev·가상 작업 공간은 미지원. 원격 환경은 미검증 |
 

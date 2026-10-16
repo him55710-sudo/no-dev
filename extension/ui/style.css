@@ -186,10 +186,10 @@ code,
 }
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   border-bottom: 1px solid var(--border);
   margin: 12px 0 24px;
-  overflow-x: auto;
 }
 .tabs button {
   background: transparent;

@@ -1,6 +1,8 @@
 # Security and privacy
 
-Pureobom 0.3 is a preview. The analysis and scenario interpreter run locally. There are no analytics SDKs, account requirements or AI API calls in the application. Loading a hosted demo still sends ordinary asset requests to its hosting provider; this is separate from source-code analysis.
+Pureobom is a preview. Syntax analysis and the restricted scenario interpreter run locally. There are no analytics SDKs or account requirements. The 0.7 development version adds optional, explicit requests to a local Ollama server; the published 0.6.0 does not have this feature. No paid AI API key or remote fallback is configured. Loading a hosted demo still sends ordinary asset requests to its hosting provider.
+
+Local AI sends only the selected current file and the user's request to `127.0.0.1` after checking that Ollama reports cloud features disabled and that the model is local. Redirects and remote models are rejected. The local server must be a trusted Ollama installation. Source is not automatically added to logs or feedback. Model output is untrusted: exact source matches and non-overlapping edit ranges are checked, but explanation truth and optimization benefit are not thereby proved. Proposed code is not executed. Python syntax validation invokes a fixed isolated `ast.parse` program on stdin; it does not import or execute the user's file. See [local AI behavior and limits](docs/LOCAL_AI.md).
 
 The browser stores an imported workspace in IndexedDB on the current origin. `?demo=shipping` skips reading and writing that saved workspace. Use a separate browser profile on shared computers, or clear this site's storage when finished. Imported-file ZIPs contain only included files, not a complete project backup. Reports contain displayed file names, inputs and outputs and should be reviewed before sharing.
 
@@ -10,4 +12,4 @@ To report a vulnerability, use [Security → Report a vulnerability](https://git
 
 Custom project terms are also local data: browser workspace IndexedDB, or VS Code workspace state keyed by document URI. Untitled-document terms are not persisted across extension sessions. Terms can appear in explanation reports, so avoid private business labels in reports you intend to share. Code ZIP exports do not include the local term dictionary.
 
-Supported maintenance line: the latest 0.4 preview. Older local prototypes are not a supported release line.
+Supported distribution: the latest published preview in [Releases](https://github.com/him55710-sudo/pureobom/releases). Development-branch features are identified separately from published packages.

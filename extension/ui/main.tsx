@@ -6,13 +6,14 @@ import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
 import { ProductHelp } from "../../src/components/ProductHelp";
 import { EditorProblems } from "./EditorProblems";
+import { LocalAssistant } from "./LocalAssistant";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
 import { host, request } from "./bridge";
 import "./style.css";
 
-type Tab = "story" | "rules" | "checks" | "map";
+type Tab = "story" | "rules" | "checks" | "map" | "local";
 function App() {
   const saved = host.getState() as { lang?: Lang } | undefined;
   const [lang, setLang] = useState<Lang>(saved?.lang === "en" ? "en" : "ko");
@@ -61,6 +62,7 @@ function App() {
       }
       setState(next);
       if (next.tab === "map") setTab("map");
+      if (next.tab === "local") setTab("local");
     };
     window.addEventListener("message", receive);
     void request("ready").catch((e) => setError(e.message));
@@ -151,7 +153,12 @@ function App() {
           <span className="pill">
             {state.busy
               ? t("설명 업데이트 중…", "Updating…")
-              : t("내 컴퓨터에서 분석", "Analyzed locally")}
+              : a?.kind === "text"
+                ? t(
+                    "로컬 AI로 설명 요청 가능",
+                    "Local AI explanation available",
+                  )
+                : t("내 컴퓨터에서 분석", "Analyzed locally")}
           </span>
           {state.path && (
             <span>
@@ -160,7 +167,7 @@ function App() {
                 : t("저장된 내용", "Saved content")}
             </span>
           )}
-          {a && (
+          {a && a.kind !== "text" && (
             <span>
               {a.functions.length} {t("개 기능", "functions")} ·{" "}
               {a.rules.length} {t("개 규칙", "rules")}
@@ -242,6 +249,7 @@ function App() {
                 ["rules", "규칙 바꾸기", "Rules"],
                 ["checks", "검토할 부분", "Review"],
                 ["map", "연결 지도", "Map"],
+                ["local", "로컬 AI", "Local AI"],
               ] as const
             ).map(([key, korean, english]) => (
               <button
@@ -258,6 +266,22 @@ function App() {
             ))}
           </nav>
           <main aria-busy={state.busy}>
+            {a && tab === "local" && (
+              <LocalAssistant state={state} lang={lang} />
+            )}
+            {a?.kind === "text" && tab !== "local" && (
+              <section className="card">
+                <p>
+                  {t(
+                    "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
+                    "Syntax-grounded explanation is not available for this language yet. Local AI can propose explanations and changes for the current file.",
+                  )}
+                </p>
+                <button onClick={() => setTab("local")}>
+                  {t("로컬 AI 열기", "Open local AI")}
+                </button>
+              </section>
+            )}
             {a && tab === "story" && (
               <>
                 <Terminology
@@ -718,8 +742,8 @@ function App() {
       )}
       <footer className="app-footer">
         {t(
-          "설명은 구문 분석을 바탕으로 생성됩니다. 지원 범위: JavaScript · TypeScript · JSON. 이름 번역은 사전 기반입니다.",
-          "Syntax-based explanations for JavaScript, TypeScript and JSON. Names use a small glossary.",
+          "기본 설명은 JS/TS 구문과 사전을 사용합니다. 선택형 로컬 AI의 설명·수정은 모델의 제안이며 의미·동작·성능 검토가 필요합니다.",
+          "Built-in explanations use JS/TS syntax and a glossary. Optional local AI output is a model proposal; review its meaning, behavior and performance.",
         )}
       </footer>
       {help && (

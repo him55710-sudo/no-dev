@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-16T04:46:04.627Z",
+  "file": "shipping.py",
+  "language": "python",
+  "model": "qwen2.5-coder:3b",
+  "task": "explain",
+  "sourceSha256": "59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1",
+  "sourceBytes": 355,
+  "kind": "actual local Ollama inference; no code applied or tests executed",
+  "result": {
+    "model": {
+      "name": "qwen2.5-coder:3b",
+      "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+      "size": 1929912626
+    },
+    "elapsedMs": 10876,
+    "proposal": {
+      "summary": "이 파일은 지역적인 설명과 편집 제안을 위한 작은 파이썬 예제입니다. 외부 호출이 없습니다.",
+      "citations": [
+        {
+          "quote": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"",
+          "explanation": "이 주석은 파일의 목적을 설명합니다.",
+          "start": 0,
+          "end": 87,
+          "line": 1
+        }
+      ],
+      "edits": [],
+      "updated": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 50_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+      "risks": [],
+      "checks": []
+    }
+  }
+}
