@@ -89,8 +89,13 @@ for (const name of Object.keys(vsix.files).filter((name) =>
 // cannot pass merely because the archive contains a file called worker.cjs.
 const workerDirectory = await mkdtemp(join(tmpdir(), "pureobom-package-"));
 const workerFile = join(workerDirectory, "worker.cjs");
-await writeFile(workerFile, await vsix.file("extension/out/worker.cjs").async("string"));
-const shippedWorker = new Worker(workerFile, { env: { ...process.env, NODE_PATH: "" } });
+await writeFile(
+  workerFile,
+  await vsix.file("extension/out/worker.cjs").async("string"),
+);
+const shippedWorker = new Worker(workerFile, {
+  env: { ...process.env, NODE_PATH: "" },
+});
 try {
   const result = await new Promise((resolve, reject) => {
     const timer = setTimeout(

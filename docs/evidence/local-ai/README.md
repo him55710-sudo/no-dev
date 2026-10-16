@@ -8,7 +8,9 @@
 | [Python 수정](python-edit.json) | 무료 배송 기준 변경 제안, 원문 일치 확인 | CLI 제안 생성; 편집기 적용 검사와 별도 |
 | [한국어 요청 보강 후 설명](python-explain-language-guard.json) | 기본 요청을 한국어로 바꾸고 한국어 문장 최소 검사 후 실제 모델 재실행, 10.9초 | 한국어 응답은 받았지만 파일 주석만 요약해 배송비 계산 설명이 부족함. 설명 품질 성공 사례로 세지 않음 |
 | [VSIX 설치본 화면](installed-ui.md) | 별도 설치 프로필에서 실제 Ollama 연결 → 한국어 수정 요청 → diff → 명시적 적용 → 디스크 무저장 확인 → Ctrl+Z → 영문 UI 전환 | 합성 Python 예제 1건. 모델 설명의 부정확한 시제도 관찰. 영어 모델 응답 검증과 별도 |
+| [언어별 28회 응답과 의미 검토](language-review.md) | 14개 언어 식별자의 합성 파일에 실제 설명·수정 요청. SQL 수정 1건은 원문 근거 불일치로 거절 | CSS·JSONC 등의 틀린 설명, JS의 잘못된 확인 항목, Python/Go 설명 누락 발견. 형식 통과를 의미 정확성으로 세지 않음 |
 | [VS Code 통합](vscode-controlled-integration.json) | 19개 실제 VS Code 검사. 새 AI 검사는 제어된 HTTP 응답으로 다중 편집·undo·오래된 제안·취소·문법 오류 적용 거절 확인 | 새 AI 3개 사례는 실제 모델 추론이 아님 |
+| [JSONC 보강 후 VS Code 통합](vscode-jsonc-integration.json) | 새 테스트 프로필에서 20개 검사. JSONC 미저장 문서·문법 오류·undo 검사 추가 | 제어된 AI HTTP 검사와 실제 모델 응답 기록은 별도 |
 | [보강 전 외부 사례](itsdangerous-before-citation-guard.json) | 실제 Ollama + VS Code + itsdangerous 전후 297개 테스트 성공 | 품질 검토에서 관련 없는 import 인용과 불필요한 조건 발견. 성공한 최적화로 세지 않음 |
 | [보강 후 외부 사례](itsdangerous-integration.json) | 변경-인용 연결 검증 후 실제 Ollama + VS Code + Python 문법 검사 + 전후 297개 테스트 + 원본 복구 | 여전히 불필요한 조건이 있어 성능 측정을 추가함 |
 | [성능 원자료](optimization-benchmark.json) | 실제 제안 전후, 입력·예외·객체 동일성 10개 확인, 사례별 15회 × 10만 호출, 교대 순서와 워밍업 | 단일 함수·PC 측정. 문자열 입력에서 약 24~38% 느림. 제안 미채택 |
