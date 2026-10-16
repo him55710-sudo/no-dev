@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as assert from "node:assert/strict";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import type { Controller } from "../src/controller";
@@ -50,6 +50,13 @@ export async function run() {
     const ready = () => until(() => !c.state.busy && !!c.state.analysis);
     await ready();
     async function runTask() {
+      // Do not attribute previous counts to a command that failed before
+      // its adapter could write a fresh report.
+      try {
+        await unlink(process.env.PUREOBOM_CLSX_TASK_REPORT!);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      }
       const choice = (await c.checks.list(c.state.contextId)).find(
         (t) => t.name === "clsx upstream tests",
       );

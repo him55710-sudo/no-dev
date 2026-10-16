@@ -3,6 +3,8 @@
 import { execFileSync } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+if (process.argv.length !== 5)
+  throw Error("Usage: node scripts/run-clsx-tests.mjs ROOT NODE_RUNTIME REPORT");
 const [root, runtime, reportFile] = process.argv
   .slice(2)
   .map((p) => resolve(p));
