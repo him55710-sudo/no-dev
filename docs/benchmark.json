@@ -1,11 +1,11 @@
 {
-  "measuredAt": "2026-10-15T20:33:40.659Z",
+  "measuredAt": "2026-10-16T05:16:26.894Z",
   "environment": "Node.js v24.19.0",
   "files": 300,
   "totalCharacters": 36490,
-  "coldMs": 298.1,
-  "cachedMs": 0.47,
-  "singleFileEditMs": 0.8,
+  "coldMs": 1797.67,
+  "cachedMs": 1.42,
+  "singleFileEditMs": 1.73,
   "cacheHitsAfterEdit": 299,
   "caveat": "Synthetic small functions, not representative of all projects; excludes worker transfer, startup and rendering."
 }
