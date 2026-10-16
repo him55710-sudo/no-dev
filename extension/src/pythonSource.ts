@@ -128,11 +128,15 @@ export async function pythonSource(
   return validateAnalysis(result, file);
 }
 
-function validateAnalysis(value: unknown, file: SourceFile): FileAnalysis {
+export function validateAnalysis(
+  value: unknown,
+  file: SourceFile,
+  syntax: "python" | "go" = "python",
+): FileAnalysis {
   const a = value as FileAnalysis;
   const fail = () => {
     throw Error(
-      "Python 분석 결과를 확인할 수 없습니다. / Invalid Python analysis result.",
+      `${syntax} 분석 결과를 확인할 수 없습니다. / Invalid ${syntax} analysis result.`,
     );
   };
   if (
@@ -140,9 +144,9 @@ function validateAnalysis(value: unknown, file: SourceFile): FileAnalysis {
     a.path !== file.path ||
     a.kind !== "script" ||
     typeof a.syntaxValid !== "boolean" ||
-    !a.python ||
-    typeof a.python.version !== "string" ||
-    typeof a.python.truncated !== "boolean" ||
+    !a[syntax] ||
+    typeof a[syntax].version !== "string" ||
+    typeof a[syntax].truncated !== "boolean" ||
     !Array.isArray(a.rules) ||
     a.rules.length > 300 ||
     !Array.isArray(a.functions) ||
@@ -200,8 +204,8 @@ function validateAnalysis(value: unknown, file: SourceFile): FileAnalysis {
     anchor(rule);
     words(rule.label);
     if (
-      rule.syntax !== "python" ||
-      rule.id !== `python:${rule.start}` ||
+      rule.syntax !== syntax ||
+      rule.id !== `${syntax}:${rule.start}` ||
       !["string", "number", "boolean"].includes(rule.type) ||
       !["string", "boolean"].includes(typeof rule.value) ||
       rule.raw !== file.content.slice(rule.start, rule.end)

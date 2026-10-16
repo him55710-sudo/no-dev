@@ -1,5 +1,7 @@
 # Changelog
 
+Go addition in the 0.7 development source: [model-free syntax reading and exact literal edits](docs/GO_SOURCE.md) through an installed Go SDK and fixed standard-library helper. Preserve multiple returns, defer/concurrency distinctions and source positions; validate proposed Go syntax without building user code. A deliberate Google UUID initializer regression fails upstream tests and undo restores them. Types, scope, dependencies and optimization remain unchecked.
+
 ## 0.7.0 — local AI development preview (unreleased)
 
 - Read supported Python statement structure in Korean/English through an isolated local AST helper; no model or user-code execution. Preserve loop else, ordered exception branches and finally. Edit assigned literals with exact numeric spelling, Unicode source positions, native diff/apply/undo and stale checks. Publish limits, interpreter setup and an actual itsdangerous regression/restore in [Python source](docs/PYTHON_SOURCE.md).

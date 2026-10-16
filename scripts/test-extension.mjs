@@ -91,6 +91,7 @@ if (installed) {
     "out/worker.cjs",
     "runtime/benchmark.py",
     "runtime/python_source.py",
+    "runtime/go_source.go",
     "media/view.js",
     "media/view.css",
   ])

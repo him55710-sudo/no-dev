@@ -2,6 +2,20 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-16 · Go 표준 파서·원문 수정·실제 UUID 프로젝트
+
+- **범위:** 모델 설명에서 Go의 오류 반환이 누락된 사례에 대응해 P2/P3/P4를 보강했다. [Go 읽기 안내](GO_SOURCE.md)의 로컬 데스크톱 기능이며 전체 언어·전체 계획 완료는 아니다. 유료 API·Ollama·모델이 필요 없는 경로지만 설치 Go SDK가 필요하다.
+- **환경:** 공식 Go 1.27.2 Windows amd64 ZIP을 작업 폴더에만 내려받아 SHA-256 `1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe04f`를 확인했다. 시스템 PATH는 바꾸지 않았다. 소스 [공식 다운로드](https://go.dev/dl/). CI에는 설치 단계 `actions/setup-go@v6`, 1.27.2와 cache false를 추가했다.
+- **구현:** `extension/runtime/go_source.go`, `extension/src/goSource.ts`와 controller/activation/protocol. 표준 라이브러리만 쓰는 고정 helper를 사용자별 캐시에 빌드하고 원문을 stdin으로 전달한다. 사용자 코드·import·init·go:generate를 실행하지 않는다. 프로젝트 GOFLAGS/GOENV/GOWORK·툴체인 자동 다운로드·모듈 프록시·CGO를 사용하지 않는다. helper/SDK/플랫폼별 캐시, shell 없는 실행·취소·시간·입출력 한도를 적용했다.
+- **설명과 수정:** 함수/메서드·여러 반환식·error 값·if/for 초기화·range·switch/type switch/select·defer·go·채널·제어 이동을 부분적으로 읽는다. 이름 하나에 대입한 문자열/숫자만 정확한 범위로 바꾸며 큰 숫자를 JS Number로 변환하지 않는다. 가려질 수 있는 true/false 이름·룬·복소수·식은 제외한다. UTF-8→UTF-16, emoji·한글·CRLF raw string·`//line`의 실제 위치를 검사했다. raw string의 AST End가 CR을 세지 않는 점과 바인딩 없는 range 표시를 수정했다.
+- **화면:** 한국어/영어 파서 버전·문법 오류·없는 SDK/설정·첫 helper 준비 안내와 편집 범위 설명을 추가했다. 부분 구문 읽기를 실행 결과처럼 표현하지 않도록 제목을 고쳤다. React 스킬 기준으로 파생 상태·키·입력 레이블·비동기 상태와 UI/파서 분리를 점검했다.
+- **핵심 검사:** 전체 **185개/20파일 통과**. Go 7개는 실제 도구 프로세스로 위치·원문 수정·분기/반환·비실행·환경 훅 무시·한도·실패·취소를 확인한다. 여러 VS Code 빌드와 동시 실행한 숫자형식 16개 이상의 순차 프로세스 검사가 테스트의 기본 5초 총시간을 넘어 한 번 실패했다. 그 사례만 총시간 20초로 바꾸고 재실행 **7개 통과**; 제품의 읽기당 5초 제한은 유지했다. `docs/benchmark.json`은 회귀 중 다시 기록한 합성 파서 측정이며 최적화 성과가 아니다.
+- **실제 편집기와 발견한 결함:** Go 원문 읽기·줄 이동·큰 정수/문자열·native diff·적용·재분석·undo·오래된 변경안/없는 SDK 거절을 확인했다. 추가 AI fixture는 한국어 요청에 영어 reason을 넣어 처음 언어 검사에 거절됐다. fixture를 고친 다음에는 이름 없는 Go 문서의 AI diff가 `.txt`가 되는 제품 결함을 발견했다. 문서 언어로 확장자를 보충하도록 고쳐 실제 Go diff와 문법 오류 적용 차단을 확인했다. 실제 모델의 응답 품질 검사로 세지 않는다.
+- **최종 로컬 통합:** [개발](evidence/local-ai/go-source-development-integration.json)과 [새 설치본](evidence/local-ai/go-source-installed-integration.json) 각각 **36개 통과**. 같은 36개 흐름을 두 환경에서 실행했으며 별개 기능 72개라고 세지 않는다. 설치본은 production 모드·VSIX `239e9ed5…`·런타임 7개 해시를 대조했다. 그 뒤 UI의 오래된 적용 알림 제거/표시 한도 문구 수정은 최종 CI에서 구분해 확인한다.
+- **외부 프로젝트:** [Google UUID v1.6.0](evidence/local-ai/go-source-project.md), 정확한 커밋 `0f11ee6918f41a04c201eceeadf612a377bc7fbc`에서 `ParseBytes` 반복 초기값 0을 2로 바꾸는 고정 오류를 검토해 적용했다. **201 pass·1 skip → 200 pass·1 fail·1 skip → undo/저장 후 201 pass·1 skip**. 실패는 TestUUID이며 미저장 검사 차단·원본 SHA-256 복구·깨끗한 checkout을 확인했다. 원자료·양언어 설명·라이선스·재현 스크립트를 공개했다. upstream 수정이나 성능 개선 사례가 아니다.
+- **패키지·화면:** VSIX에서 추출한 Go helper를 저장소 밖에서 빌드해 읽기와 정확한 큰 정수 수정을 실행했다. 기존 분석/Python 측정/Python AST helper와 manifest·체크섬 검사도 통과했다. [설치 UI 기록](evidence/local-ai/go-source-native.md)은 한국어/영어 설명, 50_000→70_000, Go diff·적용·undo·L9 이동을 실제 조작했다. 화면 밖 버튼 실패는 재관찰/스크롤 후 진행했으며 성공으로 세지 않는다. UI 검증에서 undo 후 적용 알림이 남아 context 변경 때 알림을 지우도록 후속 수정했다. 화면 설치본과 후속 통합본의 해시를 구분한다.
+- **남은 범위:** Go 타입·범위·import 연결·실행 시뮬레이션·최적화 실측·원격 workspace·전체 구문은 검증하지 않았다. Rust/Java/C#/HTML/CSS/SQL의 추가 구조 읽기와 실제 프로젝트, 모델 의미 오류, 전체 P0–P6도 남아 있다. 안정 릴리스는 0.6.0이며 이번에는 0.7 개발 소스와 근거를 공개한다.
+
 ## 2026-10-16 · 의미 설명 비교와 두 번째 외부 프로젝트
 
 - **목적:** P2의 분기/오류 누락·데이터 소비 동작 추측을 실제 모델로 확인하고, P4 외부 검증을 JavaScript까지 늘림.

@@ -10,7 +10,8 @@ export async function localAssistantChecks(
   ready: () => Promise<void>,
   reports: string[],
 ) {
-  let mode: "normal" | "hold" | "invalid" = "normal",
+  let mode: "normal" | "hold" | "invalid" | "go-valid" | "go-invalid" =
+      "normal",
     chatSeen = false;
   const model = {
     name: "fixture:local",
@@ -47,8 +48,15 @@ export async function localAssistantChecks(
     const input = JSON.parse(body.messages[1].content);
     const quote = mode === "invalid" ? "const fee = 3000;" : "fee = 3000";
     assert.ok(input.source.includes(quote));
-    const edits =
-      mode === "invalid"
+    const edits = mode.startsWith("go-")
+      ? [
+          {
+            before: quote,
+            after: mode === "go-invalid" ? "fee = " : "fee = 4000",
+              reason: "Go 문법 검증용 변경",
+          },
+        ]
+      : mode === "invalid"
         ? [
             {
               before: quote,
@@ -218,6 +226,38 @@ export async function localAssistantChecks(
     assert.equal(tsDoc.getText(), "const fee = 3000;\n");
     reports.push(
       "local AI controlled fixture: malformed TypeScript proposal remains reviewable but cannot be applied",
+    );
+
+    const goDoc = await vscode.workspace.openTextDocument({
+      language: "go",
+      content: "package sample\nconst fee = 3000\n",
+    });
+    await vscode.window.showTextDocument(goDoc, vscode.ViewColumn.One);
+    await c.setDocument(goDoc);
+    await ready();
+    assert.ok(c.state.analysis!.go);
+    mode = "go-valid";
+    const validGo = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(validGo.validation.status, "syntax-passed");
+    assert.match(
+      validGo.validation.detail,
+      /types, ranges, behavior and performance unchecked/,
+    );
+    mode = "go-invalid";
+    const invalidGo = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(invalidGo.validation.status, "syntax-failed");
+    const goPreview = await c.assistant.preview(
+      invalidGo.id,
+      c.state.contextId,
+    );
+    assert.ok(goPreview.after.endsWith(".go"));
+    await assert.rejects(
+      () => c.assistant.apply(invalidGo.id, c.state.contextId, true),
+      /syntax-invalid/,
+    );
+    assert.equal(goDoc.getText(), "package sample\nconst fee = 3000\n");
+    reports.push(
+      "local AI controlled fixture: actual Go parser accepts valid syntax, rejects a malformed proposal, preserves native Go diff and blocks invalid apply without claiming type checks",
     );
   } finally {
     c.assistant.cancel();

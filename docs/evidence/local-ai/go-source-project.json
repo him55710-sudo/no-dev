@@ -1,0 +1,200 @@
+{
+  "checkedAt": "2026-10-16T09:48:42.329Z",
+  "project": "https://github.com/google/uuid",
+  "commit": "0f11ee6918f41a04c201eceeadf612a377bc7fbc",
+  "file": "uuid.go",
+  "sourceSha256": "707a63232670b23c8bb7e90fc4cbbfdaf0d2bff6a17734943fa0c476f182a741",
+  "vscode": "1.96.4",
+  "kind": "actual VS Code Go AST reading, exact initializer edit, upstream task checks and undo; known regression; no model or optimization claim",
+  "command": "go test -mod=readonly -count=1 -json ./...",
+  "go": {
+    "truncated": false,
+    "version": "go1.27.2"
+  },
+  "analysis": {
+    "explained": 151,
+    "total": 224,
+    "functions": [
+      "(invalidLengthError).Error",
+      "IsInvalidLengthError",
+      "Parse",
+      "ParseBytes",
+      "MustParse",
+      "FromBytes",
+      "Must",
+      "Validate",
+      "(UUID).String",
+      "(UUID).URN",
+      "encodeHex",
+      "(UUID).Variant",
+      "(UUID).Version",
+      "(Version).String",
+      "(Variant).String",
+      "SetRand",
+      "EnableRandPool",
+      "DisableRandPool",
+      "(UUIDs).Strings"
+    ],
+    "selectedRule": {
+      "end": 3808,
+      "endLine": 133,
+      "id": "go:3807",
+      "label": {
+        "en": "i",
+        "ko": "i"
+      },
+      "line": 133,
+      "name": "i",
+      "note": {
+        "en": "One written literal. Types, representable range, uses and behavior need separate checks.",
+        "ko": "원문 리터럴 하나입니다. 타입·범위·사용처·동작은 별도 검사해야 합니다."
+      },
+      "raw": "0",
+      "scope": "ParseBytes",
+      "start": 3807,
+      "syntax": "go",
+      "type": "number",
+      "value": "0"
+    },
+    "ko": [
+      "- L121: 선언: var uuid UUID. 표기된 타입·초기화 결과는 검증하지 않습니다.",
+      "- L122: switch 식 「len(b)」과 일치하는 첫 case로 진행하며 기본적으로 자동 fallthrough 하지 않습니다.",
+      "  - case 36",
+      "  - case 36 + 9",
+      "    - L125: 조건 「!bytes.EqualFold(b[:9], []byte(\"urn:uuid:\"))」이 참이면:",
+      "      - L126: 반환식 [uuid, fmt.Errorf(\"invalid urn prefix: %q\", b[:9])]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "    - L128: 대입/선언 구문: b = b[9:]. 우변을 평가한 뒤 대입합니다.",
+      "  - case 36 + 2",
+      "    - L130: 대입/선언 구문: b = b[1:]. 우변을 평가한 뒤 대입합니다.",
+      "  - case 32",
+      "    - L132: 선언: var ok bool. 표기된 타입·초기화 결과는 검증하지 않습니다.",
+      "    - L133: 초기 구문을 한 번 수행한 뒤 아래 제어 구문으로 진행합니다.",
+      "      - L133: 대입/선언 구문: i := 0. 우변을 평가한 뒤 대입합니다.",
+      "      - L133: 각 반복 전 조건을 확인합니다: i < 32",
+      "        - L134: 대입/선언 구문: uuid[i/2], ok = xtob(b[i], b[i+1]). 우변을 평가한 뒤 대입합니다.",
+      "        - L135: 조건 「!ok」이 참이면:",
+      "          - L136: 반환식 [uuid, errors.New(\"invalid UUID format\")]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "        - 본문 정상 종료 또는 이 반복문의 continue 후 수행하는 후처리",
+      "          - L133: 대입/선언 구문: i += 2. 우변을 평가한 뒤 대입합니다.",
+      "    - L139: 반환식 [uuid, nil]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "  - default",
+      "    - L141: 반환식 [uuid, invalidLengthError{len(b)}]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "- L145: 조건 「b[8] != '-' || b[13] != '-' || b[18] != '-' || b[23] != '-'」이 참이면:",
+      "  - L146: 반환식 [uuid, errors.New(\"invalid UUID format\")]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "- L148: range 반복 구문: i, x := range [16]int{\r\n\t\t0, 2, 4, 6,\r\n\t\t9, 11,\r\n\t\t14, 16,\r\n\t\t19, 21,\r\n\t\t24, 26, 28, 30, 32, 34,\r\n\t}. 식의 타입에 따라 순회 방식이 달라집니다.",
+      "  - L155: 대입/선언 구문: v, ok := xtob(b[x], b[x+1]). 우변을 평가한 뒤 대입합니다.",
+      "  - L156: 조건 「!ok」이 참이면:",
+      "    - L157: 반환식 [uuid, errors.New(\"invalid UUID format\")]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다.",
+      "  - L159: 대입/선언 구문: uuid[i] = v. 우변을 평가한 뒤 대입합니다.",
+      "- L161: 반환식 [uuid, nil]를 평가해 반환하려 합니다. 등록된 defer 호출은 함수가 끝나기 전에 역순으로 실행되며 결과나 흐름을 바꿀 수 있습니다."
+    ],
+    "en": [
+      "- L121: Declaration: var uuid UUID. Written types and initialization results are not verified.",
+      "- L122: Switch on len(b); enter the first matching case, with no implicit fallthrough.",
+      "  - case 36",
+      "  - case 36 + 9",
+      "    - L125: If the condition is true: !bytes.EqualFold(b[:9], []byte(\"urn:uuid:\"))",
+      "      - L126: Evaluate and return result expressions [uuid, fmt.Errorf(\"invalid urn prefix: %q\", b[:9])]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "    - L128: Assignment/declaration: b = b[9:]. Evaluate right-hand expressions before assignment.",
+      "  - case 36 + 2",
+      "    - L130: Assignment/declaration: b = b[1:]. Evaluate right-hand expressions before assignment.",
+      "  - case 32",
+      "    - L132: Declaration: var ok bool. Written types and initialization results are not verified.",
+      "    - L133: Perform the initializer once, then enter the control statement below.",
+      "      - L133: Assignment/declaration: i := 0. Evaluate right-hand expressions before assignment.",
+      "      - L133: Check before each iteration: i < 32",
+      "        - L134: Assignment/declaration: uuid[i/2], ok = xtob(b[i], b[i+1]). Evaluate right-hand expressions before assignment.",
+      "        - L135: If the condition is true: !ok",
+      "          - L136: Evaluate and return result expressions [uuid, errors.New(\"invalid UUID format\")]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "        - Post statement after normal body completion or continue for this loop",
+      "          - L133: Assignment/declaration: i += 2. Evaluate right-hand expressions before assignment.",
+      "    - L139: Evaluate and return result expressions [uuid, nil]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "  - default",
+      "    - L141: Evaluate and return result expressions [uuid, invalidLengthError{len(b)}]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "- L145: If the condition is true: b[8] != '-' || b[13] != '-' || b[18] != '-' || b[23] != '-'",
+      "  - L146: Evaluate and return result expressions [uuid, errors.New(\"invalid UUID format\")]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "- L148: Range loop: i, x := range [16]int{\r\n\t\t0, 2, 4, 6,\r\n\t\t9, 11,\r\n\t\t14, 16,\r\n\t\t19, 21,\r\n\t\t24, 26, 28, 30, 32, 34,\r\n\t}. Iteration depends on the expression's type.",
+      "  - L155: Assignment/declaration: v, ok := xtob(b[x], b[x+1]). Evaluate right-hand expressions before assignment.",
+      "  - L156: If the condition is true: !ok",
+      "    - L157: Evaluate and return result expressions [uuid, errors.New(\"invalid UUID format\")]. Registered deferred calls run in reverse order before function exit and may change results or control flow.",
+      "  - L159: Assignment/declaration: uuid[i] = v. Evaluate right-hand expressions before assignment.",
+      "- L161: Evaluate and return result expressions [uuid, nil]. Registered deferred calls run in reverse order before function exit and may change results or control flow."
+    ]
+  },
+  "baseline": {
+    "result": {
+      "id": "89bec926-38c4-400b-b6bb-d218b205c4a6",
+      "name": "Google UUID Go AST regression",
+      "folder": "google-uuid",
+      "file": "uuid.go",
+      "sourceSha256": "707a63232670b23c8bb7e90fc4cbbfdaf0d2bff6a17734943fa0c476f182a741",
+      "startedAt": "2026-10-16T09:48:50.068Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 6090
+    },
+    "counts": {
+      "passed": 201,
+      "failed": 0,
+      "skipped": 1
+    },
+    "failedTests": [],
+    "outputSha256": "0e218b9d39023504b914c9d8d791238555f0d75e060a6a39f39d4fef32df6b92"
+  },
+  "change": {
+    "before": "0",
+    "after": "2",
+    "start": 3807,
+    "end": 3808,
+    "semanticChecked": false
+  },
+  "unsavedBlocked": true,
+  "changedSha256": "1d18b31f80fd3936266e28ca01e2f58839e55d15c5c33fd722bc884b9b0a9208",
+  "regression": {
+    "result": {
+      "id": "15a2cd13-1d52-4354-b86d-f06a069eade4",
+      "name": "Google UUID Go AST regression",
+      "folder": "google-uuid",
+      "file": "uuid.go",
+      "sourceSha256": "1d18b31f80fd3936266e28ca01e2f58839e55d15c5c33fd722bc884b9b0a9208",
+      "startedAt": "2026-10-16T09:48:57.136Z",
+      "status": "failed",
+      "stale": false,
+      "exitCode": 1,
+      "elapsedMs": 2561
+    },
+    "counts": {
+      "passed": 200,
+      "failed": 1,
+      "skipped": 1
+    },
+    "failedTests": [
+      "TestUUID"
+    ],
+    "outputSha256": "710f03b4d9ccb0b817fa7360c6df0b7aa2632ceaf72ea72ceca267c3309d3f8d"
+  },
+  "restored": {
+    "result": {
+      "id": "3517bddf-ac77-4be5-a377-eafe287a0489",
+      "name": "Google UUID Go AST regression",
+      "folder": "google-uuid",
+      "file": "uuid.go",
+      "sourceSha256": "707a63232670b23c8bb7e90fc4cbbfdaf0d2bff6a17734943fa0c476f182a741",
+      "startedAt": "2026-10-16T09:49:00.435Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 2262
+    },
+    "counts": {
+      "passed": 201,
+      "failed": 0,
+      "skipped": 1
+    },
+    "failedTests": [],
+    "outputSha256": "9b6d5e5a7c1eacdc33731de63d03982bbcd571e858339cbfb8a3ac35865495e9"
+  },
+  "originalRestored": true,
+  "restoredSha256": "707a63232670b23c8bb7e90fc4cbbfdaf0d2bff6a17734943fa0c476f182a741"
+}

@@ -14,6 +14,8 @@ The development source reads [JSON/JSONC values without a model](docs/JSON_DATA.
 
 In desktop VS Code, it also reads [Python statement structure and exact literals](docs/PYTHON_SOURCE.md) using an installed isolated Python interpreter. No model/API is needed. Branches, exceptions and source-linked value edits are partial static support; upstream tests caught a deliberate wrong edit and passed again after undo.
 
+An installed Go SDK also enables [Go source reading and exact literal edits](docs/GO_SOURCE.md), including multiple returns, defer and source-linked branches. A fixed local parser reads user code as data. The Google UUID regression test demonstrates a wrong edit failing upstream tests and undo restoring them; this is not full Go type checking.
+
 The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
 
 It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elapsed-time and peak-memory samples, output hashes, observed variation and local JSON reports. Requires Python 3 and a reviewed repeatable process task; this is measurement evidence, not an automatic optimization guarantee.

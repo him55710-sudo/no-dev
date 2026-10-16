@@ -60,6 +60,12 @@
     "configuration": {
       "title": "Pureobom",
       "properties": {
+        "pureobom.analysisGo": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Installed Go executable for model-free Go syntax reading, literal edits and AI proposal syntax checks. Empty uses go. The bundled standard-library helper is built once in extension storage with module/toolchain downloads disabled. User source is parsed, never compiled or run."
+        },
         "pureobom.analysisPython": {
           "type": "string",
           "default": "",

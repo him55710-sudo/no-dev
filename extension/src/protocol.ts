@@ -20,6 +20,7 @@ export type ViewState = {
   scanNote?: string;
   error?: string;
   pythonNotice?: string;
+  goNotice?: string;
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {

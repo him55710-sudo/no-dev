@@ -12,7 +12,7 @@
 | --- | --- | --- | --- | --- | --- |
 | JavaScript / TypeScript / JSX / TSX | 일부 구문 설명, 리터럴·비교 수정, JSX 문구 수정 | 각 형식의 합성 설명·수정 기록. JS/TS의 일부 주의점·확인 항목 오류 | 제안 파싱; VS Code 현재 파일 보고 연결. 전체 타입 검사 미제공 | clsx v2.1.1: 실제 검사 32개 통과→고정 오류 25개 실패→undo 후 32개 통과. Node 24의 구형 테스트 로더 실패는 별도 공개 | 등록 process 명령 측정 제공. 합성 Node 명령으로 연결 검증; clsx 최적화 측정은 아님 |
 | Python | [설치 Python AST의 일부 구문·분기·예외 설명과 정확한 리터럴 수정](PYTHON_SOURCE.md). 로컬 VS Code만; 타입·import 지도·시뮬레이션 미제공 | 실제 배송 예제 설명·수정, 외부 프로젝트 변경·원문 선택·diff·적용·undo 검증 | 모델 제안은 격리 ast.parse; 새 직접 읽기/수정은 parse 후 컴파일로 범위 오류도 확인. 사용자 코드 비실행, 타입 검사 아님 | itsdangerous 2.2.0: 기존 모델 변경 전후 297개; 새 AST 값 수정은 원본 297개 통과→고정 오류 38개 실패→undo 후 297개 통과 | 등록 명령의 실제 전후 각 7회 측정. 제안이 느려 미채택; Windows venv 실행기 메모리는 비교 제외 |
-| Go | 미제공 | 합성 설명·수정 기록. 요약에서 오류 반환 누락 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
+| Go | [설치 Go 표준 AST의 일부 구문·여러 반환식·defer와 문자열/숫자 수정](GO_SOURCE.md). 로컬 VS Code만; import 지도·시뮬레이션 미제공 | 합성 모델 설명·수정 기록에는 오류 반환 누락이 남음. 새 파서 검증은 모델 품질과 별도 | 직접 수정/모델 제안의 Go 문법 파싱. 타입·범위·의존성·동작 검사 아님 | Google UUID v1.6.0: 201 pass·1 skip → 고정 오류로 TestUUID 실패 → undo 후 201 pass·1 skip. Go 1.27.2/Windows | 공통 process 측정 연결 제공, Go 최적화 측정은 미검증 |
 | Rust | 미제공 | 합성 설명·수정 기록. 코드에 없는 사업적 이유 추측 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
 | Java | 미제공 | 합성 설명·수정 기록. 한 정적 메서드 사례 한정 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
 | C# | 미제공 | 합성 설명·수정 기록. 한 정적 메서드 사례 한정 | 미제공 | 미검증 | 공통 process 측정 연결 제공, 해당 언어 도구 미검증 |
@@ -22,4 +22,4 @@
 
 설명 UI는 한국어와 영어다. 프로그래밍 언어 지원과 UI 언어 지원은 다른 항목이다. 기존 0.6.0의 검증은 [릴리스 기록](RELEASE_VALIDATION.md), 새 구현 순서는 [완성 계획](PRODUCT_COMPLETION.md), 실제 작업은 [작업 기록](AGENT_WORKLOG.md)을 따른다.
 
-개발판의 [실제 프로젝트 검사](PROJECT_CHECKS.md)는 언어와 무관하게 사용자가 등록한 VS Code test/build 명령을 연결한다. 언어 도구·의존성이 설치돼 있어야 하며 풀어봄이 해당 언어의 검사기를 제공한다는 뜻은 아니다. 실제 외부 검증은 Python itsdangerous와 [JavaScript clsx](evidence/local-ai/clsx-review.md)의 고정 사례다. 종료 코드와 파일 변경 관찰을 기록하며 최적화 효과를 판정하지 않는다.
+개발판의 [실제 프로젝트 검사](PROJECT_CHECKS.md)는 언어와 무관하게 사용자가 등록한 VS Code test/build 명령을 연결한다. 언어 도구·의존성이 설치돼 있어야 하며 풀어봄이 해당 언어의 검사기를 제공한다는 뜻은 아니다. 실제 외부 검증은 Python itsdangerous, [JavaScript clsx](evidence/local-ai/clsx-review.md), [Go Google UUID](evidence/local-ai/go-source-project.md)의 고정 사례다. 종료 코드와 파일 변경 관찰을 기록하며 최적화 효과를 판정하지 않는다.

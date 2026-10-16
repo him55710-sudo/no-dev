@@ -54,6 +54,7 @@ function App() {
       if (e.data?.type !== "state") return;
       const next = e.data.state as ViewState;
       if (context.current !== next.contextId) {
+        setNotice(undefined);
         setPatch(undefined);
         setEdit(undefined);
         setSimulation(undefined);
@@ -272,9 +273,25 @@ function App() {
             ))}
           </nav>
           <main aria-busy={state.busy}>
-            {state.pythonNotice ? (
+            {state.language === "go" && state.busy ? (
+              <p role="status">
+                {t(
+                  "Go 구문을 읽고 있습니다. 처음 사용할 때는 설치된 Go로 읽기 도구를 준비해 시간이 더 걸릴 수 있습니다.",
+                  "Reading Go syntax. The first use may take longer while the installed Go SDK builds the reader.",
+                )}
+              </p>
+            ) : null}
+            {state.pythonNotice || state.goNotice ? (
               <section className="card" role="status">
-                <p>{state.pythonNotice}</p>
+                <p>{state.pythonNotice || state.goNotice}</p>
+                {state.goNotice ? (
+                  <p>
+                    {t(
+                      "Go SDK 설치 후 pureobom.analysisGo 설정에서 실행 파일 경로를 지정할 수 있습니다. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install a Go SDK and optionally set its executable path in pureobom.analysisGo. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
               </section>
             ) : null}
             {a && tab === "local" && (
@@ -286,10 +303,10 @@ function App() {
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
                 <p>
-                  {state.language === "python"
+                  {state.language === "python" || state.language === "go"
                     ? t(
-                        "Python 구문 읽기를 사용할 수 없습니다. 위 안내를 확인하거나 로컬 AI에서 설명을 요청할 수 있습니다.",
-                        "Python syntax reading is unavailable. Check the notice above or request a local AI explanation.",
+                        "구문 읽기 도구를 사용할 수 없습니다. 위 안내를 확인하거나 로컬 AI에서 설명을 요청할 수 있습니다.",
+                        "The syntax reader is unavailable. Check the notice above or request a local AI explanation.",
                       )
                     : t(
                         "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
@@ -366,15 +383,20 @@ function App() {
                         "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
                         "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
                       )
-                    : a.python
+                    : a.go
                       ? t(
-                          "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
-                          "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
+                          "이름 하나에 대입한 문자열·숫자 리터럴 하나를 수정합니다. 참거짓 이름·룬·식은 대상이 아닙니다. 타입·범위·실제 동작은 프로젝트 검사에서 확인하세요.",
+                          "Edit one string or numeric literal assigned to a name. Boolean identifiers, runes and expressions are excluded. Check types, ranges and behavior with project checks.",
                         )
-                      : t(
-                          "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                          "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                        )}
+                      : a.python
+                        ? t(
+                            "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
+                            "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
+                          )
+                        : t(
+                            "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
+                            "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
+                          )}
                 </p>
                 <form
                   className="sentence"
@@ -397,7 +419,7 @@ function App() {
                               '예: $["enabled"]를 false로 변경',
                               'Example: change $["enabled"] to false',
                             )
-                          : a.python
+                          : a.python || a.go
                             ? t(
                                 "표의 원문 이름과 새 값을 적어 주세요",
                                 "Use a source name from the table and one new value",
@@ -449,7 +471,7 @@ function App() {
                             <small className="mono">{rule.name}</small>
                           </td>
                           <td className="mono">
-                            {rule.syntax === "python"
+                            {rule.syntax === "python" || rule.syntax === "go"
                               ? rule.raw
                               : String(rule.value)}
                           </td>

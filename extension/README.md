@@ -14,6 +14,8 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 
 코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON/JSONC는 모델 없이 실제 키 경로·자료형·값을 읽고 문자열·숫자·참거짓 값 하나의 미리보기·적용·undo를 제공합니다. 숫자 표기와 주석을 보존하고 중복 키 범위의 수정은 막습니다. 소비 프로그램의 동작은 추측하지 않습니다. [범위와 예제 / JSON data guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/JSON_DATA.md).
 
+**Go 원문 읽기 / Go source:** 설치된 Go SDK로 일부 구문·여러 반환값·defer와 정확한 문자열/숫자를 읽고 수정합니다. 첫 사용에 고정 표준 라이브러리 도구만 로컬에서 빌드하며 사용자 소스는 실행하지 않습니다. API 비용은 없지만 SDK 설치가 필요합니다. `pureobom.analysisGo`로 실행 파일을 지정합니다. Syntax only; types, ranges, dependencies, behavior and performance need separate project checks. [범위·설정·Google UUID 검증 / Guide and evidence](https://github.com/him55710-sudo/pureobom/blob/main/docs/GO_SOURCE.md).
+
 ## 시작하기
 
 0.5에서는 **풀어봄: React 화면 문구 바꿔보기 / Pureobom: Edit React interface text** 명령도 제공합니다. 화면 요소·문구·조건·이벤트 속성을 펼쳐 읽고 문구를 선택해 실제 코드의 변경안을 만드세요. 화면을 실행하거나 최종 디자인을 재현하지는 않습니다.

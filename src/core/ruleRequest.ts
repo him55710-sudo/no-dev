@@ -61,9 +61,9 @@ export function parseRequest(
       "단위 없이 숫자를 적어 주세요. 7만 → 70000, 15% → 0.15 / Use plain numbers.",
     );
   const numbers =
-    rule.syntax === "python"
+    rule.syntax === "python" || rule.syntax === "go"
       ? rest.match(
-          /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+|0[oO][0-7_]+|0[bB][01_]+|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?)(?![\w.])/g,
+          /(?<![\w.])[+-]?(?:0[xX][\da-fA-F_]+(?:\.[\da-fA-F_]*)?(?:[pP][+-]?[\d_]+)?|0[oO][0-7_]+|0[bB][01_]+|(?:\d[\d_]*(?:\.[\d_]*)?|\.[\d_]+)(?:[eE][+-]?[\d_]+)?)(?![\w.])/g,
         )
       : rest.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi);
   if (numbers?.length !== 1)

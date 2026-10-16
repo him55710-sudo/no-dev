@@ -12,6 +12,10 @@ export function activate(context: vscode.ExtensionContext) {
     new AnalysisClient(context.asAbsolutePath("out/worker.cjs")),
     context.workspaceState,
     context.asAbsolutePath("runtime/python_source.py"),
+    {
+      script: context.asAbsolutePath("runtime/go_source.go"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "go-reader").fsPath,
+    },
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {

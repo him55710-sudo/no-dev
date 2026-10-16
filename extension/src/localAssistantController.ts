@@ -44,6 +44,10 @@ export class LocalAssistantController implements vscode.Disposable {
   constructor(
     private current: (context: string | undefined) => vscode.TextDocument,
     private analyzer: AnalysisClient,
+    private validateGo?: (
+      source: string,
+      signal: AbortSignal,
+    ) => Promise<AssistantValidation>,
   ) {}
   private client() {
     if (vscode.env.remoteName)
@@ -102,10 +106,18 @@ export class LocalAssistantController implements vscode.Disposable {
       const validation = response.proposal.edits.length
         ? doc.languageId === "python"
           ? await validatePython(response.proposal.updated)
-          : await this.analyzer.call<AssistantValidation>("validateAssistant", {
-              language: doc.languageId,
-              source: response.proposal.updated,
-            })
+          : doc.languageId === "go" && this.validateGo
+            ? await this.validateGo(
+                response.proposal.updated,
+                controller.signal,
+              )
+            : await this.analyzer.call<AssistantValidation>(
+                "validateAssistant",
+                {
+                  language: doc.languageId,
+                  source: response.proposal.updated,
+                },
+              )
         : {
             status: "unavailable" as const,
             detail: "변경안 없음 / No proposed change",
@@ -185,7 +197,27 @@ export class LocalAssistantController implements vscode.Disposable {
     const p = this.checked(id, context);
     if (!p.result.edits.length)
       throw Error("변경안이 없습니다. / No proposed change.");
-    const suffix = p.doc.uri.path.match(/\.[a-zA-Z0-9]+$/)?.[0] || ".txt";
+    const suffix =
+      p.doc.uri.path.match(/\.[a-zA-Z0-9]+$/)?.[0] ||
+      (
+        {
+          javascript: ".js",
+          javascriptreact: ".jsx",
+          typescript: ".ts",
+          typescriptreact: ".tsx",
+          python: ".py",
+          go: ".go",
+          rust: ".rs",
+          java: ".java",
+          csharp: ".cs",
+          html: ".html",
+          css: ".css",
+          sql: ".sql",
+          json: ".json",
+          jsonc: ".jsonc",
+        } as Record<string, string>
+      )[p.doc.languageId] ||
+      ".txt";
     const before = vscode.Uri.from({
       scheme: "pureobom-local-preview",
       path: `/${id}/before${suffix}`,

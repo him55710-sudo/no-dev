@@ -1,5 +1,7 @@
 # 제품 완성 계획 · Product completion plan
 
+추가 P2/P3/P4 증분: [Go 표준 AST 읽기·문자열/숫자 수정](GO_SOURCE.md)을 로컬 VS Code에 연결했다. 여러 반환값·defer·고루틴·switch/select 구조와 정확한 원문 위치를 읽고 Go 변경안의 문법을 검사한다. [Google UUID 고정 오류 검사](evidence/local-ai/go-source-project.md)는 201 pass·1 skip → TestUUID 실패 → undo 후 201 pass·1 skip을 확인했다. SDK가 필요하며 타입·실행 결과·Go 최적화 측정을 검증한 것은 아니다. 전체 계획은 진행 중이다.
+
 상태 기준: 2026-10-16, 시작 커밋 `7603971`. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 실제 작업과 결과는 [에이전트 작업 기록](AGENT_WORKLOG.md)에 남긴다.
 
 추가 P2/P3/P4 증분: [Python AST 읽기·리터럴 수정](PYTHON_SOURCE.md)을 로컬 VS Code에 연결했다. 모델 없이 설치 Python이 분기·반복문 else·예외·finally의 구조와 정확한 값 위치를 읽는다. [외부 itsdangerous](evidence/local-ai/python-source-project.md)에서 값 수정→실제 검사 실패 38개→undo·저장→297개 통과를 확인했다. Python 타입·import 지도·시뮬레이션·전체 구문 설명은 아직 미제공이며 다른 언어의 분석기·외부 검증도 남아 있다.

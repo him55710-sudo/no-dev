@@ -127,6 +127,8 @@ export function Story({
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
+  const native = analysis.python || analysis.go;
+  const nativeName = analysis.python ? "Python" : "Go";
   if (analysis.kind === "json")
     return (
       <DataFacts
@@ -156,21 +158,25 @@ export function Story({
     );
   return (
     <div className="story">
-      {analysis.python ? (
+      {native ? (
         <p className="card data-facts">
           {ko
-            ? `Python ${analysis.python.version} 구문에서 읽었습니다. 사용자 코드는 실행하거나 가져오지 않습니다. 일부 구문의 구조와 적힌 값만 설명하며, 타입·사용처·실행 결과·성능은 별도 확인 대상입니다.`
-            : `Read from Python ${analysis.python.version} syntax without executing or importing user code. Describes supported structure and written values; types, uses, runtime outcomes and performance need separate checks.`}
-          {analysis.python.truncated
+            ? `${nativeName} ${native.version} 구문에서 읽었습니다. 사용자 코드는 실행하거나 가져오지 않습니다. 일부 구문의 구조와 적힌 값만 설명하며, 타입·사용처·실행 결과·성능은 별도 확인 대상입니다.`
+            : `Read from ${nativeName} ${native.version} syntax without executing or importing user code. Describes supported structure and written values; types, uses, runtime outcomes and performance need separate checks.`}
+          {native.truncated
             ? ko
-              ? " 표시 한도(400개 구문·12단계·100개 함수·300개 수정 값)에 도달해 일부가 생략됐습니다."
-              : " Some content is omitted at the display limit (400 statements, 12 levels, 100 functions, 300 editable values)."
+              ? " 표시 한도(약 400개 구문·12단계·100개 함수·300개 수정 값)에 도달해 일부가 생략됐습니다."
+              : " Some content is omitted at the display limit (about 400 statements, 12 levels, 100 functions, 300 editable values)."
             : null}
         </p>
       ) : null}
-      {analysis.python && !analysis.syntaxValid ? (
+      {native && !analysis.syntaxValid ? (
         <section className="card" role="status">
-          <h3>{ko ? "Python 문법을 확인해 주세요" : "Check Python syntax"}</h3>
+          <h3>
+            {ko
+              ? `${nativeName} 문법을 확인해 주세요`
+              : `Check ${nativeName} syntax`}
+          </h3>
           {analysis.issues.map((issue) => (
             <p key={issue.id}>
               {issue.detail[lang]}{" "}
@@ -188,7 +194,13 @@ export function Story({
         <div>
           <span className="eyebrow">READ THE LOGIC</span>
           <h2>
-            {ko ? "이 파일은 이렇게 작동해요" : "Here is how this file works"}
+            {native
+              ? ko
+                ? "원문에서 읽은 구조"
+                : "Structure read from source"
+              : ko
+                ? "이 파일은 이렇게 작동해요"
+                : "Here is how this file works"}
           </h2>
         </div>
         <button
@@ -214,7 +226,7 @@ export function Story({
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {r.syntax === "python"
+                  {r.syntax === "python" || r.syntax === "go"
                     ? r.raw
                     : typeof r.value === "number"
                       ? r.value.toLocaleString("en-US")
@@ -317,10 +329,10 @@ export function Story({
       )}
       <p className="footnote">
         <Icon name="info" size={15} />
-        {analysis.python
+        {native
           ? ko
-            ? "Python 이름과 식은 원문을 유지합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
-            : "Python names and expressions retain their source spelling. Descriptions do not establish author intent, called-function behavior or runtime outcomes."
+            ? `${nativeName} 이름과 식은 원문을 유지합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다.`
+            : `${nativeName} names and expressions retain their source spelling. Descriptions do not establish author intent, called-function behavior or runtime outcomes.`
           : ko
             ? "이름 번역은 용어 사전을 사용합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
             : "Names use a small glossary. Descriptions do not establish author intent, called-function behavior or runtime outcomes."}

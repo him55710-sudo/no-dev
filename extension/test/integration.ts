@@ -7,6 +7,7 @@ import { localAssistantChecks } from "./localAssistant";
 import { projectChecks } from "./projectChecks";
 import { benchmarkChecks } from "./benchmarks";
 import { pythonSourceChecks } from "./pythonSource";
+import { goSourceChecks } from "./goSource";
 const reports: string[] = [];
 async function until(
   check: () => boolean,
@@ -575,6 +576,7 @@ export async function run() {
     "built-in TypeScript reports an actual 2322 error after a rule edit; source selection and undo clear it",
   );
   await pythonSourceChecks(c, ready, reports);
+  await goSourceChecks(c, ready, reports);
   await localAssistantChecks(c, ready, reports);
   const jsoncSource =
     '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';

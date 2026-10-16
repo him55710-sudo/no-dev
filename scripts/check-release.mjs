@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile, mkdtemp, writeFile, unlink, rmdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import assert from "node:assert/strict";
 import { Worker } from "node:worker_threads";
 import { execFile } from "node:child_process";
@@ -72,6 +72,7 @@ for (const file of [
   "extension/out/worker.cjs",
   "extension/runtime/benchmark.py",
   "extension/runtime/python_source.py",
+  "extension/runtime/go_source.go",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -242,4 +243,105 @@ try {
 }
 console.log(
   "Packaged Python AST reader and exact literal edit verified outside the workspace.",
+);
+
+// Build only the bundled fixed helper. User Go text is stdin data, never compiled.
+const goDirectory = await mkdtemp(join(tmpdir(), "pureobom-go-package-"));
+const goFile = join(goDirectory, "go_source.go");
+const goBinary = join(
+  goDirectory,
+  process.platform === "win32" ? "reader.exe" : "reader",
+);
+await writeFile(
+  goFile,
+  await vsix.file("extension/runtime/go_source.go").async("string"),
+);
+try {
+  const env = Object.fromEntries(
+    [
+      "PATH",
+      "Path",
+      "SystemRoot",
+      "WINDIR",
+      "TEMP",
+      "TMP",
+      "HOME",
+      "USERPROFILE",
+      "LOCALAPPDATA",
+    ]
+      .filter((k) => process.env[k])
+      .map((k) => [k, process.env[k]]),
+  );
+  Object.assign(env, {
+    GOTOOLCHAIN: "local",
+    GOENV: "off",
+    GOWORK: "off",
+    GO111MODULE: "off",
+    GOPROXY: "off",
+    GOSUMDB: "off",
+    GOTELEMETRY: "off",
+    GOFLAGS: "",
+    CGO_ENABLED: "0",
+    GOCACHE: resolve("test-results/go-package-cache"),
+  });
+  const exec = promisify(execFile);
+  await exec(
+    process.env.PUREOBOM_TEST_GO || "go",
+    ["build", "-trimpath", "-o", goBinary, goFile],
+    {
+      cwd: goDirectory,
+      env,
+      timeout: 60000,
+      maxBuffer: 65536,
+      windowsHide: true,
+    },
+  );
+  const source =
+    "package sample\n// 😀 exact\nconst limit = 9007199254740993\nfunc check(value int) (int, error) { if value < limit { return 0, nil }; return value, nil }\n";
+  const invoke = async (action) => {
+    const subprocess = exec(goBinary, [], {
+      cwd: goDirectory,
+      env,
+      timeout: 10000,
+      maxBuffer: 65536,
+      windowsHide: true,
+      encoding: "utf8",
+    });
+    subprocess.child.stdin.end(
+      JSON.stringify({ source, path: "sample.go", ...action }),
+    );
+    const { stdout } = await subprocess;
+    const response = JSON.parse(stdout);
+    assert.equal(response.error, undefined);
+    return response.result;
+  };
+  const analysis = await invoke({ action: "analyze" });
+  assert.ok(analysis.go.version);
+  assert.equal(analysis.functions[0].name, "check");
+  assert.equal(analysis.rules[0].value, "9007199254740993");
+  assert.equal(
+    source.slice(analysis.rules[0].start, analysis.rules[0].end),
+    "9007199254740993",
+  );
+  const patch = await invoke({
+    action: "patch",
+    ruleId: analysis.rules[0].id,
+    value: "9007199254740995",
+  });
+  assert.equal(
+    patch.updated,
+    source.replace("9007199254740993", "9007199254740995"),
+  );
+  assert.equal(patch.semanticChecked, false);
+} finally {
+  await unlink(goFile);
+  try {
+    await unlink(goBinary);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  await rmdir(goDirectory);
+}
+console.log(
+  "Packaged Go AST reader and exact literal edit verified outside the workspace.",
 );
