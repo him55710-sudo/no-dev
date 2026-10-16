@@ -6,6 +6,8 @@
 
 Understand the code AI wrote. Change a rule. See which cases change.
 
+**Product-first development:** [Detailed plan](docs/PRODUCT_COMPLETION.md) · [Language support and evidence](docs/LANGUAGE_SUPPORT.md) · [Agent work log](docs/AGENT_WORKLOG.md). Local Ollama assistance, broader editing and real-project optimization are under development; the published 0.6.0 does not include them.
+
 **VS Code extension · Korean / English · Local processing · MIT**
 
 [한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)

@@ -1,5 +1,7 @@
 # 풀어봄 — 코드가, 말이 되다
 
+**제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). Ollama 로컬 설명·자유로운 수정·실제 프로젝트 최적화를 개발합니다. 공개된 0.6.0에는 아직 포함되지 않았습니다.
+
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 
 **[30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko)** — 원문 → 설명 → 변경안 → 주문별 비교 → 적용 → 되돌리기를 실제 공개 화면으로 보여줍니다. 한국어·영어 자막과 텍스트 설명을 제공합니다. [MP4 받기](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
