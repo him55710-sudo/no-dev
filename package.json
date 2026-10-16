@@ -29,13 +29,16 @@
     "format": "prettier --write src tests docs *.json *.ts *.html"
   },
   "dependencies": {
+    "css-tree": "3.2.1",
     "jsonc-parser": "3.3.1",
     "jszip": "3.10.1",
+    "parse5": "8.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {
+    "@types/css-tree": "3.2.0",
     "@types/node": "24.10.0",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

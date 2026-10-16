@@ -4,6 +4,7 @@ import { normalizeGlossary, type GlossaryEntry } from "./glossary";
 import { terminology } from "./terminology";
 import { analyzeInterface } from "./jsx";
 import { describeJsonData } from "./jsonData";
+import { readWebSource } from "./webSource";
 import {
   words,
   type Anchor,
@@ -205,6 +206,14 @@ export function analyzeFile(
     syntaxValid: true,
   };
   const zero = { start: 0, end: 0, line: 1, endLine: 1 };
+  if (/\.(?:html?|css)$/i.test(file.path)) {
+    readWebSource(
+      file.content,
+      /\.css$/i.test(file.path) ? "css" : "html",
+      out,
+    );
+    return out;
+  }
   if (/\.jsonc?$/i.test(file.path)) {
     out.kind = "json";
     try {

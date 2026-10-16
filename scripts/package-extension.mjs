@@ -5,6 +5,20 @@ await mkdir("release", { recursive: true });
 const manifest = JSON.parse(await readFile("extension/package.json", "utf8"));
 const licenses = await Promise.all(
   [
+    ["parse5 8.0.1 — Ivan Nikulin", "node_modules/parse5/LICENSE"],
+    [
+      "entities 8.1.0 — Felix Boehm",
+      "node_modules/.pnpm/entities@8.1.0/node_modules/entities/LICENSE",
+    ],
+    ["CSS Tree 3.2.1 — Roman Dvornov", "node_modules/css-tree/LICENSE"],
+    [
+      "mdn-data 2.27.1 — Mozilla contributors",
+      "node_modules/.pnpm/mdn-data@2.27.1/node_modules/mdn-data/LICENSE",
+    ],
+    [
+      "source-map-js 1.2.2 — Mozilla Foundation and contributors",
+      "node_modules/.pnpm/source-map-js@1.2.2/node_modules/source-map-js/LICENSE",
+    ],
     [
       "jsonc-parser 3.3.1 — Microsoft Corporation",
       "node_modules/jsonc-parser/LICENSE.md",

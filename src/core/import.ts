@@ -13,7 +13,7 @@ export function eligible(path: string) {
           p.startsWith(".") ||
           ["node_modules", "dist", "build", "coverage", "vendor"].includes(p),
       ) &&
-    /\.(?:[cm]?[jt]sx?|jsonc?|css|html|md|py|ya?ml|txt)$/i.test(path) &&
+    /\.(?:[cm]?[jt]sx?|jsonc?|css|html?|md|py|ya?ml|txt)$/i.test(path) &&
     !/(?:pnpm-lock\.yaml|package-lock\.json|yarn\.lock)$/i.test(path)
   );
 }

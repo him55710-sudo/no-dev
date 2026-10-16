@@ -7,6 +7,7 @@ type Props = {
   lang: Lang;
   onSource: (line: number) => void;
   onEdit: (rule: Rule) => void;
+  editDisabled?: boolean;
 };
 function Branch({
   node,
@@ -92,9 +93,16 @@ function Branch({
   );
 }
 
-export function InterfaceTree({ analysis, lang, onSource, onEdit }: Props) {
+export function InterfaceTree({
+  analysis,
+  lang,
+  onSource,
+  onEdit,
+  editDisabled = false,
+}: Props) {
   if (!analysis.interface?.roots.length) return null;
   const ko = lang === "ko";
+  const web = analysis.web?.language;
   return (
     <section
       className="card interface-card"
@@ -103,21 +111,29 @@ export function InterfaceTree({ analysis, lang, onSource, onEdit }: Props) {
       <header>
         <span className="eyebrow">READ THE INTERFACE</span>
         <h3>
-          {ko
-            ? "이 화면에는 무엇이 들어갈까요?"
-            : "What goes into this interface?"}
+          {web
+            ? ko
+              ? `${web.toUpperCase()} 원문 구조`
+              : `${web.toUpperCase()} source structure`
+            : ko
+              ? "이 화면에는 무엇이 들어갈까요?"
+              : "What goes into this interface?"}
         </h3>
         <p>
-          {ko
-            ? "코드에 적힌 요소·문구·조건을 펼쳐 보세요. 문구 옆 ‘바꾸기’에서 실제 코드의 변경안을 만듭니다."
-            : "Explore elements, text and conditions in the source. Use Edit beside a phrase to prepare a real code change."}
+          {web
+            ? ko
+              ? "파서가 읽은 원문 항목입니다. 값 옆 ‘바꾸기’에서 변경안을 만들고 원문 위치로 이동할 수 있습니다."
+              : "Source entries read by a parser. Use Edit to prepare a value change or jump to its source location."
+            : ko
+              ? "코드에 적힌 요소·문구·조건을 펼쳐 보세요. 문구 옆 ‘바꾸기’에서 실제 코드의 변경안을 만듭니다."
+              : "Explore elements, text and conditions in the source. Use Edit beside a phrase to prepare a real code change."}
         </p>
       </header>
       <div className="interface-key">
         <span>
           {ko
-            ? "문구 → 변경안 → 적용 → 되돌리기"
-            : "Text → preview → apply → undo"}
+            ? "값 → 변경안 → 적용 → 되돌리기"
+            : "Value → preview → apply → undo"}
         </span>
         <small>
           {ko
@@ -135,7 +151,7 @@ export function InterfaceTree({ analysis, lang, onSource, onEdit }: Props) {
             lang={lang}
             onSource={onSource}
             onEdit={onEdit}
-            valid={analysis.syntaxValid}
+            valid={analysis.syntaxValid && !editDisabled}
           />
         ))}
       </ul>
@@ -147,9 +163,17 @@ export function InterfaceTree({ analysis, lang, onSource, onEdit }: Props) {
         </p>
       )}
       <p className="interface-note">
-        {ko
-          ? "소스에 등장하는 화면 조각입니다. 모두 동시에 표시된다는 뜻은 아닙니다. CSS·컴포넌트 내부·데이터·실행 순서는 실제 앱에서 확인해야 합니다. 프로젝트 코드를 실행하지 않습니다."
-          : "These are fragments found in source; they may not appear together. CSS, component internals, data and execution order require checking the running app. Project code is never executed."}
+        {web === "css"
+          ? ko
+            ? "선택자·조건·속성값을 원문 그대로 읽습니다. 최종 적용값, 열 개수, 브라우저 지원, 스타일 우선순위와 성능은 실제 페이지에서 확인해야 합니다. 외부 리소스는 불러오지 않습니다."
+            : "Selectors, conditions and values retain their source spelling. Computed values, column counts, browser support, cascade and performance require checking the actual page. External resources are not loaded."
+          : web === "html"
+            ? ko
+              ? "HTML 파서가 보정한 구조입니다. 원문에 없는 html/head/body 래퍼는 생략하며, 문구가 보인다는 보장은 없습니다. 스크립트·CSS·템플릿은 실행하거나 상세 해석하지 않습니다."
+              : "This is the HTML parser's recovered structure; implicit html/head/body wrappers are omitted. Text is not guaranteed visible. Scripts, CSS and templates are not executed or interpreted in detail."
+            : ko
+              ? "소스에 등장하는 화면 조각입니다. 모두 동시에 표시된다는 뜻은 아닙니다. CSS·컴포넌트 내부·데이터·실행 순서는 실제 앱에서 확인해야 합니다. 프로젝트 코드를 실행하지 않습니다."
+              : "These are fragments found in source; they may not appear together. CSS, component internals, data and execution order require checking the running app. Project code is never executed."}
       </p>
     </section>
   );

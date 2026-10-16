@@ -8,6 +8,7 @@ import { projectChecks } from "./projectChecks";
 import { benchmarkChecks } from "./benchmarks";
 import { pythonSourceChecks } from "./pythonSource";
 import { goSourceChecks } from "./goSource";
+import { webSourceChecks } from "./webSource";
 const reports: string[] = [];
 async function until(
   check: () => boolean,
@@ -694,6 +695,7 @@ export async function run() {
   reports.push(
     "JSONC source facts in Korean/English, source navigation, model-free numeric edit, native JSONC diff, exact unsafe-integer spelling, apply/undo and stale edit rejection",
   );
+  await webSourceChecks(c, ready, reports);
   await projectChecks(c, ready, reports);
   await benchmarkChecks(c, ready, reports);
   const report = {

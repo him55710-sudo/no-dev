@@ -26,7 +26,16 @@ export type Rule = Anchor & {
   scope: string;
   raw: string;
   note?: Words;
-  syntax?: "jsxText" | "jsxAttribute" | "json" | "python" | "go";
+  cssProperty?: string;
+  syntax?:
+    | "jsxText"
+    | "jsxAttribute"
+    | "json"
+    | "python"
+    | "go"
+    | "htmlText"
+    | "htmlAttribute"
+    | "css";
 };
 export type InterfaceNode = Anchor & {
   id: string;
@@ -75,6 +84,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  web?: { language: "html" | "css"; truncated: boolean; nodes: number };
   python?: { version: string; truncated: boolean };
   go?: { version: string; truncated: boolean };
   data?: import("./jsonData").JsonDataFacts;

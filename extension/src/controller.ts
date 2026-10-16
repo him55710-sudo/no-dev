@@ -192,7 +192,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", html: "html", css: "css" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {

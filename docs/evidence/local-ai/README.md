@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+[HTML/CSS 파서 읽기·값 수정](../../HTML_CSS_SOURCE.md)의 [개발 38개](web-source-development-integration.json), [설치 38개](web-source-installed-integration.json), [실제 화면](web-source-native.md)을 추가했다. API/모델 없이 원문 값과 diff·적용·undo를 확인한 자료이며, 실제 모델 응답 수나 외부 페이지 동작 검증 수에 합치지 않는다. 마지막 주석/식별자 수정 전 화면 설치본과 이후 검증은 구분한다.
+
 Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI 원자료](go-source-ci.json): 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시·패키지 도구 4종 성공. [네이티브 Go 화면](go-source-native.md)과 [외부 프로젝트](go-source-project.md)는 별도 증거다.
 
 [Go AST 읽기·수정](../../GO_SOURCE.md)과 [Google UUID 외부 프로젝트 원자료](go-source-project.md)를 추가했다. 설치된 표준 파서와 실제 편집기/task로 201 pass·1 skip → 고정 오류의 TestUUID 실패 → undo 후 복구를 확인한다. 모델 없이 수행한 검사이며 모델 정확도나 최적화 성공 점수에 합치지 않는다.
