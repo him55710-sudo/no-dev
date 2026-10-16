@@ -71,6 +71,8 @@
       }
     },
     "commands": [
+      { "command": "pureobom.openWorkspace", "title": "풀어봄: 시스템 설계 워크스페이스 열기", "icon": "$(type-hierarchy-sub)" },
+      { "command": "pureobom.revealInWorkspace", "title": "풀어봄: 선택한 코드를 시스템에서 보기", "icon": "$(type-hierarchy-sub)" },
       {
         "command": "pureobom.localAI",
         "title": "%command.localAI%",
@@ -123,6 +125,7 @@
         }
       ],
       "editor/context": [
+        { "command": "pureobom.revealInWorkspace", "when": "resourceScheme == file", "group": "navigation@8" },
         {
           "command": "pureobom.explain",
           "when": "resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact|json|jsonc)$/",

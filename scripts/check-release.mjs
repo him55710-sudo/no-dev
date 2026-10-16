@@ -70,6 +70,8 @@ for (const file of [
   "extension/out/worker.cjs",
   "extension/media/view.js",
   "extension/media/view.css",
+  "extension/media/design.js",
+  "extension/media/design.css",
   "extension/LICENSE.txt",
   "extension/package.nls.ko.json",
 ])

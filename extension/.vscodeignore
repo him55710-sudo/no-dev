@@ -4,6 +4,7 @@ test/**
 tsconfig.json
 out/integration.cjs
 out/real-project.cjs
+out/design-integration.cjs
 node_modules/**
 **/*.map
 .DS_Store

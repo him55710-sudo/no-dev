@@ -5,6 +5,13 @@ const common = { bundle: true, sourcemap: false, logLevel: "info" };
 await Promise.all([
   build({
     ...common,
+    entryPoints: ["extension/ui/design.tsx"],
+    outfile: "extension/media/design.js",
+    platform: "browser", format: "iife", target: "chrome120", jsx: "automatic", minify: true,
+    define: { "process.env.NODE_ENV": '"production"' },
+  }),
+  build({
+    ...common,
     entryPoints: ["extension/src/extension.ts"],
     outfile: "extension/out/extension.cjs",
     platform: "node",

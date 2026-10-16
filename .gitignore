@@ -7,6 +7,8 @@ test-results/
 extension/out/
 extension/media/view.js
 extension/media/view.css
+extension/media/design.js
+extension/media/design.css
 release/
 .DS_Store
 *.log

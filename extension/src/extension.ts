@@ -6,8 +6,10 @@ import { inputString, requestMessage } from "./protocol";
 import type { Scenario } from "../../src/core/scenarioModel";
 import { interfaceDemo } from "../../src/interfaceDemo";
 import { productResource } from "../../src/product";
+import { DesignWorkspace } from "./designWorkspace";
 
 export function activate(context: vscode.ExtensionContext) {
+  const designWorkspace = new DesignWorkspace(context);
   const controller = new Controller(
     new AnalysisClient(context.asAbsolutePath("out/worker.cjs")),
     context.workspaceState,
@@ -225,6 +227,7 @@ export function activate(context: vscode.ExtensionContext) {
     getTreeItem: (item) => item,
     getChildren: () =>
       [
+        ["시스템 설계 워크스페이스", "pureobom.openWorkspace", "type-hierarchy-sub"],
         ["현재 파일 설명 열기", "pureobom.explain", "book"],
         ["작업 공간 연결 지도", "pureobom.map", "type-hierarchy"],
         ["예제로 시작하기", "pureobom.example", "beaker"],
@@ -238,9 +241,12 @@ export function activate(context: vscode.ExtensionContext) {
       }),
   };
   context.subscriptions.push(
+    designWorkspace,
     controller,
     vscode.window.registerTreeDataProvider("pureobom.start", sidebar),
     vscode.commands.registerCommand("pureobom.explain", handle(openPanel)),
+    vscode.commands.registerCommand("pureobom.openWorkspace", handle(() => designWorkspace.open())),
+    vscode.commands.registerCommand("pureobom.revealInWorkspace", handle(() => designWorkspace.open(true))),
     vscode.commands.registerCommand(
       "pureobom.localAI",
       handle(async () => {
@@ -316,7 +322,7 @@ export function activate(context: vscode.ExtensionContext) {
     { dispose: () => panel?.dispose() },
   );
   // Public API used by integration tests; all operations retain document/version validation.
-  return { controller, openPanel };
+  return { controller, openPanel, designWorkspace };
 }
 function html(webview: vscode.Webview, root: vscode.Uri) {
   const script = webview.asWebviewUri(

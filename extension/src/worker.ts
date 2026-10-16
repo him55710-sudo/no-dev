@@ -5,11 +5,14 @@ import { makePatch, parseRequest } from "../../src/core/edit";
 import { simulate } from "../../src/core/simulate";
 import { compareScenarios } from "../../src/core/scenarios";
 import { validateAssistantChange } from "../../src/core/assistantValidation";
+import { analyzeStructure } from "../../src/workspace/analyze";
 const analyzer = new ProjectAnalyzer();
-parentPort!.on("message", ({ id, type, payload }) => {
+parentPort!.on("message", async ({ id, type, payload }) => {
   try {
     let result: unknown;
-    if (type === "analyze")
+    if (type === "structure")
+      result = await analyzeStructure(payload.files);
+    else if (type === "analyze")
       result = analyzer.analyze(payload.files, payload.glossary);
     else if (type === "validateAssistant")
       result = validateAssistantChange(payload.language, payload.source);
