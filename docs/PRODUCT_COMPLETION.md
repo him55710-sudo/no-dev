@@ -4,6 +4,8 @@
 
 현재 0.7 개발판에는 로컬 Ollama 연결, 다중 범위 편집, 문법 검사, 프로젝트 명령 실행, 전후 시간·메모리 측정과 설치본 검사가 구현돼 있다. 외부 Python itsdangerous와 JavaScript clsx에서 각각 검사 흐름을 확인했다. 측정한 모델 최적화 제안은 느려져 채택하지 않았다. 모델 설명의 경계·분기·데이터 해석 오류가 남아 있으며 전체 P0–P6 완료를 뜻하지 않는다. [현재 증거](evidence/local-ai/README.md). 아래 '시작 상태'는 최초 기준선이다.
 
+최신 JSON 데이터 기능 소스 `2b0235e`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38876047129)는 각 핵심 169개·개발/설치 각 31개·패키지 Worker 검사를 통과했다. [원자료](evidence/local-ai/json-facts-ci.json). 모델 없는 사실 읽기·범위 수정의 근거이며 소비 코드·모든 언어의 의미 정확성을 확인한 것은 아니다.
+
 추가 P2/P4 증분: [설명 의미 비교](evidence/local-ai/semantic-review.md)에서 분기·예외·데이터 선언 지시를 보강했지만 여러 모델의 오류가 남음을 확인했다. 모델 크기나 원문 인용 통과를 의미 정확성으로 세지 않는다. [외부 JavaScript clsx](evidence/local-ai/clsx-review.md)는 실제 프로젝트 검사로 원본 32개 통과→고정 오류 25개 실패→undo 후 32개 통과를 확인했다. 구형 테스트 실행기의 Node 24 실패와 별도 호환 런타임 사용도 공개한다. 전체 언어 지원이나 최적화 성공을 뜻하지 않는다.
 
 앞선 기능·검증 도구 소스 `a184b68`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38872584322)는 각 핵심 162개·개발/설치 각 30개·패키지 Worker 검사를 통과했다. [원자료](evidence/local-ai/semantic-ci.json). 한국어 50회·영어 10회의 실제 설명은 별도 의미 검토이며 통합 검사 수로 정확도를 표현하지 않는다.

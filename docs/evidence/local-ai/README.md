@@ -4,6 +4,8 @@
 
 JSONC의 소비 동작 추측에 대응해 [모델 없는 데이터 읽기·수정](../../JSON_DATA.md)을 추가했다. 파서가 확인한 키·값과 모델 해석을 구별하며, 실제 VS Code의 원문 보존·diff·큰 정수 수정·undo를 검사한다. 모델의 의미 정확성 개선 점수로 세지 않는다.
 
+`2b0235e`의 [Windows·Ubuntu CI](json-facts-ci.json): 각 핵심 169개·개발/설치 각 31개, production 모드·런타임 해시와 추출한 Worker 검사 성공. [로컬 설치본](json-facts-installed-integration.json)과 [브라우저 실제 조작·제약](../../JSON_DATA.md)은 별도 기록이다. 네이티브 JSON 화면 조작의 추가 시도는 대상 창을 찾지 못해 성공으로 세지 않았다.
+
 추가 자료: [분기·경계·데이터 의미의 모델 비교](semantic-review.md), [외부 JavaScript clsx 검사 연결](clsx-review.md). 모델 비교에는 실패와 누락을 보존하고, clsx에는 Node 24 준비 실패와 호환 런타임에서의 실제 32개 검사·고정 오류 발견·undo 복구를 함께 공개한다.
 
 기능 소스 `a184b68`의 [Windows·Ubuntu CI](semantic-ci.json)는 각각 핵심 162개·개발 실행 30개·설치 실행 30개·추출 Worker 검사를 확인한다. [로컬 설치본 원자료](semantic-installed-integration.json)와 실제 설명 60회(한국어 50, 영어 10)는 서로 다른 검증이다. 둘을 합쳐 모델 정확도 점수로 쓰지 않는다.

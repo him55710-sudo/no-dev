@@ -34,4 +34,6 @@
 
 2026-10-16 로컬 결과: 핵심 169개, [개발 VS Code](evidence/local-ai/json-facts-development-integration.json)와 [설치 VSIX](evidence/local-ai/json-facts-installed-integration.json) 각각 같은 31개 흐름 통과. 설치본 SHA-256은 `2607c8e56093a8bba493286419fbfcd3611ce18b71438f823a46aa4efa5dd92e`. 웹·확장 빌드, VSIX/소스 ZIP/데모 ZIP의 체크섬·라이선스·독립 추출 Worker 검사도 통과했다.
 
+기능 소스 `2b0235e`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38876047129)도 양쪽 모두 성공했다. 각 핵심 169개, 개발/설치 각 31개, production 모드·런타임 5개 해시와 패키지 Worker 검사를 확인했다. [CI 원자료](evidence/local-ai/json-facts-ci.json). 동일한 흐름을 배포·운영체제별로 반복한 것이며 독립적인 모델 정확도 사례로 합산하지 않는다.
+
 English: the development preview now reads literal JSON/JSONC data without a model, links values to source, and edits one string, number or boolean with explicit preview/apply/undo. Numeric spelling and unrelated source text are preserved. Duplicate-key ranges are read-only. Consumer behavior, schema validation, cross-file usage and optimization remain separate work; this is not a claim that model explanations are reliable in every language.
