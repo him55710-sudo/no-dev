@@ -10,7 +10,7 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 
 **전후 측정 / Before and after:** 같은 탭에서 반복 가능한 process 명령을 확인하고 변경 전후 각각 7회 시간·최대 메모리·출력 해시를 측정합니다. 로컬 Python 3가 필요합니다. 실제 검사 기록과 변동 범위를 함께 보며 JSON 보고서를 열 수 있습니다. No AI/API is needed; commands execute real project code with normal user privileges. [사용법·측정 한계 / Measurement guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/BENCHMARKS.md).
 
-코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON은 유효성과 개요를 보여 줍니다.
+코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON/JSONC는 모델 없이 실제 키 경로·자료형·값을 읽고 문자열·숫자·참거짓 값 하나의 미리보기·적용·undo를 제공합니다. 숫자 표기와 주석을 보존하고 중복 키 범위의 수정은 막습니다. 소비 프로그램의 동작은 추측하지 않습니다. [범위와 예제 / JSON data guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/JSON_DATA.md).
 
 ## 시작하기
 

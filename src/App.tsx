@@ -11,7 +11,9 @@ import type {
   ProjectAnalysis,
   Rule,
   SourceFile,
+  Words,
 } from "./core/types";
+import { words } from "./core/types";
 import { Icon } from "./components/Icon";
 import { Story } from "./components/Story";
 import { MapView } from "./components/MapView";
@@ -42,7 +44,7 @@ export default function App() {
     [selected, setSelected] = useState(initialFiles[0].path),
     [view, setView] = useState<View>("story"),
     [search, setSearch] = useState(""),
-    [notice, setNotice] = useState(""),
+    [notice, setNotice] = useState<Words | null>(null),
     [error, setError] = useState(""),
     [saveState, setSaveState] = useState(""),
     [history, setHistory] = useState<History[]>([]),
@@ -91,7 +93,10 @@ export default function App() {
       .catch(() => {
         if (active)
           setNotice(
-            "브라우저 저장소를 사용할 수 없습니다. 파일 내보내기를 이용하세요. / Browser storage unavailable.",
+            words(
+              "브라우저 저장소를 사용할 수 없습니다. 파일 내보내기를 이용하세요.",
+              "Browser storage unavailable. Export files to keep your work.",
+            ),
           );
       })
       .finally(() => {
@@ -243,7 +248,7 @@ export default function App() {
     setSimulation(null);
     setError("");
     setNotice(
-      t(
+      words(
         "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
         "Your term is now used in explanations. Source names are unchanged.",
       ),
@@ -277,7 +282,7 @@ export default function App() {
       },
     ]);
     setNotice(
-      t(
+      words(
         "변경을 적용했습니다. 설명과 연결 지도를 새로 확인하고 있어요.",
         "Change applied. Refreshing explanations and connections.",
       ),
@@ -307,12 +312,12 @@ export default function App() {
     setHistory((prev) => prev.slice(0, -1));
     setPatch(null);
     setSelectedRule(null);
-    setNotice(t("마지막 변경을 되돌렸습니다.", "Undid the last change."));
+    setNotice(words("마지막 변경을 되돌렸습니다.", "Undid the last change."));
   }
   async function importFiles(input: File[]) {
     if (!input.length) return;
     setError("");
-    setNotice(t("파일을 읽고 있습니다…", "Reading files…"));
+    setNotice(words("파일을 읽고 있습니다…", "Reading files…"));
     try {
       const result = await readFiles(input);
       if (!result.files.length)
@@ -334,7 +339,7 @@ export default function App() {
       setSelectedRule(null);
       setImportedSkipped(result.skipped);
       setNotice(
-        t(
+        words(
           `${result.files.length}개 파일을 불러왔습니다. ${result.skipped.length}개 제외.`,
           `${result.files.length} files loaded; ${result.skipped.length} skipped.`,
         ),
@@ -358,7 +363,7 @@ export default function App() {
       });
       saveBlob(blob, "pureobom-files.zip");
       setNotice(
-        t(
+        words(
           "가져온 텍스트 파일을 내보냈습니다. 제외된 파일은 포함되지 않습니다.",
           "Exported imported text files only; skipped files are not included.",
         ),
@@ -423,7 +428,7 @@ export default function App() {
     setModal(null);
     setView("story");
     setNotice(
-      t("예제 프로젝트를 불러왔습니다.", "Loaded the example project."),
+      words("예제 프로젝트를 불러왔습니다.", "Loaded the example project."),
     );
   }
   const nav: { id: View; icon: string; ko: string; en: string }[] = [
@@ -802,11 +807,11 @@ export default function App() {
           {notice && (
             <div className="notice" role="status">
               <Icon name="check" size={16} />
-              <span>{notice}</span>
+              <span>{notice[lang]}</span>
               <button
                 className="icon-button"
                 aria-label={t("알림 닫기", "Dismiss notice")}
-                onClick={() => setNotice("")}
+                onClick={() => setNotice(null)}
               >
                 <Icon name="close" size={14} />
               </button>
@@ -917,6 +922,7 @@ export default function App() {
                   />
                   <Story
                     analysis={active}
+                    disabled={busy || editing}
                     lang={lang}
                     onSource={setSourceLine}
                     onSimulate={setSimulation}
@@ -1182,21 +1188,35 @@ export default function App() {
                         setSentence(e.target.value);
                         setPatch(null);
                       }}
-                      placeholder={t(
-                        "예: 무료 배송 기준을 70000으로 변경",
-                        "Example: change freeShippingThreshold to 70000",
-                      )}
+                      placeholder={
+                        active?.kind === "json"
+                          ? t(
+                              '예: $["enabled"]를 false로 변경',
+                              'Example: change $["enabled"] to false',
+                            )
+                          : t(
+                              "예: 무료 배송 기준을 70000으로 변경",
+                              "Example: change freeShippingThreshold to 70000",
+                            )
+                      }
                       rows={4}
                     />
                     <span className="field-help">
-                      {t(
-                        "현재 파일의 규칙 이름 + 새 값. 일반적인 기능 생성 요청은 아직 지원하지 않습니다.",
-                        "Use a rule name in the current file + one new value. General feature generation is not supported yet.",
-                      )}
+                      {active?.kind === "json"
+                        ? t(
+                            "키 경로 전체와 새 값 하나를 적어 주세요. 문자열은 큰따옴표로 감싸 주세요.",
+                            "Use the full key path and one new value. Put strings in double quotes.",
+                          )
+                        : t(
+                            "현재 파일의 규칙 이름 + 새 값. 일반적인 기능 생성 요청은 아직 지원하지 않습니다.",
+                            "Use a rule name in the current file + one new value. General feature generation is not supported yet.",
+                          )}
                     </span>
                     <div className="suggestion-chips">
                       {active?.rules
-                        .filter((r) => r.type === "number")
+                        .filter(
+                          (r) => r.type === "number" && r.syntax !== "json",
+                        )
                         .slice(0, 2)
                         .map((r) => (
                           <button
@@ -1285,6 +1305,11 @@ export default function App() {
                           {t("현재 값", "Current value")}:{" "}
                           {String(editRule.rule.value)}
                         </span>
+                        {editRule.rule.note ? (
+                          <p className="field-help">
+                            {editRule.rule.note[lang]}
+                          </p>
+                        ) : null}
                       </>
                     ) : (
                       <div className="choose-rule">
@@ -1377,7 +1402,7 @@ export default function App() {
                           if (candidate) setSimulation(candidate.name);
                           else
                             setNotice(
-                              t(
+                              words(
                                 "이 파일에는 미리보기할 기능이 없습니다.",
                                 "No function to preview in this file.",
                               ),

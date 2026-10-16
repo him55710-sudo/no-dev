@@ -25,7 +25,7 @@ export type Rule = Anchor & {
   scope: string;
   raw: string;
   note?: Words;
-  syntax?: "jsxText" | "jsxAttribute";
+  syntax?: "jsxText" | "jsxAttribute" | "json";
 };
 export type InterfaceNode = Anchor & {
   id: string;
@@ -73,6 +73,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  data?: import("./jsonData").JsonDataFacts;
   interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];
   path: string;

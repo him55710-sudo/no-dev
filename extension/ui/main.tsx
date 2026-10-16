@@ -168,12 +168,17 @@ function App() {
                 : t("저장된 내용", "Saved content")}
             </span>
           )}
-          {a && a.kind !== "text" && (
+          {a && a.kind === "json" ? (
+            <span>
+              {a.data?.fields.length ?? 0} {t("개 데이터 항목", "data entries")}{" "}
+              · {a.rules.length} {t("개 수정 가능", "editable values")}
+            </span>
+          ) : a && a.kind === "script" ? (
             <span>
               {a.functions.length} {t("개 기능", "functions")} ·{" "}
               {a.rules.length} {t("개 규칙", "rules")}
             </span>
-          )}
+          ) : null}
           <button
             disabled={working || state.busy}
             onClick={() => void action(() => request("refresh"))}
@@ -308,6 +313,8 @@ function App() {
                 />
                 <Story
                   analysis={a}
+                  disabled={disabled}
+                  editDisabled={disabled || !state.trusted}
                   lang={lang}
                   onSource={source}
                   onEdit={selectRule}
@@ -331,18 +338,28 @@ function App() {
                   <div>
                     <span className="eyebrow">EDIT THE RULES</span>
                     <h2>
-                      {t(
-                        "원하는 동작에 맞게 값을 바꾸세요",
-                        "Adjust the rules",
-                      )}
+                      {a.kind === "json"
+                        ? t(
+                            "원문에 저장된 값을 바꾸세요",
+                            "Change a stored value",
+                          )
+                        : t(
+                            "원하는 동작에 맞게 값을 바꾸세요",
+                            "Adjust the rules",
+                          )}
                     </h2>
                   </div>
                 </div>
                 <p className="muted">
-                  {t(
-                    "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                    "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                  )}
+                  {a.kind === "json"
+                    ? t(
+                        "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
+                        "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
+                      )
+                    : t(
+                        "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
+                        "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
+                      )}
                 </p>
                 <form
                   className="sentence"
@@ -359,10 +376,17 @@ function App() {
                       id="sentence"
                       value={sentence}
                       onChange={(e) => setSentence(e.target.value)}
-                      placeholder={t(
-                        "무료 배송 기준을 70000으로 변경",
-                        "Change freeShippingThreshold to 70000",
-                      )}
+                      placeholder={
+                        a.kind === "json"
+                          ? t(
+                              '예: $["enabled"]를 false로 변경',
+                              'Example: change $["enabled"] to false',
+                            )
+                          : t(
+                              "무료 배송 기준을 70000으로 변경",
+                              "Change freeShippingThreshold to 70000",
+                            )
+                      }
                     />
                     <button
                       disabled={
@@ -376,10 +400,15 @@ function App() {
                     </button>
                   </div>
                   <small>
-                    {t(
-                      "아래 표의 규칙 이름과 새 값 하나를 적어 주세요. 7만 → 70000, 15% → 0.15",
-                      "Use one rule name and one new value. Write 70000 or 0.15 without units.",
-                    )}
+                    {a.kind === "json"
+                      ? t(
+                          "아래 표의 키 경로 전체와 새 값 하나를 적어 주세요.",
+                          "Use the full key path from the table and one new value.",
+                        )
+                      : t(
+                          "아래 표의 규칙 이름과 새 값 하나를 적어 주세요. 7만 → 70000, 15% → 0.15",
+                          "Use one rule name and one new value. Write 70000 or 0.15 without units.",
+                        )}
                   </small>
                 </form>
                 <div className="table-scroll card">
@@ -434,6 +463,7 @@ function App() {
                 {edit && (
                   <div className="card rule-editor" ref={editorRef}>
                     <h3>{edit.label[lang]}</h3>
+                    {edit.note ? <p>{edit.note[lang]}</p> : null}
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();

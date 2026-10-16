@@ -2,6 +2,7 @@ import { analyzeFile, diagnostics, parse } from "./analyze";
 import { operators } from "./labels";
 import { words, type Patch, type Rule, type SourceFile } from "./types";
 import type { GlossaryEntry } from "./glossary";
+import { readJsonStructure, jsonDataLimits } from "./jsonData";
 export function makePatch(
   file: SourceFile,
   ruleId: string,
@@ -16,16 +17,29 @@ export function makePatch(
   const r = a.rules.find((x) => x.id === ruleId);
   if (!r)
     throw Error("규칙이 바뀌었습니다. 다시 선택해 주세요. / Rule is stale.");
+  if (r.syntax === "json" && input.length > jsonDataLimits.editable)
+    throw Error(
+      "값은 4096자 이내로 입력해 주세요. / Enter a value up to 4096 characters.",
+    );
   let value: string;
   if (r.type === "number") {
-    if (
-      !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(input.trim()) ||
-      !Number.isFinite(Number(input))
-    )
-      throw Error(
-        "유한한 숫자를 입력해 주세요. 예: 70000, 0.15 / Enter a finite number.",
-      );
-    value = String(Number(input));
+    if (r.syntax === "json") {
+      // Preserve numeric lexemes, including integers outside JS's safe range.
+      if (!/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(input.trim()))
+        throw Error(
+          "JSON 숫자 표기로 입력해 주세요. / Enter a valid JSON number.",
+        );
+      value = input.trim();
+    } else {
+      if (
+        !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(input.trim()) ||
+        !Number.isFinite(Number(input))
+      )
+        throw Error(
+          "유한한 숫자를 입력해 주세요. 예: 70000, 0.15 / Enter a finite number.",
+        );
+      value = String(Number(input));
+    }
   } else if (r.type === "boolean") {
     if (!["true", "false"].includes(input))
       throw Error("true 또는 false만 가능합니다.");
@@ -42,7 +56,9 @@ export function makePatch(
   if (value === r.raw) throw Error("현재 값과 같습니다. / No change.");
   const updated =
     file.content.slice(0, r.start) + value + file.content.slice(r.end);
-  if (diagnostics(parse({ ...file, content: updated })).length)
+  if (r.syntax === "json") {
+    readJsonStructure(updated, /\.jsonc$/i.test(file.path));
+  } else if (diagnostics(parse({ ...file, content: updated })).length)
     throw Error(
       "변경 후 문법 오류가 발견되어 적용할 수 없습니다. / Invalid syntax.",
     );

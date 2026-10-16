@@ -580,10 +580,7 @@ export async function run() {
     language: "jsonc",
     content: jsoncSource,
   });
-  const jsoncEditor = await vscode.window.showTextDocument(
-    jsoncDoc,
-    vscode.ViewColumn.One,
-  );
+  await vscode.window.showTextDocument(jsoncDoc, vscode.ViewColumn.One);
   await c.setDocument(jsoncDoc);
   await ready();
   assert.equal(c.state.analysis!.kind, "json");
@@ -593,8 +590,79 @@ export async function run() {
     "untitled JSONC preserves its language for the worker",
   );
   assert.ok(c.state.analysis!.steps[0].text.ko.includes("2개 항목"));
+  assert.equal(c.state.analysis!.data!.fields.length, 2);
+  const jsonFee = c.state.analysis!.rules.find((r) => r.name === '$["fee"]')!;
+  assert.equal(jsonFee.value, "3000");
+  assert.equal(jsonFee.syntax, "json");
+  assert.ok(
+    c.state.analysis!.steps.some(
+      (step) => step.text.en === '$["fee"] stores number 3000',
+    ),
+  );
+  assert.ok(
+    c.state.analysis!.steps.some(
+      (step) => step.text.ko === '$["fee"]에 숫자 3000 저장',
+    ),
+  );
+  await c.source(c.state.contextId, jsonFee.line);
+  assert.equal(vscode.window.activeTextEditor!.selection.active.line, 1);
+  const jsonContext = c.state.contextId;
+  const jsonPatch = await c.prepare(jsonContext, {
+    ruleId: jsonFee.id,
+    value: "9007199254740993",
+  });
+  assert.equal(jsonPatch.newText, "9007199254740993");
+  const jsonPreview = await c.preview(jsonPatch.id, jsonContext);
+  const jsonBefore = await vscode.workspace.openTextDocument(
+    vscode.Uri.parse(jsonPreview.before),
+  );
+  const jsonAfter = await vscode.workspace.openTextDocument(
+    vscode.Uri.parse(jsonPreview.after),
+  );
+  assert.equal(jsonBefore.languageId, "jsonc");
+  assert.equal(jsonAfter.languageId, "jsonc");
+  assert.equal(jsonBefore.getText(), jsoncSource);
+  assert.equal(
+    jsonAfter.getText(),
+    jsoncSource.replace("3000", "9007199254740993"),
+  );
+  assert.equal(
+    jsoncDoc.getText(),
+    jsoncSource,
+    "JSONC preview must not mutate source",
+  );
+  await c.apply(jsonPatch.id, jsonContext);
+  await ready();
+  assert.equal(jsoncDoc.getText(), jsonAfter.getText());
+  assert.equal(
+    c.state.analysis!.rules.find((r) => r.name === '$["fee"]')!.value,
+    "9007199254740993",
+  );
+  await vscode.window.showTextDocument(jsoncDoc, vscode.ViewColumn.One);
+  await vscode.commands.executeCommand("undo");
+  await until(
+    () =>
+      !c.state.busy &&
+      c.state.analysis?.rules.some(
+        (r) => r.name === '$["fee"]' && r.value === "3000",
+      ) === true,
+    "JSONC literal undo refreshes source facts",
+  );
+  assert.equal(jsoncDoc.getText(), jsoncSource);
+  await assert.rejects(
+    c.apply(jsonPatch.id, jsonContext),
+    "a used JSON patch cannot be reapplied",
+  );
+  const staleJson = await c.prepare(c.state.contextId, {
+    request: 'change $["fee"] to 4000',
+  });
+  const staleContext = c.state.contextId;
   const feeStart = jsoncSource.indexOf("3000");
-  await jsoncEditor.edit((builder) =>
+  const currentJsonEditor = await vscode.window.showTextDocument(
+    jsoncDoc,
+    vscode.ViewColumn.One,
+  );
+  await currentJsonEditor.edit((builder) =>
     builder.delete(
       new vscode.Range(
         jsoncDoc.positionAt(feeStart),
@@ -606,6 +674,10 @@ export async function run() {
     () => !c.state.busy && c.state.analysis?.syntaxValid === false,
     "invalid JSONC is reported after unsaved edits",
   );
+  await assert.rejects(
+    c.apply(staleJson.id, staleContext),
+    "edited JSON document invalidates a pending literal patch",
+  );
   await vscode.commands.executeCommand("undo");
   await until(
     () => !c.state.busy && c.state.analysis?.syntaxValid === true,
@@ -614,6 +686,9 @@ export async function run() {
   assert.equal(jsoncDoc.getText(), jsoncSource);
   reports.push(
     "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
+  );
+  reports.push(
+    "JSONC source facts in Korean/English, source navigation, model-free numeric edit, native JSONC diff, exact unsafe-integer spelling, apply/undo and stale edit rejection",
   );
   await projectChecks(c, ready, reports);
   await benchmarkChecks(c, ready, reports);

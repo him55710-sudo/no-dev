@@ -3,6 +3,7 @@ import type { FileAnalysis, Lang, Step, Rule } from "../core/types";
 import { label } from "../core/labels";
 import { Icon } from "./Icon";
 import { InterfaceTree } from "./InterfaceTree";
+import { DataFacts } from "./DataFacts";
 export function Steps({
   steps,
   lang,
@@ -98,15 +99,31 @@ export function Story({
   onSource,
   onSimulate,
   onEdit,
+  disabled = false,
+  editDisabled = disabled,
 }: {
   analysis: FileAnalysis;
   lang: Lang;
   onSource: (line: number) => void;
   onSimulate: (name: string) => void;
   onEdit: (rule: Rule) => void;
+  disabled?: boolean;
+  editDisabled?: boolean;
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
+  if (analysis.kind === "json")
+    return (
+      <DataFacts
+        key={analysis.path}
+        analysis={analysis}
+        lang={lang}
+        onSource={onSource}
+        onEdit={onEdit}
+        disabled={disabled}
+        editDisabled={editDisabled}
+      />
+    );
   if (analysis.kind === "text")
     return (
       <div className="empty card">

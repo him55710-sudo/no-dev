@@ -2,6 +2,9 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Read JSON/JSONC literal facts in Korean and English without a model. Search key paths and values, jump to source, and preview/apply/undo one string, number or boolean. Preserve numeric spelling and surrounding source; block duplicate-key ranges and stale edits. Document display limits and unverified consumer behavior in [JSON data](docs/JSON_DATA.md).
+- Keep browser notices in the selected language when switching Korean/English after applying or undoing a change.
+
 - Measure a reviewed process task before and after edits: one warm-up plus seven fresh runs, elapsed time, OS peak process memory, output hashes and optional project-check evidence. Report observed variation and failures; reject stale conditions and incompatible comparisons. Local Python standard library only, with cancellation and per-run limits. See [measurement scope](docs/BENCHMARKS.md).
 
 - Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.

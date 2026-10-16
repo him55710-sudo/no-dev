@@ -3,7 +3,7 @@ import { label, operators, particle } from "./labels";
 import { normalizeGlossary, type GlossaryEntry } from "./glossary";
 import { terminology } from "./terminology";
 import { analyzeInterface } from "./jsx";
-import { readJsonStructure } from "./jsonData";
+import { describeJsonData } from "./jsonData";
 import {
   words,
   type Anchor,
@@ -208,20 +208,27 @@ export function analyzeFile(
   if (/\.jsonc?$/i.test(file.path)) {
     out.kind = "json";
     try {
-      const data = readJsonStructure(file.content, /\.jsonc$/i.test(file.path));
+      const {
+        facts: data,
+        rules,
+        steps,
+      } = describeJsonData(file.content, /\.jsonc$/i.test(file.path));
+      out.data = data;
+      out.rules = rules;
       out.steps = [
         {
           ...zero,
           id: "json",
           kind: "data",
           text: words(
-            `이 파일은 ${data.type === "array" ? "목록" : data.type === "object" ? data.entries + "개 항목의 설정" : "하나의 값"}을 담습니다. 실행되는 기능은 없습니다.`,
-            `This file contains JSON/JSONC data, not executable functions.`,
+            `이 파일의 최상위 데이터는 ${data.type === "array" ? data.entries + "개 항목의 목록" : data.type === "object" ? data.entries + "개 항목의 객체" : "하나의 값"}입니다. 실행 조건이나 값의 사용 방식은 소비 코드를 확인해야 합니다.`,
+            `The root is ${data.type === "array" ? "an array with " + data.entries + " entries" : data.type === "object" ? "an object with " + data.entries + " entries" : "a single value"}. Execution conditions and the use of these values depend on the consuming code.`,
           ),
           children: [],
           supported: true,
         },
       ];
+      out.steps.push(...steps);
     } catch {
       out.syntaxValid = false;
       out.issues.push({
