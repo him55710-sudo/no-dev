@@ -18,6 +18,8 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 
 **Go 원문 읽기 / Go source:** 설치된 Go SDK로 일부 구문·여러 반환값·defer와 정확한 문자열/숫자를 읽고 수정합니다. 첫 사용에 고정 표준 라이브러리 도구만 로컬에서 빌드하며 사용자 소스는 실행하지 않습니다. API 비용은 없지만 SDK 설치가 필요합니다. `pureobom.analysisGo`로 실행 파일을 지정합니다. Syntax only; types, ranges, dependencies, behavior and performance need separate project checks. [범위·설정·Google UUID 검증 / Guide and evidence](https://github.com/him55710-sudo/pureobom/blob/main/docs/GO_SOURCE.md).
 
+**Java 원문 읽기 / Java source:** JDK 21+로 일부 구문·예외·자원 정리와 정확한 문자열/숫자/참거짓 값을 읽고 수정합니다. `pureobom.analysisJavaHome`에 JDK 폴더 절대 경로를 설정하거나 JAVA_HOME/PATH를 사용합니다. 사용자 코드는 컴파일·실행하지 않습니다. Local desktop only; parsing does not verify types, dependencies, behavior or performance. No model or paid API required. [범위·설정 / Guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/JAVA_SOURCE.md).
+
 ## 시작하기
 
 0.5에서는 **풀어봄: React 화면 문구 바꿔보기 / Pureobom: Edit React interface text** 명령도 제공합니다. 화면 요소·문구·조건·이벤트 속성을 펼쳐 읽고 문구를 선택해 실제 코드의 변경안을 만드세요. 화면을 실행하거나 최종 디자인을 재현하지는 않습니다.

@@ -10,8 +10,14 @@ export async function localAssistantChecks(
   ready: () => Promise<void>,
   reports: string[],
 ) {
-  let mode: "normal" | "hold" | "invalid" | "go-valid" | "go-invalid" =
-      "normal",
+  let mode:
+      | "normal"
+      | "hold"
+      | "invalid"
+      | "go-valid"
+      | "go-invalid"
+      | "java-valid"
+      | "java-invalid" = "normal",
     chatSeen = false;
   const model = {
     name: "fixture:local",
@@ -48,34 +54,35 @@ export async function localAssistantChecks(
     const input = JSON.parse(body.messages[1].content);
     const quote = mode === "invalid" ? "const fee = 3000;" : "fee = 3000";
     assert.ok(input.source.includes(quote));
-    const edits = mode.startsWith("go-")
-      ? [
-          {
-            before: quote,
-            after: mode === "go-invalid" ? "fee = " : "fee = 4000",
-              reason: "Go 문법 검증용 변경",
-          },
-        ]
-      : mode === "invalid"
+    const edits =
+      mode.startsWith("go-") || mode.startsWith("java-")
         ? [
             {
               before: quote,
-              after: "const fee = ;",
-              reason: "문법 오류 검증용",
+              after: mode.endsWith("-invalid") ? "fee = " : "fee = 4000",
+              reason: "언어별 문법 검증용 변경",
             },
           ]
-        : [
-            {
-              before: "fee = 3000",
-              after: "fee = 4000",
-              reason: "배송비 변경",
-            },
-            {
-              before: "threshold = 50000",
-              after: "threshold = 70000",
-              reason: "기준 변경",
-            },
-          ];
+        : mode === "invalid"
+          ? [
+              {
+                before: quote,
+                after: "const fee = ;",
+                reason: "문법 오류 검증용",
+              },
+            ]
+          : [
+              {
+                before: "fee = 3000",
+                after: "fee = 4000",
+                reason: "배송비 변경",
+              },
+              {
+                before: "threshold = 50000",
+                after: "threshold = 70000",
+                reason: "기준 변경",
+              },
+            ];
     const citations = edits.map((edit) => ({
       quote: edit.before,
       explanation: "변경 지점의 원문",
@@ -98,7 +105,8 @@ export async function localAssistantChecks(
   });
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const config = vscode.workspace.getConfiguration("pureobom"),
-    oldPort = config.inspect<number>("ollamaPort")?.globalValue;
+    oldPort = config.inspect<number>("ollamaPort")?.globalValue,
+    oldJavaHome = config.inspect<string>("analysisJavaHome")?.globalValue;
   await config.update(
     "ollamaPort",
     (server.address() as AddressInfo).port,
@@ -259,6 +267,42 @@ export async function localAssistantChecks(
     reports.push(
       "local AI controlled fixture: actual Go parser accepts valid syntax, rejects a malformed proposal, preserves native Go diff and blocks invalid apply without claiming type checks",
     );
+    await config.update(
+      "analysisJavaHome",
+      process.env.PUREOBOM_TEST_JAVA_HOME || process.env.JAVA_HOME || "",
+      vscode.ConfigurationTarget.Global,
+    );
+    const javaDoc = await vscode.workspace.openTextDocument({
+      language: "java",
+      content: "class Sample { int fee = 3000; }\n",
+    });
+    await vscode.window.showTextDocument(javaDoc, vscode.ViewColumn.One);
+    await c.setDocument(javaDoc);
+    await ready();
+    assert.ok(c.state.analysis!.java);
+    mode = "java-valid";
+    const validJava = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(validJava.validation.status, "syntax-passed");
+    assert.match(
+      validJava.validation.detail,
+      /types, dependencies, behavior and performance unchecked/,
+    );
+    mode = "java-invalid";
+    const invalidJava = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(invalidJava.validation.status, "syntax-failed");
+    const javaPreview = await c.assistant.preview(
+      invalidJava.id,
+      c.state.contextId,
+    );
+    assert.ok(javaPreview.after.endsWith(".java"));
+    await assert.rejects(
+      () => c.assistant.apply(invalidJava.id, c.state.contextId, true),
+      /syntax-invalid/,
+    );
+    assert.equal(javaDoc.getText(), "class Sample { int fee = 3000; }\n");
+    reports.push(
+      "local AI controlled fixture: actual Java parser accepts valid syntax, rejects a malformed proposal, preserves native Java diff and blocks invalid apply without claiming type or dependency checks",
+    );
   } finally {
     c.assistant.cancel();
     server.closeAllConnections();
@@ -266,6 +310,11 @@ export async function localAssistantChecks(
     await config.update(
       "ollamaPort",
       oldPort,
+      vscode.ConfigurationTarget.Global,
+    );
+    await config.update(
+      "analysisJavaHome",
+      oldJavaHome,
       vscode.ConfigurationTarget.Global,
     );
   }

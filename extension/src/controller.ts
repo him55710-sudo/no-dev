@@ -11,6 +11,7 @@ import type {
 import { parseRequest } from "../../src/core/ruleRequest";
 import { pythonSource } from "./pythonSource";
 import { goSource } from "./goSource";
+import { javaSource } from "./javaSource";
 import {
   normalizeGlossary,
   updateGlossary,
@@ -58,11 +59,13 @@ export class Controller implements vscode.Disposable {
   private glossary: GlossaryEntry[] = [];
   private pythonWork?: AbortController;
   private goWork?: AbortController;
+  private javaWork?: AbortController;
   constructor(
     private client: AnalysisClient,
     private storage?: vscode.Memento,
     private pythonScript?: string,
     private goRuntime?: { script: string; cache: string },
+    private javaRuntime?: { script: string; cache: string },
   ) {
     this.assistant = new LocalAssistantController(
       (context) => this.current(context),
@@ -78,6 +81,23 @@ export class Controller implements vscode.Disposable {
             status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
             detail: analysis.syntaxValid
               ? `${analysis.go!.version}: Go 문법 파싱 통과. 타입·범위·동작·성능은 미검증입니다. / Go syntax parsed; types, ranges, behavior and performance unchecked.`
+              : analysis.issues.map((i) => i.detail.en).join("\n"),
+          };
+        } catch (error) {
+          return { status: "unavailable", detail: message(error) };
+        }
+      },
+      async (source, signal) => {
+        try {
+          const analysis = (await this.readJava(
+            { path: "Proposal.java", content: source },
+            { action: "analyze" },
+            signal,
+          )) as FileAnalysis;
+          return {
+            status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+            detail: analysis.syntaxValid
+              ? `${analysis.java!.version}: Java 문법 파싱 통과. 타입·의존성·동작·성능은 미검증입니다. / Java syntax parsed; types, dependencies, behavior and performance unchecked.`
               : analysis.issues.map((i) => i.detail.en).join("\n"),
           };
         } catch (error) {
@@ -192,7 +212,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", html: "html", css: "css" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", html: "html", css: "css" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {
@@ -250,6 +270,7 @@ export class Controller implements vscode.Disposable {
   private invalidate() {
     this.pythonWork?.abort();
     this.goWork?.abort();
+    this.javaWork?.abort();
     this.assistant.invalidate();
     this.epoch++;
     this.patches.clear();
@@ -273,6 +294,7 @@ export class Controller implements vscode.Disposable {
       analysis: undefined,
       pythonNotice: undefined,
       goNotice: undefined,
+      javaNotice: undefined,
       diagnostics: changedDocument
         ? undefined
         : this.state.diagnostics &&
@@ -293,6 +315,7 @@ export class Controller implements vscode.Disposable {
       analysis: undefined,
       pythonNotice: undefined,
       goNotice: undefined,
+      javaNotice: undefined,
       diagnostics: undefined,
       busy: false,
       dirty: false,
@@ -367,6 +390,7 @@ export class Controller implements vscode.Disposable {
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       let pythonNotice: string | undefined;
       let goNotice: string | undefined;
+      let javaNotice: string | undefined;
       if (doc.languageId === "python") {
         try {
           const analysis = (await this.readPython(
@@ -393,6 +417,19 @@ export class Controller implements vscode.Disposable {
           goNotice = message(error);
         }
       }
+      if (doc.languageId === "java") {
+        try {
+          const analysis = (await this.readJava(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          javaNotice = message(error);
+        }
+      }
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       this.publish({
         project,
@@ -404,6 +441,7 @@ export class Controller implements vscode.Disposable {
         sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
         pythonNotice,
         goNotice,
+        javaNotice,
       });
     } catch (e) {
       if (epoch === this.epoch)
@@ -541,6 +579,41 @@ export class Controller implements vscode.Disposable {
       if (this.goWork === run) this.goWork = undefined;
     }
   }
+  private async readJava(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+    signal?: AbortSignal,
+  ) {
+    if (vscode.env.remoteName || !this.javaRuntime)
+      throw Error(
+        "Java 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / Java reading requires a local desktop workspace.",
+      );
+    if (signal?.aborted) throw Error("Java work cancelled");
+    this.javaWork?.abort();
+    const run = new AbortController();
+    this.javaWork = run;
+    const cancel = () => run.abort();
+    signal?.addEventListener("abort", cancel, { once: true });
+    try {
+      return await javaSource(
+        file,
+        this.javaRuntime.script,
+        this.javaRuntime.cache,
+        action,
+        {
+          javaHome: vscode.workspace
+            .getConfiguration("pureobom")
+            .get<string>("analysisJavaHome", ""),
+          signal: run.signal,
+        },
+      );
+    } finally {
+      signal?.removeEventListener("abort", cancel);
+      if (this.javaWork === run) this.javaWork = undefined;
+    }
+  }
   async prepare(
     contextId: string | undefined,
     payload: Record<string, unknown>,
@@ -551,7 +624,7 @@ export class Controller implements vscode.Disposable {
     const file = { path: this.path(doc), content: doc.getText() },
       version = doc.version;
     let patch: Patch;
-    if (doc.languageId === "python" || doc.languageId === "go") {
+    if (["python", "go", "java"].includes(doc.languageId)) {
       const selected =
         payload.request !== undefined
           ? parseRequest(
@@ -563,9 +636,11 @@ export class Controller implements vscode.Disposable {
               value: inputString(payload.value),
             };
       patch = (await (
-        doc.languageId === "go"
-          ? this.readGo.bind(this)
-          : this.readPython.bind(this)
+        doc.languageId === "java"
+          ? this.readJava.bind(this)
+          : doc.languageId === "go"
+            ? this.readGo.bind(this)
+            : this.readPython.bind(this)
       )(file, {
         action: "patch",
         ruleId: selected.rule.id,
@@ -753,6 +828,7 @@ export class Controller implements vscode.Disposable {
   dispose() {
     this.pythonWork?.abort();
     this.goWork?.abort();
+    this.javaWork?.abort();
     this.benchmarks.dispose();
     this.checks.dispose();
     this.assistant.dispose();

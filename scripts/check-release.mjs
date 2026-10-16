@@ -1,7 +1,14 @@
 import { createHash } from "node:crypto";
-import { readFile, mkdtemp, writeFile, unlink, rmdir } from "node:fs/promises";
+import {
+  readFile,
+  mkdtemp,
+  writeFile,
+  unlink,
+  rmdir,
+  rm,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, resolve, sep } from "node:path";
 import assert from "node:assert/strict";
 import { Worker } from "node:worker_threads";
 import { execFile } from "node:child_process";
@@ -73,6 +80,7 @@ for (const file of [
   "extension/runtime/benchmark.py",
   "extension/runtime/python_source.py",
   "extension/runtime/go_source.go",
+  "extension/runtime/PureobomJavaSource.java",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -353,4 +361,115 @@ try {
 }
 console.log(
   "Packaged Go AST reader and exact literal edit verified outside the workspace.",
+);
+
+// Compile the shipped fixed helper in isolation; user Java is only parser input.
+const javaDirectory = await mkdtemp(join(tmpdir(), "pureobom-java-package-"));
+const javaFile = join(javaDirectory, "PureobomJavaSource.java");
+await writeFile(
+  javaFile,
+  await vsix.file("extension/runtime/PureobomJavaSource.java").async("string"),
+);
+try {
+  const env = Object.fromEntries(
+    [
+      "PATH",
+      "Path",
+      "SystemRoot",
+      "WINDIR",
+      "TEMP",
+      "TMP",
+      "HOME",
+      "USERPROFILE",
+      "LOCALAPPDATA",
+    ]
+      .filter((key) => process.env[key])
+      .map((key) => [key, process.env[key]]),
+  );
+  const home = process.env.PUREOBOM_TEST_JAVA_HOME || process.env.JAVA_HOME;
+  const executable = (name) =>
+    home
+      ? join(home, "bin", name + (process.platform === "win32" ? ".exe" : ""))
+      : name;
+  const exec = promisify(execFile);
+  const options = {
+    cwd: javaDirectory,
+    env,
+    timeout: 60000,
+    maxBuffer: 65536,
+    windowsHide: true,
+    encoding: "utf8",
+  };
+  await exec(
+    executable("javac"),
+    [
+      "-proc:none",
+      "-implicit:none",
+      "-encoding",
+      "UTF-8",
+      "--release",
+      "21",
+      "-classpath",
+      javaDirectory,
+      "-sourcepath",
+      javaDirectory,
+      "-d",
+      javaDirectory,
+      javaFile,
+    ],
+    options,
+  );
+  const source =
+    'class Sample {\n // 😀 exact\n long limit = 9007199254740993L;\n int check(int value) { if (value < 0) throw new IllegalArgumentException("negative"); return value; }\n}\n';
+  const invoke = async (action, ruleId = "", value = "") => {
+    const subprocess = exec(
+      executable("java"),
+      [
+        "-Xmx192m",
+        "-Dfile.encoding=UTF-8",
+        "-Dstdout.encoding=UTF-8",
+        "--class-path",
+        javaDirectory,
+        "PureobomJavaSource",
+      ],
+      options,
+    );
+    subprocess.child.stdin.end(
+      [action, "Sample.java", source, ruleId, value]
+        .map((s) => Buffer.from(s, "utf8").toString("base64"))
+        .join("\n"),
+    );
+    const { stdout } = await subprocess;
+    const response = JSON.parse(stdout);
+    assert.equal(response.error, undefined);
+    return response.result;
+  };
+  const analysis = await invoke("analyze");
+  assert.ok(analysis.java.version);
+  assert.equal(analysis.functions[0].name, "Sample.check(int)");
+  assert.equal(analysis.rules[0].value, "9007199254740993L");
+  assert.equal(
+    source.slice(analysis.rules[0].start, analysis.rules[0].end),
+    "9007199254740993L",
+  );
+  const patch = await invoke(
+    "patch",
+    analysis.rules[0].id,
+    "9007199254740995L",
+  );
+  assert.equal(
+    patch.updated,
+    source.replace("9007199254740993L", "9007199254740995L"),
+  );
+  assert.equal(patch.semanticChecked, false);
+} finally {
+  if (
+    !resolve(javaDirectory).startsWith(resolve(tmpdir()) + sep) ||
+    !javaDirectory.split(sep).at(-1).startsWith("pureobom-java-package-")
+  )
+    throw Error("Unexpected Java package cleanup directory");
+  await rm(javaDirectory, { recursive: true, force: true });
+}
+console.log(
+  "Packaged Java AST reader and exact literal edit verified outside the workspace.",
 );

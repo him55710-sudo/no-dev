@@ -16,6 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
       script: context.asAbsolutePath("runtime/go_source.go"),
       cache: vscode.Uri.joinPath(context.globalStorageUri, "go-reader").fsPath,
     },
+    {
+      script: context.asAbsolutePath("runtime/PureobomJavaSource.java"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "java-reader")
+        .fsPath,
+    },
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {

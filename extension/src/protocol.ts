@@ -21,6 +21,7 @@ export type ViewState = {
   error?: string;
   pythonNotice?: string;
   goNotice?: string;
+  javaNotice?: string;
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {

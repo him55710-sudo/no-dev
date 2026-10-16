@@ -92,6 +92,7 @@ if (installed) {
     "runtime/benchmark.py",
     "runtime/python_source.py",
     "runtime/go_source.go",
+    "runtime/PureobomJavaSource.java",
     "media/view.js",
     "media/view.css",
   ])

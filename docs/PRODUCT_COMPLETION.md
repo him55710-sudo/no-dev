@@ -5,9 +5,9 @@
 ## 현재 상태
 
 - **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
-- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
-- **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다.
-- **남은 우선순위:** Rust·Java·C#·SQL의 전용 도구와 실제 프로젝트, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
+- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
+- **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다. [Java minimal-json](evidence/local-ai/java-source-project.md)은 별도 JDK 호환 adapter로 452 pass → 고정 오류 13 fail → undo 후 452 pass를 확인했다.
+- **남은 우선순위:** Rust·C#·SQL의 전용 도구와 실제 프로젝트, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
 외부 검증 도구·기록 소스 `493cd04`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38891611946)는 각각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시와 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/web-project-ci.json). 외부 Chrome 프로젝트는 별도로 Windows에서 실행한 기록이며 CI의 성공 수에 합치지 않는다. 이전 증분의 커밋별 CI와 설치본·실제 모델·화면 기록은 작업 기록에서 추적한다.
 

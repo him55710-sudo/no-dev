@@ -127,8 +127,8 @@ export function Story({
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
-  const native = analysis.python || analysis.go;
-  const nativeName = analysis.python ? "Python" : "Go";
+  const native = analysis.python || analysis.go || analysis.java;
+  const nativeName = analysis.python ? "Python" : analysis.go ? "Go" : "Java";
   if (analysis.web)
     return (
       <div className="story">
@@ -265,7 +265,7 @@ export function Story({
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {r.syntax === "python" || r.syntax === "go"
+                  {["python", "go", "java"].includes(r.syntax || "")
                     ? r.raw
                     : typeof r.value === "number"
                       ? r.value.toLocaleString("en-US")
