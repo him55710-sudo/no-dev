@@ -17,6 +17,8 @@ await Promise.all([
     entryPoints: ["extension/src/worker.ts"],
     outfile: "extension/out/worker.cjs",
     platform: "node",
+    // jsonc-parser's UMD entry hides relative requires from the bundler.
+    mainFields: ["module", "main"],
     format: "cjs",
     target: "node20",
     minify: true,

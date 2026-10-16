@@ -1,5 +1,6 @@
 import ts from "typescript";
 import { diagnostics, parse } from "./analyze";
+import { readJsonStructure } from "./jsonData";
 
 export function validateAssistantChange(language: string, source: string) {
   const extensions: Record<string, string> = {
@@ -22,18 +23,17 @@ export function validateAssistantChange(language: string, source: string) {
         : "JS/TS 문법 검사 통과. 타입·동작·성능은 미검증입니다. / JS/TS syntax passed; types, behavior and performance are unchecked.",
     };
   }
-  if (language === "json") {
+  if (language === "json" || language === "jsonc") {
     try {
-      JSON.parse(source);
+      readJsonStructure(source, language === "jsonc");
       return {
         status: "syntax-passed",
-        detail:
-          "JSON 문법 검사 통과. 데이터 의미는 미검증입니다. / JSON syntax passed; meaning unchecked.",
+        detail: `${language.toUpperCase()} 문법 검사 통과. 데이터 의미는 미검증입니다. / Syntax passed; meaning unchecked.`,
       };
     } catch {
       return {
         status: "syntax-failed",
-        detail: "JSON 문법 오류 / Invalid JSON syntax",
+        detail: `${language.toUpperCase()} 문법 오류 / Invalid data syntax`,
       };
     }
   }

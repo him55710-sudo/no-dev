@@ -90,6 +90,8 @@ describe("Ollama loopback protocol (controlled HTTP fixture, not real inference)
     expect(chat).not.toHaveProperty("tools");
     expect(chat).not.toHaveProperty("api_key");
     expect(chat.stream).toBe(false);
+    expect(chat.options.num_ctx).toBeLessThan(32768);
+    expect(result.contextSize).toBe(chat.options.num_ctx);
   });
   it("rejects enabled cloud before source transmission", async () => {
     const seen: string[] = [];

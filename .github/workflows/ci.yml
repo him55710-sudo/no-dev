@@ -29,6 +29,8 @@ jobs:
       - run: pnpm extension:test
         if: runner.os == 'Windows'
       - run: pnpm extension:package
+      - run: pnpm release:package
+      - run: pnpm release:check
       - uses: actions/upload-artifact@v4
         with:
           name: pureobom-${{ runner.os }}

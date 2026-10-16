@@ -3,6 +3,7 @@ import { label, operators, particle } from "./labels";
 import { normalizeGlossary, type GlossaryEntry } from "./glossary";
 import { terminology } from "./terminology";
 import { analyzeInterface } from "./jsx";
+import { readJsonStructure } from "./jsonData";
 import {
   words,
   type Anchor,
@@ -204,18 +205,18 @@ export function analyzeFile(
     syntaxValid: true,
   };
   const zero = { start: 0, end: 0, line: 1, endLine: 1 };
-  if (/\.json$/i.test(file.path)) {
+  if (/\.jsonc?$/i.test(file.path)) {
     out.kind = "json";
     try {
-      const data = JSON.parse(file.content);
+      const data = readJsonStructure(file.content, /\.jsonc$/i.test(file.path));
       out.steps = [
         {
           ...zero,
           id: "json",
           kind: "data",
           text: words(
-            `이 파일은 ${Array.isArray(data) ? "목록" : data !== null && typeof data === "object" ? Object.keys(data).length + "개 항목의 설정" : "하나의 값"}을 담습니다. 실행되는 기능은 없습니다.`,
-            `This file contains JSON data, not executable functions.`,
+            `이 파일은 ${data.type === "array" ? "목록" : data.type === "object" ? data.entries + "개 항목의 설정" : "하나의 값"}을 담습니다. 실행되는 기능은 없습니다.`,
+            `This file contains JSON/JSONC data, not executable functions.`,
           ),
           children: [],
           supported: true,
@@ -227,7 +228,7 @@ export function analyzeFile(
         ...zero,
         id: "json-error",
         level: "error",
-        title: words("설정 파일을 읽을 수 없어요", "Invalid JSON"),
+        title: words("설정 파일을 읽을 수 없어요", "Invalid JSON/JSONC"),
         detail: words(
           "따옴표, 쉼표, 괄호를 확인해 주세요.",
           "Check quotes, commas and brackets.",

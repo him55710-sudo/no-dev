@@ -1,0 +1,100 @@
+[
+  {
+    "file": "shipping.js",
+    "language": "javascript",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "shipping.ts",
+    "language": "typescript",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "Checkout.jsx",
+    "language": "javascriptreact",
+    "from": "주문하기",
+    "to": "결제하기",
+    "request": "버튼 문구만 결제하기로 바꾸고 수량에 따른 비활성화 조건은 유지해 주세요."
+  },
+  {
+    "file": "Checkout.tsx",
+    "language": "typescriptreact",
+    "from": "주문하기",
+    "to": "결제하기",
+    "request": "버튼 문구만 결제하기로 바꾸고 수량에 따른 비활성화 조건은 유지해 주세요."
+  },
+  {
+    "file": "../shipping.py",
+    "language": "python",
+    "from": "50_000",
+    "to": "70_000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "shipping.go",
+    "language": "go",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 오류 처리와 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "shipping.rs",
+    "language": "rust",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 오류 처리와 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "Shipping.java",
+    "language": "java",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 오류 처리와 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "Shipping.cs",
+    "language": "csharp",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 오류 처리와 나머지 동작은 유지해 주세요."
+  },
+  {
+    "file": "checkout.html",
+    "language": "html",
+    "from": "주문하기",
+    "to": "결제하기",
+    "request": "제출 버튼 문구만 결제하기로 바꾸고 입력 조건과 전송 방식은 유지해 주세요."
+  },
+  {
+    "file": "cards.css",
+    "language": "css",
+    "from": "repeat(3, 1fr)",
+    "to": "repeat(4, 1fr)",
+    "request": "기본 카드 격자를 4열로 바꾸고 작은 화면의 1열 규칙과 간격은 유지해 주세요."
+  },
+  {
+    "file": "orders.sql",
+    "language": "sql",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 paid 상태 필터와 열은 유지해 주세요."
+  },
+  {
+    "file": "shipping.json",
+    "language": "json",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 다른 설정 값은 유지해 주세요."
+  },
+  {
+    "file": "shipping.jsonc",
+    "language": "jsonc",
+    "from": "50000",
+    "to": "70000",
+    "request": "무료 배송 기준만 70000으로 바꾸고 주석과 다른 설정 값은 유지해 주세요."
+  }
+]

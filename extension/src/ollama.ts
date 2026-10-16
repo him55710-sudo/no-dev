@@ -1,6 +1,8 @@
 import { request as httpRequest } from "node:http";
 import {
   assistantMessages,
+  assistantContextSize,
+  assistantLimits,
   assistantSchema,
   parseAssistantProposal,
   validateAssistantInput,
@@ -205,15 +207,21 @@ export class OllamaClient {
       );
     // Verify local-only mode again immediately before any source leaves the extension.
     await this.localOnly(signal);
+    const messages = assistantMessages(input);
+    const contextSize = assistantContextSize(messages);
     const started = Date.now();
     const result = await this.json(
       "/api/chat",
       {
         model: model.name,
         stream: false,
-        messages: assistantMessages(input),
+        messages,
         format: assistantSchema,
-        options: { temperature: 0, num_ctx: 32768, num_predict: 4096 },
+        options: {
+          temperature: 0,
+          num_ctx: contextSize,
+          num_predict: assistantLimits.outputTokens,
+        },
         keep_alive: "5m",
       },
       signal,
@@ -232,6 +240,7 @@ export class OllamaClient {
     return {
       model,
       elapsedMs: Date.now() - started,
+      contextSize,
       proposal: parseAssistantProposal(result.message.content, input),
     };
   }

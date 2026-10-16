@@ -1,0 +1,6 @@
+{
+  // Shipping policy used by an application; this file does not run itself.
+  "freeShippingThreshold": 50000,
+  "shippingFee": 3000,
+  "currency": "KRW"
+}

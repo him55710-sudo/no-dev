@@ -6,6 +6,10 @@ const manifest = JSON.parse(await readFile("extension/package.json", "utf8"));
 const licenses = await Promise.all(
   [
     [
+      "jsonc-parser 3.3.1 — Microsoft Corporation",
+      "node_modules/jsonc-parser/LICENSE.md",
+    ],
+    [
       "TypeScript 5.9.3 — Microsoft Corporation",
       "node_modules/typescript/LICENSE.txt",
     ],

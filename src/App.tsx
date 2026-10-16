@@ -519,7 +519,7 @@ export default function App() {
                 >
                   <span
                     className={
-                      "file-type " + (/\.json$/.test(f.path) ? "json" : "")
+                      "file-type " + (/\.jsonc?$/.test(f.path) ? "json" : "")
                     }
                   >
                     {f.path.split(".").pop()?.slice(0, 3).toUpperCase()}
@@ -793,7 +793,7 @@ export default function App() {
             ref={fileInput}
             hidden
             multiple
-            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.css,.html,.md,.py,.yaml,.yml,.txt"
+            accept=".ts,.tsx,.js,.jsx,.mjs,.cjs,.mts,.cts,.json,.jsonc,.css,.html,.md,.py,.yaml,.yml,.txt"
             onChange={(e) => {
               void importFiles(Array.from(e.target.files || []));
               e.target.value = "";

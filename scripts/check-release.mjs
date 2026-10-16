@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { readFile, mkdtemp, writeFile, unlink, rmdir } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import assert from "node:assert/strict";
+import { Worker } from "node:worker_threads";
 import JSZip from "jszip";
 
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
@@ -82,6 +85,42 @@ for (const name of Object.keys(vsix.files).filter((name) =>
     ["extension/out/extension.cjs", "extension/out/worker.cjs"].includes(name),
     `Unexpected runtime bundle: ${name}`,
   );
+// Execute the shipped analysis worker, so an accidentally unbundled dependency
+// cannot pass merely because the archive contains a file called worker.cjs.
+const workerDirectory = await mkdtemp(join(tmpdir(), "pureobom-package-"));
+const workerFile = join(workerDirectory, "worker.cjs");
+await writeFile(workerFile, await vsix.file("extension/out/worker.cjs").async("string"));
+const shippedWorker = new Worker(workerFile, { env: { ...process.env, NODE_PATH: "" } });
+try {
+  const result = await new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(Error("Packaged worker startup timed out")),
+      20000,
+    );
+    shippedWorker.once("error", (error) => {
+      clearTimeout(timer);
+      reject(error);
+    });
+    shippedWorker.once("message", (message) => {
+      clearTimeout(timer);
+      message.error ? reject(Error(message.error)) : resolve(message.result);
+    });
+    shippedWorker.postMessage({
+      id: 1,
+      type: "validateAssistant",
+      payload: { language: "jsonc", source: '{ // shipping\n "fee": 3000,\n}' },
+    });
+  });
+  assert.equal(
+    result.status,
+    "syntax-passed",
+    "Packaged JSONC parser runs without node_modules",
+  );
+} finally {
+  await shippedWorker.terminate();
+  await unlink(workerFile);
+  await rmdir(workerDirectory);
+}
 console.log(
-  `Release ${version}: checksums, source manifest, demo assets, licenses and VSIX contents verified.`,
+  `Release ${version}: checksums, source manifest, demo assets, licenses, VSIX contents and packaged worker verified.`,
 );

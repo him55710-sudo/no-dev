@@ -1,0 +1,5 @@
+{
+  "freeShippingThreshold": 50000,
+  "shippingFee": 3000,
+  "currency": "KRW"
+}

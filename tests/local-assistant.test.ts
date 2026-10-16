@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   assistantMessages,
+  assistantContextSize,
+  assistantLimits,
   parseAssistantProposal,
   type AssistantInput,
 } from "../src/core/localAssistant";
@@ -26,6 +28,23 @@ const parse = (r: unknown, i = input) =>
   parseAssistantProposal(JSON.stringify(r), i);
 
 describe("grounded local assistant proposals", () => {
+  it("reserves input, output and template space without allocating the maximum for every file", () => {
+    const small = assistantMessages(input);
+    expect(assistantContextSize(small)).toBeLessThan(32768);
+    const large = assistantMessages({ ...input, source: "x".repeat(18000) });
+    expect(assistantContextSize(large)).toBe(32768);
+    for (const messages of [small, large]) {
+      const bytes = new TextEncoder().encode(
+        JSON.stringify({ messages }),
+      ).byteLength;
+      expect(assistantContextSize(messages)).toBeGreaterThanOrEqual(
+        bytes + assistantLimits.outputTokens + 1024,
+      );
+    }
+    expect(() =>
+      assistantContextSize([{ role: "user", content: "x".repeat(40000) }]),
+    ).toThrow(/context budget/);
+  });
   it("distinguishes syntax validation from unavailable language checks", () => {
     expect(validateAssistantChange("typescript", "const x = ;").status).toBe(
       "syntax-failed",

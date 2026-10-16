@@ -25,8 +25,15 @@ export async function run() {
     viewColumn: vscode.ViewColumn.One,
   });
   await api.openPanel();
-  const ready = async () =>
-    until(() => !c.state.busy && !!c.state.analysis, "analysis ready");
+  const ready = async () => {
+    try {
+      await until(() => !c.state.busy && !!c.state.analysis, "analysis ready");
+    } catch (error) {
+      throw Error(
+        `${String(error)}: ${JSON.stringify({ path: c.state.path, busy: c.state.busy, error: c.state.error })}`,
+      );
+    }
+  };
   await ready();
   const firstTerm = c.state.analysis!.terms!.find(
     (term) => term.name === "freeShippingThreshold",
@@ -474,6 +481,47 @@ export async function run() {
     "built-in TypeScript reports an actual 2322 error after a rule edit; source selection and undo clear it",
   );
   await localAssistantChecks(c, ready, reports);
+  const jsoncSource =
+    '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';
+  const jsoncDoc = await vscode.workspace.openTextDocument({
+    language: "jsonc",
+    content: jsoncSource,
+  });
+  const jsoncEditor = await vscode.window.showTextDocument(
+    jsoncDoc,
+    vscode.ViewColumn.One,
+  );
+  await c.setDocument(jsoncDoc);
+  await ready();
+  assert.equal(c.state.analysis!.kind, "json");
+  assert.equal(
+    c.state.analysis!.syntaxValid,
+    true,
+    "untitled JSONC preserves its language for the worker",
+  );
+  assert.ok(c.state.analysis!.steps[0].text.ko.includes("2개 항목"));
+  const feeStart = jsoncSource.indexOf("3000");
+  await jsoncEditor.edit((builder) =>
+    builder.delete(
+      new vscode.Range(
+        jsoncDoc.positionAt(feeStart),
+        jsoncDoc.positionAt(feeStart + 4),
+      ),
+    ),
+  );
+  await until(
+    () => !c.state.busy && c.state.analysis?.syntaxValid === false,
+    "invalid JSONC is reported after unsaved edits",
+  );
+  await vscode.commands.executeCommand("undo");
+  await until(
+    () => !c.state.busy && c.state.analysis?.syntaxValid === true,
+    "JSONC undo restores valid analysis",
+  );
+  assert.equal(jsoncDoc.getText(), jsoncSource);
+  reports.push(
+    "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
+  );
   const report = {
     vscode: vscode.version,
     checks: reports,

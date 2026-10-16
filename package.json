@@ -28,6 +28,7 @@
     "format": "prettier --write src tests docs *.json *.ts *.html"
   },
   "dependencies": {
+    "jsonc-parser": "3.3.1",
     "jszip": "3.10.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
