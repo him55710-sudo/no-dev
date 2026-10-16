@@ -1096,10 +1096,9 @@ export function DesignWorkspaceView({
       ) : null}
       {state.job && actions.jobAction ? (
         <JobTray
+          key={state.job.id}
           job={state.job}
-          action={(action, payload) =>
-            perform(() => actions.jobAction!(action, payload))
-          }
+          action={(action, payload) => actions.jobAction!(action, payload)}
         />
       ) : null}
       <footer className="design-statusbar">

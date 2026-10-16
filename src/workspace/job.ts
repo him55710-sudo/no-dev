@@ -1,5 +1,11 @@
 import { z } from "zod";
 import { relativePath } from "./model";
+import {
+  reviewAssessmentSchema,
+  reviewDecisionSchema,
+  type ReviewAssessment,
+  type ReviewDecision,
+} from "./review";
 export type VerificationName = "test" | "build" | "typecheck" | "check";
 export type VerificationResult = {
   name: string;
@@ -34,6 +40,8 @@ export type ImplementationJob = {
   checks: VerificationResult[];
   files: { path: string; kind: "added" | "modified" | "deleted" }[];
   reviewId?: string;
+  assessment?: ReviewAssessment;
+  reviewDecision?: ReviewDecision;
   approvals: {
     id: string;
     kind: "command" | "file";
@@ -95,6 +103,8 @@ export const jobSchema = z
       .string()
       .regex(/^[a-f0-9]{64}$/)
       .optional(),
+    assessment: reviewAssessmentSchema.optional(),
+    reviewDecision: reviewDecisionSchema.optional(),
     approvals: z
       .array(
         z

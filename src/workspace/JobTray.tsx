@@ -1,4 +1,6 @@
 import { jobIsActive, type ImplementationJob } from "./job";
+import { useState } from "react";
+import { ImplementationReview } from "./ImplementationReview";
 export const phaseNames: Record<ImplementationJob["phase"], string> = {
   preparing: "작업 공간 준비",
   running: "구현 중",
@@ -20,36 +22,45 @@ export type JobAction =
   | "decideJob"
   | "jobDiff"
   | "applyJob"
+  | "reviewJob"
   | "undoJob"
   | "recoverJob"
   | "restoreJob"
   | "jobHistory";
 export function JobTray({
   job,
-  action,
+  action: dispatch,
 }: {
   job: ImplementationJob;
-  action: (name: JobAction, payload?: Record<string, unknown>) => void;
+  action: (
+    name: JobAction,
+    payload?: Record<string, unknown>,
+  ) => Promise<unknown>;
 }) {
+  const [error, setError] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const action = (name: JobAction, payload?: Record<string, unknown>) => {
+    setError("");
+    void dispatch(name, payload).catch((error) => setError(String(error)));
+  };
   return (
-    <section className="implementation-job" aria-label="구현 작업">
+    <section
+      className={`implementation-job${expanded ? " expanded" : ""}`}
+      aria-label="구현 작업"
+    >
       <header>
         <strong>{phaseNames[job.phase]}</strong>
         <span>설계 v{job.specRevision}</span>
+        {job.assessment ? (
+          <button
+            aria-pressed={expanded}
+            onClick={() => setExpanded((value) => !value)}
+          >
+            {expanded ? "검토 화면 줄이기" : "검토 크게 보기"}
+          </button>
+        ) : null}
         {jobIsActive(job) && !["applying", "cancelling"].includes(job.phase) ? (
           <button onClick={() => action("cancelJob")}>작업 취소</button>
-        ) : null}
-        {job.phase === "review" ? (
-          <button
-            className="primary"
-            disabled={
-              !job.checks.length ||
-              job.checks.some((check) => check.status !== "passed")
-            }
-            onClick={() => action("applyJob", { reviewId: job.reviewId })}
-          >
-            검토한 변경 반영
-          </button>
         ) : null}
         {job.phase === "applied" ? (
           <button onClick={() => action("undoJob", { reviewId: job.reviewId })}>
@@ -152,6 +163,16 @@ export function JobTray({
           </details>
         ) : null}
       </div>
+      {error ? <p role="alert">{error}</p> : null}
+      {job.assessment ? (
+        <ImplementationReview
+          key={`${job.id}:${job.assessment.reviewId}:${JSON.stringify(job.reviewDecision)}`}
+          job={job}
+          save={(decision) => dispatch("reviewJob", decision)}
+          apply={() => dispatch("applyJob", { reviewId: job.reviewId })}
+          diff={(index) => action("jobDiff", { reviewId: job.reviewId, index })}
+        />
+      ) : null}
     </section>
   );
 }

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T10:29:32.039Z",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.19.0",
+    "vscode": "1.96.4"
+  },
+  "scope": "Exact-proposal review records, outside-scope and verification-path acknowledgements, explicit criterion observations and uncertainty; not automatic semantic proof or a new external model run.",
+  "regression": {
+    "startedAt": "2026-10-16T10:23:12.867Z",
+    "files": 23,
+    "tests": 199,
+    "passed": 199,
+    "failed": 0,
+    "skipped": 0
+  },
+  "reviewCases": [
+    {
+      "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery persists explicit scope and test review, rejects stale proposals and preserves uncertainty",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery excludes a second writer until its lease is released",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery excludes another process and releases the lease after its owner is killed",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery can acquire an IPC lease while an unrelated service holds the former TCP port",
+      "status": "passed"
+    },
+    {
+      "name": "implementation review evidence compares real paths and marks test/configuration candidates without semantic claims",
+      "status": "passed"
+    },
+    {
+      "name": "implementation review evidence never turns passing commands into confirmed criteria or implicit scope permission",
+      "status": "passed"
+    },
+    {
+      "name": "implementation review evidence requires actual observations and only links available successful check records",
+      "status": "passed"
+    },
+    {
+      "name": "implementation review evidence binds records to the exact job, proposal, criteria and files and never applies known failures",
+      "status": "passed"
+    }
+  ],
+  "installed": {
+    "checkedAt": "2026-10-16T10:28:56.699Z",
+    "artifact": {
+      "version": "0.7.0",
+      "vsixSha256": "53cfb9e2937092e785ec4cb2cd7e12c13832dc698aa75a49b5c697fd3e962132",
+      "files": {
+        "out/extension.cjs": "966bf155e375e662703fe36f1fc993fdd7d8948b99204aaa5a13f966fd713961",
+        "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+        "media/design.js": "b2f9a89b42bf0c1f4596c4d6bbc5871430e9fba3bc874ecb096004f5254ccc08",
+        "media/design.css": "d828cfc991a4e7121f0a34fd349370420839071a12d37d149b556a90105d7600",
+        "THIRD_PARTY_NOTICES.txt": "160717d2962ebbbc30eec21debdc00ae32720e5d78ac588b88e617d096110f3c"
+      }
+    },
+    "phases": [
+      "prepare-review",
+      "review-and-apply",
+      "undo-after-restart",
+      "crash-during-apply",
+      "recover-after-crash"
+    ]
+  },
+  "browser": {
+    "data": "Synthetic fixture and browser-local mock persistence with real product React components",
+    "checks": [
+      "outside-scope and verification candidates are explicitly acknowledged",
+      "a confirmed criterion requires a note and can link a successful check log",
+      "reload retains saved review choices",
+      "a known failure blocks apply even when uncertainty is accepted",
+      "explicit acceptance of unknown criteria permits mock apply without relabeling them confirmed"
+    ],
+    "screenshot": "implementation-review.jpg"
+  },
+  "sourceHashes": {
+    "src/workspace/review.ts": "5eb5366551f9e209de87cb0a8a5ce74cbc89ded96324354b9d9f778a787e3853",
+    "src/workspace/ImplementationReview.tsx": "d5308d51f2d845eeeb6a12a39a0deaff33b001234c08d4fcf3caf75eed54384c",
+    "src/workspace/JobTray.tsx": "085fc45e988663d4eedd335ce5bbb25fcffb77b181235409ab29ac28fe81a447",
+    "src/workspace/job.ts": "10ec1a8d79f7c157271aaf54dbbcff87ab222b2ad96fc53c8f4db044f6f74b4a",
+    "src/workspace/design.css": "61bdc49e1231a46bc1c26303c9a30c7c533884cfed6465f1d35f31cf1d8f4f5f",
+    "extension/src/agent/jobs.ts": "746774ee3285ec2cfd7659c49f579dfa2b906937da46013521e27f1c02ba14df",
+    "extension/src/designWorkspace.ts": "4fb7cf59a3a617f1806dba4705ab60fed2b97c14877b03cb898decc3e31337d5",
+    "extension/test/installedRecovery.ts": "a7a794ccee7e6ef258206b9c0523813e6fe69f0ace6955bdbdd0d146630f004a"
+  },
+  "limitations": [
+    "Criterion outcomes are reviewer statements, not automatic behavior verification",
+    "Path classification does not find every custom verification file or determine test weakening",
+    "Scope acknowledgement controls original-file application, not every agent write in its worktree",
+    "Installed verification uses a deterministic stdio test fixture",
+    "Browser evidence is not installed Webview pointer/keyboard end-to-end evidence"
+  ]
+}

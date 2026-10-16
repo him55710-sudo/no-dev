@@ -49,7 +49,7 @@ await git("commit", "-m", "Synthetic design task baseline");
 const runtime = resolve(run, "runtime.cjs");
 await build({
   stdin: {
-    contents: `export {ImplementationJobs} from './extension/src/agent/jobs'; export {analyzeStructure} from './src/workspace/analyze'; export {draftSpec,prepareChange} from './src/workspace/spec';`,
+    contents: `export {ImplementationJobs} from './extension/src/agent/jobs'; export {analyzeStructure} from './src/workspace/analyze'; export {draftSpec,prepareChange} from './src/workspace/spec'; export {assertReviewReady} from './src/workspace/review';`,
     resolveDir: process.cwd(),
     loader: "ts",
   },
@@ -60,8 +60,13 @@ await build({
   format: "cjs",
   target: "node24",
 });
-const { ImplementationJobs, analyzeStructure, draftSpec, prepareChange } =
-  createRequire(import.meta.url)(runtime);
+const {
+  ImplementationJobs,
+  analyzeStructure,
+  draftSpec,
+  prepareChange,
+  assertReviewReady,
+} = createRequire(import.meta.url)(runtime);
 const paths = (await git("ls-files", "-z"))
   .split("\0")
   .filter((path) => path && !path.startsWith("."));
@@ -96,7 +101,10 @@ spec.content.acceptance = [
   "다른 프로젝트 권한 재사용 거절",
   "test, typecheck, build 통과",
 ];
-let finish, lastPhase;
+let finish, lastPhase, finishReview;
+const reviewed = new Promise((resolveDone) => {
+  finishReview = resolveDone;
+});
 const completion = new Promise((resolveDone) => {
   finish = resolveDone;
 });
@@ -116,10 +124,18 @@ const jobs = new ImplementationJobs(resolve(run, "jobs"), (state) => {
   if (["review", "failed", "cancelled"].includes(state.phase)) finish(state);
 });
 const input = createInterface({ input: process.stdin });
-input.on("line", (line) => {
+input.on("line", async (line) => {
   try {
     const value = JSON.parse(line);
-    jobs.decide(value.id, value.decision);
+    if (value.action === "review") {
+      await jobs.reviewDecision(value.decision);
+      assertReviewReady(
+        jobs.state.assessment,
+        jobs.state.checks,
+        jobs.state.reviewDecision,
+      );
+      finishReview();
+    } else jobs.decide(value.id, value.decision);
   } catch (error) {
     console.error(String(error));
   }
@@ -157,6 +173,33 @@ try {
     final.files.some((file) => file.path.includes("ProjectEditor.tsx")),
   );
   assert.ok(final.files.some((file) => file.path.includes("route.ts")));
+  console.log(
+    "REVIEW REQUIRED: inspect the proposal and actual check output, then submit a JSON line with action=review and an explicit decision. Unverified criteria must remain unverified.",
+  );
+  console.log(
+    JSON.stringify(
+      {
+        assessment: final.assessment,
+        decisionTemplate: {
+          jobId: final.id,
+          reviewId: final.reviewId,
+          approvedScopePaths: [],
+          reviewedVerificationPaths: [],
+          acceptUnverified: false,
+          criteria: final.assessment.criteria.map((item) => ({
+            id: item.id,
+            outcome: "unverified",
+            note: "",
+            checkNames: [],
+          })),
+        },
+      },
+      null,
+      2,
+    ),
+  );
+  await reviewed;
+  report.reviewDecision = jobs.state.reviewDecision;
   await jobs.apply(final.reviewId);
   assert.equal(jobs.state.phase, "applied");
   await jobs.undo(final.reviewId);

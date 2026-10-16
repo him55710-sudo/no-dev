@@ -32,6 +32,11 @@ import {
 } from "./gitWorkspace";
 import { availableChecks, verifyWorkspace } from "./verify";
 import { readRecord, writeRecord } from "./records";
+import {
+  assessReview,
+  assertReviewReady,
+  validateReviewDecision,
+} from "../../../src/workspace/review";
 
 export const jobRecordSchema = z
   .object({
@@ -68,9 +73,10 @@ export class ImplementationJobs {
     private storage: string,
     private changed: (job: ImplementationJob) => void,
   ) {}
-  private emit(persist = true) {
+  private emit(persist = true, publish = true) {
     if (this.state) this.state.message = this.state.message.slice(0, 32000);
-    if (this.state && !this.disposed) this.changed(structuredClone(this.state));
+    if (publish && this.state && !this.disposed)
+      this.changed(structuredClone(this.state));
     if (
       !persist ||
       !this.state ||
@@ -262,6 +268,8 @@ export class ImplementationJobs {
       signal.throwIfAborted();
       this.review = await reviewJobWorkspace(workspace);
       state.reviewId = this.review.id;
+      state.assessment = assessReview(request, this.review);
+      state.reviewDecision = undefined;
       state.files = this.review.files.map((file) => ({
         path: file.path,
         kind:
@@ -318,6 +326,43 @@ export class ImplementationJobs {
     if (!file) throw Error("검토할 변경 파일이 없습니다.");
     return file;
   }
+  async reviewDecision(raw: unknown) {
+    if (
+      !this.workspace ||
+      !this.review ||
+      !this.request ||
+      this.state?.phase !== "review"
+    )
+      throw Error("현재 검토할 작업이 아닙니다.");
+    const { workspace, review, request, state } = this;
+    if ((await reviewJobWorkspace(workspace)).id !== review.id)
+      throw Error(
+        "검사 이후 작업 복사본이 바뀌었습니다. 이전 검사와 검토로 반영할 수 없습니다.",
+      );
+    if (
+      this.workspace !== workspace ||
+      this.state !== state ||
+      state.phase !== "review"
+    )
+      throw Error("검토 중 선택한 작업이 바뀌었습니다.");
+    const assessment = assessReview(request, review);
+    state.assessment = assessment;
+    const previous = state.reviewDecision;
+    state.reviewDecision = validateReviewDecision(
+      assessment,
+      state.checks,
+      raw,
+    );
+    this.emit(true, false);
+    try {
+      await this.flush();
+    } catch (error) {
+      state.reviewDecision = previous;
+      this.emit(false);
+      throw error;
+    }
+    this.emit(false);
+  }
   async apply(reviewId: string) {
     if (
       !this.workspace ||
@@ -331,6 +376,12 @@ export class ImplementationJobs {
       this.state.checks.some((check) => check.status !== "passed")
     )
       throw Error("검사가 통과한 뒤 반영할 수 있습니다.");
+    if (!this.request) throw Error("검토할 설계 요청이 없습니다.");
+    assertReviewReady(
+      assessReview(this.request, this.review),
+      this.state.checks,
+      this.state.reviewDecision,
+    );
     this.state.phase = "applying";
     this.emit();
     try {
@@ -380,6 +431,8 @@ export class ImplementationJobs {
     }
     this.review = journal.review;
     this.state.reviewId = journal.review.id;
+    if (this.request)
+      this.state.assessment = assessReview(this.request, journal.review);
     this.state.files = journal.review.files.map((file) => ({
       path: file.path,
       kind:
@@ -500,6 +553,23 @@ export class ImplementationJobs {
     this.state = record.state;
     this.state.worktree = workspace.path;
     this.review = record.review;
+    if (this.review) {
+      this.state.assessment = assessReview(record.request, this.review);
+      if (this.state.reviewDecision) {
+        try {
+          validateReviewDecision(
+            this.state.assessment,
+            this.state.checks,
+            this.state.reviewDecision,
+          );
+        } catch {
+          this.state.reviewDecision = undefined;
+        }
+      }
+    } else {
+      this.state.assessment = undefined;
+      this.state.reviewDecision = undefined;
+    }
     if (this.review)
       this.state.files = this.review.files.map((file) => ({
         path: file.path,
@@ -514,6 +584,7 @@ export class ImplementationJobs {
     if (jobIsActive(this.state) && this.state.phase !== "applying") {
       this.state.phase = "interrupted";
       this.state.checks = [];
+      this.state.reviewDecision = undefined;
       this.state.message =
         "이전 실행 연결을 확인할 수 없습니다. 승인과 구현을 자동으로 재개하지 않습니다. 작업 복사본과 변경을 확인해 주세요.";
       // Old request IDs cannot authorize a new process. Interrupted code is never applyable.
@@ -532,6 +603,7 @@ export class ImplementationJobs {
       if (!reviewMatches) {
         this.state.phase = "interrupted";
         this.state.checks = [];
+        this.state.reviewDecision = undefined;
         this.state.message =
           "검토 이후 작업 복사본이 바뀌었습니다. 기존 검사 결과로 반영할 수 없습니다.";
       }

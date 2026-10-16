@@ -70,6 +70,7 @@ const requestSchema = z
       "decideJob",
       "jobDiff",
       "applyJob",
+      "reviewJob",
       "undoJob",
       "recoverJob",
       "restoreJob",
@@ -374,6 +375,9 @@ export class DesignWorkspace implements vscode.Disposable {
         file.path,
         { preview: true },
       );
+    } else if (request.action === "reviewJob") {
+      this.assertExecutionReady();
+      await this.jobs.reviewDecision(request.payload);
     } else {
       this.assertExecutionReady();
       const payload = z

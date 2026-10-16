@@ -234,6 +234,42 @@ export async function run() {
     assert.equal(job.checks.length, 1);
     assert.equal(job.checks[0].status, "passed", job.checks[0].output);
     assert.equal(job.checks[0].exitCode, 0);
+    assert.ok(job.assessment);
+    assert.equal(
+      job.reviewDecision,
+      undefined,
+      "passed checks must not manufacture criterion evidence",
+    );
+    await assert.rejects(
+      dispatch("applyJob", { reviewId: job.reviewId }),
+      /검토 기록/,
+    );
+    const reviewDecision = {
+      jobId: job.id,
+      reviewId: job.reviewId,
+      approvedScopePaths: job.assessment.files
+        .filter((file) => file.outsideScope)
+        .map((file) => file.path),
+      reviewedVerificationPaths: job.assessment.files
+        .filter((file) => file.verification)
+        .map((file) => file.path),
+      acceptUnverified: false,
+      criteria: job.assessment.criteria.map((item) => ({
+        id: item.id,
+        outcome: "unverified",
+        note: "",
+        checkNames: [],
+      })),
+    };
+    await dispatch("reviewJob", reviewDecision);
+    await assert.rejects(
+      dispatch("applyJob", { reviewId: job.reviewId }),
+      /아직 확인/,
+    );
+    await dispatch("reviewJob", { ...reviewDecision, acceptUnverified: true });
+    checks.push(
+      "passing checks do not auto-confirm criteria; explicit review preserves unverified criteria",
+    );
     assert.match(job.checks[0].output, /viewer reads|viewer controls/);
     assert.equal(
       digest(await readFile(resolve(job.worktree!, "test.js"))),
@@ -326,6 +362,15 @@ export async function run() {
     assert.ok(workspace.state.jobHistory?.some((entry) => entry.id === job.id));
     await dispatch("restoreJob", { workspaceId: job.id });
     assert.equal(workspace.state.job?.phase, "review");
+    assert.equal(workspace.state.job?.reviewDecision?.acceptUnverified, true);
+    assert.ok(
+      workspace.state.job?.reviewDecision?.criteria.every(
+        (item) => item.outcome === "unverified",
+      ),
+    );
+    checks.push(
+      "saved review decisions restore with their exact proposal after restart without claiming criterion completion",
+    );
     await dispatch("jobDiff", { reviewId: job.reviewId, index: 0 });
     assert.ok(
       vscode.window.tabGroups.all.some((group) =>

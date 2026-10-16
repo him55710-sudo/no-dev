@@ -22,6 +22,7 @@ body {
 }
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
@@ -38,6 +39,7 @@ button:hover {
 }
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--design-accent);
   outline-offset: 2px;
@@ -47,6 +49,7 @@ button:disabled {
   cursor: default;
 }
 input,
+select,
 textarea {
   width: 100%;
   border: 1px solid var(--design-line);
@@ -646,6 +649,9 @@ textarea {
   align-items: center;
   gap: 12px;
 }
+.implementation-job.expanded {
+  max-height: 78vh;
+}
 .implementation-job > header > span {
   color: var(--design-muted);
   margin-right: auto;
@@ -873,4 +879,77 @@ textarea {
 .draft-comparison input[type="checkbox"] {
   width: auto;
   margin-right: 6px;
+}
+.implementation-review {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--design-line);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.implementation-review h3 {
+  margin: 0 0 6px;
+}
+.implementation-review label {
+  display: block;
+  margin: 8px 0;
+}
+.implementation-review input[type="checkbox"] {
+  width: auto;
+  margin: 0 7px 0 0;
+}
+.review-file {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--design-line);
+  overflow-wrap: anywhere;
+}
+.review-file > span {
+  display: block;
+  color: var(--design-muted);
+}
+.review-criteria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.review-criteria fieldset {
+  min-width: 0;
+  border: 1px solid var(--design-line);
+  border-radius: 7px;
+  padding: 12px;
+}
+.review-criteria legend {
+  padding: 0 5px;
+  font-weight: 600;
+}
+.review-criteria textarea {
+  display: block;
+  width: 100%;
+  min-height: 68px;
+  resize: vertical;
+}
+.review-criteria select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+.review-actions {
+  position: sticky;
+  bottom: -12px;
+  padding: 12px 0;
+  background: var(--design-panel);
+  border-top: 1px solid var(--design-line);
+}
+.review-actions button {
+  margin-right: 8px;
+}
+.review-actions p {
+  margin: 6px 0 0;
+}
+.review-uncertainty {
+  padding: 10px;
+  background: var(--design-bg);
+  border: 1px solid var(--design-line);
+  border-radius: 6px;
 }

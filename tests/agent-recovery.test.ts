@@ -216,12 +216,86 @@ describe("durable implementation recovery", { timeout: 60000 }, () => {
     expect(first.state?.phase).toBe("review");
     expect(first.savedSpec).toBe(JSON.stringify(spec));
     expect(first.file(0).before).toContain("user draft");
+    await expect(first.apply(f.review.id)).rejects.toThrow(/검토 기록/);
+    await first.reviewDecision({
+      jobId: first.state!.id,
+      reviewId: f.review.id,
+      approvedScopePaths: [],
+      reviewedVerificationPaths: [],
+      acceptUnverified: true,
+      criteria: first.state!.assessment!.criteria.map((item) => ({
+        id: item.id,
+        outcome: "unverified",
+        note: "Persistence fixture only; no behavior inference",
+        checkNames: [],
+      })),
+    });
     await first.apply(f.review.id);
     first.dispose();
     const second = new ImplementationJobs(f.storage, () => {});
     await second.restore(f.source, f.workspace.id);
     expect(second.state?.phase).toBe("applied");
+    expect(
+      second.state?.reviewDecision?.criteria.every(
+        (item) => item.outcome === "unverified",
+      ),
+    ).toBe(true);
     await second.undo(f.review.id);
+    expect(await git(f.source, "status", "--porcelain")).toBe("");
+    second.dispose();
+  });
+  it("persists explicit scope and test review, rejects stale proposals and preserves uncertainty", async () => {
+    const f = await fixture();
+    await writeFile(
+      resolve(f.workspace.path, "outside.ts"),
+      "export const outside = true;\n",
+    );
+    await writeFile(
+      resolve(f.workspace.path, "permission.test.ts"),
+      "// synthetic changed test\n",
+    );
+    f.review = await reviewJobWorkspace(f.workspace);
+    await persistedJob(f);
+    const first = new ImplementationJobs(f.storage, () => {});
+    await first.restore(f.source, f.workspace.id);
+    const assessment = first.state!.assessment!;
+    expect(
+      assessment.files
+        .filter((file) => file.outsideScope)
+        .map((file) => file.path),
+    ).toEqual(["outside.ts", "permission.test.ts"]);
+    const decision = {
+      jobId: f.workspace.id,
+      reviewId: f.review.id,
+      approvedScopePaths: [] as string[],
+      reviewedVerificationPaths: [] as string[],
+      acceptUnverified: true,
+      criteria: assessment.criteria.map((item) => ({
+        id: item.id,
+        outcome: "unverified",
+        note: "Synthetic persistence test, not inferred behavior",
+        checkNames: [],
+      })),
+    };
+    await first.reviewDecision(decision);
+    await expect(first.apply(f.review.id)).rejects.toThrow(/범위 밖/);
+    decision.approvedScopePaths = ["outside.ts", "permission.test.ts"];
+    await first.reviewDecision(decision);
+    await expect(first.apply(f.review.id)).rejects.toThrow(/검사 설정/);
+    decision.reviewedVerificationPaths = ["permission.test.ts"];
+    await first.reviewDecision(decision);
+    first.dispose();
+    const second = new ImplementationJobs(f.storage, () => {});
+    await second.restore(f.source, f.workspace.id);
+    expect(second.state!.reviewDecision).toEqual(decision);
+    await writeFile(
+      resolve(f.workspace.path, "outside.ts"),
+      "export const outside = false;\n",
+    );
+    await expect(second.reviewDecision(decision)).rejects.toThrow(
+      /작업 복사본/,
+    );
+    await expect(second.apply(f.review.id)).rejects.toThrow();
     expect(await git(f.source, "status", "--porcelain")).toBe("");
     second.dispose();
   });
