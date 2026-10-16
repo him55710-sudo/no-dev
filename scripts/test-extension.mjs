@@ -43,7 +43,10 @@ await writeFile(
         type: label.endsWith("shell") ? "shell" : "process",
         isBackground: label.endsWith("background"),
         command: process.execPath,
-        args: ["-e", code],
+        args: [
+          "-e",
+          label.endsWith("shell") ? { value: code, quoting: "strong" } : code,
+        ],
         group: "test",
         problemMatcher: [],
       })),

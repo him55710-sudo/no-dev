@@ -178,8 +178,14 @@ export async function projectChecks(
   assert.equal(shell.kind, "shell");
   await c.checks.start(c.state.contextId, shell.id, true);
   await until(
-    () => c.checks.result?.status === "passed",
+    () =>
+      !["running", "stopping"].includes(c.checks.result?.status || "running"),
     "shell task after cancellation",
+  );
+  assert.equal(
+    c.checks.result?.status,
+    "passed",
+    JSON.stringify(c.checks.result),
   );
   const outdated = await task("Pureobom check success");
   const configUri = vscode.Uri.joinPath(root, ".vscode/tasks.json");
