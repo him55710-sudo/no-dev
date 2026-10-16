@@ -10,7 +10,12 @@ import {
   type NodeChange,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import type { StructureGraph, StructureNode } from "./model";
+import {
+  structureChildren,
+  structureConnections,
+  type StructureGraph,
+  type StructureNode,
+} from "./model";
 
 type CardData = {
   label: string;
@@ -22,6 +27,7 @@ type CardData = {
 type Card = Node<CardData, "structure">;
 const labels: Record<string, string> = {
   group: "모듈 묶음",
+  feature: "업무 기능 · 사용자 정의",
   file: "구현 파일",
   symbol: "기능·선언",
   rule: "조건·규칙",
@@ -64,56 +70,11 @@ export function StructureCanvas({
     Record<string, { x: number; y: number }>
   >({});
   const layout = useMemo(() => {
-    const children = graph.nodes.filter((node) => node.parentId === scopeId);
+    const children = structureChildren(graph, scopeId);
     const visible = children.length
       ? children
       : graph.nodes.filter((node) => node.id === scopeId);
-    const byId = new Map(graph.nodes.map((node) => [node.id, node]));
-    const visibleIds = new Set(visible.map((node) => node.id));
-    const ancestor = (id: string): string | undefined => {
-      let node = byId.get(id);
-      while (node) {
-        if (visibleIds.has(node.id)) return node.id;
-        node = node.parentId ? byId.get(node.parentId) : undefined;
-      }
-      return undefined;
-    };
-    const connections = new Map<
-      string,
-      {
-        id: string;
-        source: string;
-        target: string;
-        label: string;
-        data: { originals: string[] };
-        count: number;
-      }
-    >();
-    for (const edge of graph.edges) {
-      const source = ancestor(edge.source),
-        target = ancestor(edge.target);
-      if (!source || !target || source === target) continue;
-      const key = `${source}|${target}`;
-      const previous = connections.get(key);
-      if (previous) {
-        previous.data.originals.push(edge.id);
-        previous.count++;
-        previous.label = `${previous.count}개 연결`;
-      } else
-        connections.set(key, {
-          id: edge.id,
-          source,
-          target,
-          label:
-            edge.kind === "imports"
-              ? "모듈 연결"
-              : edge.kind === "calls"
-                ? "호출"
-                : "화면 구성",
-          data: { originals: [edge.id] },
-          count: 1,
-        });
-    }
+    const connections = structureConnections(graph, visible);
     const layoutGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(
       () => ({}),
     );
@@ -126,10 +87,10 @@ export function StructureCanvas({
     });
     for (const node of visible)
       layoutGraph.setNode(node.id, { width: 220, height: 116 });
-    for (const edge of connections.values())
+    for (const edge of connections)
       layoutGraph.setEdge(edge.source, edge.target);
     dagre.layout(layoutGraph);
-    return { visible, edges: [...connections.values()], layoutGraph };
+    return { visible, edges: connections, layoutGraph };
   }, [graph, scopeId]);
   const nodes: Card[] = layout.visible.map((node: StructureNode) => ({
     id: node.id,
@@ -143,12 +104,14 @@ export function StructureCanvas({
     data: {
       label: node.label,
       kind: node.kind,
-      detail: node.sources[0]
-        ? `${node.sources[0].path} · L${node.sources[0].line}`
-        : "코드 경로에서 추출",
+      detail:
+        node.kind === "feature"
+          ? `${node.members?.length ?? 0}개 코드 연결 · ${node.unresolvedMembers?.length ?? 0}개 재연결 필요`
+          : node.sources[0]
+            ? `${node.sources[0].path} · L${node.sources[0].line}`
+            : "코드 경로에서 추출",
       selected: selectedId === node.id,
-      children: graph.nodes.filter((child) => child.parentId === node.id)
-        .length,
+      children: structureChildren(graph, node.id).length,
     },
     ariaLabel: `${labels[node.kind]} ${node.label}`,
     selected: selectedId === node.id,

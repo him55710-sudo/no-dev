@@ -1,8 +1,10 @@
 import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
+import { createHash } from "node:crypto";
 import type { DesignWorkspace } from "../src/designWorkspace";
+import type { Feature } from "../../src/workspace/features";
 import { observeSpec } from "../../src/workspace/spec";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, rename } from "node:fs/promises";
 
 export async function run() {
   const extension = vscode.extensions.getExtension<{
@@ -229,6 +231,90 @@ export async function run() {
     .specs[0];
   assert.equal(persisted.id, saved.id);
   assert.deepEqual(persisted.baselineHistory, reconnected.baselineHistory);
+  const memberIds = workspace.state
+    .graph!.nodes.filter(
+      (node) =>
+        node.kind === "symbol" &&
+        ["mayEdit", "updateProject", "ProjectEditor"].includes(node.label),
+    )
+    .map((node) => node.id);
+  assert.equal(memberIds.length, 3);
+  const sourceBeforeGrouping = await readFile(file.uri.fsPath, "utf8");
+  const request = {
+    title: "프로젝트 공유",
+    description: "화면·서비스·권한을 함께 검토",
+    memberIds,
+    expectedRevision: 0,
+    expectedGraphRevision: workspace.state.graph!.revision,
+  };
+  const feature = (await workspace.handleRequest({
+    id: "create-feature",
+    action: "saveFeature",
+    payload: request,
+  })) as Feature;
+  assert.equal(feature.revision, 1);
+  const featureNode = workspace.state.graph!.nodes.find(
+    (node) => node.id === `feature:${feature.id}`,
+  )!;
+  assert.deepEqual(
+    featureNode.members!.slice().sort(),
+    memberIds.slice().sort(),
+  );
+  assert.equal(workspace.state.job, undefined);
+  assert.equal(await readFile(file.uri.fsPath, "utf8"), sourceBeforeGrouping);
+  await assert.rejects(
+    workspace.handleRequest({
+      id: "stale-feature",
+      action: "saveFeature",
+      payload: { ...request, id: feature.id },
+    }),
+    /바뀌었/,
+  );
+  const groupedSpec = await workspace.save({
+    targetIds: [featureNode.id],
+    content,
+    expectedRevision: 0,
+  });
+  const withFeature = JSON.parse(await readFile(designUri.fsPath, "utf8"));
+  assert.deepEqual(
+    withFeature.features[0],
+    feature,
+    "saving design preserves feature metadata",
+  );
+  await workspace.handleRequest({
+    id: "remove-feature",
+    action: "removeFeature",
+    payload: {
+      id: feature.id,
+      expectedRevision: 1,
+      expectedGraphRevision: workspace.state.graph!.revision,
+    },
+  });
+  assert.equal(workspace.state.specs.features!.length, 0);
+  assert.equal(
+    workspace.state.specs.specs.some((spec) => spec.id === groupedSpec.id),
+    true,
+  );
+  assert.equal(
+    observeSpec(groupedSpec, workspace.state.graph!).status,
+    "reconnect",
+  );
+  assert.equal(await readFile(file.uri.fsPath, "utf8"), sourceBeforeGrouping);
+  const diskEdit =
+    sourceBeforeGrouping.replace(/\r?\n/g, "\r\n") +
+    "\n// external atomic replacement\n";
+  await writeFile(file.uri.fsPath + ".external.tmp", diskEdit);
+  await rename(file.uri.fsPath + ".external.tmp", file.uri.fsPath);
+  assert.equal(file.isDirty, false);
+  await workspace.refresh();
+  await settled();
+  assert.equal(
+    workspace.state.graph!.files.find(
+      (item) => item.path === "features/sharing/policy.ts",
+    )!.hash,
+    createHash("sha256").update(diskEdit).digest("hex"),
+    "clean editor buffers cannot override externally replaced disk bytes",
+  );
   const report = {
     checkedAt: new Date().toISOString(),
     checks: [
@@ -250,6 +336,12 @@ export async function run() {
       "renamed declaration explicitly reconnects with stable spec identity",
       "baseline history and desired intent survive subsequent document edits",
       "baseline acceptance never starts an agent",
+      "cross-folder business feature stores canonical code membership",
+      "feature grouping does not change source or start an agent",
+      "stale feature edits are rejected",
+      "design save preserves feature metadata",
+      "feature removal preserves code and marks saved design for reconnection",
+      "external atomic replacement is analyzed from disk while the document is open",
     ],
     nodes: graph.nodes.length,
     edges: graph.edges.length,

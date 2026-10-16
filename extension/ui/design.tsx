@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { DesignWorkspaceView } from "../../src/workspace/DesignWorkspaceView";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import type { LivingSpec } from "../../src/workspace/spec";
+import type { Feature } from "../../src/workspace/features";
 import { request } from "./bridge";
 
 function DesignApp() {
@@ -49,6 +50,8 @@ function DesignApp() {
             specId,
           }),
         acceptBaseline: (payload) => request("acceptBaseline", payload),
+        saveFeature: (payload) => request<Feature>("saveFeature", payload),
+        removeFeature: (payload) => request("removeFeature", payload),
         jobAction: (action, payload) => request(action, payload),
       }}
     />

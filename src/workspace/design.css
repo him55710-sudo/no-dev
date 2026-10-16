@@ -714,6 +714,43 @@ textarea {
   border-radius: 6px;
   overflow-wrap: anywhere;
 }
+.feature-create {
+  margin: 0 12px 12px;
+}
+.feature-editor,
+.feature-overview {
+  padding: 18px;
+}
+.feature-overview {
+  border-bottom: 1px solid var(--design-line);
+}
+.feature-overview button {
+  margin: 6px 6px 0 0;
+}
+.feature-editor small,
+.feature-members small {
+  display: block;
+  opacity: 0.75;
+}
+.feature-members {
+  max-height: 200px;
+  overflow: auto;
+  margin: 8px 0;
+}
+.feature-members > div {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  overflow-wrap: anywhere;
+}
+.feature-members button {
+  flex: 0 0 auto;
+}
+.kind-feature {
+  background: var(--design-accent);
+}
 .baseline-review h3 {
   margin: 0 0 8px;
 }

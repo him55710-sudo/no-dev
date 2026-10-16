@@ -8,12 +8,14 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import type { SpecContent } from "../../src/workspace/spec";
+import type { Feature } from "../../src/workspace/features";
 const exec = promisify(execFile);
 const digest = (bytes: Buffer | string) =>
   createHash("sha256").update(bytes).digest("hex");
 const phase = process.env.PUREOBOM_RECOVERY_PHASE!;
 const checkpointPath = process.env.PUREOBOM_RECOVERY_CHECKPOINT!;
 type Checkpoint = {
+  featureId?: string;
   originalHashes: Record<string, string>;
   originalHead: string;
   originalIndex: string;
@@ -83,6 +85,17 @@ export async function run() {
     "Production extension mode",
     "real workspace command opens analyzed design panel",
   ];
+  if (phase !== "prepare-review") {
+    const feature = workspace.state.specs.features?.find(
+      (item) => item.id === checkpoint.featureId,
+    );
+    assert.equal(
+      feature?.members.length,
+      3,
+      "business feature persists across separate VS Code launches",
+    );
+    checks.push("business feature persists after restart");
+  }
   const dispatch = (action: string, payload?: unknown) =>
     workspace.handleRequest({ id: `test-${phase}`, action, payload });
   const saveCheckpoint = () =>
@@ -134,7 +147,7 @@ export async function run() {
   async function acceptCurrentBaseline() {
     await stableAnalysis();
     const before = workspace.state.specs.specs.find(
-      (spec) => spec.id === "system",
+      (spec) => spec.id === `feature:${checkpoint.featureId}`,
     )!;
     const currentJob = workspace.state.job!.id;
     const accepted = (await dispatch("acceptBaseline", {
@@ -161,7 +174,7 @@ export async function run() {
   async function startImplementation() {
     await stableAnalysis();
     const previous = workspace.state.specs.specs.find(
-      (spec) => spec.id === "system",
+      (spec) => spec.id === `feature:${checkpoint.featureId}`,
     );
     const content: SpecContent = {
       title: "공유 권한 복구 검증",
@@ -178,7 +191,7 @@ export async function run() {
       ],
     };
     await dispatch("implement", {
-      targetIds: ["system"],
+      targetIds: [`feature:${checkpoint.featureId}`],
       content,
       expectedRevision: previous?.revision ?? 0,
       checks: ["test"],
@@ -244,6 +257,30 @@ export async function run() {
 
   if (phase === "prepare-review") {
     assert.equal(workspace.state.jobHistory?.length, 0);
+    const members = workspace.state
+      .graph!.nodes.filter(
+        (node) =>
+          node.kind === "file" &&
+          ["policy.js", "service.js", "ui.js"].includes(node.sources[0]?.path),
+      )
+      .map((node) => node.id);
+    assert.equal(members.length, 3);
+    const feature = (await dispatch("saveFeature", {
+      title: "프로젝트 공유",
+      description: "권한·수정 API·화면을 함께 변경",
+      memberIds: members,
+      expectedRevision: 0,
+      expectedGraphRevision: workspace.state.graph!.revision,
+    })) as Feature;
+    checkpoint.featureId = feature.id;
+    assert.equal(
+      workspace.state.job,
+      undefined,
+      "grouping never starts an agent",
+    );
+    checks.push(
+      "implementation begins from a saved cross-file business feature",
+    );
     checkpoint.firstJob = await startImplementation();
     await assertOriginal();
     checks.push("implementation does not modify the original source or index");
@@ -264,6 +301,32 @@ export async function run() {
         }),
       ),
       "review uses VS Code's real diff editor",
+    );
+    const feature = workspace.state.specs.features!.find(
+      (item) => item.id === checkpoint.featureId,
+    )!;
+    const editFeature = (memberIds: string[]) =>
+      dispatch("saveFeature", {
+        id: feature.id,
+        title: feature.title,
+        description: feature.description,
+        memberIds,
+        expectedRevision: workspace.state.specs.features!.find(
+          (item) => item.id === feature.id,
+        )!.revision,
+        expectedGraphRevision: workspace.state.graph!.revision,
+      });
+    await editFeature(
+      feature.members.slice(0, 2).map((member) => member.nodeId),
+    );
+    await assert.rejects(
+      dispatch("applyJob", { reviewId: job.reviewId }),
+      /다시 검토/,
+    );
+    await assertOriginal();
+    await editFeature(feature.members.map((member) => member.nodeId));
+    checks.push(
+      "changing feature membership blocks an old implementation review",
     );
     const designPath = resolve(source, ".pureobom/specs.json"),
       originalDesign = await readFile(designPath, "utf8");

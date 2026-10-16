@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import {
   lstat,
   mkdir,
@@ -29,6 +29,14 @@ import {
   type SpecDocument,
 } from "../../src/workspace/spec";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
+import {
+  featureRequestSchema,
+  projectFeatures,
+  saveFeature,
+  removeFeature,
+  removeFeatureSchema,
+  type Feature,
+} from "../../src/workspace/features";
 import { ImplementationJobs } from "./agent/jobs";
 import { availableChecks } from "./agent/verify";
 
@@ -41,6 +49,8 @@ const requestSchema = z
       "source",
       "saveSpec",
       "acceptBaseline",
+      "saveFeature",
+      "removeFeature",
       "implement",
       "cancelJob",
       "decideJob",
@@ -275,6 +285,10 @@ export class DesignWorkspace implements vscode.Disposable {
       result = await this.save(request.payload);
     else if (request.action === "acceptBaseline")
       result = await this.acceptBaseline(request.payload);
+    else if (request.action === "saveFeature")
+      result = await this.saveFeature(request.payload);
+    else if (request.action === "removeFeature")
+      result = await this.removeFeature(request.payload);
     else if (request.action === "implement")
       result = await this.implement(request.payload);
     else if (request.action === "jobHistory") await this.loadJobHistory();
@@ -344,6 +358,10 @@ export class DesignWorkspace implements vscode.Disposable {
           throw Error(
             "구현 중 설계가 바뀌었습니다. 새 설계로 다시 구현해 주세요.",
           );
+        await this.refresh();
+        if (this.state.busy || this.state.stale)
+          throw Error("구조 분석이 갱신된 뒤 반영해 주세요.");
+        prepareChange(current!, this.state.graph!, "behavior");
         await this.jobs.apply(payload.reviewId);
       } else if (request.action === "recoverJob")
         await this.jobs.recover(payload.reviewId);
@@ -392,7 +410,11 @@ export class DesignWorkspace implements vscode.Disposable {
         const open = vscode.workspace.textDocuments.find(
           (doc) => doc.uri.toString() === uri.toString(),
         );
-        const content = open ? open.getText() : await readFile(actual, "utf8");
+        // Clean buffers can lag an external atomic rename (especially on Linux).
+        // Only unsaved user edits override disk bytes in the observed graph.
+        const content = open?.isDirty
+          ? open.getText()
+          : await readFile(actual, "utf8");
         if (content.includes("\0")) {
           notices.push(`바이너리 파일 제외: ${path}`);
           continue;
@@ -409,9 +431,13 @@ export class DesignWorkspace implements vscode.Disposable {
           );
         files.push({ path, content });
       }
-      const graph = await this.worker.call<StructureGraph>("structure", {
+      const base = await this.worker.call<StructureGraph>("structure", {
         files,
       });
+      const graph = await projectFeatures(
+        base,
+        this.state.specs.features ?? [],
+      );
       const checks = (await availableChecks(folder.uri.fsPath)).names;
       if (serial !== this.serial || this.folder !== folder) return;
       this.state.graph = graph;
@@ -565,6 +591,70 @@ export class DesignWorkspace implements vscode.Disposable {
         if (this.serial !== serial || this.folder !== folder)
           throw Error("검토 중 코드가 바뀌었습니다. 비교를 다시 열어 주세요.");
       });
+    } finally {
+      this.saving = false;
+    }
+  }
+  async saveFeature(raw: unknown): Promise<Feature> {
+    this.assertExecutionReady();
+    if (this.saving) throw Error("설계를 저장하는 중입니다.");
+    if (this.jobs.isRunning || this.state.job?.phase === "recovery")
+      throw Error("진행 중인 구현·복구를 마친 뒤 기능 묶음을 편집해 주세요.");
+    const request = featureRequestSchema.parse(raw);
+    const graph = this.state.graph;
+    if (!graph || this.state.busy || this.state.stale)
+      throw Error("구조 분석이 완료된 뒤 기능 묶음을 편집해 주세요.");
+    const serial = this.serial;
+    const id = request.id ?? randomUUID();
+    const next = specDocumentSchema.parse({
+      ...this.state.specs,
+      features: saveFeature(
+        this.state.specs.features ?? [],
+        graph,
+        request,
+        id,
+      ),
+    });
+    this.saving = true;
+    try {
+      await this.persistDesign(next, "", () => {
+        this.assertExecutionReady();
+        if (this.serial !== serial)
+          throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
+      });
+      await this.refresh();
+      return next.features!.find((feature) => feature.id === id)!;
+    } finally {
+      this.saving = false;
+    }
+  }
+  async removeFeature(raw: unknown) {
+    this.assertExecutionReady();
+    if (
+      this.saving ||
+      this.jobs.isRunning ||
+      this.state.job?.phase === "recovery"
+    )
+      throw Error(
+        "진행 중인 저장·구현·복구를 마친 뒤 기능 묶음을 해제해 주세요.",
+      );
+    const request = removeFeatureSchema.parse(raw);
+    const graph = this.state.graph;
+    if (!graph || this.state.busy || this.state.stale)
+      throw Error("구조 분석이 완료된 뒤 기능 묶음을 해제해 주세요.");
+    const serial = this.serial;
+    const next = specDocumentSchema.parse({
+      ...this.state.specs,
+      features: removeFeature(this.state.specs.features ?? [], graph, request),
+    });
+    this.saving = true;
+    try {
+      await this.persistDesign(next, "", () => {
+        this.assertExecutionReady();
+        if (this.serial !== serial)
+          throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
+      });
+      await this.refresh();
     } finally {
       this.saving = false;
     }

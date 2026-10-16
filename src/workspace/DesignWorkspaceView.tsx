@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { ancestors, type StructureGraph, type StructureNode } from "./model";
+import {
+  ancestors,
+  descendantIds,
+  structureChildren,
+  type StructureGraph,
+  type StructureNode,
+} from "./model";
 import {
   specForTargets,
   observeSpec,
@@ -9,6 +15,13 @@ import {
   type BaselineRequest,
 } from "./spec";
 import { BaselineReview } from "./BaselineReview";
+import { FeatureEditor } from "./FeatureEditor";
+import {
+  featureNodeId,
+  type Feature,
+  type FeatureRequest,
+  type RemoveFeatureRequest,
+} from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
 import { jobIsActive, type VerificationName } from "./job";
@@ -33,6 +46,8 @@ export type DesignActions = {
     specId?: string,
   ) => Promise<unknown>;
   acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
+  saveFeature?: (request: FeatureRequest) => Promise<Feature>;
+  removeFeature?: (request: RemoveFeatureRequest) => Promise<unknown>;
   jobAction?: (
     action: JobAction,
     payload?: Record<string, unknown>,
@@ -41,6 +56,7 @@ export type DesignActions = {
 const typeNames: Record<string, string> = {
   system: "프로젝트",
   group: "모듈",
+  feature: "업무 기능",
   file: "파일",
   symbol: "선언",
   rule: "규칙",
@@ -64,6 +80,9 @@ function StructureTree({
       const key = node.parentId ?? "";
       result.set(key, [...(result.get(key) ?? []), node]);
     }
+    for (const node of graph.nodes)
+      if (node.members) result.set(node.id, structureChildren(graph, node.id));
+    result.set("system", structureChildren(graph, "system"));
     return result;
   }, [graph]);
   const render = (parent: string, depth: number): React.ReactNode =>
@@ -326,7 +345,9 @@ export function DesignWorkspaceView({
     setSavedSpecId(undefined);
   };
   const [connections, setConnections] = useState<string[]>([]);
-  const [scope, setScope] = useState("system");
+  const [scope, updateScope] = useState("system");
+  const [scopeTrail, setScopeTrail] = useState(["system"]);
+  const [editingFeature, setEditingFeature] = useState<string>();
   const [search, setSearch] = useState("");
   const [included, setIncluded] = useState<string[]>([]);
   const [drafts, setDrafts] = useState<Record<string, SpecContent>>({});
@@ -339,6 +360,19 @@ export function DesignWorkspaceView({
     setSelection(state.selectedId);
   }, [state.selectedId]);
   const graph = state.graph;
+  const setScope = (id: string) => {
+    updateScope(id);
+    setScopeTrail((old) =>
+      old.includes(id)
+        ? old.slice(0, old.indexOf(id) + 1)
+        : graph &&
+            structureChildren(graph, scope).some((node) => node.id === id)
+          ? [...old, id]
+          : graph
+            ? ancestors(graph, id).map((node) => node.id)
+            : ["system"],
+    );
+  };
   const selected = graph?.nodes.find((node) => node.id === selection);
   const edge = graph?.edges.find((item) => item.id === selection);
   const selectedId = selected?.id ?? edge?.id ?? "system";
@@ -359,6 +393,23 @@ export function DesignWorkspaceView({
     }
   }, [graph, state.specs, targetsKey, savedSpecId]);
   const content = spec ? (drafts[spec.id] ?? spec.content) : undefined;
+  const memberships = useMemo(
+    () =>
+      graph && selected
+        ? graph.nodes.filter(
+            (node) =>
+              node.kind === "feature" &&
+              descendantIds(graph, [node.id]).has(selected.id),
+          )
+        : [],
+    [graph, selected],
+  );
+  const breadcrumbs = graph
+    ? scopeTrail.at(-1) === scopeId &&
+      scopeTrail.every((id) => graph.nodes.some((node) => node.id === id))
+      ? scopeTrail.map((id) => graph.nodes.find((node) => node.id === id)!)
+      : ancestors(graph, scopeId)
+    : [];
   const related = useMemo(
     () =>
       graph && spec ? implementationScope(graph, spec.targetIds) : undefined,
@@ -372,7 +423,7 @@ export function DesignWorkspaceView({
   };
   const enter = (id: string) => {
     setSelection(id);
-    if (graph?.nodes.some((node) => node.parentId === id)) setScope(id);
+    if (graph && structureChildren(graph, id).length) setScope(id);
   };
   const source = (id: string, index: number) =>
     perform(() => actions.source(id, index));
@@ -467,6 +518,22 @@ export function DesignWorkspaceView({
             {results ? "검색 결과" : "프로젝트 구조"}
             <span>{results ? results.length : (graph?.nodes.length ?? 0)}</span>
           </div>
+          {actions.saveFeature ? (
+            <button
+              className="feature-create"
+              disabled={
+                !graph ||
+                !state.trusted ||
+                state.busy ||
+                state.stale ||
+                jobIsActive(state.job) ||
+                state.job?.phase === "recovery"
+              }
+              onClick={() => setEditingFeature("new")}
+            >
+              업무 기능 만들기
+            </button>
+          ) : null}
           {graph ? (
             results ? (
               <ul className="search-results">
@@ -524,14 +591,14 @@ export function DesignWorkspaceView({
             </>
           ) : null}
           <p className="sidebar-note">
-            모듈 묶음은 코드 경로에서 가져옵니다. 연결을 확인하며 여러 대상을
-            하나의 설계에 포함할 수 있어요.
+            업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든
+            구현을 경로대로 탐색할 수 있어요.
           </p>
         </aside>
         <section className="design-center" aria-label="시스템 구조 캔버스">
           <nav className="design-breadcrumb" aria-label="현재 탐색 위치">
             {graph
-              ? ancestors(graph, scopeId).map((node, index) => (
+              ? breadcrumbs.map((node, index) => (
                   <span key={node.id}>
                     {index ? " / " : ""}
                     <button
@@ -590,234 +657,321 @@ export function DesignWorkspaceView({
               {focus ? "구조 함께 보기" : "집중 보기"}
             </button>
           </header>
-          {edge && graph ? (
-            <div className="edge-inspector">
-              {connections.includes(edge.id) && connections.length > 1 ? (
-                <nav aria-label="묶인 연결의 근거">
-                  <p>이 선에 포함된 {connections.length}개 연결</p>
-                  {connections.map((id) => {
-                    const item = graph.edges.find(
-                      (candidate) => candidate.id === id,
-                    );
-                    return item ? (
-                      <button
-                        key={id}
-                        aria-current={edge.id === id ? "true" : undefined}
-                        onClick={() => setSelection(id)}
-                      >
-                        {item.kind} · {item.sources[0]?.path}:
-                        {item.sources[0]?.line}
-                      </button>
-                    ) : null;
-                  })}
-                </nav>
-              ) : null}
-              <span className="eyebrow">{edge.kind.toUpperCase()}</span>
-              <h2>
-                {graph.nodes.find((node) => node.id === edge.source)?.label} →{" "}
-                {graph.nodes.find((node) => node.id === edge.target)?.label}
-              </h2>
-              <p>
-                컴파일러가 정적으로 확인한{" "}
-                {edge.kind === "calls"
-                  ? "호출"
-                  : edge.kind === "renders"
-                    ? "화면 구성"
-                    : "모듈"}{" "}
-                연결입니다. 런타임 실행·데이터 계약·실패 처리는 별도 확인이
-                필요합니다.
-              </p>
-              {edge.sources.map((ref, index) => (
-                <button key={index} onClick={() => source(edge.id, index)}>
-                  {ref.path}:{ref.line} 원문 ↗
-                </button>
-              ))}
-              <button
-                className="primary"
-                onClick={() => {
-                  setIncluded([edge.source, edge.target]);
-                  setSelection(edge.target);
-                }}
-              >
-                두 대상을 함께 설계하기
-              </button>
-            </div>
-          ) : null}
-          {selected ? (
-            <div className="target-controls">
-              <span>
-                {typeNames[selected.kind]} · {selected.label}
-              </span>
-              <button
-                onClick={() => {
-                  setSavedSpecId(undefined);
-                  setIncluded((old) =>
-                    old.includes(selected.id)
-                      ? old.filter((id) => id !== selected.id)
-                      : [...old, selected.id],
-                  );
-                }}
-              >
-                {included.includes(selected.id)
-                  ? "대상에서 제외"
-                  : "설계에 포함"}
-              </button>
-            </div>
-          ) : null}
-          {included.length ? (
-            <div className="included-targets">
-              <span>{included.length}개 대상을 함께 설계</span>
-              <button
-                onClick={() => {
-                  setSavedSpecId(undefined);
-                  setIncluded([]);
-                }}
-              >
-                선택 해제
-              </button>
-            </div>
-          ) : null}
-          {selected && graph ? (
-            <details className="related-structure">
-              <summary>직접 연결된 구현</summary>
-              {graph.edges
-                .filter(
-                  (item) =>
-                    item.source === selected.id || item.target === selected.id,
-                )
-                .map((item) => {
-                  const id =
-                    item.source === selected.id ? item.target : item.source;
-                  const node = graph.nodes.find((n) => n.id === id)!;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setSelection(node.id);
-                        setScope(node.parentId ?? "system");
-                      }}
-                    >
-                      <strong>
-                        {item.source === selected.id ? "→ " : "← "}
-                        {node.label}
-                      </strong>
-                      <span>
-                        {node.sources[0]?.path} · {item.kind}
-                      </span>
-                    </button>
-                  );
-                })}
-              <p>
-                호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}개
-              </p>
-              {related?.paths.map((path) => (
-                <small key={path}>{path}</small>
-              ))}
-            </details>
-          ) : null}
-          {spec && content && graph ? (
-            <SpecEditor
-              key={spec.id}
-              spec={spec}
+          {editingFeature && graph && actions.saveFeature ? (
+            <FeatureEditor
+              key={editingFeature}
               graph={graph}
-              content={content}
-              dirty={!!drafts[spec.id]}
-              saving={saving}
-              readOnly={!state.trusted || state.stale || state.busy}
-              onChange={(next) =>
-                setDrafts((old) => ({ ...old, [spec.id]: next }))
+              feature={state.specs.features?.find(
+                (item) => item.id === editingFeature,
+              )}
+              initialIds={
+                included.length ? included : selected ? [selected.id] : []
               }
-              onSave={() => save()}
-              onSource={source}
-              acceptBaseline={
-                actions.acceptBaseline &&
-                !jobIsActive(state.job) &&
-                state.job?.phase !== "recovery"
+              disabled={
+                !state.trusted ||
+                state.busy ||
+                state.stale ||
+                jobIsActive(state.job) ||
+                state.job?.phase === "recovery"
+              }
+              save={async (request) => {
+                const feature = await actions.saveFeature!(request);
+                setIncluded([]);
+                setSelection(featureNodeId(feature.id));
+                setScope("system");
+                return feature;
+              }}
+              remove={
+                actions.removeFeature
                   ? async (request) => {
-                      await actions.acceptBaseline!(request);
-                      updateSelection(request.targetIds[0]);
-                      setIncluded(request.targetIds);
-                      setSavedSpecId(request.specId);
-                      setFeedback(
-                        "검토한 코드를 새 기준으로 저장했습니다. 설계 목표는 그대로 유지됩니다.",
-                      );
+                      await actions.removeFeature!(request);
+                      setIncluded([]);
+                      setSelection("system");
+                      setScope("system");
                     }
                   : undefined
               }
-              implementation={
-                actions.implement ? (
-                  <section
-                    className="implementation-options"
-                    aria-label="구현 설정"
-                  >
-                    <strong>Codex로 구현</strong>
-                    <p>
-                      별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
-                      반영하면 원본 프로젝트에 적용됩니다.
-                    </p>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={allowExternal}
-                        onChange={(e) => setAllowExternal(e.target.checked)}
-                      />
-                      설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사
-                      명령을 실행합니다.
-                    </label>
-                    <fieldset>
-                      <legend>구현 후 실행할 검사</legend>
-                      {state.checks?.length ? (
-                        state.checks.map((name) => (
-                          <label key={name}>
-                            <input
-                              type="checkbox"
-                              checked={checks.includes(name)}
-                              onChange={(e) =>
-                                setChecks((current) =>
-                                  e.target.checked
-                                    ? [...current, name]
-                                    : current.filter((item) => item !== name),
-                                )
-                              }
-                            />
-                            {name}
-                          </label>
-                        ))
-                      ) : (
-                        <p>
-                          package.json에 test, build, typecheck 또는 check
-                          명령이 필요합니다.
-                        </p>
-                      )}
-                    </fieldset>
-                    <button
-                      className="primary"
-                      onClick={() => save(true)}
-                      disabled={
-                        !allowExternal ||
-                        !checks.length ||
-                        saving ||
-                        !state.trusted ||
-                        state.stale ||
-                        state.busy ||
-                        observeSpec(spec, graph).status !== "unchanged" ||
-                        jobIsActive(state.job) ||
-                        state.job?.phase === "recovery" ||
-                        !content.desired.trim() ||
-                        !content.acceptance.some((line) => line.trim())
-                      }
-                    >
-                      저장하고 구현
-                    </button>
-                  </section>
-                ) : undefined
-              }
+              close={() => setEditingFeature(undefined)}
             />
-          ) : !edge ? (
-            <p className="empty-message">
-              구조를 선택하면 현재 구현과 원하는 동작을 함께 확인할 수 있어요.
-            </p>
           ) : null}
+          <div hidden={!!editingFeature}>
+            {edge && graph ? (
+              <div className="edge-inspector">
+                {connections.includes(edge.id) && connections.length > 1 ? (
+                  <nav aria-label="묶인 연결의 근거">
+                    <p>이 선에 포함된 {connections.length}개 연결</p>
+                    {connections.map((id) => {
+                      const item = graph.edges.find(
+                        (candidate) => candidate.id === id,
+                      );
+                      return item ? (
+                        <button
+                          key={id}
+                          aria-current={edge.id === id ? "true" : undefined}
+                          onClick={() => setSelection(id)}
+                        >
+                          {item.kind} · {item.sources[0]?.path}:
+                          {item.sources[0]?.line}
+                        </button>
+                      ) : null;
+                    })}
+                  </nav>
+                ) : null}
+                <span className="eyebrow">{edge.kind.toUpperCase()}</span>
+                <h2>
+                  {graph.nodes.find((node) => node.id === edge.source)?.label} →{" "}
+                  {graph.nodes.find((node) => node.id === edge.target)?.label}
+                </h2>
+                <p>
+                  컴파일러가 정적으로 확인한{" "}
+                  {edge.kind === "calls"
+                    ? "호출"
+                    : edge.kind === "renders"
+                      ? "화면 구성"
+                      : "모듈"}{" "}
+                  연결입니다. 런타임 실행·데이터 계약·실패 처리는 별도 확인이
+                  필요합니다.
+                </p>
+                {edge.sources.map((ref, index) => (
+                  <button key={index} onClick={() => source(edge.id, index)}>
+                    {ref.path}:{ref.line} 원문 ↗
+                  </button>
+                ))}
+                <button
+                  className="primary"
+                  onClick={() => {
+                    setIncluded([edge.source, edge.target]);
+                    setSelection(edge.target);
+                  }}
+                >
+                  두 대상을 함께 설계하기
+                </button>
+              </div>
+            ) : null}
+            {selected ? (
+              <div className="target-controls">
+                <span>
+                  {typeNames[selected.kind]} · {selected.label}
+                </span>
+                <button
+                  onClick={() => {
+                    setSavedSpecId(undefined);
+                    setIncluded((old) =>
+                      old.includes(selected.id)
+                        ? old.filter((id) => id !== selected.id)
+                        : [...old, selected.id],
+                    );
+                  }}
+                >
+                  {included.includes(selected.id)
+                    ? "대상에서 제외"
+                    : "설계에 포함"}
+                </button>
+              </div>
+            ) : null}
+            {selected?.kind === "feature" ? (
+              <section className="feature-overview">
+                <strong>사용자가 정의한 업무 기능</strong>
+                <p>{selected.description || "기능 설명을 추가할 수 있어요."}</p>
+                {selected.unresolvedMembers?.map((member) => (
+                  <p key={member.nodeId} role="status">
+                    다시 연결 필요: {member.label}
+                  </p>
+                ))}
+                {actions.saveFeature ? (
+                  <button
+                    disabled={
+                      !state.trusted ||
+                      state.busy ||
+                      state.stale ||
+                      jobIsActive(state.job) ||
+                      state.job?.phase === "recovery"
+                    }
+                    onClick={() =>
+                      setEditingFeature(selected.id.slice("feature:".length))
+                    }
+                  >
+                    기능 이름·코드 묶음 편집
+                  </button>
+                ) : null}
+              </section>
+            ) : memberships.length ? (
+              <nav
+                className="feature-overview"
+                aria-label="이 코드가 포함된 업무 기능"
+              >
+                <strong>이 코드가 포함된 업무 기능</strong>
+                {memberships.map((feature) => (
+                  <button
+                    key={feature.id}
+                    onClick={() => {
+                      setIncluded([]);
+                      setScope(feature.id);
+                      setSelection(feature.id);
+                    }}
+                  >
+                    {feature.label}
+                  </button>
+                ))}
+              </nav>
+            ) : null}
+            {included.length ? (
+              <div className="included-targets">
+                <span>{included.length}개 대상을 함께 설계</span>
+                <button
+                  onClick={() => {
+                    setSavedSpecId(undefined);
+                    setIncluded([]);
+                  }}
+                >
+                  선택 해제
+                </button>
+              </div>
+            ) : null}
+            {selected && graph ? (
+              <details className="related-structure">
+                <summary>직접 연결된 구현</summary>
+                {graph.edges
+                  .filter(
+                    (item) =>
+                      item.source === selected.id ||
+                      item.target === selected.id,
+                  )
+                  .map((item) => {
+                    const id =
+                      item.source === selected.id ? item.target : item.source;
+                    const node = graph.nodes.find((n) => n.id === id)!;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setSelection(node.id);
+                          setScope(node.parentId ?? "system");
+                        }}
+                      >
+                        <strong>
+                          {item.source === selected.id ? "→ " : "← "}
+                          {node.label}
+                        </strong>
+                        <span>
+                          {node.sources[0]?.path} · {item.kind}
+                        </span>
+                      </button>
+                    );
+                  })}
+                <p>
+                  호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}
+                  개
+                </p>
+                {related?.paths.map((path) => (
+                  <small key={path}>{path}</small>
+                ))}
+              </details>
+            ) : null}
+            {spec && content && graph ? (
+              <SpecEditor
+                key={spec.id}
+                spec={spec}
+                graph={graph}
+                content={content}
+                dirty={!!drafts[spec.id]}
+                saving={saving}
+                readOnly={!state.trusted || state.stale || state.busy}
+                onChange={(next) =>
+                  setDrafts((old) => ({ ...old, [spec.id]: next }))
+                }
+                onSave={() => save()}
+                onSource={source}
+                acceptBaseline={
+                  actions.acceptBaseline &&
+                  !jobIsActive(state.job) &&
+                  state.job?.phase !== "recovery"
+                    ? async (request) => {
+                        await actions.acceptBaseline!(request);
+                        updateSelection(request.targetIds[0]);
+                        setIncluded(request.targetIds);
+                        setSavedSpecId(request.specId);
+                        setFeedback(
+                          "검토한 코드를 새 기준으로 저장했습니다. 설계 목표는 그대로 유지됩니다.",
+                        );
+                      }
+                    : undefined
+                }
+                implementation={
+                  actions.implement ? (
+                    <section
+                      className="implementation-options"
+                      aria-label="구현 설정"
+                    >
+                      <strong>Codex로 구현</strong>
+                      <p>
+                        별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
+                        반영하면 원본 프로젝트에 적용됩니다.
+                      </p>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={allowExternal}
+                          onChange={(e) => setAllowExternal(e.target.checked)}
+                        />
+                        설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한
+                        검사 명령을 실행합니다.
+                      </label>
+                      <fieldset>
+                        <legend>구현 후 실행할 검사</legend>
+                        {state.checks?.length ? (
+                          state.checks.map((name) => (
+                            <label key={name}>
+                              <input
+                                type="checkbox"
+                                checked={checks.includes(name)}
+                                onChange={(e) =>
+                                  setChecks((current) =>
+                                    e.target.checked
+                                      ? [...current, name]
+                                      : current.filter((item) => item !== name),
+                                  )
+                                }
+                              />
+                              {name}
+                            </label>
+                          ))
+                        ) : (
+                          <p>
+                            package.json에 test, build, typecheck 또는 check
+                            명령이 필요합니다.
+                          </p>
+                        )}
+                      </fieldset>
+                      <button
+                        className="primary"
+                        onClick={() => save(true)}
+                        disabled={
+                          !allowExternal ||
+                          !checks.length ||
+                          saving ||
+                          !state.trusted ||
+                          state.stale ||
+                          state.busy ||
+                          observeSpec(spec, graph).status !== "unchanged" ||
+                          jobIsActive(state.job) ||
+                          state.job?.phase === "recovery" ||
+                          !content.desired.trim() ||
+                          !content.acceptance.some((line) => line.trim())
+                        }
+                      >
+                        저장하고 구현
+                      </button>
+                    </section>
+                  ) : undefined
+                }
+              />
+            ) : !edge ? (
+              <p className="empty-message">
+                구조를 선택하면 현재 구현과 원하는 동작을 함께 확인할 수 있어요.
+              </p>
+            ) : null}
+          </div>
         </aside>
       </div>
       {actions.jobAction ? (

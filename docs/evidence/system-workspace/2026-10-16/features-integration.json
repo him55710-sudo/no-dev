@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-10-16T09:20:51.161Z",
+  "checks": [
+    "real compiler graph",
+    "alias/re-export shared policy",
+    "node to exact source",
+    "source to node",
+    "durable design save",
+    "stale design rejected",
+    "unsaved source invalidation",
+    "observed drift preserves intent",
+    "restored source reconnects",
+    "project verification script discovery",
+    "documentation save never starts agent",
+    "external data choice required",
+    "dirty editor blocks implementation",
+    "dirty editor blocks baseline acceptance",
+    "stale baseline comparison and stale spec revision are rejected",
+    "renamed declaration explicitly reconnects with stable spec identity",
+    "baseline history and desired intent survive subsequent document edits",
+    "baseline acceptance never starts an agent",
+    "cross-folder business feature stores canonical code membership",
+    "feature grouping does not change source or start an agent",
+    "stale feature edits are rejected",
+    "design save preserves feature metadata",
+    "feature removal preserves code and marks saved design for reconnection",
+    "external atomic replacement is analyzed from disk while the document is open"
+  ],
+  "nodes": 42,
+  "edges": 21
+}

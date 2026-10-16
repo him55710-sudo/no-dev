@@ -1,10 +1,12 @@
 import { z } from "zod";
 import {
   relativePath,
+  descendantIds,
   sourceRefSchema,
   type SourceRef,
   type StructureGraph,
 } from "./model";
+import { featureListSchema } from "./features";
 
 const text = z.string().max(12000);
 const lines = z.array(z.string().min(1).max(2000)).max(100);
@@ -64,6 +66,7 @@ export const specDocumentSchema = z
   .object({
     schemaVersion: z.literal(1),
     specs: z.array(livingSpecSchema).max(1000),
+    features: featureListSchema.optional(),
   })
   .strict();
 export type SpecContent = z.infer<typeof specContentSchema>;
@@ -102,18 +105,11 @@ export function draftSpec(
   now = new Date().toISOString(),
 ): LivingSpec {
   const targets = new Set(targetIds);
-  const lookup = new Map(graph.nodes.map((node) => [node.id, node]));
   const selected = graph.nodes.filter((node) => targets.has(node.id));
   if (selected.length !== new Set(targetIds).size || selected.length === 0)
     throw Error("선택한 구조가 현재 분석에 없습니다.");
-  const descendants = graph.nodes.filter((node) => {
-    let current: typeof node | undefined = node;
-    while (current) {
-      if (targets.has(current.id)) return true;
-      current = current.parentId ? lookup.get(current.parentId) : undefined;
-    }
-    return false;
-  });
+  const included = descendantIds(graph, targetIds);
+  const descendants = graph.nodes.filter((node) => included.has(node.id));
   // Keep top-level selected declarations, not duplicate nested ranges.
   const refs = outerSources(descendants.flatMap((node) => node.sources));
   return livingSpecSchema.parse({
@@ -187,6 +183,26 @@ export function observeSpec(
   const sources: SourceRef[] = [],
     details: string[] = [];
   let status: SpecObservation["status"] = "unchanged";
+  const included = descendantIds(graph, spec.targetIds);
+  for (const node of graph.nodes)
+    if (included.has(node.id) && node.unresolvedMembers?.length) {
+      status = "reconnect";
+      details.push(
+        `${node.label}: 기능에 연결되지 않은 코드가 있습니다. 기능 묶음의 대상을 다시 확인해 주세요.`,
+      );
+    }
+  if (
+    spec.targetIds.some(
+      (id) =>
+        id.startsWith("feature:") &&
+        !graph.nodes.some((node) => node.id === id),
+    )
+  ) {
+    status = "reconnect";
+    details.push(
+      "연결된 업무 기능이 없습니다. 설계 대상을 다시 선택해 주세요.",
+    );
+  }
   for (const old of spec.baseline.sources) {
     const same = locations.get(`${old.path}\0${old.symbol}`) ?? [];
     const matches = same.filter((ref) => ref.contentHash === old.contentHash);
@@ -225,10 +241,14 @@ export function observeSpec(
   ) {
     const current = draftSpec(graph, spec.targetIds);
     const known = new Set(sources.map(sourceKey));
-    if (current.baseline.sources.some((ref) => !known.has(sourceKey(ref)))) {
+    const selected = new Set(current.baseline.sources.map(sourceKey));
+    if (
+      current.baseline.sources.some((ref) => !known.has(sourceKey(ref))) ||
+      sources.some((ref) => !selected.has(sourceKey(ref)))
+    ) {
       status = "changed";
       details.push(
-        "설계 대상에 새로운 구현 근거가 추가되었습니다. 범위를 다시 검토해 주세요.",
+        "설계 대상의 구현 근거 범위가 바뀌었습니다. 범위를 다시 검토해 주세요.",
       );
     }
   }
@@ -258,6 +278,7 @@ export function saveSpec(
     updatedAt: new Date().toISOString(),
   };
   return specDocumentSchema.parse({
+    ...document,
     schemaVersion: 1,
     specs: [...document.specs.filter((spec) => spec.id !== saved.id), saved],
   });
@@ -279,6 +300,13 @@ export function acceptBaseline(
       "검토 중 코드가 바뀌었습니다. 기준 코드 비교를 다시 열어 주세요.",
     );
   const candidate = draftSpec(graph, [...new Set(request.targetIds)], now);
+  const included = descendantIds(graph, request.targetIds);
+  if (
+    graph.nodes.some(
+      (node) => included.has(node.id) && node.unresolvedMembers?.length,
+    )
+  )
+    throw Error("기능 묶음의 코드 연결을 먼저 확인해 주세요.");
   if (!candidate.baseline.sources.length)
     throw Error(
       "연결할 구현 근거가 없습니다. 코드가 있는 대상을 선택해 주세요.",
@@ -304,6 +332,7 @@ export function acceptBaseline(
     updatedAt: now,
   });
   return specDocumentSchema.parse({
+    ...document,
     schemaVersion: 1,
     specs: document.specs.map((spec) => (spec.id === saved.id ? saved : spec)),
   });
@@ -338,6 +367,7 @@ export function implementationScope(
     adjacent.get(from)!.add(to);
   };
   for (const node of graph.nodes) {
+    for (const member of node.members ?? []) link(node.id, member);
     if (!node.parentId) continue;
     link(node.parentId, node.id);
     if (lookup.get(node.parentId)?.kind === "symbol")
