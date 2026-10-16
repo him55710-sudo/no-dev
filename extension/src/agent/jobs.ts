@@ -31,6 +31,7 @@ import {
   type ChangeReview,
 } from "./gitWorkspace";
 import { availableChecks, verifyWorkspace } from "./verify";
+import type { ExecutionContext } from "../../../src/workspace/execution";
 import { readRecord, writeRecord } from "./records";
 import {
   assessReview,
@@ -121,6 +122,7 @@ export class ImplementationJobs {
       checks: VerificationName[];
       allowExternal: boolean;
       specSnapshot?: LivingSpec;
+      verification?: Pick<ExecutionContext, "manager" | "scripts">;
     },
   ) {
     if (!options.allowExternal)
@@ -160,7 +162,12 @@ export class ImplementationJobs {
   private async execute(
     root: string,
     request: ChangeRequest,
-    options: { executable: string; model?: string; checks: VerificationName[] },
+    options: {
+      executable: string;
+      model?: string;
+      checks: VerificationName[];
+      verification?: Pick<ExecutionContext, "manager" | "scripts">;
+    },
     signal: AbortSignal,
   ) {
     const state = this.state!;
@@ -172,13 +179,26 @@ export class ImplementationJobs {
       await mkdir(this.recordDirectory);
       this.emit();
       await this.flush();
-      const verification = await availableChecks(root);
+      const verification =
+        options.verification ?? (await availableChecks(root, true));
       const workspace = (this.workspace = await createJobWorkspace(
         root,
         this.storage,
         state.id,
       ));
       signal.throwIfAborted();
+      const copiedChecks = await availableChecks(workspace.path, true);
+      if (
+        copiedChecks.manager !== verification.manager ||
+        options.checks.some(
+          (name) =>
+            verification.scripts[name] === undefined ||
+            copiedChecks.scripts[name] !== verification.scripts[name],
+        )
+      )
+        throw Error(
+          "선택한 검사 설정이 준비 도중 바뀌었습니다. 구현 설정을 다시 확인해 주세요.",
+        );
       for (const ref of request.sources)
         if (workspace.hashes[ref.path] !== ref.fileHash)
           throw Error(`분석 후 원본이 바뀌었습니다: ${ref.path}`);
@@ -259,6 +279,7 @@ export class ImplementationJobs {
               signal,
               180000,
               verification.scripts[name],
+              verification.manager,
             ),
           );
           this.emit();

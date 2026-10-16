@@ -2,6 +2,8 @@
 
 **Pureobom — Read it. Change it. Check it.**
 
+**시스템 설계 개발판:** `풀어봄: 시스템 설계 워크스페이스 열기`에서 프로젝트 구조를 탐색하고 원하는 동작·완료 기준을 편집할 수 있습니다. Codex 연결과 검사 명령을 확인하고 `저장하고 구현`을 실행하면 별도 작업 공간에서 관련 파일을 수정·검사한 뒤 결과를 검토합니다. 실행 선택은 이 컴퓨터의 프로젝트별 설정으로 보관·해제할 수 있습니다. [연결과 실행 설정](https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/EXECUTION_SETTINGS.md).
+
 **0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 다른 언어의 실제 모델 품질, 전체 프로젝트 검사, 성능 측정 UI는 아직 검증·구현 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
 
 Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. Optional local AI proposes broader changes. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.

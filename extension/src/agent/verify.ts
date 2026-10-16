@@ -63,10 +63,19 @@ export async function verifyWorkspace(
   signal: AbortSignal,
   timeoutMs = 180000,
   expectedScript?: string,
+  expectedManager?: string,
 ): Promise<VerificationResult> {
   const start = Date.now(),
     available = await availableChecks(root, true);
   signal.throwIfAborted();
+  if (expectedManager !== undefined && available.manager !== expectedManager)
+    return {
+      name,
+      status: "failed",
+      output:
+        "검사 실행기가 구현 도중 바뀌었습니다. 기존 실행기를 유지하거나 새 설정을 별도로 검토해야 합니다.",
+      elapsedMs: Date.now() - start,
+    };
   if (
     expectedScript !== undefined &&
     available.scripts[name] !== expectedScript

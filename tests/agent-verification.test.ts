@@ -84,6 +84,19 @@ describe("independent implementation verification", { timeout: 120000 }, () => {
     expect((await verifyWorkspace(root, "typecheck", signal)).status).toBe(
       "missing",
     );
+    const manager = (await availableChecks(root, true)).manager;
+    const wrongManager = manager === "npm" ? "pnpm" : "npm";
+    const replacedLauncher = await verifyWorkspace(
+      root,
+      "test",
+      signal,
+      3000,
+      'node -e "console.log(123)"',
+      wrongManager,
+    );
+    expect(replacedLauncher.status).toBe("failed");
+    expect(replacedLauncher.output).toContain("실행기가 구현 도중 바뀌었");
+    expect(replacedLauncher.exitCode).toBeUndefined();
     expect(
       (
         await verifyWorkspace(

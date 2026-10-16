@@ -38,6 +38,17 @@ import {
   type DesignDraft,
 } from "../../src/workspace/drafts";
 import { DesignDrafts } from "./designDrafts";
+import { ExecutionProfiles } from "./executionProfiles";
+import { CodexAppServer } from "./agent/appServer";
+import {
+  executionContextSchema,
+  executionUseSchema,
+  saveExecutionSchema,
+  revokeExecutionSchema,
+  executionKey,
+  assertExecutionContext,
+  type ExecutionContext,
+} from "../../src/workspace/execution";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import {
   featureRequestSchema,
@@ -66,6 +77,10 @@ const requestSchema = z
       "saveFeature",
       "removeFeature",
       "implement",
+      "saveExecution",
+      "revokeExecution",
+      "checkConnection",
+      "executionSettings",
       "cancelJob",
       "decideJob",
       "jobDiff",
@@ -120,6 +135,10 @@ export class DesignWorkspace implements vscode.Disposable {
   private saving = false;
   private diskDesign = "";
   private drafts?: DesignDrafts;
+  private executionProfiles?: ExecutionProfiles;
+  private connectionServer?: CodexAppServer;
+  private executionSerial = 0;
+  private connectionSerial = 0;
   private disposables: vscode.Disposable[] = [];
   constructor(private context: vscode.ExtensionContext) {
     this.worker = new AnalysisClient(context.asAbsolutePath("out/worker.cjs"));
@@ -194,6 +213,16 @@ export class DesignWorkspace implements vscode.Disposable {
         this.state.trusted = true;
         this.emit();
       }),
+      vscode.workspace.onDidChangeConfiguration((event) => {
+        if (
+          event.affectsConfiguration("pureobom.codexPath") ||
+          event.affectsConfiguration("pureobom.codexModel")
+        ) {
+          this.connectionSerial++;
+          this.state.connection = undefined;
+          void this.loadExecution();
+        }
+      }),
     );
   }
   private emit() {
@@ -219,6 +248,9 @@ export class DesignWorkspace implements vscode.Disposable {
       if (this.jobs.isRunning || this.saving)
         throw Error("진행 중인 구현 작업이 끝난 뒤 프로젝트를 바꿔 주세요.");
       this.jobs.dispose();
+      this.connectionSerial++;
+      void this.connectionServer?.close();
+      this.connectionServer = undefined;
       this.jobs = new ImplementationJobs(
         resolve(this.context.globalStorageUri.fsPath, "implementation-jobs"),
         (job) => {
@@ -243,6 +275,10 @@ export class DesignWorkspace implements vscode.Disposable {
         await realpath(folder.uri.fsPath),
       );
       this.state.projectKey = this.drafts.projectKey;
+      this.executionProfiles = new ExecutionProfiles(
+        this.context.globalStorageUri.fsPath,
+        this.drafts.projectKey,
+      );
       await this.loadDrafts();
       await this.loadJobHistory();
     } else await this.loadDrafts();
@@ -329,6 +365,18 @@ export class DesignWorkspace implements vscode.Disposable {
       result = await this.removeFeature(request.payload);
     else if (request.action === "implement")
       result = await this.implement(request.payload);
+    else if (
+      request.action === "saveExecution" ||
+      request.action === "revokeExecution"
+    )
+      result = await this.editExecution(request.action, request.payload);
+    else if (request.action === "checkConnection")
+      result = await this.checkConnection(request.payload);
+    else if (request.action === "executionSettings")
+      await vscode.commands.executeCommand(
+        "workbench.action.openSettings",
+        "@ext:pureobom-local.pureobom codex",
+      );
     else if (request.action === "jobHistory") await this.loadJobHistory();
     else if (request.action === "restoreJob") {
       const payload = z
@@ -518,6 +566,7 @@ export class DesignWorkspace implements vscode.Disposable {
       this.state.notices = notices;
       this.state.stale = false;
       this.state.busy = false;
+      await this.loadExecution();
       this.emit();
     } catch (error) {
       // A rename/delete can invalidate an in-flight read as well as its result.
@@ -896,40 +945,189 @@ export class DesignWorkspace implements vscode.Disposable {
         "편집 중인 파일을 저장한 뒤 구현·반영해 주세요. 저장되지 않은 내용을 덮어쓰지 않습니다.",
       );
   }
+  private async executionContext(): Promise<ExecutionContext> {
+    if (!this.folder || !this.state.projectKey)
+      throw Error("프로젝트가 없습니다.");
+    const configuration = vscode.workspace.getConfiguration("pureobom");
+    const folder = this.folder;
+    const projectKey = this.state.projectKey;
+    const executable = configuration.get<string>("codexPath") || "codex";
+    const model = configuration.get<string>("codexModel") || "";
+    const checks = await availableChecks(folder.uri.fsPath, true);
+    if (
+      this.folder !== folder ||
+      this.state.projectKey !== projectKey ||
+      this.disposed
+    )
+      throw Error("프로젝트가 바뀌었습니다.");
+    return executionContextSchema.parse({
+      projectKey,
+      executable,
+      model,
+      manager: checks.manager,
+      scripts: checks.scripts,
+    });
+  }
+  private async loadExecution() {
+    const store = this.executionProfiles;
+    if (!store || this.disposed) return;
+    const serial = ++this.executionSerial;
+    try {
+      const [context, profile] = await Promise.all([
+        this.executionContext(),
+        store.read(),
+      ]);
+      if (
+        this.executionProfiles !== store ||
+        this.disposed ||
+        this.executionSerial !== serial
+      )
+        return;
+      if (
+        this.state.execution &&
+        executionKey(this.state.execution.context) !== executionKey(context)
+      ) {
+        this.connectionSerial++;
+        this.state.connection = undefined;
+      }
+      this.state.execution = { context, profile };
+      this.state.executionError = undefined;
+    } catch (error) {
+      if (
+        this.executionProfiles !== store ||
+        this.disposed ||
+        this.executionSerial !== serial
+      )
+        return;
+      this.state.execution = undefined;
+      this.state.connection = undefined;
+      this.state.executionError = `구현 설정을 읽지 못했습니다. 기존 기록은 보존합니다. ${String(error)}`;
+    }
+    this.emit();
+  }
+  private async editExecution(action: string, raw: unknown) {
+    const store = this.executionProfiles;
+    if (!store || !vscode.workspace.isTrusted)
+      throw Error("신뢰한 로컬 프로젝트에서 실행 설정을 변경해 주세요.");
+    try {
+      if (action === "saveExecution") {
+        const request = saveExecutionSchema.parse(raw);
+        assertExecutionContext(request, await this.executionContext());
+        return await store.save(request);
+      }
+      const request = revokeExecutionSchema.parse(raw);
+      if (request.projectKey !== store.projectKey)
+        throw Error("다른 프로젝트의 실행 설정입니다.");
+      return await store.revoke(request.expectedRevision);
+    } finally {
+      await this.loadExecution();
+    }
+  }
+  private async checkConnection(raw: unknown) {
+    if (!this.folder || !vscode.workspace.isTrusted)
+      throw Error("신뢰한 로컬 프로젝트에서 Codex 연결을 확인해 주세요.");
+    if (this.connectionServer || this.jobs.isRunning)
+      throw Error(
+        "진행 중인 연결 확인 또는 구현 작업이 끝난 뒤 확인해 주세요.",
+      );
+    const expected = executionContextSchema.parse(raw);
+    const context = await this.executionContext();
+    if (executionKey(expected) !== executionKey(context))
+      throw Error("구현 설정이 바뀌었습니다. 새로 읽고 확인해 주세요.");
+    if (this.connectionServer || this.jobs.isRunning || this.disposed)
+      throw Error("다른 연결 확인 또는 구현 작업이 진행 중입니다.");
+    const folder = this.folder;
+    const serial = ++this.connectionSerial;
+    const server = new CodexAppServer({
+      executable: context.executable,
+      cwd: folder.uri.fsPath,
+      requestTimeoutMs: 15000,
+    });
+    this.connectionServer = server;
+    this.state.connection = {
+      status: "checking",
+      message: "Codex 실행기와 로그인 상태를 확인합니다.",
+    };
+    this.emit();
+    let result: NonNullable<DesignWorkspaceState["connection"]>;
+    try {
+      const provider = (await server.start()).userAgent;
+      const account = await server.account();
+      const ready = account.signedIn || !account.requiresOpenaiAuth;
+      result = {
+        status: ready ? "ready" : "signin",
+        provider,
+        message: ready
+          ? "Codex에 연결되었습니다. 구현 실행 시 로그인 상태를 다시 확인합니다."
+          : "Codex CLI에서 로그인한 뒤 연결을 다시 확인해 주세요.",
+        checkedAt: new Date().toISOString(),
+      };
+    } catch {
+      // Do not copy raw provider/account output into persistent state or the Webview.
+      result = {
+        status: "failed",
+        message:
+          "Codex에 연결하지 못했습니다. 설정의 실행 파일 경로와 CLI 설치·로그인을 확인해 주세요.",
+        checkedAt: new Date().toISOString(),
+      };
+    } finally {
+      await server.close();
+      if (this.connectionServer === server) this.connectionServer = undefined;
+    }
+    if (
+      !this.disposed &&
+      this.folder === folder &&
+      this.connectionSerial === serial &&
+      this.state.execution &&
+      executionKey(this.state.execution.context) === executionKey(context)
+    ) {
+      this.state.connection = result;
+      this.emit();
+    }
+    return result;
+  }
   async implement(raw: unknown) {
     this.assertExecutionReady();
     if (this.jobs.isRunning)
       throw Error("현재 구현 작업이 끝난 뒤 다시 시작해 주세요.");
     const payload = saveSchema
       .extend({
-        allowExternal: z.literal(true),
-        checks: z
-          .array(z.enum(["test", "build", "typecheck", "check"]))
-          .min(1)
-          .max(4),
+        execution: executionUseSchema,
       })
       .strict()
       .parse(raw);
-    const available = (await availableChecks(this.folder!.uri.fsPath)).names;
-    if (payload.checks.some((name) => !available.includes(name)))
-      throw Error("선택한 검사 명령이 프로젝트에 없습니다.");
-    const saved = await this.save({
-      specId: payload.specId,
-      targetIds: payload.targetIds,
-      content: payload.content,
-      expectedRevision: payload.expectedRevision,
-      draftRevision: payload.draftRevision,
-      projectKey: payload.projectKey,
-    });
-    const change = prepareChange(saved, this.state.graph!, "behavior")!;
-    const configuration = vscode.workspace.getConfiguration("pureobom");
-    return this.jobs.start(this.folder!.uri.fsPath, change, {
-      executable: configuration.get<string>("codexPath") || "codex",
-      model: configuration.get<string>("codexModel") || undefined,
-      checks: [...new Set(payload.checks)],
-      allowExternal: payload.allowExternal,
-      specSnapshot: saved,
-    });
+    const store = this.executionProfiles!;
+    const folder = this.folder!;
+    assertExecutionContext(payload.execution, await this.executionContext());
+    const start = async () => {
+      if (this.executionProfiles !== store)
+        throw Error("프로젝트가 바뀌었습니다.");
+      const saved = await this.save({
+        specId: payload.specId,
+        targetIds: payload.targetIds,
+        content: payload.content,
+        expectedRevision: payload.expectedRevision,
+        draftRevision: payload.draftRevision,
+        projectKey: payload.projectKey,
+      });
+      const change = prepareChange(saved, this.state.graph!, "behavior")!;
+      const context = await this.executionContext();
+      assertExecutionContext(payload.execution, context);
+      if (this.folder !== folder) throw Error("프로젝트가 바뀌었습니다.");
+      return this.jobs.start(folder.uri.fsPath, change, {
+        executable: context.executable,
+        model: context.model || undefined,
+        checks: payload.execution.checks,
+        allowExternal: true,
+        verification: { manager: context.manager, scripts: context.scripts },
+        specSnapshot: saved,
+      });
+    };
+    try {
+      return await store.use(payload.execution, start);
+    } finally {
+      await this.loadExecution();
+    }
   }
   async loadJobHistory() {
     if (!this.folder) return;
@@ -948,11 +1146,13 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   dispose() {
     this.disposed = true;
+    this.connectionSerial++;
     clearTimeout(this.timer);
     this.serial++;
     this.panel?.dispose();
     this.worker.dispose();
     this.jobs.dispose();
+    void this.connectionServer?.close();
     this.changes.dispose();
     this.disposables.forEach((d) => d.dispose());
   }

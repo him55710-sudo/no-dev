@@ -326,6 +326,18 @@ describe("durable implementation recovery", { timeout: 60000 }, () => {
   });
   it("persists a real failed launch and restores it without launching another process", async () => {
     const f = await fixture();
+    // This case must reach the missing agent launcher after a valid check preflight.
+    await writeFile(
+      resolve(f.source, "package.json"),
+      JSON.stringify({ private: true, scripts: { test: "node --version" } }),
+    );
+    await git(f.source, "add", "package.json");
+    await git(
+      f.source,
+      "commit",
+      "-m",
+      "Valid check for missing-launcher recovery",
+    );
     await persistedJob(f);
     const record = JSON.parse(
       await readFile(resolve(f.workspace.directory, "job.json"), "utf8"),

@@ -33,6 +33,8 @@
 
 구현 연결의 사용법·제한·실행 증거: [AGENT_IMPLEMENTATION.md](AGENT_IMPLEMENTATION.md). 이 표의 부분 검증을 전체 제품 완성으로 간주하지 않는다.
 
+최초 실행 연결과 프로젝트 설정: [EXECUTION_SETTINGS.md](EXECUTION_SETTINGS.md). 실행기·로그인 확인, 검사 명령 표시, 로컬 선택 보관·해제, 설정 변경과 다른 창의 해제 후 오래된 실행 요청 차단을 구현했다. 전체 실행 정책의 OS 격리나 CLI 기본 설정 고정을 의미하지 않는다.
+
 업무 기능의 저장·다대다 연결·탐색·범위 변경·제한: [BUSINESS_FEATURES.md](BUSINESS_FEATURES.md).
 
 작성 중 설계의 로컬 보관·재시작 복원·충돌 비교·확정: [DESIGN_DRAFTS.md](DESIGN_DRAFTS.md).

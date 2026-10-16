@@ -6,6 +6,8 @@ This is a deterministic installation/recovery test, not a real AI implementation
 
 The driver uses the same validated request handler as the Webview. Five separate VS Code launches exercise persisted review, native diff, design/dirty-buffer conflicts, apply, undo, and recovery after killing the test extension-host process during an actual file transaction. The installed product's location, Production mode, and bundle hashes are checked on every launch.
 
+Connection preflight calls initialize/account in the original isolated fixture without starting a model turn. Overlapping connection requests must launch only one peer. Execution choices persist across the five launches and are reused through their exact stored revision. The fixture refuses implementation turns outside its generated worktree.
+
 Run after building and packaging:
 
 ```sh

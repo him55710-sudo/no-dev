@@ -10,6 +10,7 @@ import type { DesignWorkspace } from "../src/designWorkspace";
 import type { SpecContent } from "../../src/workspace/spec";
 import type { Feature } from "../../src/workspace/features";
 import { draftMatches, type DesignDraft } from "../../src/workspace/drafts";
+import { approvalMatches } from "../../src/workspace/execution";
 const exec = promisify(execFile);
 const digest = (bytes: Buffer | string) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -99,6 +100,51 @@ export async function run() {
   }
   const dispatch = (action: string, payload?: unknown) =>
     workspace.handleRequest({ id: `test-${phase}`, action, payload });
+  if (phase === "prepare-review") {
+    const context = workspace.state.execution!.context;
+    const before = JSON.stringify(workspace.state.specs);
+    const connections = await Promise.allSettled([
+      dispatch("checkConnection", context),
+      dispatch("checkConnection", context),
+    ]);
+    assert.equal(
+      connections.filter((result) => result.status === "fulfilled").length,
+      1,
+    );
+    assert.equal(
+      connections.filter((result) => result.status === "rejected").length,
+      1,
+    );
+    assert.equal(workspace.state.connection?.status, "ready");
+    assert.match(workspace.state.connection!.provider!, /deterministic/);
+    assert.equal(workspace.state.job, undefined);
+    assert.equal(JSON.stringify(workspace.state.specs), before);
+    await dispatch("saveExecution", {
+      context,
+      checks: ["test"],
+      allowExternal: true,
+      expectedRevision: 0,
+    });
+    assert.equal(workspace.state.execution!.profile.revision, 1);
+    checks.push(
+      "connection check uses the real stdio adapter without starting an implementation or changing design",
+      "overlapping connection requests start only one peer",
+      "project execution approval is saved in local extension storage",
+    );
+  } else {
+    const execution = workspace.state.execution!;
+    assert.equal(execution.profile.revision, 1);
+    assert.ok(approvalMatches(execution.profile, execution.context));
+    assert.deepEqual(execution.profile.approval!.checks, ["test"]);
+    assert.equal(
+      workspace.state.connection,
+      undefined,
+      "login status is never persisted as a future guarantee",
+    );
+    checks.push(
+      "project execution settings survive an independent installed extension launch",
+    );
+  }
   const saveCheckpoint = () =>
     writeFile(checkpointPath, JSON.stringify(checkpoint, null, 2));
   async function assertOriginal() {
@@ -195,8 +241,13 @@ export async function run() {
       targetIds: [`feature:${checkpoint.featureId}`],
       content,
       expectedRevision: previous?.revision ?? 0,
-      checks: ["test"],
-      allowExternal: true,
+      execution: {
+        context: workspace.state.execution!.context,
+        checks: ["test"],
+        allowExternal: true,
+        profileRevision: workspace.state.execution!.profile.revision,
+        useSaved: true,
+      },
     });
     await waitFor(
       () =>

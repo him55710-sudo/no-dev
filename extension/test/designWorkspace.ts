@@ -5,6 +5,7 @@ import type { DesignWorkspace } from "../src/designWorkspace";
 import type { Feature } from "../../src/workspace/features";
 import { observeSpec, draftSpec } from "../../src/workspace/spec";
 import type { DesignDraft } from "../../src/workspace/drafts";
+import { approvalMatches } from "../../src/workspace/execution";
 import { readFile, writeFile, rename } from "node:fs/promises";
 
 export async function run() {
@@ -92,8 +93,12 @@ export async function run() {
       targetIds: targets,
       content,
       expectedRevision: 1,
-      checks: ["test"],
-      allowExternal: false,
+      execution: {
+        context: workspace.state.execution!.context,
+        checks: ["test"],
+        allowExternal: false,
+        profileRevision: workspace.state.execution!.profile.revision,
+      },
     }),
   );
   assert.equal(
@@ -101,6 +106,67 @@ export async function run() {
     undefined,
     "external execution requires the explicit implementation action and data choice",
   );
+  const execution = workspace.state.execution!;
+  const useExecution = {
+    context: execution.context,
+    checks: ["test"],
+    allowExternal: true,
+    profileRevision: 1,
+    useSaved: true,
+  };
+  const implementPayload = {
+    targetIds: targets,
+    content,
+    expectedRevision: saved.revision,
+    execution: useExecution,
+  };
+  await workspace.handleRequest({
+    id: "execution-save",
+    action: "saveExecution",
+    payload: {
+      context: execution.context,
+      checks: ["test"],
+      allowExternal: true,
+      expectedRevision: 0,
+    },
+  });
+  assert.equal(workspace.state.execution!.profile.revision, 1);
+  const manifestPath = vscode.Uri.joinPath(
+    vscode.workspace.workspaceFolders![0].uri,
+    "package.json",
+  ).fsPath;
+  const manifest = await readFile(manifestPath, "utf8");
+  const changedManifest = JSON.parse(manifest);
+  changedManifest.scripts.test = "node changed-test.js";
+  await writeFile(manifestPath, JSON.stringify(changedManifest));
+  await workspace.refresh();
+  assert.equal(
+    approvalMatches(
+      workspace.state.execution!.profile,
+      workspace.state.execution!.context,
+    ),
+    false,
+  );
+  await assert.rejects(
+    workspace.implement(implementPayload),
+    /검사 명령이 바뀌었/,
+  );
+  assert.equal(
+    workspace.state.specs.specs[0].revision,
+    saved.revision,
+    "stale command refusal precedes design save",
+  );
+  assert.equal(workspace.state.job, undefined);
+  await writeFile(manifestPath, manifest);
+  await workspace.refresh();
+  await workspace.handleRequest({
+    id: "execution-revoke",
+    action: "revokeExecution",
+    payload: { projectKey: execution.context.projectKey, expectedRevision: 1 },
+  });
+  await assert.rejects(workspace.implement(implementPayload), /다른 창/);
+  assert.equal(workspace.state.job, undefined);
+  await settled();
   const designUri = vscode.Uri.joinPath(
     vscode.workspace.workspaceFolders![0].uri,
     ".pureobom/specs.json",
@@ -131,8 +197,11 @@ export async function run() {
       targetIds: targets,
       content,
       expectedRevision: 1,
-      checks: ["test"],
-      allowExternal: true,
+      execution: {
+        context: workspace.state.execution!.context,
+        checks: ["test"],
+        allowExternal: true,
+      },
     }),
     /저장한 뒤/,
   );
@@ -435,6 +504,8 @@ export async function run() {
       "observed drift preserves intent",
       "restored source reconnects",
       "project verification script discovery",
+      "changed package script invalidates saved execution settings and blocks implementation before design save",
+      "revoked execution settings cannot be reused by a stale UI request",
       "documentation save never starts agent",
       "external data choice required",
       "dirty editor blocks implementation",

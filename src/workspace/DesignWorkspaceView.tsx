@@ -27,37 +27,43 @@ import {
 } from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
-import { jobIsActive, type VerificationName } from "./job";
+import { jobIsActive } from "./job";
+import { executionKey, type ExecutionUse } from "./execution";
+import {
+  ImplementationOptions,
+  type ExecutionActions,
+} from "./ImplementationOptions";
 import { JobTray, phaseNames, type JobAction } from "./JobTray";
 import "@xyflow/react/dist/style.css";
 import "./design.css";
 
-export type DesignActions = DraftActions & {
-  refresh: () => Promise<unknown>;
-  source: (id: string, index: number) => Promise<unknown>;
-  save: (
-    targets: string[],
-    content: SpecContent,
-    revision: number,
-    specId?: string,
-    draftRevision?: number,
-  ) => Promise<LivingSpec>;
-  implement?: (
-    targets: string[],
-    content: SpecContent,
-    revision: number,
-    checks: VerificationName[],
-    specId?: string,
-    draftRevision?: number,
-  ) => Promise<unknown>;
-  acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
-  saveFeature?: (request: FeatureRequest) => Promise<Feature>;
-  removeFeature?: (request: RemoveFeatureRequest) => Promise<unknown>;
-  jobAction?: (
-    action: JobAction,
-    payload?: Record<string, unknown>,
-  ) => Promise<unknown>;
-};
+export type DesignActions = DraftActions &
+  ExecutionActions & {
+    refresh: () => Promise<unknown>;
+    source: (id: string, index: number) => Promise<unknown>;
+    save: (
+      targets: string[],
+      content: SpecContent,
+      revision: number,
+      specId?: string,
+      draftRevision?: number,
+    ) => Promise<LivingSpec>;
+    implement?: (
+      targets: string[],
+      content: SpecContent,
+      revision: number,
+      execution: ExecutionUse,
+      specId?: string,
+      draftRevision?: number,
+    ) => Promise<unknown>;
+    acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
+    saveFeature?: (request: FeatureRequest) => Promise<Feature>;
+    removeFeature?: (request: RemoveFeatureRequest) => Promise<unknown>;
+    jobAction?: (
+      action: JobAction,
+      payload?: Record<string, unknown>,
+    ) => Promise<unknown>;
+  };
 const typeNames: Record<string, string> = {
   system: "프로젝트",
   group: "모듈",
@@ -359,8 +365,6 @@ export function DesignWorkspaceView({
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [focus, setFocus] = useState(false);
-  const [allowExternal, setAllowExternal] = useState(false);
-  const [checks, setChecks] = useState<VerificationName[]>([]);
   useEffect(() => {
     setSelection(state.selectedId);
   }, [state.selectedId]);
@@ -436,7 +440,8 @@ export function DesignWorkspaceView({
   };
   const source = (id: string, index: number) =>
     perform(() => actions.source(id, index));
-  const save = (implement = false) => {
+  const save = (execution?: ExecutionUse) => {
+    const implement = !!execution;
     if (!spec || !content || draftConflict) return;
     setSaving(true);
     setFeedback("");
@@ -448,12 +453,12 @@ export function DesignWorkspaceView({
     const request = drafts
       .flush(spec.id)
       .then((draftRevision) =>
-        implement && actions.implement
+        execution && actions.implement
           ? actions.implement(
               spec.targetIds,
               cleaned,
               spec.revision,
-              checks,
+              execution,
               spec.revision ? spec.id : undefined,
               draftRevision,
             )
@@ -978,73 +983,28 @@ export function DesignWorkspaceView({
                   }
                   implementation={
                     actions.implement ? (
-                      <section
-                        className="implementation-options"
-                        aria-label="구현 설정"
-                      >
-                        <strong>Codex로 구현</strong>
-                        <p>
-                          별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
-                          반영하면 원본 프로젝트에 적용됩니다.
-                        </p>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={allowExternal}
-                            onChange={(e) => setAllowExternal(e.target.checked)}
-                          />
-                          설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한
-                          검사 명령을 실행합니다.
-                        </label>
-                        <fieldset>
-                          <legend>구현 후 실행할 검사</legend>
-                          {state.checks?.length ? (
-                            state.checks.map((name) => (
-                              <label key={name}>
-                                <input
-                                  type="checkbox"
-                                  checked={checks.includes(name)}
-                                  onChange={(e) =>
-                                    setChecks((current) =>
-                                      e.target.checked
-                                        ? [...current, name]
-                                        : current.filter(
-                                            (item) => item !== name,
-                                          ),
-                                    )
-                                  }
-                                />
-                                {name}
-                              </label>
-                            ))
-                          ) : (
-                            <p>
-                              package.json에 test, build, typecheck 또는 check
-                              명령이 필요합니다.
-                            </p>
-                          )}
-                        </fieldset>
-                        <button
-                          className="primary"
-                          onClick={() => save(true)}
-                          disabled={
-                            !allowExternal ||
-                            !checks.length ||
-                            saving ||
-                            draftConflict ||
-                            !state.trusted ||
-                            state.stale ||
-                            state.busy ||
-                            observeSpec(spec, graph).status !== "unchanged" ||
-                            jobIsActive(state.job) ||
-                            state.job?.phase === "recovery" ||
-                            !content.desired.trim() ||
-                            !content.acceptance.some((line) => line.trim())
-                          }
-                        >
-                          저장하고 구현
-                        </button>
-                      </section>
+                      <ImplementationOptions
+                        key={
+                          state.execution
+                            ? `${executionKey(state.execution.context)}:${state.execution.profile.revision}`
+                            : "loading"
+                        }
+                        state={state}
+                        actions={actions}
+                        onImplement={save}
+                        disabled={
+                          saving ||
+                          draftConflict ||
+                          !state.trusted ||
+                          state.stale ||
+                          state.busy ||
+                          observeSpec(spec, graph).status !== "unchanged" ||
+                          jobIsActive(state.job) ||
+                          state.job?.phase === "recovery" ||
+                          !content.desired.trim() ||
+                          !content.acceptance.some((line) => line.trim())
+                        }
+                      />
                     ) : undefined
                   }
                 />

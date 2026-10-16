@@ -636,6 +636,22 @@ textarea {
   border: 1px solid var(--design-line);
   border-radius: 6px;
 }
+.execution-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.execution-check {
+  padding: 6px 0;
+}
+.implementation-options code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  margin: 4px 0 8px;
+}
 .implementation-job {
   flex: none;
   max-height: 36vh;

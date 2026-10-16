@@ -2,6 +2,11 @@ import type { StructureGraph } from "./model";
 import type { SpecDocument } from "./spec";
 import type { DesignDraft } from "./drafts";
 import type {
+  ExecutionContext,
+  ExecutionProfile,
+  AgentConnection,
+} from "./execution";
+import type {
   ImplementationJob,
   VerificationName,
   JobHistoryEntry,
@@ -20,6 +25,9 @@ export type DesignWorkspaceState = {
   error?: string;
   notices: string[];
   checks?: VerificationName[];
+  execution?: { context: ExecutionContext; profile: ExecutionProfile };
+  executionError?: string;
+  connection?: AgentConnection;
   job?: ImplementationJob;
   jobHistory?: JobHistoryEntry[];
   jobHistoryErrors?: string[];

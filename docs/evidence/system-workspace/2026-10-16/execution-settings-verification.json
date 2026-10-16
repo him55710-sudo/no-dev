@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T11:25:55.618458+00:00",
+  "scope": "Project execution settings, connection preflight and persisted choice validation. Not completion of the entire product plan.",
+  "sourceSha256": {
+    "src/workspace/execution.ts": "c7e4debb1b72f34f946e30216b0dc0e8cc2a755086a5785aca8f6713d565e94a",
+    "src/workspace/ImplementationOptions.tsx": "a97a02882f074aa66d78cde124d7dcdd1e51000ce24b87948c5ad062d89ab3a1",
+    "src/workspace/DesignWorkspaceView.tsx": "c32c808d644b369bace0e7506fd7b8bf796a9cda72afb6730ba5cf3286352734",
+    "src/workspace/state.ts": "3c72ce5565dcbfaa7db0a84eb572ba8d58cd8dfa757a885d19f8edd42d3a094f",
+    "src/workspace/design.css": "d10af990d735102587c310272a3f29b29ef94fa9f00ebd3bfc34a3f6b6ad45ed",
+    "extension/src/executionProfiles.ts": "60490a105b819dd0415fd336924c76c037fb1a8e345c70f8ed8e9761e7ca72b2",
+    "extension/src/designWorkspace.ts": "d73c186cf1d0157508ba89de63c62ecdbbabf0aa006f86a513750eec3212d08b",
+    "extension/src/agent/jobs.ts": "2813573fba9d7d36f0b70b637f9c1de7adc5141a6eac3f31680470d2bcb4d5f8",
+    "extension/src/agent/verify.ts": "7bf38287fa327ed924804c29fa80c410d19e74d929609cae165defe0f6395ed4",
+    "extension/ui/design.tsx": "61db43df9f19e6bba9017643a23dc84d8ff166e79779c8847899229ae994dc93",
+    "extension/test/designWorkspace.ts": "a9dd8f9561b8bd98c375bb182fbff8a00fc88555f33c09d67a9c9c1ca22a46c6",
+    "extension/test/installedRecovery.ts": "3f816653992264e4e7501ed6246c47446eee42d7670ec06f780f45c41cc303e6",
+    "tests/execution-profiles.test.ts": "2a106fa52642f60c871a0daef92902a935376fd62339d358e4cf2d3215c9a84a",
+    "tests/agent-verification.test.ts": "54dcc424e6ebd222a9674e88b975cf6a63e4ec2dfa165c50b4297f716a0cd610",
+    "tests/agent-recovery.test.ts": "627905dd4185faa5a56c7c0f84e202b1d2af8e8a50548993a0acc446b2bc22ff",
+    "tests/fixtures/installed-recovery/app-server": "f971577ef2737deca126d1dec4eadcc0cc3d338378c7be749594b900839a5c61",
+    "scripts/preview-execution-settings.mjs": "931879001402343ef028a37fd573bef9ef6cb494dcac32c5b2e932d8f4d440b8"
+  },
+  "unit": {
+    "command": "pnpm exec vitest run tests/execution-profiles.test.ts tests/agent-verification.test.ts tests/agent-recovery.test.ts",
+    "passed": 18,
+    "failed": 0,
+    "cases": [
+      {
+        "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery persists explicit scope and test review, rejects stale proposals and preserves uncertainty",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery excludes a second writer until its lease is released",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery excludes another process and releases the lease after its owner is killed",
+        "status": "passed"
+      },
+      {
+        "name": "durable implementation recovery can acquire an IPC lease while an unrelated service holds the former TCP port",
+        "status": "passed"
+      },
+      {
+        "name": "independent implementation verification records real exits, refuses missing or replaced scripts, and terminates timed-out commands",
+        "status": "passed"
+      },
+      {
+        "name": "independent implementation verification cancels a running check only after its actual child and descendant stop",
+        "status": "passed"
+      },
+      {
+        "name": "project execution settings restores the exact reviewed choices locally and isolates another project",
+        "status": "passed"
+      },
+      {
+        "name": "project execution settings revocation survives reopen and cannot be undone by a stale open window",
+        "status": "passed"
+      },
+      {
+        "name": "project execution settings rejects changed launcher, model, manager, scripts, project, and check selections before starting",
+        "status": "passed"
+      },
+      {
+        "name": "project execution settings serializes approval use against another process store without silently restoring a revoked record",
+        "status": "passed"
+      },
+      {
+        "name": "project execution settings preserves malformed records instead of replacing them with a new approval",
+        "status": "passed"
+      }
+    ]
+  },
+  "host": {
+    "checkedAt": "2026-10-16T11:24:13.888Z",
+    "checks": [
+      "real compiler graph",
+      "alias/re-export shared policy",
+      "node to exact source",
+      "source to node",
+      "durable design save",
+      "unfinished draft persists separately without confirming design or starting an agent",
+      "explicit design save consumes only its persisted draft revision",
+      "changed design blocks stale draft confirmation and explicit comparison preserves input",
+      "stale design rejected",
+      "unsaved source invalidation",
+      "observed drift preserves intent",
+      "restored source reconnects",
+      "project verification script discovery",
+      "changed package script invalidates saved execution settings and blocks implementation before design save",
+      "revoked execution settings cannot be reused by a stale UI request",
+      "documentation save never starts agent",
+      "external data choice required",
+      "dirty editor blocks implementation",
+      "dirty editor blocks baseline acceptance",
+      "stale baseline comparison and stale spec revision are rejected",
+      "renamed declaration explicitly reconnects with stable spec identity",
+      "baseline history and desired intent survive subsequent document edits",
+      "baseline acceptance never starts an agent",
+      "cross-folder business feature stores canonical code membership",
+      "feature grouping does not change source or start an agent",
+      "stale feature edits are rejected",
+      "design save preserves feature metadata",
+      "feature removal preserves code and marks saved design for reconnection",
+      "feature removal waits for an overlapping analysis before acknowledging completion",
+      "external atomic replacement is analyzed from disk while the document is open"
+    ],
+    "nodes": 42,
+    "edges": 21
+  },
+  "installedReport": "execution-settings-installed.json",
+  "builds": [
+    "pnpm build",
+    "pnpm extension:build",
+    "pnpm extension:package"
+  ],
+  "browser": {
+    "method": "Cua browser interaction with actual ImplementationOptions component, synthetic callbacks only. No actual CLI or external model in browser fixture.",
+    "screenshot": "execution-settings-ui.jpg",
+    "observed": [
+      "initial implementation disabled without consent and checks",
+      "unrelated progress update retains edited selection",
+      "saved choices restore after page reload",
+      "saved implementation request contains profileRevision and useSaved",
+      "one-time changed selection still contains profileRevision",
+      "changed script clears consent and disables implementation",
+      "revoke clears consent and selected checks",
+      "untrusted state disables checkboxes and connection",
+      "connection test response displayed without clearing choices"
+    ]
+  },
+  "limitations": [
+    "Installed tests use the real packaged host and deterministic stdio peer, not a live model.",
+    "Browser fixture is separate from installed VS Code Webview.",
+    "No end-to-end installed UI and live-model run established by this change.",
+    "Profile binds configured strings, not executable bytes, PATH, CLI defaults, package manager versions or all test source files."
+  ]
+}
