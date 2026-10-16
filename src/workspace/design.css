@@ -834,3 +834,43 @@ textarea {
     font-size: 19px;
   }
 }
+.draft-notice {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--design-line);
+  border-radius: 8px;
+  background: var(--design-panel);
+}
+.draft-notice p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.draft-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.draft-comparison {
+  margin-top: 14px;
+}
+.draft-comparison details {
+  margin: 10px 0;
+}
+.draft-comparison dd {
+  margin: 4px 0 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.draft-comparison dt {
+  font-size: 11px;
+  opacity: 0.7;
+}
+.draft-comparison label {
+  display: block;
+  margin: 16px 0;
+  font-size: 12px;
+}
+.draft-comparison input[type="checkbox"] {
+  width: auto;
+  margin-right: 6px;
+}

@@ -1,5 +1,6 @@
 import type { StructureGraph } from "./model";
 import type { SpecDocument } from "./spec";
+import type { DesignDraft } from "./drafts";
 import type {
   ImplementationJob,
   VerificationName,
@@ -7,6 +8,9 @@ import type {
 } from "./job";
 export type DesignWorkspaceState = {
   projectName: string;
+  projectKey?: string;
+  drafts?: DesignDraft[];
+  draftError?: string;
   graph?: StructureGraph;
   specs: SpecDocument;
   selectedId: string;

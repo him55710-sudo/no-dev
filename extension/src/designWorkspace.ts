@@ -27,7 +27,17 @@ import {
   specContentSchema,
   specDocumentSchema,
   type SpecDocument,
+  type LivingSpec,
 } from "../../src/workspace/spec";
+import {
+  cleanDraft,
+  draftMatches,
+  draftWriteSchema,
+  draftIdentitySchema,
+  draftRebaseSchema,
+  type DesignDraft,
+} from "../../src/workspace/drafts";
+import { DesignDrafts } from "./designDrafts";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import {
   featureRequestSchema,
@@ -48,6 +58,10 @@ const requestSchema = z
       "refresh",
       "source",
       "saveSpec",
+      "saveDraft",
+      "removeDraft",
+      "rebaseDraft",
+      "loadDrafts",
       "acceptBaseline",
       "saveFeature",
       "removeFeature",
@@ -70,6 +84,11 @@ const saveSchema = z
     targetIds: z.array(z.string().max(4096)).min(1).max(100),
     content: specContentSchema,
     expectedRevision: z.number().int().nonnegative(),
+    draftRevision: z.number().int().positive().optional(),
+    projectKey: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .optional(),
   })
   .strict();
 const excluded =
@@ -99,6 +118,7 @@ export class DesignWorkspace implements vscode.Disposable {
   private disposed = false;
   private saving = false;
   private diskDesign = "";
+  private drafts?: DesignDrafts;
   private disposables: vscode.Disposable[] = [];
   constructor(private context: vscode.ExtensionContext) {
     this.worker = new AnalysisClient(context.asAbsolutePath("out/worker.cjs"));
@@ -217,8 +237,14 @@ export class DesignWorkspace implements vscode.Disposable {
         trusted: vscode.workspace.isTrusted,
       };
       await this.loadDesign();
+      this.drafts = new DesignDrafts(
+        this.context.globalStorageUri.fsPath,
+        await realpath(folder.uri.fsPath),
+      );
+      this.state.projectKey = this.drafts.projectKey;
+      await this.loadDrafts();
       await this.loadJobHistory();
-    }
+    } else await this.loadDrafts();
     if (!this.panel) {
       const panel = (this.panel = vscode.window.createWebviewPanel(
         "pureobom.design",
@@ -285,7 +311,16 @@ export class DesignWorkspace implements vscode.Disposable {
       await this.source(payload.nodeId, payload.sourceIndex);
     } else if (request.action === "saveSpec")
       result = await this.save(request.payload);
-    else if (request.action === "acceptBaseline")
+    else if (
+      request.action === "saveDraft" ||
+      request.action === "removeDraft" ||
+      request.action === "rebaseDraft"
+    )
+      result = await this.editDraft(request.action, request.payload);
+    else if (request.action === "loadDrafts") {
+      await this.loadDrafts();
+      result = this.state.drafts;
+    } else if (request.action === "acceptBaseline")
       result = await this.acceptBaseline(request.payload);
     else if (request.action === "saveFeature")
       result = await this.saveFeature(request.payload);
@@ -555,6 +590,84 @@ export class DesignWorkspace implements vscode.Disposable {
       : { schemaVersion: 1, specs: [] };
     this.diskDesign = text;
   }
+  private async loadDrafts() {
+    const store = this.drafts;
+    if (!store) return;
+    try {
+      const drafts = await store.list();
+      if (this.drafts !== store) return;
+      this.state.drafts = drafts;
+      this.state.draftError = undefined;
+    } catch (error) {
+      if (this.drafts !== store) return;
+      this.state.draftError = `초안 기록을 읽지 못했습니다. 기존 파일은 보존합니다. ${String(error)}`;
+    }
+    this.emit();
+  }
+  private currentDraftBase(base: LivingSpec) {
+    const saved = this.state.specs.specs.find((spec) => spec.id === base.id);
+    if (saved) return saved;
+    if (base.revision || !this.state.graph)
+      throw Error(
+        "초안의 원래 설계나 연결 대상이 없습니다. 입력 내용을 보관한 뒤 대상을 다시 확인해 주세요.",
+      );
+    return specForTargets(this.state.specs, this.state.graph, base.targetIds);
+  }
+  private async editDraft(
+    action: "saveDraft" | "removeDraft" | "rebaseDraft",
+    raw: unknown,
+  ) {
+    const store = this.drafts;
+    const editingPanel = this.panel;
+    if (!store) throw Error("초안을 보관할 프로젝트가 없습니다.");
+    const request =
+      action === "saveDraft"
+        ? draftWriteSchema.parse(raw)
+        : action === "rebaseDraft"
+          ? draftRebaseSchema.parse(raw)
+          : draftIdentitySchema.parse(raw);
+    if (request.projectKey !== store.projectKey)
+      throw Error("초안을 작성한 프로젝트가 아닙니다.");
+    let result: DesignDraft | undefined;
+    if ("base" in request) result = await store.save(request);
+    else if ("expectedDesign" in request) {
+      const comparison = draftRebaseSchema.parse(raw);
+      await this.loadDesign();
+      if (this.drafts !== store)
+        throw Error("비교 중 프로젝트가 바뀌었습니다.");
+      this.emit();
+      const draft = await store.read(request.specId);
+      if (!draft) throw Error("다시 연결할 초안이 없습니다.");
+      const current = this.currentDraftBase(draft.base);
+      if (
+        this.state.stale ||
+        this.state.busy ||
+        this.state.graph?.revision !== comparison.expectedGraphRevision ||
+        !draftMatches({ base: comparison.expectedDesign }, current)
+      )
+        throw Error(
+          "비교 중 설계나 코드가 바뀌었습니다. 초안과 최신 설계를 다시 비교해 주세요.",
+        );
+      result = await store.rebase(
+        request.specId,
+        request.expectedRevision,
+        current,
+      );
+    } else await store.remove(request.specId, request.expectedRevision);
+    if (this.drafts === store) {
+      // The editing panel receives this draft in the response. Avoid resending
+      // the entire compiler graph and all other drafts for every keystroke.
+      const id = result?.base.id ?? ("specId" in request ? request.specId : "");
+      this.state.drafts = (this.state.drafts ?? []).filter(
+        (draft) => draft.base.id !== id,
+      );
+      if (result) this.state.drafts.push(result);
+      // An accepted write may finish after its original panel was closed. The
+      // replacement panel has no pending response handler for that request.
+      if (this.panel !== editingPanel) this.emit();
+    }
+    return result;
+  }
   async save(raw: unknown) {
     if (!vscode.workspace.isTrusted)
       throw Error("설계를 저장하려면 신뢰한 작업 공간이 필요합니다.");
@@ -563,6 +676,8 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.stale || this.state.busy)
       throw Error("현재 구조 분석이 완료된 뒤 저장해 주세요.");
     const payload = saveSchema.parse(raw);
+    if (payload.draftRevision && payload.projectKey !== this.drafts?.projectKey)
+      throw Error("초안을 작성한 프로젝트가 아닙니다.");
     const previous = payload.specId
       ? this.state.specs.specs.find((spec) => spec.id === payload.specId)
       : undefined;
@@ -576,14 +691,39 @@ export class DesignWorkspace implements vscode.Disposable {
       throw Error(
         "설계 대상을 바꾸려면 기준 코드 비교에서 다시 연결해 주세요.",
       );
-    const next: SpecDocument = saveSpec(
-      this.state.specs,
-      { ...original, content: payload.content },
-      payload.expectedRevision,
-    );
     this.saving = true;
     try {
-      return await this.persistDesign(next, original.id);
+      const commit = async (draft?: DesignDraft) => {
+        const validate = () => {
+          if (
+            draft &&
+            (!draftMatches(draft, this.currentDraftBase(draft.base)) ||
+              JSON.stringify(cleanDraft(draft.content)) !==
+                JSON.stringify(payload.content))
+          )
+            throw Error(
+              "초안 작성 후 설계나 코드가 바뀌었습니다. 최신 설계와 비교한 뒤 다시 저장해 주세요.",
+            );
+        };
+        validate();
+        const next = saveSpec(
+          this.state.specs,
+          { ...original, content: payload.content },
+          payload.expectedRevision,
+        );
+        return this.persistDesign(next, original.id, validate);
+      };
+      if (payload.draftRevision) {
+        if (!this.drafts) throw Error("저장할 초안이 없습니다.");
+        const saved = await this.drafts.consume(
+          original.id,
+          payload.draftRevision,
+          commit,
+        );
+        await this.loadDrafts();
+        return saved;
+      }
+      return await commit();
     } finally {
       this.saving = false;
     }
@@ -774,6 +914,8 @@ export class DesignWorkspace implements vscode.Disposable {
       targetIds: payload.targetIds,
       content: payload.content,
       expectedRevision: payload.expectedRevision,
+      draftRevision: payload.draftRevision,
+      projectKey: payload.projectKey,
     });
     const change = prepareChange(saved, this.state.graph!, "behavior")!;
     const configuration = vscode.workspace.getConfiguration("pureobom");

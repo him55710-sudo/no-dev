@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T10:12:46.746Z",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.19.0",
+    "vscode": "1.96.4"
+  },
+  "scope": "Durable unfinished design drafts, explicit conflict comparison, installed restart recovery, and normal workspace scanning beneath hidden parent directories. No new model inference.",
+  "regression": {
+    "startedAt": "2026-10-16T10:01:10.414Z",
+    "files": 22,
+    "tests": 194,
+    "passed": 194,
+    "failed": 0,
+    "skipped": 0
+  },
+  "draftCases": [
+    {
+      "name": "durable design drafts restores unfinished text and the original context without writing a project or design",
+      "status": "passed"
+    },
+    {
+      "name": "durable design drafts isolates projects and refuses stale writers or silent context replacement",
+      "status": "passed"
+    },
+    {
+      "name": "durable design drafts keeps input on failed confirmation and consumes only the reviewed draft revision",
+      "status": "passed"
+    },
+    {
+      "name": "durable design drafts detects same-revision manual edits and corrupt records without overwriting them",
+      "status": "passed"
+    }
+  ],
+  "hostChecks": 28,
+  "extensionChecks": 26,
+  "installed": {
+    "checkedAt": "2026-10-16T10:12:26.012Z",
+    "phases": [
+      "prepare-review",
+      "review-and-apply",
+      "undo-after-restart",
+      "crash-during-apply",
+      "recover-after-crash"
+    ],
+    "artifact": {
+      "version": "0.7.0",
+      "vsixSha256": "806b309ed0a7b26cfdc0affaeb32f3621d2f658be0d69cbee09b6cf6868ecf5f",
+      "files": {
+        "out/extension.cjs": "c7fd78c5506e7e41cffb298c653e639323fcaf93d54c3975ad75b899c78f812f",
+        "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+        "media/design.js": "3c7fc03869a8411eb3bbbc2f69114b6d5330ff9ded467db01c07c27def97c6c9",
+        "media/design.css": "674e8ccf4d9eba6466266281b21ea4e0a4d7c6579c2a5635a96aa82be253d0d1",
+        "THIRD_PARTY_NOTICES.txt": "160717d2962ebbbc30eec21debdc00ae32720e5d78ac588b88e617d096110f3c"
+      }
+    }
+  },
+  "browser": {
+    "data": "Synthetic structure and browser-local storage mock; real React components",
+    "checks": [
+      "typing persists unfinished draft without confirming a design",
+      "reload restores input",
+      "external design change blocks stale confirmation",
+      "comparison shows original, current and draft values",
+      "another change after opening comparison rejects stale rebase",
+      "explicit rebase preserves input and separate confirmation consumes draft"
+    ],
+    "screenshot": "draft-comparison.jpg"
+  },
+  "sourceHashes": {
+    "extension/src/designDrafts.ts": "0aa907265f98c22632bf426603b8352d288ec2ba6e0158fe935cd175ed0a2938",
+    "extension/src/designWorkspace.ts": "c42250719c254edd7ca73f6b95591e8d7aa14f13b7bf73978b5e3a823a57b516",
+    "extension/src/controller.ts": "e956b73e54f91f01cbef1b7f17d26e575be41025f4d87b133c0de04249212432",
+    "src/workspace/drafts.ts": "dd0b2b3222fa2aa7284282858c1894f8992a5aee2f2b219cf95f21ac8c454d40",
+    "src/workspace/useDesignDrafts.ts": "c5dc25d6fc037bdc888a44d18d6d99c623d00097433b679f2e75e64617e48562",
+    "src/workspace/DraftNotice.tsx": "73b4f7af1d1f2c99512c7d6f7d185df2e46ccb81781959e3146d06490ead0be3",
+    "src/workspace/DesignWorkspaceView.tsx": "843b8a301ba6de247cf951074fc09f3b079aa28cbffec6f1b16b8132a0b6c51d",
+    "extension/ui/design.tsx": "a8d3ed6d161c33bf58f7196d6cb6681d091d229a6215fafb8ac1bdcd97eb5423"
+  },
+  "limitations": [
+    "Browser fixture is not installed Webview pointer/keyboard end-to-end automation",
+    "Installed recovery uses an explicit deterministic stdio fixture, not external AI",
+    "Only acknowledged draft writes are promised across restart; queued unsent edits and power loss are outside this proof",
+    "No cross-device draft sync or automatic multi-window merge"
+  ]
+}

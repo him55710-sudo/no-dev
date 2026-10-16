@@ -47,7 +47,7 @@ beforeAll(async () => {
     format: "cjs",
     logLevel: "silent",
   });
-});
+}, 60000); // Builds two child-process fixtures; this is setup, not a behavior deadline.
 async function git(root: string, ...args: string[]) {
   return (await exec("git", ["-C", root, ...args], { windowsHide: true }))
     .stdout;

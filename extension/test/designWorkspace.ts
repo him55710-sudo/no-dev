@@ -3,7 +3,8 @@ import * as vscode from "vscode";
 import { createHash } from "node:crypto";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import type { Feature } from "../../src/workspace/features";
-import { observeSpec } from "../../src/workspace/spec";
+import { observeSpec, draftSpec } from "../../src/workspace/spec";
+import type { DesignDraft } from "../../src/workspace/drafts";
 import { readFile, writeFile, rename } from "node:fs/promises";
 
 export async function run() {
@@ -47,11 +48,39 @@ export async function run() {
     invariants: ["owner 편집 유지"],
     acceptance: ["viewer API 요청 거절"],
   };
+  const draftBase = draftSpec(graph, targets);
+  const localDraft = (await workspace.handleRequest({
+    id: "draft-empty",
+    action: "saveDraft",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      base: draftBase,
+      content: { ...content, title: "", acceptance: [""] },
+      expectedRevision: 0,
+    },
+  })) as DesignDraft;
+  assert.equal(workspace.state.specs.specs.length, 0);
+  assert.equal(workspace.state.job, undefined);
+  await workspace.open();
+  assert.deepEqual(workspace.state.drafts, [localDraft]);
+  const completedDraft = (await workspace.handleRequest({
+    id: "draft-complete",
+    action: "saveDraft",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      base: draftBase,
+      content,
+      expectedRevision: localDraft.revision,
+    },
+  })) as DesignDraft;
   const saved = await workspace.save({
     targetIds: targets,
     content,
     expectedRevision: 0,
+    projectKey: workspace.state.projectKey,
+    draftRevision: completedDraft.revision,
   });
+  assert.deepEqual(workspace.state.drafts, []);
   assert.equal(saved.revision, 1);
   assert.equal(
     workspace.state.job,
@@ -231,6 +260,59 @@ export async function run() {
     .specs[0];
   assert.equal(persisted.id, saved.id);
   assert.deepEqual(persisted.baselineHistory, reconnected.baselineHistory);
+  const editing = (await workspace.handleRequest({
+    id: "draft-conflict",
+    action: "saveDraft",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      base: afterEdit,
+      content: { ...content, desired: "보관된 다음 목표" },
+      expectedRevision: 0,
+    },
+  })) as DesignDraft;
+  const concurrent = await workspace.save({
+    specId: afterEdit.id,
+    targetIds: afterEdit.targetIds,
+    content: { ...afterEdit.content, purpose: "동시에 확정한 설계" },
+    expectedRevision: afterEdit.revision,
+  });
+  await assert.rejects(
+    workspace.save({
+      specId: afterEdit.id,
+      targetIds: afterEdit.targetIds,
+      content: editing.content,
+      expectedRevision: afterEdit.revision,
+      draftRevision: editing.revision,
+      projectKey: workspace.state.projectKey,
+    }),
+    /비교/,
+  );
+  const rebasedDraft = (await workspace.handleRequest({
+    id: "draft-rebase",
+    action: "rebaseDraft",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      specId: afterEdit.id,
+      expectedRevision: editing.revision,
+      expectedGraphRevision: workspace.state.graph!.revision,
+      expectedDesign: concurrent,
+    },
+  })) as DesignDraft;
+  assert.equal(rebasedDraft.content.desired, "보관된 다음 목표");
+  assert.deepEqual(
+    workspace.state.specs.specs.find((item) => item.id === afterEdit.id),
+    concurrent,
+  );
+  assert.equal(workspace.state.job, undefined);
+  await workspace.save({
+    specId: concurrent.id,
+    targetIds: concurrent.targetIds,
+    content: rebasedDraft.content,
+    expectedRevision: concurrent.revision,
+    draftRevision: rebasedDraft.revision,
+    projectKey: workspace.state.projectKey,
+  });
+  assert.deepEqual(workspace.state.drafts, []);
   const memberIds = workspace.state
     .graph!.nodes.filter(
       (node) =>
@@ -341,6 +423,9 @@ export async function run() {
       "node to exact source",
       "source to node",
       "durable design save",
+      "unfinished draft persists separately without confirming design or starting an agent",
+      "explicit design save consumes only its persisted draft revision",
+      "changed design blocks stale draft confirmation and explicit comparison preserves input",
       "stale design rejected",
       "unsaved source invalidation",
       "observed drift preserves intent",

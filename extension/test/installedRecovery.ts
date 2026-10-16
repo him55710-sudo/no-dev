@@ -9,6 +9,7 @@ import { dirname, isAbsolute, relative, resolve } from "node:path";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import type { SpecContent } from "../../src/workspace/spec";
 import type { Feature } from "../../src/workspace/features";
+import { draftMatches, type DesignDraft } from "../../src/workspace/drafts";
 const exec = promisify(execFile);
 const digest = (bytes: Buffer | string) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -282,9 +283,45 @@ export async function run() {
       "implementation begins from a saved cross-file business feature",
     );
     checkpoint.firstJob = await startImplementation();
+    const base = workspace.state.specs.specs.find(
+      (spec) => spec.id === `feature:${feature.id}`,
+    )!;
+    const confirmedBefore = JSON.stringify(workspace.state.specs);
+    const jobBefore = workspace.state.job!.id;
+    await dispatch("saveDraft", {
+      projectKey: workspace.state.projectKey,
+      base,
+      expectedRevision: 0,
+      content: {
+        ...base.content,
+        title: "",
+        desired: "재시작 후 검토할 다음 목표",
+        acceptance: [""],
+      },
+    });
+    assert.equal(JSON.stringify(workspace.state.specs), confirmedBefore);
+    assert.equal(workspace.state.job!.id, jobBefore);
+    checks.push(
+      "unfinished local draft is durable without changing the confirmed design or starting another agent",
+    );
     await assertOriginal();
     checks.push("implementation does not modify the original source or index");
   } else if (phase === "review-and-apply") {
+    const restoredDraft = workspace.state.drafts?.find(
+      (draft) => draft.base.id === `feature:${checkpoint.featureId}`,
+    )!;
+    assert.ok(restoredDraft);
+    assert.equal(restoredDraft.content.title, "");
+    assert.deepEqual(restoredDraft.content.acceptance, [""]);
+    assert.equal(restoredDraft.content.desired, "재시작 후 검토할 다음 목표");
+    assert.equal(
+      Boolean(workspace.state.job),
+      false,
+      "restoring drafts cannot resume an agent",
+    );
+    checks.push(
+      "unfinished draft restores after a fresh VS Code launch without auto-confirmation or execution",
+    );
     const job = checkpoint.firstJob!;
     assert.ok(workspace.state.jobHistory?.some((entry) => entry.id === job.id));
     await dispatch("restoreJob", { workspaceId: job.id });
@@ -374,6 +411,32 @@ export async function run() {
       "original project passes the acceptance tests after apply",
     );
   } else if (phase === "undo-after-restart") {
+    const restoredDraft = workspace.state.drafts?.find(
+      (draft) => draft.base.id === `feature:${checkpoint.featureId}`,
+    ) as DesignDraft;
+    assert.ok(restoredDraft);
+    assert.equal(restoredDraft.content.desired, "재시작 후 검토할 다음 목표");
+    const confirmed = workspace.state.specs.specs.find(
+      (spec) => spec.id === restoredDraft.base.id,
+    )!;
+    assert.equal(
+      draftMatches(restoredDraft, confirmed),
+      false,
+      "the original draft context survives a later baseline acceptance",
+    );
+    await dispatch("removeDraft", {
+      projectKey: workspace.state.projectKey,
+      specId: restoredDraft.base.id,
+      expectedRevision: restoredDraft.revision,
+    });
+    assert.deepEqual(workspace.state.drafts, []);
+    assert.deepEqual(
+      workspace.state.specs.specs.find((spec) => spec.id === confirmed.id),
+      confirmed,
+    );
+    checks.push(
+      "draft keeps its original context across baseline changes and explicit discard preserves confirmed design",
+    );
     const job = checkpoint.firstJob!;
     await dispatch("restoreJob", { workspaceId: job.id });
     assert.equal(workspace.state.job?.phase, "applied");

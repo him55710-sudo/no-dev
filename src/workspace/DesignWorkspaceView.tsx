@@ -16,6 +16,9 @@ import {
 } from "./spec";
 import { BaselineReview } from "./BaselineReview";
 import { FeatureEditor } from "./FeatureEditor";
+import { useDesignDrafts, type DraftActions } from "./useDesignDrafts";
+import { draftMatches } from "./drafts";
+import { DraftNotice } from "./DraftNotice";
 import {
   featureNodeId,
   type Feature,
@@ -29,7 +32,7 @@ import { JobTray, phaseNames, type JobAction } from "./JobTray";
 import "@xyflow/react/dist/style.css";
 import "./design.css";
 
-export type DesignActions = {
+export type DesignActions = DraftActions & {
   refresh: () => Promise<unknown>;
   source: (id: string, index: number) => Promise<unknown>;
   save: (
@@ -37,6 +40,7 @@ export type DesignActions = {
     content: SpecContent,
     revision: number,
     specId?: string,
+    draftRevision?: number,
   ) => Promise<LivingSpec>;
   implement?: (
     targets: string[],
@@ -44,6 +48,7 @@ export type DesignActions = {
     revision: number,
     checks: VerificationName[],
     specId?: string,
+    draftRevision?: number,
   ) => Promise<unknown>;
   acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
   saveFeature?: (request: FeatureRequest) => Promise<Feature>;
@@ -350,7 +355,7 @@ export function DesignWorkspaceView({
   const [editingFeature, setEditingFeature] = useState<string>();
   const [search, setSearch] = useState("");
   const [included, setIncluded] = useState<string[]>([]);
-  const [drafts, setDrafts] = useState<Record<string, SpecContent>>({});
+  const drafts = useDesignDrafts(state.drafts ?? [], state.projectKey, actions);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [focus, setFocus] = useState(false);
@@ -381,7 +386,7 @@ export function DesignWorkspaceView({
     : "system";
   const targetIds = included.length ? included : selected ? [selected.id] : [];
   const targetsKey = targetIds.slice().sort().join("|");
-  const spec = useMemo(() => {
+  const currentSpec = useMemo(() => {
     if (!graph) return undefined;
     const pinned = state.specs.specs.find((item) => item.id === savedSpecId);
     if (pinned) return pinned;
@@ -392,7 +397,11 @@ export function DesignWorkspaceView({
       return undefined;
     }
   }, [graph, state.specs, targetsKey, savedSpecId]);
-  const content = spec ? (drafts[spec.id] ?? spec.content) : undefined;
+  const draft = drafts.entries.get(savedSpecId ?? currentSpec?.id ?? "");
+  const spec = draft?.base ?? currentSpec;
+  const content = draft?.content ?? spec?.content;
+  const draftConflict =
+    !!draft && (!currentSpec || !draftMatches(draft, currentSpec));
   const memberships = useMemo(
     () =>
       graph && selected
@@ -428,7 +437,7 @@ export function DesignWorkspaceView({
   const source = (id: string, index: number) =>
     perform(() => actions.source(id, index));
   const save = (implement = false) => {
-    if (!spec || !content) return;
+    if (!spec || !content || draftConflict) return;
     setSaving(true);
     setFeedback("");
     const cleaned = {
@@ -436,28 +445,29 @@ export function DesignWorkspaceView({
       invariants: content.invariants.map((v) => v.trim()).filter(Boolean),
       acceptance: content.acceptance.map((v) => v.trim()).filter(Boolean),
     };
-    const request =
-      implement && actions.implement
-        ? actions.implement(
-            spec.targetIds,
-            cleaned,
-            spec.revision,
-            checks,
-            spec.revision ? spec.id : undefined,
-          )
-        : actions.save(
-            spec.targetIds,
-            cleaned,
-            spec.revision,
-            spec.revision ? spec.id : undefined,
-          );
+    const request = drafts
+      .flush(spec.id)
+      .then((draftRevision) =>
+        implement && actions.implement
+          ? actions.implement(
+              spec.targetIds,
+              cleaned,
+              spec.revision,
+              checks,
+              spec.revision ? spec.id : undefined,
+              draftRevision,
+            )
+          : actions.save(
+              spec.targetIds,
+              cleaned,
+              spec.revision,
+              spec.revision ? spec.id : undefined,
+              draftRevision,
+            ),
+      );
     void request
       .then(() => {
-        setDrafts((current) => {
-          const next = { ...current };
-          delete next[spec.id];
-          return next;
-        });
+        drafts.forget(spec.id);
         setFeedback(
           implement
             ? "설계를 저장하고 구현 작업을 시작했습니다."
@@ -589,6 +599,36 @@ export function DesignWorkspaceView({
                 ))}
               </ul>
             </>
+          ) : null}
+          {drafts.entries.size ? (
+            <>
+              <div className="sidebar-heading">
+                작성 중 초안<span>{drafts.entries.size}</span>
+              </div>
+              <ul className="saved-specs">
+                {[...drafts.entries.values()].map((item) => (
+                  <li key={item.base.id}>
+                    <button
+                      onClick={() => {
+                        setIncluded(item.base.targetIds);
+                        setSelection(item.base.targetIds[0]);
+                        setSavedSpecId(item.base.id);
+                      }}
+                    >
+                      {item.content.title || item.base.content.title}
+                      <span>
+                        {item.status === "saved" ? "보관됨" : "작성 중"}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+          {state.draftError ? (
+            <p className="empty-message" role="alert">
+              {state.draftError}
+            </p>
           ) : null}
           <p className="sidebar-note">
             업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든
@@ -869,103 +909,146 @@ export function DesignWorkspaceView({
               </details>
             ) : null}
             {spec && content && graph ? (
-              <SpecEditor
-                key={spec.id}
-                spec={spec}
-                graph={graph}
-                content={content}
-                dirty={!!drafts[spec.id]}
-                saving={saving}
-                readOnly={!state.trusted || state.stale || state.busy}
-                onChange={(next) =>
-                  setDrafts((old) => ({ ...old, [spec.id]: next }))
-                }
-                onSave={() => save()}
-                onSource={source}
-                acceptBaseline={
-                  actions.acceptBaseline &&
-                  !jobIsActive(state.job) &&
-                  state.job?.phase !== "recovery"
-                    ? async (request) => {
-                        await actions.acceptBaseline!(request);
-                        updateSelection(request.targetIds[0]);
-                        setIncluded(request.targetIds);
-                        setSavedSpecId(request.specId);
-                        setFeedback(
-                          "검토한 코드를 새 기준으로 저장했습니다. 설계 목표는 그대로 유지됩니다.",
-                        );
-                      }
-                    : undefined
-                }
-                implementation={
-                  actions.implement ? (
-                    <section
-                      className="implementation-options"
-                      aria-label="구현 설정"
-                    >
-                      <strong>Codex로 구현</strong>
-                      <p>
-                        별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
-                        반영하면 원본 프로젝트에 적용됩니다.
-                      </p>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={allowExternal}
-                          onChange={(e) => setAllowExternal(e.target.checked)}
-                        />
-                        설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한
-                        검사 명령을 실행합니다.
-                      </label>
-                      <fieldset>
-                        <legend>구현 후 실행할 검사</legend>
-                        {state.checks?.length ? (
-                          state.checks.map((name) => (
-                            <label key={name}>
-                              <input
-                                type="checkbox"
-                                checked={checks.includes(name)}
-                                onChange={(e) =>
-                                  setChecks((current) =>
-                                    e.target.checked
-                                      ? [...current, name]
-                                      : current.filter((item) => item !== name),
-                                  )
-                                }
-                              />
-                              {name}
-                            </label>
-                          ))
-                        ) : (
-                          <p>
-                            package.json에 test, build, typecheck 또는 check
-                            명령이 필요합니다.
-                          </p>
-                        )}
-                      </fieldset>
-                      <button
-                        className="primary"
-                        onClick={() => save(true)}
-                        disabled={
-                          !allowExternal ||
-                          !checks.length ||
-                          saving ||
-                          !state.trusted ||
-                          state.stale ||
-                          state.busy ||
-                          observeSpec(spec, graph).status !== "unchanged" ||
-                          jobIsActive(state.job) ||
-                          state.job?.phase === "recovery" ||
-                          !content.desired.trim() ||
-                          !content.acceptance.some((line) => line.trim())
+              <>
+                {draft ? (
+                  <DraftNotice
+                    key={spec.id}
+                    draft={draft}
+                    current={currentSpec}
+                    graphRevision={graph.revision}
+                    conflict={draftConflict}
+                    busy={saving}
+                    retry={() => drafts.retry(spec.id)}
+                    discard={() => {
+                      setSaving(true);
+                      perform(async () => {
+                        try {
+                          await drafts.discard(spec.id);
+                          setFeedback(
+                            "초안을 버렸습니다. 확정된 설계는 유지됩니다.",
+                          );
+                        } finally {
+                          setSaving(false);
                         }
+                      });
+                    }}
+                    rebase={async (current, revision) => {
+                      setSaving(true);
+                      try {
+                        await drafts.rebase(spec.id, current, revision);
+                        setFeedback(
+                          "초안의 입력을 유지하고 편집 기준을 갱신했습니다.",
+                        );
+                      } catch (error) {
+                        setFeedback(String(error));
+                        throw error;
+                      } finally {
+                        setSaving(false);
+                      }
+                    }}
+                  />
+                ) : null}
+                <SpecEditor
+                  key={spec.id}
+                  spec={spec}
+                  graph={graph}
+                  content={content}
+                  dirty={!!draft}
+                  saving={saving}
+                  readOnly={
+                    !state.trusted || state.stale || state.busy || draftConflict
+                  }
+                  onChange={(next) => drafts.change(spec, next)}
+                  onSave={() => save()}
+                  onSource={source}
+                  acceptBaseline={
+                    actions.acceptBaseline &&
+                    !jobIsActive(state.job) &&
+                    state.job?.phase !== "recovery"
+                      ? async (request) => {
+                          await actions.acceptBaseline!(request);
+                          updateSelection(request.targetIds[0]);
+                          setIncluded(request.targetIds);
+                          setSavedSpecId(request.specId);
+                          setFeedback(
+                            "검토한 코드를 새 기준으로 저장했습니다. 설계 목표는 그대로 유지됩니다.",
+                          );
+                        }
+                      : undefined
+                  }
+                  implementation={
+                    actions.implement ? (
+                      <section
+                        className="implementation-options"
+                        aria-label="구현 설정"
                       >
-                        저장하고 구현
-                      </button>
-                    </section>
-                  ) : undefined
-                }
-              />
+                        <strong>Codex로 구현</strong>
+                        <p>
+                          별도 Git 작업 공간에서 수정하고 검사합니다. 검토 후
+                          반영하면 원본 프로젝트에 적용됩니다.
+                        </p>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={allowExternal}
+                            onChange={(e) => setAllowExternal(e.target.checked)}
+                          />
+                          설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한
+                          검사 명령을 실행합니다.
+                        </label>
+                        <fieldset>
+                          <legend>구현 후 실행할 검사</legend>
+                          {state.checks?.length ? (
+                            state.checks.map((name) => (
+                              <label key={name}>
+                                <input
+                                  type="checkbox"
+                                  checked={checks.includes(name)}
+                                  onChange={(e) =>
+                                    setChecks((current) =>
+                                      e.target.checked
+                                        ? [...current, name]
+                                        : current.filter(
+                                            (item) => item !== name,
+                                          ),
+                                    )
+                                  }
+                                />
+                                {name}
+                              </label>
+                            ))
+                          ) : (
+                            <p>
+                              package.json에 test, build, typecheck 또는 check
+                              명령이 필요합니다.
+                            </p>
+                          )}
+                        </fieldset>
+                        <button
+                          className="primary"
+                          onClick={() => save(true)}
+                          disabled={
+                            !allowExternal ||
+                            !checks.length ||
+                            saving ||
+                            draftConflict ||
+                            !state.trusted ||
+                            state.stale ||
+                            state.busy ||
+                            observeSpec(spec, graph).status !== "unchanged" ||
+                            jobIsActive(state.job) ||
+                            state.job?.phase === "recovery" ||
+                            !content.desired.trim() ||
+                            !content.acceptance.some((line) => line.trim())
+                          }
+                        >
+                          저장하고 구현
+                        </button>
+                      </section>
+                    ) : undefined
+                  }
+                />
+              </>
             ) : !edge ? (
               <p className="empty-message">
                 구조를 선택하면 현재 구현과 원하는 동작을 함께 확인할 수 있어요.
