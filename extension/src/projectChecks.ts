@@ -115,6 +115,43 @@ function view(task: vscode.Task, id: string): ProjectTask {
   };
 }
 
+function executionSettings(task: vscode.Task) {
+  const platform =
+    process.platform === "win32"
+      ? "windows"
+      : process.platform === "darwin"
+        ? "osx"
+        : "linux";
+  const keys = new Set([
+    "tasks",
+    `terminal.integrated.env.${platform}`,
+    "terminal.integrated.inheritEnv",
+    "terminal.integrated.detectLocale",
+  ]);
+  if (task.execution instanceof vscode.ShellExecution) {
+    for (const key of [
+      "automationProfile",
+      "defaultProfile",
+      "profiles",
+      "shell",
+      "shellArgs",
+    ])
+      keys.add(`terminal.integrated.${key}.${platform}`);
+  }
+  // Include settings explicitly referenced by the task's variable expressions.
+  for (const match of JSON.stringify(task.execution).matchAll(
+    /\$\{config:([^}]+)\}/g,
+  ))
+    keys.add(match[1]);
+  const config = vscode.workspace.getConfiguration(
+    undefined,
+    folderOf(task)?.uri,
+  );
+  return hash(
+    JSON.stringify([...keys].sort().map((key) => [key, config.get(key)])),
+  );
+}
+
 /** Runs only an explicitly selected, already configured command, never model text. */
 export class ProjectChecks implements vscode.Disposable {
   readonly changes = new vscode.EventEmitter<ProjectCheck>();
@@ -123,6 +160,8 @@ export class ProjectChecks implements vscode.Disposable {
   private active?: Run;
   private resultFolder?: vscode.WorkspaceFolder;
   private resultUri?: string;
+  private resultTask?: vscode.Task;
+  private resultSettings?: string;
   private disposables: vscode.Disposable[] = [];
   constructor(
     private current: (context: string | undefined) => vscode.TextDocument,
@@ -144,11 +183,16 @@ export class ProjectChecks implements vscode.Disposable {
         this.choices.clear();
         this.markStale("workspace folders changed");
       }),
-      vscode.workspace.onDidChangeConfiguration((event) => {
-        this.choices.clear();
-        this.markStale(
-          `settings changed: ${["tasks", "terminal", "typescript", "editor", "files"].filter((key) => event.affectsConfiguration(key)).join(", ") || "other"}`,
-        );
+      vscode.workspace.onDidChangeConfiguration(() => {
+        // Linux discovers terminal profiles on first use. A configuration event
+        // alone does not mean the command's effective settings changed.
+        if (
+          !this.resultTask ||
+          executionSettings(this.resultTask) !== this.resultSettings
+        ) {
+          this.choices.clear();
+          this.markStale("execution settings changed");
+        }
       }),
       vscode.tasks.onDidEndTaskProcess((e) => {
         if (this.matches(e.execution)) void this.finish(e.exitCode);
@@ -275,6 +319,8 @@ export class ProjectChecks implements vscode.Disposable {
     this.active = run;
     this.resultFolder = folder;
     this.resultUri = doc.uri.toString();
+    this.resultTask = selected;
+    this.resultSettings = executionSettings(selected);
     this.result = {
       id: runId,
       name: selected.name,

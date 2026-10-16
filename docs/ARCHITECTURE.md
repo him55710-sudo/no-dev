@@ -6,9 +6,9 @@
 
 `localAssistantController.ts`는 문서 URI·버전·전체 원문과 요청 문맥을 보관하고, 변경 시 요청을 취소하고 결과를 무효화한다. JS/TS와 JSON 제안은 분석 Worker에서 문법 확인한다. Python은 `pythonValidation.ts`의 고정 `ast.parse` 프로그램으로만 검사한다. native diff → 명시적 적용 → 기존 undo 경로를 사용하며 모델이 적용 권한을 갖지 않는다. 이 경로는 데스크톱 로컬 작업 공간 전용이며 브라우저 데모에는 포함하지 않는다. [제약과 실제 증거](LOCAL_AI.md).
 
-## 0.5 화면 구조와 문구 편집
-
 0.7의 프로젝트 검사 경로는 `extension/src/projectChecks.ts`와 `extension/ui/ProjectChecks.tsx`가 담당한다. 모델 경로와 분리해 VS Code가 제공한 test/build 작업을 목록화하고, 검토한 실행 정보의 fingerprint를 다시 확인한 뒤 단일 task를 시작한다. 프로세스 시작·종료 이벤트로 취소 경쟁과 종료 코드를 처리하고, 열린 문서/파일 감시 이벤트와 시작 파일 디스크 해시로 오래된 결과를 표시한다. [상세 범위](PROJECT_CHECKS.md).
+
+## 0.5 화면 구조와 문구 편집
 
 `core/jsx.ts`는 TypeScript AST를 별도 UI 구조로 바꾼다. JSX 리터럴의 엔티티와 공백은 실행 없는 컴파일 후 문자열 읽기로 복원한다. `InterfaceTree`는 경량 데이터만 받아 두 환경에서 렌더링하며, 숨긴 하위 구조는 펼칠 때 생성한다. 원시 JSX 문구·속성은 문자열 표현식으로 바뀌어 입력이 마크업이나 코드로 해석되지 않는다. 원문 범위·문법 검사·오래된 변경안 거부·실행 취소 경로는 기존 편집기와 공유한다. [상세 범위](INTERFACE.md).
 

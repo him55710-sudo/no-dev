@@ -65,6 +65,45 @@ export async function projectChecks(
   assert.match(c.checks.result!.sourceSha256, /^[a-f0-9]{64}$/);
   assert.equal(c.checks.result?.stale, false, JSON.stringify(c.checks.result));
   assert.equal(c.state.projectCheck?.id, c.checks.result!.id);
+  const terminalConfig = vscode.workspace.getConfiguration(
+    "terminal.integrated",
+  );
+  const oldFont = terminalConfig.inspect<number>("fontSize")?.globalValue;
+  const envKey = `env.${process.platform === "win32" ? "windows" : process.platform === "darwin" ? "osx" : "linux"}`;
+  const oldEnvironment =
+    terminalConfig.inspect<Record<string, string | null>>(envKey)?.globalValue;
+  try {
+    await terminalConfig.update(
+      "fontSize",
+      17,
+      vscode.ConfigurationTarget.Global,
+    );
+    assert.equal(
+      c.checks.result?.stale,
+      false,
+      "terminal appearance does not invalidate code checks",
+    );
+    await terminalConfig.update(
+      envKey,
+      { ...oldEnvironment, PUREOBOM_CHECK_FIXTURE: "1" },
+      vscode.ConfigurationTarget.Global,
+    );
+    await until(
+      () => c.checks.result?.stale === true,
+      "effective task environment change invalidates check",
+    );
+  } finally {
+    await terminalConfig.update(
+      "fontSize",
+      oldFont,
+      vscode.ConfigurationTarget.Global,
+    );
+    await terminalConfig.update(
+      envKey,
+      oldEnvironment,
+      vscode.ConfigurationTarget.Global,
+    );
+  }
   reports.push(
     "project check: configured process runs in VS Code; review and known task ID required; real exit 0 and saved-file SHA-256 recorded",
   );
