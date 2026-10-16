@@ -7,6 +7,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Controller } from "../src/controller";
 import { realProjectChecks } from "./realProjectChecks";
+import { realProjectBenchmark } from "./realProjectBenchmark";
 const exec = promisify(execFile);
 const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 async function ready(c: Controller) {
@@ -55,6 +56,11 @@ export async function run() {
   }>("pureobom-local.pureobom")!;
   const api = await extension.activate(),
     c = api.controller;
+  if (process.env.PUREOBOM_PROJECT_BENCHMARK_ONLY === "1") {
+    await api.openPanel();
+    await realProjectBenchmark(c, root, reportFile);
+    return;
+  }
   if (process.env.PUREOBOM_PROJECT_CHECKS_ONLY === "1") {
     await api.openPanel();
     await realProjectChecks(c, root, python, reportFile);

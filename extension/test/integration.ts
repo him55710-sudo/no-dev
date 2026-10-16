@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import type { Controller } from "../src/controller";
 import { localAssistantChecks } from "./localAssistant";
 import { projectChecks } from "./projectChecks";
+import { benchmarkChecks } from "./benchmarks";
 const reports: string[] = [];
 async function until(
   check: () => boolean,
@@ -40,6 +41,30 @@ export async function run() {
     }
   };
   await ready();
+  if (process.env.PUREOBOM_ONLY_BENCHMARK === "1") {
+    await benchmarkChecks(c, ready, reports);
+    await vscode.workspace.fs.writeFile(
+      vscode.Uri.file(process.env.PUREOBOM_INTEGRATION_REPORT!),
+      Buffer.from(
+        JSON.stringify(
+          {
+            vscode: vscode.version,
+            checks: reports,
+            passed: reports.length,
+            timestamp: new Date().toISOString(),
+          },
+          null,
+          2,
+        ),
+      ),
+    );
+    console.log(
+      "PUREOBOM BENCHMARK INTEGRATION PASSED",
+      JSON.stringify(reports),
+    );
+    c.dispose();
+    return;
+  }
   const firstTerm = c.state.analysis!.terms!.find(
     (term) => term.name === "freeShippingThreshold",
   )!;
@@ -550,6 +575,7 @@ export async function run() {
     "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
   );
   await projectChecks(c, ready, reports);
+  await benchmarkChecks(c, ready, reports);
   const report = {
     vscode: vscode.version,
     checks: reports,

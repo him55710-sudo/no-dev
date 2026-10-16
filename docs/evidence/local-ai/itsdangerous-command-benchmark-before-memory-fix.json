@@ -1,0 +1,258 @@
+{
+  "checkedAt": "2026-10-16T06:37:20.911Z",
+  "project": "https://github.com/pallets/itsdangerous",
+  "commit": "096c8d42545d3b68ea21a4f890fb2b2d8979c0bd",
+  "vscode": "1.96.4",
+  "kind": "Actual VS Code before/after measurement; replay of one previously reviewed qwen2.5-coder:3b edit; no new inference",
+  "edit": {
+    "before": "s = s.encode(encoding, errors)",
+    "after": "return s if isinstance(s, bytes) else s.encode(encoding, errors)"
+  },
+  "adopted": false,
+  "baselineTests": {
+    "tests": 297,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "candidateTests": {
+    "tests": 297,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "measurement": {
+    "schema": 1,
+    "recordedAt": "2026-10-16T06:37:56.912Z",
+    "scope": "One command, 1 warm-up + 7 fresh processes per phase. OS peak process memory. Observed ranges, not confidence intervals. Output equality is not behavioral equivalence. Project change observation excludes generated/dependency folders and external inputs.",
+    "baseline": {
+      "id": "97dfcbc6-bd5c-498f-a75a-51007b0c1240",
+      "name": "itsdangerous measure",
+      "file": "src/itsdangerous/encoding.py",
+      "folder": "itsdangerous",
+      "argv": [
+        "<workspace>\\test-results\\python-venv\\Scripts\\python.exe",
+        "<workspace>\\scripts\\measure-itsdangerous.py",
+        "<workspace>\\test-results\\projects\\itsdangerous"
+      ],
+      "cwd": "<workspace>\\test-results\\projects\\itsdangerous",
+      "python": "python",
+      "sourceSha256": "6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac",
+      "startedAt": "2026-10-16T06:37:28.357Z",
+      "result": {
+        "schema": 1,
+        "warmupRuns": 1,
+        "memoryMethod": "windows-peak-working-set",
+        "environment": {
+          "platform": "Windows",
+          "arch": "AMD64",
+          "python": "3.12.10",
+          "executableSha256": "0b471133e110cfb53a061cad528ce8e517d7b9ac41a0a396c39ad795a487fc14"
+        },
+        "samples": [
+          {
+            "elapsedMs": 1224.1841,
+            "peakRssBytes": 4726784,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1336.368,
+            "peakRssBytes": 4722688,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1313.3467,
+            "peakRssBytes": 4722688,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1308.8332,
+            "peakRssBytes": 4718592,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1326.6756,
+            "peakRssBytes": 4734976,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1310.0472,
+            "peakRssBytes": 4718592,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1245.8091,
+            "peakRssBytes": 4714496,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          }
+        ]
+      },
+      "check": {
+        "id": "dadc25db-5eb3-45eb-8b62-fd6a5679abd0",
+        "name": "itsdangerous pytest",
+        "folder": "itsdangerous",
+        "file": "src/itsdangerous/encoding.py",
+        "sourceSha256": "6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac",
+        "startedAt": "2026-10-16T06:37:23.333Z",
+        "status": "passed",
+        "stale": false,
+        "exitCode": 0,
+        "elapsedMs": 4652
+      }
+    },
+    "candidate": {
+      "id": "8bce5dcf-01c7-489c-8970-a276ed4cd856",
+      "name": "itsdangerous measure",
+      "file": "src/itsdangerous/encoding.py",
+      "folder": "itsdangerous",
+      "argv": [
+        "<workspace>\\test-results\\python-venv\\Scripts\\python.exe",
+        "<workspace>\\scripts\\measure-itsdangerous.py",
+        "<workspace>\\test-results\\projects\\itsdangerous"
+      ],
+      "cwd": "<workspace>\\test-results\\projects\\itsdangerous",
+      "python": "python",
+      "sourceSha256": "301ca67927dfbfaa6dcd2670f8abdd04d698f7901d5acc573c999ee15c8446c1",
+      "startedAt": "2026-10-16T06:37:44.187Z",
+      "result": {
+        "schema": 1,
+        "warmupRuns": 1,
+        "memoryMethod": "windows-peak-working-set",
+        "environment": {
+          "platform": "Windows",
+          "arch": "AMD64",
+          "python": "3.12.10",
+          "executableSha256": "0b471133e110cfb53a061cad528ce8e517d7b9ac41a0a396c39ad795a487fc14"
+        },
+        "samples": [
+          {
+            "elapsedMs": 1494.1208,
+            "peakRssBytes": 4734976,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1556.2055,
+            "peakRssBytes": 4726784,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1486.3174,
+            "peakRssBytes": 4718592,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1467.3583,
+            "peakRssBytes": 4722688,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1674.911,
+            "peakRssBytes": 4718592,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1484.6358,
+            "peakRssBytes": 4722688,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          },
+          {
+            "elapsedMs": 1638.5439,
+            "peakRssBytes": 4722688,
+            "stdoutSha256": "970f7a72bc2e62c4947d2d553304e17f75e031eac2e10d307f07eea8fba9cf50",
+            "stdoutBytes": 66,
+            "stderrBytes": 0
+          }
+        ]
+      },
+      "check": {
+        "id": "b846d533-6ef4-47e6-8e19-e2ec3db25f35",
+        "name": "itsdangerous pytest",
+        "folder": "itsdangerous",
+        "file": "src/itsdangerous/encoding.py",
+        "sourceSha256": "301ca67927dfbfaa6dcd2670f8abdd04d698f7901d5acc573c999ee15c8446c1",
+        "startedAt": "2026-10-16T06:37:39.883Z",
+        "status": "passed",
+        "stale": false,
+        "exitCode": 0,
+        "elapsedMs": 3930
+      }
+    },
+    "candidateStale": false,
+    "comparison": {
+      "before": {
+        "time": {
+          "median": 1310.0472,
+          "min": 1224.1841,
+          "max": 1336.368,
+          "mad": 16.628400000000056
+        },
+        "memory": {
+          "median": 4722688,
+          "min": 4714496,
+          "max": 4734976,
+          "mad": 4096
+        },
+        "stableOutput": true,
+        "hasOutput": true,
+        "hasStderr": false
+      },
+      "after": {
+        "time": {
+          "median": 1494.1208,
+          "min": 1467.3583,
+          "max": 1674.911,
+          "mad": 26.762499999999818
+        },
+        "memory": {
+          "median": 4722688,
+          "min": 4718592,
+          "max": 4734976,
+          "mad": 4096
+        },
+        "stableOutput": true,
+        "hasOutput": true,
+        "hasStderr": false
+      },
+      "compatible": true,
+      "outputsMatch": true,
+      "executableChanged": false,
+      "rangesOverlap": false,
+      "timeChangePercent": 14.050913585403645,
+      "memoryChangePercent": 0
+    }
+  },
+  "restoredTests": {
+    "tests": 297,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "originalRestored": true,
+  "publicationNote": "Historical run retained. The reported 4.5 MiB peak is the Windows venv launcher, NOT the Python workload. Do not use these memory values or the 0% memory change as application evidence. The subsequent fix excludes launcher memory."
+}

@@ -38,6 +38,10 @@ await writeFile(
         ["Pureobom check cancel", "setInterval(() => {}, 1000)"],
         ["Pureobom check shell", "process.exit(0)"],
         ["Pureobom check background", "process.exit(0)"],
+        [
+          "Pureobom benchmark",
+          "const s=require('node:fs').readFileSync(process.argv[1],'utf8'); const b=Buffer.alloc(8*1024*1024,1); setTimeout(()=>console.log(s.includes('bench-output')?'different':'stable'),s.includes('bench-slow')?160:60)",
+        ],
       ].map(([label, code]) => ({
         label,
         type: label.endsWith("shell") ? "shell" : "process",
@@ -46,6 +50,7 @@ await writeFile(
         args: [
           "-e",
           label.endsWith("shell") ? { value: code, quoting: "strong" } : code,
+          ...(label === "Pureobom benchmark" ? ["${file}"] : []),
         ],
         group: "test",
         problemMatcher: [],
@@ -68,8 +73,11 @@ await runTests({
   extensionDevelopmentPath: resolve("extension"),
   extensionTestsPath: resolve("extension/out/integration.cjs"),
   extensionTestsEnv: {
+    PUREOBOM_ONLY_BENCHMARK: process.env.PUREOBOM_ONLY_BENCHMARK || "0",
     PUREOBOM_INTEGRATION_REPORT: resolve(
-      "test-results/extension-integration.json",
+      process.env.PUREOBOM_ONLY_BENCHMARK === "1"
+        ? "test-results/benchmark-integration.json"
+        : "test-results/extension-integration.json",
     ),
   },
   launchArgs: [

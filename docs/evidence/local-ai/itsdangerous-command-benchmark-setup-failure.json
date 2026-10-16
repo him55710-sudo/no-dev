@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-16T06:34:18.884Z",
+  "project": "https://github.com/pallets/itsdangerous",
+  "commit": "096c8d42545d3b68ea21a4f890fb2b2d8979c0bd",
+  "vscode": "1.96.4",
+  "kind": "Actual VS Code before/after measurement; replay of one previously reviewed qwen2.5-coder:3b edit; no new inference",
+  "edit": {
+    "before": "s = s.encode(encoding, errors)",
+    "after": "return s if isinstance(s, bytes) else s.encode(encoding, errors)"
+  },
+  "adopted": false,
+  "error": "AssertionError [ERR_ASSERTION]: {\"id\":\"443096c5-39b6-4021-a5a6-ad601628775b\",\"name\":\"itsdangerous pytest\",\"folder\":\"itsdangerous\",\"file\":\"src/itsdangerous/encoding.py\",\"sourceSha256\":\"6546d4dcaca3a497dc280795fabd49d76fda2a19f68be6441560ffc5b48bcfac\",\"startedAt\":\"2026-10-16T06:34:21.397Z\",\"status\":\"passed\",\"stale\":true,\"staleReason\":\"file changed: .vscode/tasks.json\",\"exitCode\":0,\"elapsedMs\":4712}\n\ntrue !== false\n",
+  "publicationNote": "Initial fixture setup failure retained. A delayed tasks.json watcher event marked the check stale. Fixture creation was moved before VS Code startup; product invalidation remained enforced."
+}

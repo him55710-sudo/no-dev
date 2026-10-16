@@ -2,11 +2,13 @@
 
 **Pureobom — Read it. Change it. Check it.**
 
-**0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 다른 언어의 실제 모델 품질, 전체 프로젝트 검사, 성능 측정 UI는 아직 검증·구현 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
+**0.7 개발판:** 선택형 Ollama 로컬 AI로 현재 파일 설명·여러 위치 수정·최적화 제안을 요청할 수 있습니다. 클라우드가 꺼진 로컬 서버만 사용하며, 원문 근거·변경 차이·미검증 항목을 확인한 뒤 적용합니다. Python 실제 프로젝트의 전후 테스트와 undo를 검증했습니다. 언어별 모델의 의미 정확성과 새 설치·사용 조합은 계속 검증 중입니다. [사용법과 증거](https://github.com/him55710-sudo/pureobom/blob/main/docs/LOCAL_AI.md).
 
 Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. Optional local AI proposes broader changes. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.
 
 **프로젝트 검사 / Project checks:** 0.7 개발판은 등록한 VS Code test/build 명령의 실행도 연결합니다. 명령을 검토하고 파일을 저장한 뒤 실행하며, 실제 종료 코드와 파일 변경 여부를 표시합니다. 로컬 AI 연결은 필요 없습니다. Runs an explicitly reviewed project command; an exit code is not a guarantee of correctness. [설정·범위 / Setup and limits](https://github.com/him55710-sudo/pureobom/blob/main/docs/PROJECT_CHECKS.md).
+
+**전후 측정 / Before and after:** 같은 탭에서 반복 가능한 process 명령을 확인하고 변경 전후 각각 7회 시간·최대 메모리·출력 해시를 측정합니다. 로컬 Python 3가 필요합니다. 실제 검사 기록과 변동 범위를 함께 보며 JSON 보고서를 열 수 있습니다. No AI/API is needed; commands execute real project code with normal user privileges. [사용법·측정 한계 / Measurement guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/BENCHMARKS.md).
 
 코딩 문법이 낯설어도 **문장으로 읽고, 표에서 규칙을 바꾸고, 연결 지도로 구조를 확인하는** 로컬 시제품입니다. JavaScript·TypeScript·JSX·TSX 코드를 한국어와 영어로 설명합니다. JSON은 유효성과 개요를 보여 줍니다.
 
@@ -45,7 +47,7 @@ Read JS/TS as source-linked stories in Korean or English, edit a rule, and compa
 | 항목 | 지원 범위 |
 | --- | --- |
 | 수정 | 기본 모드는 숫자·문자열·불리언 리터럴과 비교 연산자 한 곳. 로컬 AI는 현재 파일에서 최대 8개 정확한 범위 변경 제안. 다중 파일 리팩터링 미지원 |
-| 검사 | 문법 파싱·검토 패턴과 VS Code의 현재 파일 알림 연결. 변경안의 사전 타입 검사·전체 프로젝트 검사·보안 감사·실제 테스트 실행 미지원 |
+| 검사 | 문법 파싱·검토 패턴, 현재 파일 알림, 사용자가 등록·검토한 실제 프로젝트 명령. 사전 타입 검사·보안 감사·전체 동작 보증은 제공하지 않음 |
 | 모의 실행 | 제한된 순수 계산. 네트워크, DOM, 비동기, 외부 패키지, 반복문 등 미지원 구문은 거부 |
 | 연결 | 정적인 상대 경로 import/export. 별칭, require, 동적 import 미해석. 그래프 최대 40개 파일 |
 | 크기 | 기존 읽기는 파일당 512KB, 최대 300개, 합계 8MB. 로컬 AI는 현재 파일 24KB와 합산 요청 예산을 별도 제한. 숨김·의존성·빌드 파일은 작업 공간 검색에서 제외 |

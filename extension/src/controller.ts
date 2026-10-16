@@ -18,6 +18,7 @@ import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
 import { assistantLanguages } from "../../src/core/localAssistant";
 import { LocalAssistantController } from "./localAssistantController";
 import { ProjectChecks } from "./projectChecks";
+import { Benchmarks } from "./benchmarks";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
 
 const FILE_BYTES = 512 * 1024,
@@ -32,6 +33,7 @@ type PendingPatch = {
 export class Controller implements vscode.Disposable {
   readonly assistant: LocalAssistantController;
   readonly checks: ProjectChecks;
+  readonly benchmarks: Benchmarks;
   readonly changes = new vscode.EventEmitter<ViewState>();
   state: ViewState = {
     contextId: "",
@@ -60,6 +62,8 @@ export class Controller implements vscode.Disposable {
     );
     this.checks = new ProjectChecks((context) => this.current(context));
     this.checks.changes.event((projectCheck) => this.publish({ projectCheck }));
+    this.benchmarks = new Benchmarks(this.checks);
+    this.benchmarks.changes.event((benchmark) => this.publish({ benchmark }));
     try {
       this.glossary = normalizeGlossary(storage?.get("pureobom.glossary.v1"));
     } catch {
@@ -604,6 +608,7 @@ export class Controller implements vscode.Disposable {
     return report;
   }
   dispose() {
+    this.benchmarks.dispose();
     this.checks.dispose();
     this.assistant.dispose();
     clearTimeout(this.timer);

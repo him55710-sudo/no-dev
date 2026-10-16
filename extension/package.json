@@ -60,6 +60,12 @@
     "configuration": {
       "title": "Pureobom",
       "properties": {
+        "pureobom.benchmarkPython": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Python 3 executable for local command measurements. Empty uses python on Windows and python3 elsewhere. Standard library only; no API service."
+        },
         "pureobom.ollamaPort": {
           "type": "integer",
           "default": 11434,

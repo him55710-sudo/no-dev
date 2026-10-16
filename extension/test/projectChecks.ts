@@ -216,6 +216,34 @@ export async function projectChecks(
     assert.equal(c.checks.result?.id, c.state.projectCheck?.id);
   } finally {
     await vscode.workspace.fs.writeFile(configUri, originalConfig);
+    // The next workflow must not race VS Code reloading the restored fixture.
+    const deadline = Date.now() + 10000;
+    while (true) {
+      const configured = vscode.workspace
+        .getConfiguration("tasks", root)
+        .get<{ label: string; args: string[] }[]>("tasks", []);
+      const fetched = await vscode.tasks.fetchTasks();
+      if (
+        configured.some(
+          (t) =>
+            t.label === "Pureobom check success" &&
+            t.args.some(
+              (arg) =>
+                typeof arg === "string" && arg.includes("assertion passed"),
+            ),
+        ) &&
+        fetched.some(
+          (t) =>
+            t.name === "Pureobom check success" &&
+            t.execution instanceof vscode.ProcessExecution &&
+            t.execution.args.some((arg) => arg.includes("assertion passed")),
+        )
+      )
+        break;
+      if (Date.now() > deadline)
+        throw Error("Restored tasks fixture did not reload");
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
   }
   reports.push(
     "project check: shell task works after cancellation; background tasks excluded; changed command rejected until reviewed again",

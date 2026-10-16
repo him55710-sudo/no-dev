@@ -2,6 +2,8 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Measure a reviewed process task before and after edits: one warm-up plus seven fresh runs, elapsed time, OS peak process memory, output hashes and optional project-check evidence. Report observed variation and failures; reject stale conditions and incompatible comparisons. Local Python standard library only, with cancellation and per-run limits. See [measurement scope](docs/BENCHMARKS.md).
+
 - Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.
 - Ground citations and edits in unique original source ranges, require changed-source evidence, bound requests, and cancel stale work. Review the native diff and unchecked behavior before explicit apply; use normal editor undo.
 - Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Other language checks remain unavailable.

@@ -4,6 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import assert from "node:assert/strict";
 import { Worker } from "node:worker_threads";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import JSZip from "jszip";
 
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
@@ -68,6 +70,7 @@ assert.equal(manifest.version, version);
 for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",
+  "extension/runtime/benchmark.py",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -128,4 +131,55 @@ try {
 }
 console.log(
   `Release ${version}: checksums, source manifest, demo assets, licenses, VSIX contents and packaged worker verified.`,
+);
+// Run the actual shipped standard-library measurement worker outside the repo.
+const measurementDirectory = await mkdtemp(
+  join(tmpdir(), "pureobom-measure-package-"),
+);
+const measurementFile = join(measurementDirectory, "benchmark.py");
+await writeFile(
+  measurementFile,
+  await vsix.file("extension/runtime/benchmark.py").async("string"),
+);
+try {
+  const exec = promisify(execFile);
+  const subprocess = exec(
+    process.platform === "win32" ? "python" : "python3",
+    ["-I", "-S", measurementFile],
+    {
+      cwd: measurementDirectory,
+      timeout: 20000,
+      maxBuffer: 65536,
+      windowsHide: true,
+      encoding: "utf8",
+    },
+  );
+  subprocess.child.stdin.end(
+    JSON.stringify({
+      argv: [process.execPath, "-e", "console.log('packaged measurement')"],
+      cwd: measurementDirectory,
+      env: {},
+    }) + "\n",
+  );
+  const { stdout } = await subprocess;
+  const event = stdout
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => JSON.parse(line))
+    .find((event) => event.type === "result");
+  assert.equal(
+    event?.result.samples.length,
+    7,
+    "Packaged measurement worker runs all seven samples",
+  );
+  assert.equal(
+    new Set(event.result.samples.map((sample) => sample.stdoutSha256)).size,
+    1,
+  );
+} finally {
+  await unlink(measurementFile);
+  await rmdir(measurementDirectory);
+}
+console.log(
+  "Packaged Python measurement worker verified outside the workspace.",
 );

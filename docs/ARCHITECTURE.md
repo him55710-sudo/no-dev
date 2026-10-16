@@ -2,6 +2,8 @@
 
 ## 0.7 개발판의 로컬 AI 경로
 
+전후 측정은 `benchmarks.ts`가 기존 ProjectChecks의 작업 재검증·저장 확인·실행 예약을 재사용한다. 사용자가 확인한 process argv를 `benchmarkRunner.ts` → 번들된 `runtime/benchmark.py`로 전달한다. Python은 명령을 직접 실행하고 OS 시간·메모리·출력 해시를 NDJSON으로 반환한다. 호스트는 한도·취소·결과 스키마를 검증하며 UI에는 환경 값 대신 검토 정보와 원자료만 보낸다. `src/core/benchmark.ts`의 통계는 UI와 JSON 보고서가 공유한다. [측정 방식·변경 감지 범위](BENCHMARKS.md).
+
 `src/core/localAssistant.ts`는 언어·요청·응답 크기와 구조, 실제 원문 인용, 겹치지 않는 변경 범위를 검증한다. `extension/src/ollama.ts`는 확장 호스트에서 고정 루프백으로 연결하며, 클라우드 비활성화와 로컬 모델 메타데이터 확인 후에만 현재 파일을 전송한다. 파일/모델/요청 선택은 `extension/ui/LocalAssistant.tsx`에서 수행한다. 코드·답변에 포함된 도구나 명령은 실행하지 않는다.
 
 `localAssistantController.ts`는 문서 URI·버전·전체 원문과 요청 문맥을 보관하고, 변경 시 요청을 취소하고 결과를 무효화한다. JS/TS와 JSON 제안은 분석 Worker에서 문법 확인한다. Python은 `pythonValidation.ts`의 고정 `ast.parse` 프로그램으로만 검사한다. native diff → 명시적 적용 → 기존 undo 경로를 사용하며 모델이 적용 권한을 갖지 않는다. 이 경로는 데스크톱 로컬 작업 공간 전용이며 브라우저 데모에는 포함하지 않는다. [제약과 실제 증거](LOCAL_AI.md).

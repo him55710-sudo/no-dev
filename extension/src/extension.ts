@@ -58,6 +58,34 @@ export function activate(context: vscode.ExtensionContext) {
         const p = r.payload || {};
         let result: unknown;
         switch (r.action) {
+          case "benchmarkPrepare":
+            result = await controller.benchmarks.prepare(
+              r.contextId,
+              inputString(p.id, 100),
+            );
+            break;
+          case "benchmarkRun":
+            result = await controller.benchmarks.start(
+              r.contextId,
+              inputString(p.id, 100),
+              p.phase,
+              p.reviewed,
+            );
+            break;
+          case "benchmarkCancel":
+            controller.benchmarks.cancel();
+            break;
+          case "benchmarkReport": {
+            const document = await vscode.workspace.openTextDocument({
+              language: "json",
+              content: JSON.stringify(controller.benchmarks.report(), null, 2),
+            });
+            await vscode.window.showTextDocument(document, {
+              viewColumn: vscode.ViewColumn.One,
+              preview: false,
+            });
+            break;
+          }
           case "projectTasks":
             result = await controller.checks.list(r.contextId);
             break;
