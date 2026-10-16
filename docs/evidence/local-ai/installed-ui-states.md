@@ -13,6 +13,8 @@
 | 완료 응답의 언어 변경 | 영어로 전환하면 한국어 응답을 숨기고 `The previous response was generated in Korean. Send a new request for an English explanation.` 표시 |
 | 큰 파일 | 29,402바이트 Python 파일을 열면 24,000바이트 한도, 조건 안내, 비활성화된 요청 버튼 표시. 이전 파일 결과 없음 |
 | 미지원 파일 | `notes.txt`로 전환하면 파일 열기 안내로 돌아오고 이전 파일의 모델 응답·요청 폼 없음 |
+| 서버 미실행 | 테스트 프로필만 미사용 포트 11436으로 바꾼 뒤 연결. `Cannot connect to Ollama. Start the local server.`가 한국어와 함께 표시되고 재연결 가능 |
+| 설치 모델 없음 | 별도 빈 모델 폴더의 실제 Ollama를 11436에서 시작. `/api/status`의 `cloud.disabled:true`, `/api/tags`의 `models:[]` 확인. 화면은 `No installed local text model found.`로 바뀌고 요청 버튼 비활성화. 기존 모델은 변경하지 않음 |
 
 ## 실제 모델 응답의 한계
 
@@ -29,6 +31,8 @@
 
 `pnpm extension:build`, `pnpm extension:package`, `pnpm extension:test:installed`로 새 VSIX를 매번 별도 프로필에 설치한다. 제품의 경로·버전·실제 production 모드와 런타임 파일 5개의 SHA-256이 VSIX 내용과 같은지 확인한 뒤 실제 VS Code 통합 30개 흐름을 실행한다. 테스트 진입점만 별도의 개발 확장이며 제품은 설치본이다. [설치 통합 원자료](installed-vsix-integration.json).
 
-자동 검사의 AI 응답은 제어된 HTTP fixture다. 위 클릭 검증은 실제 Ollama이며, 실제 프로젝트 검사·측정 **실행 버튼**을 클릭한 기록은 아니다. 명령 실행·실패·취소·전후 측정은 설치본 통합 검사와 외부 프로젝트 원자료가 별도로 검증한다. 연결 실패/빈 모델 목록의 네이티브 화면, 영어 응답의 의미 정확성, Linux 네이티브 조작과 모든 언어 조합을 검증했다고 주장하지 않는다.
+자동 검사의 AI 응답은 제어된 HTTP fixture다. 위 클릭 검증은 실제 Ollama이며, 실제 프로젝트 검사·측정 **실행 버튼**을 클릭한 기록은 아니다. 명령 실행·실패·취소·전후 측정은 설치본 통합 검사와 외부 프로젝트 원자료가 별도로 검증한다. 빈 모델 검증 후 소유한 추가 서버만 종료하고 테스트 프로필 포트를 11435로 복구했다. 영어 응답의 의미 정확성, Linux 네이티브 조작과 모든 언어 조합을 검증했다고 주장하지 않는다.
+
+복구 후 기존 모델 연결 성공과 배송 예제 파일의 원본 SHA-256 `59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1` 일치를 확인했다. [Windows·Ubuntu CI 원자료](installed-ci.json)는 각각 개발/설치 방식의 동일한 30개 흐름과 핵심 161개, 패키지 독립 실행을 기록한다.
 
 English: a fresh installed preview was checked with native Windows UI actions for Korean/English notices, cancellation on language change, hiding a response generated in another language, oversized input and unsupported files. A real 3B Korean explanation completed but omitted important branches. Automated installed-VSIX integration uses controlled AI fixtures and is separate from these UI observations.
