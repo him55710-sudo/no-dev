@@ -71,6 +71,7 @@ for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",
   "extension/runtime/benchmark.py",
+  "extension/runtime/python_source.py",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -182,4 +183,63 @@ try {
 }
 console.log(
   "Packaged Python measurement worker verified outside the workspace.",
+);
+
+// Verify the shipped AST helper, with no repository imports or user-code execution.
+const pythonDirectory = await mkdtemp(
+  join(tmpdir(), "pureobom-python-package-"),
+);
+const pythonFile = join(pythonDirectory, "python_source.py");
+await writeFile(
+  pythonFile,
+  await vsix.file("extension/runtime/python_source.py").async("string"),
+);
+try {
+  const exec = promisify(execFile);
+  const source =
+    '# 😀 exact\nlimit = 9007199254740993\ndef check(value):\n    if value < limit:\n        raise ValueError("below")\n    return value\n';
+  const invoke = async (action) => {
+    const subprocess = exec(
+      process.platform === "win32" ? "python" : "python3",
+      ["-I", "-S", pythonFile],
+      {
+        cwd: pythonDirectory,
+        timeout: 10000,
+        maxBuffer: 65536,
+        windowsHide: true,
+        encoding: "utf8",
+      },
+    );
+    subprocess.child.stdin.end(
+      JSON.stringify({ source, path: "sample.py", ...action }),
+    );
+    const { stdout } = await subprocess;
+    const response = JSON.parse(stdout);
+    assert.equal(response.error, undefined);
+    return response.result;
+  };
+  const analysis = await invoke({ action: "analyze" });
+  assert.ok(analysis.python.version);
+  assert.equal(analysis.functions[0].name, "check");
+  assert.equal(analysis.rules[0].value, "9007199254740993");
+  assert.equal(
+    source.slice(analysis.rules[0].start, analysis.rules[0].end),
+    "9007199254740993",
+  );
+  const patch = await invoke({
+    action: "patch",
+    ruleId: analysis.rules[0].id,
+    value: "9007199254740995",
+  });
+  assert.equal(
+    patch.updated,
+    source.replace("9007199254740993", "9007199254740995"),
+  );
+  assert.equal(patch.semanticChecked, false);
+} finally {
+  await unlink(pythonFile);
+  await rmdir(pythonDirectory);
+}
+console.log(
+  "Packaged Python AST reader and exact literal edit verified outside the workspace.",
 );

@@ -272,6 +272,11 @@ function App() {
             ))}
           </nav>
           <main aria-busy={state.busy}>
+            {state.pythonNotice ? (
+              <section className="card" role="status">
+                <p>{state.pythonNotice}</p>
+              </section>
+            ) : null}
             {a && tab === "local" && (
               <>
                 <LocalAssistant state={state} lang={lang} />
@@ -281,10 +286,15 @@ function App() {
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
                 <p>
-                  {t(
-                    "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
-                    "Syntax-grounded explanation is not available for this language yet. Local AI can propose explanations and changes for the current file.",
-                  )}
+                  {state.language === "python"
+                    ? t(
+                        "Python 구문 읽기를 사용할 수 없습니다. 위 안내를 확인하거나 로컬 AI에서 설명을 요청할 수 있습니다.",
+                        "Python syntax reading is unavailable. Check the notice above or request a local AI explanation.",
+                      )
+                    : t(
+                        "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
+                        "Syntax-grounded explanation is not available for this language yet. Local AI can propose explanations and changes for the current file.",
+                      )}
                 </p>
                 <button onClick={() => setTab("local")}>
                   {t("로컬 AI 열기", "Open local AI")}
@@ -356,10 +366,15 @@ function App() {
                         "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
                         "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
                       )
-                    : t(
-                        "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                        "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                      )}
+                    : a.python
+                      ? t(
+                          "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
+                          "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
+                        )
+                      : t(
+                          "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
+                          "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
+                        )}
                 </p>
                 <form
                   className="sentence"
@@ -382,10 +397,15 @@ function App() {
                               '예: $["enabled"]를 false로 변경',
                               'Example: change $["enabled"] to false',
                             )
-                          : t(
-                              "무료 배송 기준을 70000으로 변경",
-                              "Change freeShippingThreshold to 70000",
-                            )
+                          : a.python
+                            ? t(
+                                "표의 원문 이름과 새 값을 적어 주세요",
+                                "Use a source name from the table and one new value",
+                              )
+                            : t(
+                                "무료 배송 기준을 70000으로 변경",
+                                "Change freeShippingThreshold to 70000",
+                              )
                       }
                     />
                     <button
@@ -428,7 +448,11 @@ function App() {
                             <strong>{rule.label[lang]}</strong>
                             <small className="mono">{rule.name}</small>
                           </td>
-                          <td className="mono">{String(rule.value)}</td>
+                          <td className="mono">
+                            {rule.syntax === "python"
+                              ? rule.raw
+                              : String(rule.value)}
+                          </td>
                           <td>
                             <button
                               className="line-link"
@@ -485,7 +509,12 @@ function App() {
                               : [">=", ">", "<=", "<", "===", "!==", "==", "!="]
                             ).map((v) => (
                               <option key={v} value={v}>
-                                {v}
+                                {edit.syntax === "python" &&
+                                edit.type === "boolean"
+                                  ? v === "true"
+                                    ? "True"
+                                    : "False"
+                                  : v}
                               </option>
                             ))}
                           </select>
@@ -773,8 +802,8 @@ function App() {
       )}
       <footer className="app-footer">
         {t(
-          "기본 설명은 JS/TS 구문과 사전을 사용합니다. 선택형 로컬 AI의 설명·수정은 모델의 제안이며 의미·동작·성능 검토가 필요합니다.",
-          "Built-in explanations use JS/TS syntax and a glossary. Optional local AI output is a model proposal; review its meaning, behavior and performance.",
+          "기본 읽기는 지원되는 구문과 원문에 기반합니다. 선택형 로컬 AI의 설명·수정은 모델의 제안이며 의미·동작·성능 검토가 필요합니다.",
+          "Built-in reading uses supported syntax and source text. Optional local AI output is a model proposal; review its meaning, behavior and performance.",
         )}
       </footer>
       {help && (

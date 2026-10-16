@@ -106,10 +106,21 @@ export async function localAssistantChecks(
     await c.setDocument(doc);
     await ready();
     assert.equal(c.state.language, "python");
-    assert.equal(
-      c.state.analysis!.kind,
-      "text",
-      "Python must not be falsely parsed as TypeScript",
+    assert.equal(c.state.analysis!.kind, "script");
+    assert.ok(
+      c.state.analysis!.python?.version,
+      "Python uses its own installed AST parser",
+    );
+    assert.deepEqual(
+      c.state.analysis!.rules.map(({ name, raw, syntax }) => ({
+        name,
+        raw,
+        syntax,
+      })),
+      [
+        { name: "fee", raw: "3000", syntax: "python" },
+        { name: "threshold", raw: "50000", syntax: "python" },
+      ],
     );
     const payload = {
       model: model.name,

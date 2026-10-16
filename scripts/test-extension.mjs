@@ -90,6 +90,7 @@ if (installed) {
     "out/extension.cjs",
     "out/worker.cjs",
     "runtime/benchmark.py",
+    "runtime/python_source.py",
     "media/view.js",
     "media/view.css",
   ])

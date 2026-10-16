@@ -2,6 +2,8 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Read supported Python statement structure in Korean/English through an isolated local AST helper; no model or user-code execution. Preserve loop else, ordered exception branches and finally. Edit assigned literals with exact numeric spelling, Unicode source positions, native diff/apply/undo and stale checks. Publish limits, interpreter setup and an actual itsdangerous regression/restore in [Python source](docs/PYTHON_SOURCE.md).
+
 - Read JSON/JSONC literal facts in Korean and English without a model. Search key paths and values, jump to source, and preview/apply/undo one string, number or boolean. Preserve numeric spelling and surrounding source; block duplicate-key ranges and stale edits. Document display limits and unverified consumer behavior in [JSON data](docs/JSON_DATA.md).
 - Keep browser notices in the selected language when switching Korean/English after applying or undoing a change.
 

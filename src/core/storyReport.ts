@@ -6,6 +6,10 @@ export function storyLines(steps: Step[], lang: Lang, depth = 0): string[] {
   for (const step of steps) {
     lines.push("  ".repeat(depth) + `- L${step.line}: ${step.text[lang]}`);
     lines.push(...storyLines(step.children, lang, depth + 1));
+    for (const branch of step.branches || []) {
+      lines.push("  ".repeat(depth + 1) + `- ${branch.label[lang]}`);
+      lines.push(...storyLines(branch.steps, lang, depth + 2));
+    }
     if (step.otherwise) {
       const label =
         step.kind === "guard"

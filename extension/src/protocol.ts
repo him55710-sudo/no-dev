@@ -19,6 +19,7 @@ export type ViewState = {
   project?: ProjectAnalysis;
   scanNote?: string;
   error?: string;
+  pythonNotice?: string;
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {

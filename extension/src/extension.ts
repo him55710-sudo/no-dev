@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
   const controller = new Controller(
     new AnalysisClient(context.asAbsolutePath("out/worker.cjs")),
     context.workspaceState,
+    context.asAbsolutePath("runtime/python_source.py"),
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {

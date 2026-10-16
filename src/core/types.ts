@@ -14,6 +14,7 @@ export type Step = Anchor & {
   children: Step[];
   otherwise?: Step[];
   finalizer?: Step;
+  branches?: { label: Words; steps: Step[] }[];
   supported: boolean;
 };
 export type Rule = Anchor & {
@@ -25,7 +26,7 @@ export type Rule = Anchor & {
   scope: string;
   raw: string;
   note?: Words;
-  syntax?: "jsxText" | "jsxAttribute" | "json";
+  syntax?: "jsxText" | "jsxAttribute" | "json" | "python";
 };
 export type InterfaceNode = Anchor & {
   id: string;
@@ -51,6 +52,7 @@ export type InterfaceStructure = {
   truncated: boolean;
 };
 export type FunctionInfo = Anchor & {
+  note?: Words;
   id: string;
   name: string;
   label: Words;
@@ -73,6 +75,7 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  python?: { version: string; truncated: boolean };
   data?: import("./jsonData").JsonDataFacts;
   interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];

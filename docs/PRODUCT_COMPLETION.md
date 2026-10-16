@@ -2,6 +2,8 @@
 
 상태 기준: 2026-10-16, 시작 커밋 `7603971`. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 실제 작업과 결과는 [에이전트 작업 기록](AGENT_WORKLOG.md)에 남긴다.
 
+추가 P2/P3/P4 증분: [Python AST 읽기·리터럴 수정](PYTHON_SOURCE.md)을 로컬 VS Code에 연결했다. 모델 없이 설치 Python이 분기·반복문 else·예외·finally의 구조와 정확한 값 위치를 읽는다. [외부 itsdangerous](evidence/local-ai/python-source-project.md)에서 값 수정→실제 검사 실패 38개→undo·저장→297개 통과를 확인했다. Python 타입·import 지도·시뮬레이션·전체 구문 설명은 아직 미제공이며 다른 언어의 분석기·외부 검증도 남아 있다.
+
 현재 0.7 개발판에는 로컬 Ollama 연결, 다중 범위 편집, 문법 검사, 프로젝트 명령 실행, 전후 시간·메모리 측정과 설치본 검사가 구현돼 있다. 외부 Python itsdangerous와 JavaScript clsx에서 각각 검사 흐름을 확인했다. 측정한 모델 최적화 제안은 느려져 채택하지 않았다. 모델 설명의 경계·분기·데이터 해석 오류가 남아 있으며 전체 P0–P6 완료를 뜻하지 않는다. [현재 증거](evidence/local-ai/README.md). 아래 '시작 상태'는 최초 기준선이다.
 
 최신 JSON 데이터 기능 소스 `2b0235e`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38876047129)는 각 핵심 169개·개발/설치 각 31개·패키지 Worker 검사를 통과했다. [원자료](evidence/local-ai/json-facts-ci.json). 모델 없는 사실 읽기·범위 수정의 근거이며 소비 코드·모든 언어의 의미 정확성을 확인한 것은 아니다.

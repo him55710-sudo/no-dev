@@ -12,6 +12,8 @@ Understand the code AI wrote. Change a rule. See which cases change.
 
 The development source reads [JSON/JSONC values without a model](docs/JSON_DATA.md): exact key paths, types and source lines, plus preview/apply/undo for individual values. It preserves numeric spelling and comments, marks duplicate keys, and does not infer what a consuming program does.
 
+In desktop VS Code, it also reads [Python statement structure and exact literals](docs/PYTHON_SOURCE.md) using an installed isolated Python interpreter. No model/API is needed. Branches, exceptions and source-linked value edits are partial static support; upstream tests caught a deliberate wrong edit and passed again after undo.
+
 The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
 
 It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elapsed-time and peak-memory samples, output hashes, observed variation and local JSON reports. Requires Python 3 and a reviewed repeatable process task; this is measurement evidence, not an automatic optimization guarantee.

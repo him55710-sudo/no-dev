@@ -6,7 +6,10 @@ import type {
   Simulation,
   SourceFile,
   Lang,
+  FileAnalysis,
 } from "../../src/core/types";
+import { parseRequest } from "../../src/core/ruleRequest";
+import { pythonSource } from "./pythonSource";
 import {
   normalizeGlossary,
   updateGlossary,
@@ -52,9 +55,11 @@ export class Controller implements vscode.Disposable {
   private registration: vscode.Disposable;
   private diagnosticRegistration: vscode.Disposable;
   private glossary: GlossaryEntry[] = [];
+  private pythonWork?: AbortController;
   constructor(
     private client: AnalysisClient,
     private storage?: vscode.Memento,
+    private pythonScript?: string,
   ) {
     this.assistant = new LocalAssistantController(
       (context) => this.current(context),
@@ -167,7 +172,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {
@@ -223,6 +228,7 @@ export class Controller implements vscode.Disposable {
     await this.refresh();
   }
   private invalidate() {
+    this.pythonWork?.abort();
     this.assistant.invalidate();
     this.epoch++;
     this.patches.clear();
@@ -244,6 +250,7 @@ export class Controller implements vscode.Disposable {
       language: doc.languageId,
       sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
       analysis: undefined,
+      pythonNotice: undefined,
       diagnostics: changedDocument
         ? undefined
         : this.state.diagnostics &&
@@ -262,6 +269,7 @@ export class Controller implements vscode.Disposable {
       language: undefined,
       sourceBytes: undefined,
       analysis: undefined,
+      pythonNotice: undefined,
       diagnostics: undefined,
       busy: false,
       dirty: false,
@@ -334,6 +342,21 @@ export class Controller implements vscode.Disposable {
         glossary: this.analysisGlossary(),
       });
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
+      let pythonNotice: string | undefined;
+      if (doc.languageId === "python") {
+        try {
+          const analysis = (await this.readPython(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          pythonNotice = message(error);
+        }
+      }
+      if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       this.publish({
         project,
         analysis: project.files.find((f) => f.path === path),
@@ -342,6 +365,7 @@ export class Controller implements vscode.Disposable {
         dirty: doc.isDirty,
         language: doc.languageId,
         sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
+        pythonNotice,
       });
     } catch (e) {
       if (epoch === this.epoch)
@@ -420,6 +444,30 @@ export class Controller implements vscode.Disposable {
       throw Error("파일이 바뀌었습니다. 최신 설명에서 다시 시도해 주세요.");
     return doc;
   }
+  private async readPython(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+  ) {
+    if (vscode.env.remoteName || !this.pythonScript)
+      throw Error(
+        "Python 구문 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / Python syntax reading requires a local desktop workspace.",
+      );
+    this.pythonWork?.abort();
+    const run = new AbortController();
+    this.pythonWork = run;
+    try {
+      return await pythonSource(file, this.pythonScript, action, {
+        executable: vscode.workspace
+          .getConfiguration("pureobom")
+          .get<string>("analysisPython", ""),
+        signal: run.signal,
+      });
+    } finally {
+      if (this.pythonWork === run) this.pythonWork = undefined;
+    }
+  }
   async prepare(
     contextId: string | undefined,
     payload: Record<string, unknown>,
@@ -429,19 +477,37 @@ export class Controller implements vscode.Disposable {
       throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
     const file = { path: this.path(doc), content: doc.getText() },
       version = doc.version;
-    const patch =
-      payload.request !== undefined
-        ? await this.client.call<Patch>("request", {
-            file,
-            request: inputString(payload.request),
-            glossary: this.analysisGlossary(),
-          })
-        : await this.client.call<Patch>("patch", {
-            file,
-            ruleId: inputString(payload.ruleId),
-            value: inputString(payload.value),
-            glossary: this.analysisGlossary(),
-          });
+    let patch: Patch;
+    if (doc.languageId === "python") {
+      const selected =
+        payload.request !== undefined
+          ? parseRequest(
+              inputString(payload.request),
+              this.state.analysis!.rules,
+            )
+          : {
+              rule: { id: inputString(payload.ruleId) },
+              value: inputString(payload.value),
+            };
+      patch = (await this.readPython(file, {
+        action: "patch",
+        ruleId: selected.rule.id,
+        value: selected.value,
+      })) as Patch;
+    } else
+      patch =
+        payload.request !== undefined
+          ? await this.client.call<Patch>("request", {
+              file,
+              request: inputString(payload.request),
+              glossary: this.analysisGlossary(),
+            })
+          : await this.client.call<Patch>("patch", {
+              file,
+              ruleId: inputString(payload.ruleId),
+              value: inputString(payload.value),
+              glossary: this.analysisGlossary(),
+            });
     if (
       this.current(contextId) !== doc ||
       doc.version !== version ||
@@ -608,6 +674,7 @@ export class Controller implements vscode.Disposable {
     return report;
   }
   dispose() {
+    this.pythonWork?.abort();
     this.benchmarks.dispose();
     this.checks.dispose();
     this.assistant.dispose();

@@ -6,6 +6,8 @@
 
 Read JS/TS as source-linked stories in Korean or English, edit a rule, and compare up to 12 inputs before applying. Optional local AI proposes broader changes. In English VS Code, run **Pureobom: Try an example** or **Pureobom: Explain current file**; choose English in the panel.
 
+**Python 원문 읽기 / Python source:** 0.7 개발판은 설치된 Python AST로 현재 파일의 일부 구문·분기·예외와 실제 값을 읽습니다. 사용자 코드를 실행하거나 가져오지 않으며 모델/API가 필요 없습니다. 문자열·숫자·참거짓 하나를 Python diff→적용→undo로 수정합니다. Python 타입 검사·연결 지도·시뮬레이션은 미제공입니다. Requires local desktop VS Code and Python; select a different interpreter with the user setting `pureobom.analysisPython`. [범위·설정·외부 검증 / Guide and evidence](https://github.com/him55710-sudo/pureobom/blob/main/docs/PYTHON_SOURCE.md).
+
 **프로젝트 검사 / Project checks:** 0.7 개발판은 등록한 VS Code test/build 명령의 실행도 연결합니다. 명령을 검토하고 파일을 저장한 뒤 실행하며, 실제 종료 코드와 파일 변경 여부를 표시합니다. 로컬 AI 연결은 필요 없습니다. Runs an explicitly reviewed project command; an exit code is not a guarantee of correctness. [설정·범위 / Setup and limits](https://github.com/him55710-sudo/pureobom/blob/main/docs/PROJECT_CHECKS.md).
 
 **전후 측정 / Before and after:** 같은 탭에서 반복 가능한 process 명령을 확인하고 변경 전후 각각 7회 시간·최대 메모리·출력 해시를 측정합니다. 로컬 Python 3가 필요합니다. 실제 검사 기록과 변동 범위를 함께 보며 JSON 보고서를 열 수 있습니다. No AI/API is needed; commands execute real project code with normal user privileges. [사용법·측정 한계 / Measurement guide](https://github.com/him55710-sudo/pureobom/blob/main/docs/BENCHMARKS.md).

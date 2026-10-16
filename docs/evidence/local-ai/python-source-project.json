@@ -1,0 +1,184 @@
+{
+  "checkedAt": "2026-10-16T09:13:59.090Z",
+  "project": "https://github.com/pallets/itsdangerous",
+  "commit": "096c8d42545d3b68ea21a4f890fb2b2d8979c0bd",
+  "file": "src/itsdangerous/url_safe.py",
+  "sourceSha256": "4d7db7718099818b3ec71b700d8397e3b5ce12ee9dcb345885b77ade693fb1be",
+  "vscode": "1.96.4",
+  "kind": "actual VS Code Python AST reading, exact boolean edit, upstream task checks and undo; known regression; no model or optimization claim",
+  "command": "python -m pytest -q --tb=no --junitxml=<outside-workspace>",
+  "python": {
+    "version": "3.12.10",
+    "truncated": false
+  },
+  "analysis": {
+    "explained": 41,
+    "total": 41,
+    "functions": [
+      "URLSafeSerializerMixin.load_payload",
+      "URLSafeSerializerMixin.dump_payload"
+    ],
+    "selectedRule": {
+      "start": 852,
+      "end": 857,
+      "line": 30,
+      "endLine": 30,
+      "id": "python:852",
+      "name": "decompress",
+      "label": {
+        "ko": "decompress",
+        "en": "decompress"
+      },
+      "type": "boolean",
+      "value": false,
+      "scope": "URLSafeSerializerMixin.load_payload",
+      "raw": "False",
+      "syntax": "python",
+      "note": {
+        "ko": "원문에 적힌 값 하나입니다. 사용처·타입·실행 결과는 별도 확인해야 합니다.",
+        "en": "One written literal. Its uses, types and runtime effects need separate checks."
+      }
+    },
+    "ko": [
+      {
+        "name": "URLSafeSerializerMixin.load_payload",
+        "lines": [
+          "- L30: 「False」를 평가해 「decompress」에 대입합니다.",
+          "- L32: 조건 「payload.startswith(b\".\")」이 참으로 평가되면:",
+          "  - L33: 「payload[1:]」를 평가해 「payload」에 대입합니다.",
+          "  - L34: 「True」를 평가해 「decompress」에 대입합니다.",
+          "- L36: try 본문을 실행하는 구조입니다. 예외 처리는 아래 분기를 따릅니다.",
+          "  - L37: 「base64_decode(payload)」를 평가해 「json」에 대입합니다.",
+          "  - except Exception as e: 순서대로 처음 일치하는 예외 처리",
+          "    - L39: 예외 「BadPayload(\r\n                \"Could not base64 decode the payload because of an exception\",\r\n                original_error=e,\r\n            ) from e」를 발생시키거나 다시 전달합니다. 일치하는 처리기가 있으면 그 흐름을 따릅니다.",
+          "- L44: 조건 「decompress」이 참으로 평가되면:",
+          "  - L45: try 본문을 실행하는 구조입니다. 예외 처리는 아래 분기를 따릅니다.",
+          "    - L46: 「zlib.decompress(json)」를 평가해 「json」에 대입합니다.",
+          "    - except Exception as e: 순서대로 처음 일치하는 예외 처리",
+          "      - L48: 예외 「BadPayload(\r\n                    \"Could not zlib decompress the payload before decoding the payload\",\r\n                    original_error=e,\r\n                ) from e」를 발생시키거나 다시 전달합니다. 일치하는 처리기가 있으면 그 흐름을 따릅니다.",
+          "- L53: 「super().load_payload(json, *args, **kwargs)」를 반환하고 함수를 끝내려 합니다."
+        ]
+      },
+      {
+        "name": "URLSafeSerializerMixin.dump_payload",
+        "lines": [
+          "- L56: 「super().dump_payload(obj)」를 평가해 「json」에 대입합니다.",
+          "- L57: 「False」를 평가해 「is_compressed」에 대입합니다.",
+          "- L58: 「zlib.compress(json)」를 평가해 「compressed」에 대입합니다.",
+          "- L60: 조건 「len(compressed) < (len(json) - 1)」이 참으로 평가되면:",
+          "  - L61: 「compressed」를 평가해 「json」에 대입합니다.",
+          "  - L62: 「True」를 평가해 「is_compressed」에 대입합니다.",
+          "- L64: 「base64_encode(json)」를 평가해 「base64d」에 대입합니다.",
+          "- L66: 조건 「is_compressed」이 참으로 평가되면:",
+          "  - L67: 「b\".\" + base64d」를 평가해 「base64d」에 대입합니다.",
+          "- L69: 「base64d」를 반환하고 함수를 끝내려 합니다."
+        ]
+      }
+    ],
+    "en": [
+      {
+        "name": "URLSafeSerializerMixin.load_payload",
+        "lines": [
+          "- L30: Evaluate False and assign to decompress.",
+          "- L32: If the condition evaluates as true: payload.startswith(b\".\")",
+          "  - L33: Evaluate payload[1:] and assign to payload.",
+          "  - L34: Evaluate True and assign to decompress.",
+          "- L36: Try body; exception handling follows the branches below.",
+          "  - L37: Evaluate base64_decode(payload) and assign to json.",
+          "  - except Exception as e: first matching handler in order",
+          "    - L39: Raise or re-raise BadPayload(\r\n                \"Could not base64 decode the payload because of an exception\",\r\n                original_error=e,\r\n            ) from e; a matching handler can handle it.",
+          "- L44: If the condition evaluates as true: decompress",
+          "  - L45: Try body; exception handling follows the branches below.",
+          "    - L46: Evaluate zlib.decompress(json) and assign to json.",
+          "    - except Exception as e: first matching handler in order",
+          "      - L48: Raise or re-raise BadPayload(\r\n                    \"Could not zlib decompress the payload before decoding the payload\",\r\n                    original_error=e,\r\n                ) from e; a matching handler can handle it.",
+          "- L53: Return super().load_payload(json, *args, **kwargs) and leave the function."
+        ]
+      },
+      {
+        "name": "URLSafeSerializerMixin.dump_payload",
+        "lines": [
+          "- L56: Evaluate super().dump_payload(obj) and assign to json.",
+          "- L57: Evaluate False and assign to is_compressed.",
+          "- L58: Evaluate zlib.compress(json) and assign to compressed.",
+          "- L60: If the condition evaluates as true: len(compressed) < (len(json) - 1)",
+          "  - L61: Evaluate compressed and assign to json.",
+          "  - L62: Evaluate True and assign to is_compressed.",
+          "- L64: Evaluate base64_encode(json) and assign to base64d.",
+          "- L66: If the condition evaluates as true: is_compressed",
+          "  - L67: Evaluate b\".\" + base64d and assign to base64d.",
+          "- L69: Return base64d and leave the function."
+        ]
+      }
+    ]
+  },
+  "baseline": {
+    "result": {
+      "id": "046ea3a9-1647-4656-b1ca-aba19b68e58e",
+      "name": "itsdangerous Python AST regression",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/url_safe.py",
+      "sourceSha256": "4d7db7718099818b3ec71b700d8397e3b5ce12ee9dcb345885b77ade693fb1be",
+      "startedAt": "2026-10-16T09:14:00.700Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 3601
+    },
+    "counts": {
+      "tests": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "change": {
+    "before": "False",
+    "after": "True",
+    "start": 852,
+    "end": 857,
+    "semanticChecked": false
+  },
+  "unsavedBlocked": true,
+  "regression": {
+    "result": {
+      "id": "021d8c40-ab19-488e-87e8-d17249309149",
+      "name": "itsdangerous Python AST regression",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/url_safe.py",
+      "sourceSha256": "71799523cfc821987a37c016675a6239e34e55350a044e2a24b52eae15a11515",
+      "startedAt": "2026-10-16T09:14:05.308Z",
+      "status": "failed",
+      "stale": false,
+      "exitCode": 1,
+      "elapsedMs": 2794
+    },
+    "counts": {
+      "tests": 297,
+      "failures": 38,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "restored": {
+    "result": {
+      "id": "c0f69462-cf0e-4403-81cb-9865d6621f81",
+      "name": "itsdangerous Python AST regression",
+      "folder": "itsdangerous",
+      "file": "src/itsdangerous/url_safe.py",
+      "sourceSha256": "4d7db7718099818b3ec71b700d8397e3b5ce12ee9dcb345885b77ade693fb1be",
+      "startedAt": "2026-10-16T09:14:08.791Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 2698
+    },
+    "counts": {
+      "tests": 297,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "originalRestored": true
+}

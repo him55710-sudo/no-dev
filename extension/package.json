@@ -60,6 +60,12 @@
     "configuration": {
       "title": "Pureobom",
       "properties": {
+        "pureobom.analysisPython": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Python 3 executable for model-free Python source reading and literal edits. Empty uses python on Windows and python3 elsewhere. Only the bundled isolated reader runs; user code is parsed, never executed or imported."
+        },
         "pureobom.benchmarkPython": {
           "type": "string",
           "default": "",

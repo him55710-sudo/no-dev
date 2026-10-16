@@ -53,6 +53,18 @@ export function Steps({
               depth={depth + 1}
             />
           )}{" "}
+          {depth < 12 &&
+            step.branches?.map((branch, index) => (
+              <div className="otherwise" key={index}>
+                <span>{branch.label[lang]}</span>
+                <Steps
+                  steps={branch.steps}
+                  lang={lang}
+                  onSource={onSource}
+                  depth={depth + 1}
+                />
+              </div>
+            ))}
           {depth < 12 && step.otherwise && (
             <div className="otherwise">
               <span>
@@ -81,7 +93,10 @@ export function Steps({
             />
           )}
           {depth >= 12 &&
-            (step.children.length > 0 || step.otherwise || step.finalizer) && (
+            (step.children.length > 0 ||
+              step.otherwise ||
+              step.finalizer ||
+              step.branches?.length) && (
               <p className="muted">
                 {lang === "ko"
                   ? "더 깊은 구조는 원문에서 확인해 주세요."
@@ -141,6 +156,34 @@ export function Story({
     );
   return (
     <div className="story">
+      {analysis.python ? (
+        <p className="card data-facts">
+          {ko
+            ? `Python ${analysis.python.version} 구문에서 읽었습니다. 사용자 코드는 실행하거나 가져오지 않습니다. 일부 구문의 구조와 적힌 값만 설명하며, 타입·사용처·실행 결과·성능은 별도 확인 대상입니다.`
+            : `Read from Python ${analysis.python.version} syntax without executing or importing user code. Describes supported structure and written values; types, uses, runtime outcomes and performance need separate checks.`}
+          {analysis.python.truncated
+            ? ko
+              ? " 표시 한도(400개 구문·12단계·100개 함수·300개 수정 값)에 도달해 일부가 생략됐습니다."
+              : " Some content is omitted at the display limit (400 statements, 12 levels, 100 functions, 300 editable values)."
+            : null}
+        </p>
+      ) : null}
+      {analysis.python && !analysis.syntaxValid ? (
+        <section className="card" role="status">
+          <h3>{ko ? "Python 문법을 확인해 주세요" : "Check Python syntax"}</h3>
+          {analysis.issues.map((issue) => (
+            <p key={issue.id}>
+              {issue.detail[lang]}{" "}
+              <button
+                className="line-link"
+                onClick={() => onSource(issue.line)}
+              >
+                L{issue.line}
+              </button>
+            </p>
+          ))}
+        </section>
+      ) : null}
       <div className="section-heading">
         <div>
           <span className="eyebrow">READ THE LOGIC</span>
@@ -167,13 +210,15 @@ export function Story({
                 key={r.id}
                 className="story-rule"
                 onClick={() => onEdit(r)}
-                disabled={!analysis.syntaxValid}
+                disabled={editDisabled || !analysis.syntaxValid}
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {typeof r.value === "number"
-                    ? r.value.toLocaleString("en-US")
-                    : String(r.value)}
+                  {r.syntax === "python"
+                    ? r.raw
+                    : typeof r.value === "number"
+                      ? r.value.toLocaleString("en-US")
+                      : String(r.value)}
                 </strong>
                 <span className="story-rule-action">
                   {ko ? "바꾸기" : "Edit"} <Icon name="arrow" size={13} />
@@ -197,7 +242,7 @@ export function Story({
       {analysis.functions.length === 0 ? (
         <section className="card setup-card">
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
-          {analysis.steps.length === 0 && (
+          {analysis.syntaxValid && analysis.steps.length === 0 && (
             <p>
               {ko
                 ? "분석할 실행 구문이 없습니다."
@@ -226,6 +271,7 @@ export function Story({
                     : "Function"}
               </span>
             </header>
+            {fn.note ? <p>{fn.note[lang]}</p> : null}
             <div className="function-input">
               <span className="mini-label">{ko ? "받는 정보" : "INPUTS"}</span>
               {fn.params.length ? (
@@ -271,9 +317,13 @@ export function Story({
       )}
       <p className="footnote">
         <Icon name="info" size={15} />
-        {ko
-          ? "이름 번역은 용어 사전을 사용합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
-          : "Names use a small glossary. Descriptions do not establish author intent, called-function behavior or runtime outcomes."}
+        {analysis.python
+          ? ko
+            ? "Python 이름과 식은 원문을 유지합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
+            : "Python names and expressions retain their source spelling. Descriptions do not establish author intent, called-function behavior or runtime outcomes."
+          : ko
+            ? "이름 번역은 용어 사전을 사용합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
+            : "Names use a small glossary. Descriptions do not establish author intent, called-function behavior or runtime outcomes."}
       </p>
     </div>
   );
