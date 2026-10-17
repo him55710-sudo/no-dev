@@ -185,6 +185,7 @@ export class ImplementationJobs {
         root,
         this.storage,
         state.id,
+        process.platform === "win32",
       ));
       signal.throwIfAborted();
       const copiedChecks = await availableChecks(workspace.path, true);

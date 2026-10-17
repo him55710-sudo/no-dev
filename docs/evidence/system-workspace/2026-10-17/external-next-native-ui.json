@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-17T03:55:40.458Z",
+  "scope": "Browser DOM and actual UI actions on the saved candidate in an independent clone; synthetic local accounts and PostgreSQL. Not installed extension review/apply/undo or a full authentication/payment regression.",
+  "member": {
+    "at": "2026-10-17T03:54:30.883Z",
+    "url": "http://127.0.0.1:54445/dashboard",
+    "inviteEnabled": false,
+    "removeEnabled": [
+      false,
+      false
+    ],
+    "reasonCount": 2,
+    "signOutUrl": "http://127.0.0.1:54445/"
+  },
+  "owner": {
+    "at": "2026-10-17T03:55:17.368Z",
+    "url": "http://127.0.0.1:54445/dashboard",
+    "inviteEnabled": true,
+    "removeEnabled": [
+      true,
+      true
+    ],
+    "invitationSuccess": true,
+    "memberRemoved": true,
+    "remainingRemoveButtons": 1
+  }
+}

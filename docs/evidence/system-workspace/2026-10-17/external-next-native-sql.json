@@ -1,0 +1,157 @@
+{
+  "checkedAt": "2026-10-17T03:55:47.363Z",
+  "source": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-next-browser-2c5a1c3898\\project",
+  "kind": "actual-next-dev-browser-fixture",
+  "database": {
+    "kind": "PostgreSQL",
+    "version": "postgres (PostgreSQL) 18.6",
+    "directory": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-pg-data-07JHOL",
+    "port": 54441
+  },
+  "teamProbe": {
+    "status": 200,
+    "teamId": 1
+  },
+  "snapshots": [
+    {
+      "at": "2026-10-17T03:52:33.241Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [],
+      "activity": []
+    },
+    {
+      "at": "2026-10-17T03:54:41.132Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [],
+      "activity": [
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_IN"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-17T03:55:20.252Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [
+        {
+          "team_id": 1,
+          "email": "owner-invited@fixture.invalid",
+          "role": "member",
+          "invited_by": 1,
+          "status": "pending"
+        }
+      ],
+      "activity": [
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_OUT"
+        },
+        {
+          "team_id": 1,
+          "user_id": 1,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 1,
+          "action": "INVITE_TEAM_MEMBER"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-17T03:55:47.361Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        }
+      ],
+      "invitations": [
+        {
+          "team_id": 1,
+          "email": "owner-invited@fixture.invalid",
+          "role": "member",
+          "invited_by": 1,
+          "status": "pending"
+        }
+      ],
+      "activity": [
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_OUT"
+        },
+        {
+          "team_id": 1,
+          "user_id": 1,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 1,
+          "action": "INVITE_TEAM_MEMBER"
+        },
+        {
+          "team_id": 1,
+          "user_id": 1,
+          "action": "REMOVE_TEAM_MEMBER"
+        }
+      ]
+    }
+  ],
+  "scope": "SQL snapshots and HTTP startup probe only. Browser UI observations must be recorded separately. Synthetic accounts/database; production build and payments are not verified."
+}

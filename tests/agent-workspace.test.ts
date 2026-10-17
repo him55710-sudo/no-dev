@@ -1,13 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { mkdir, mkdtemp, readFile, writeFile, unlink } from "node:fs/promises";
+import {
+  copyFile,
+  mkdir,
+  mkdtemp,
+  readFile,
+  writeFile,
+  unlink,
+} from "node:fs/promises";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import {
   createJobWorkspace,
   reviewJobWorkspace,
   applyJobReview,
   undoJobReview,
+  loadJobWorkspace,
 } from "../extension/src/agent/gitWorkspace";
 const exec = promisify(execFile);
 async function git(root: string, ...args: string[]) {
@@ -39,6 +48,56 @@ async function fixture() {
   return { directory, source, storage: resolve(directory, "jobs") };
 }
 describe("isolated implementation and review", { timeout: 30000 }, () => {
+  it("keeps native tools runnable outside a deep profile and restores the exact compact worktree", async () => {
+    const f = await fixture();
+    const storage = resolve(
+      f.directory,
+      "p".repeat(Math.max(1, 170 - f.directory.length)),
+      "jobs",
+    );
+    const job = await createJobWorkspace(f.source, storage, undefined, true);
+    try {
+      expect(job.path).not.toBe(resolve(job.directory, "worktree"));
+      expect(await loadJobWorkspace(storage, job.id, f.source)).toEqual(job);
+      if (process.platform === "win32") {
+        const dependency =
+          "node_modules/.pnpm/@esbuild+win32-x64@0.25.12/node_modules/@esbuild/win32-x64/esbuild.exe";
+        expect(
+          resolve(job.directory, "worktree", dependency).length,
+        ).toBeGreaterThan(260);
+        const binary = resolve(job.path, dependency);
+        expect(binary.length).toBeLessThan(260);
+        const fromEsbuild = createRequire(
+          createRequire(import.meta.url).resolve("esbuild"),
+        );
+        const original = fromEsbuild.resolve("@esbuild/win32-x64/esbuild.exe");
+        await mkdir(resolve(binary, ".."), { recursive: true });
+        await copyFile(original, binary);
+        const expected = (
+          await exec(original, ["--version"], { windowsHide: true })
+        ).stdout;
+        expect(
+          (await exec(binary, ["--version"], { windowsHide: true })).stdout,
+        ).toBe(expected);
+        await unlink(binary);
+      }
+      await writeFile(
+        resolve(job.path, "policy.ts"),
+        "export const canEdit = false;\r\n",
+      );
+      const review = await reviewJobWorkspace(job);
+      await applyJobReview(job, review);
+      // A new process can still find the durable worktree and undo the change.
+      const restored = await loadJobWorkspace(storage, job.id, f.source);
+      await undoJobReview(restored, review);
+      expect(await readFile(resolve(f.source, "policy.ts"), "utf8")).toContain(
+        "true",
+      );
+    } finally {
+      // Only remove the exact disposable worktree returned for this test's repo.
+      await git(f.source, "worktree", "remove", "--force", job.path);
+    }
+  });
   it("preserves staged/unstaged work, raw CRLF and assets without copying excluded secrets", async () => {
     const f = await fixture();
     await writeFile(

@@ -5,7 +5,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { readFileSync, writeFileSync, watch } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import type { SpecContent } from "../../src/workspace/spec";
 import type { Feature } from "../../src/workspace/features";
@@ -569,7 +569,11 @@ export async function run() {
     const job = checkpoint.crashJob!;
     await dispatch("restoreJob", { workspaceId: job.id });
     assert.equal(workspace.state.job?.phase, "review");
-    const journalPath = resolve(dirname(job.worktree), "apply.json");
+    const journalPath = resolve(
+      process.env.PUREOBOM_JOB_STORAGE!,
+      job.id,
+      "apply.json",
+    );
     const watcher = watch(source, (_event, name) => {
       if (name !== "policy.js" || workspace.state.job?.phase !== "applying")
         return;

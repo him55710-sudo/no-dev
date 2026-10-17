@@ -149,6 +149,10 @@ for (const phase of phases) {
       extensionTestsEnv: {
         PUREOBOM_RECOVERY_PHASE: phase,
         PUREOBOM_RECOVERY_CHECKPOINT: checkpoint,
+        PUREOBOM_JOB_STORAGE: resolve(
+          profile,
+          "User/globalStorage/pureobom-local.pureobom/implementation-jobs",
+        ),
         PUREOBOM_EXPECTED_INSTALL: JSON.stringify(expected),
         PUREOBOM_FIXTURE_NODE: process.execPath,
       },

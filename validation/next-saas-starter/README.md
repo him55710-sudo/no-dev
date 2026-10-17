@@ -38,11 +38,23 @@ Node 24, pnpm 11.25.0, Git을 사용한다. `<external>`은 다른 프로젝트�
 
 별도의 준비된 임시 복사본에서 `node validation/next-saas-starter/serve.mjs <external>`을 실행하면 실제 Next 개발 서버와 임시 SQL DB를 켜고, 서명한 테스트 세션으로 `/api/team`을 HTTP 호출한다. 팀·멤버 결과를 검증한 뒤 해당 프로세스와 DB를 종료한다. Next는 시작하면서 `.next`를 만들고 `tsconfig.json`을 자동 수정할 수 있으므로 실제 사용자 프로젝트나 진행 중인 구현의 원본에서 함께 실행하지 않는다. 이는 production build 성공을 뜻하지 않는다.
 
+### 실제 브라우저 확인
+
+브라우저 모드는 실제 PostgreSQL 실행 파일이 있는 폴더를 `PUREOBOM_TEST_POSTGRES_BIN`으로 지정해야 한다. 예를 들어 PowerShell에서 `$env:PUREOBOM_TEST_POSTGRES_BIN = 'C:\path\to\pgsql\bin'`을 설정한다. `initdb`, `pg_ctl`, `postgres`를 사용해 새 임시 클러스터를 만들며, 기존 DB나 시스템 서비스를 사용하지 않는다. 무작위 비밀번호의 SCRAM 인증과 `127.0.0.1` 바인딩을 사용하고 종료 시 해당 클러스터만 중지한다. 실행 파일은 저장소나 VSIX에 포함하지 않는다.
+
+`serve.mjs <external> --interactive`는 HTTP 시작 검사가 통과한 뒤 서버를 유지한다. 출력된 `/sign-in` 주소와 합성 계정으로 실제 로그인·대시보드를 조작할 수 있다. `member@fixture.invalid`는 현재 팀 member이면서 계정 전역 role이 owner이고, `owner@fixture.invalid`는 현재 팀 owner이면서 계정 전역 role이 member이다. 출력된 비밀번호는 임시 DB에만 쓰는 테스트 값이다. 실제 계정이나 결제를 연결하지 않는다.
+
+터미널에 `snapshot`을 입력하면 구성원·초대·활동 로그의 SQL 상태를 기록한다. `stop`은 마지막 상태를 `<external>`의 상위 폴더 `next-browser-report.json`에 저장하고 서버와 DB를 종료한다. 60분 후에도 종료한다. 보고서는 SQL 기록과 HTTP 시작 검사만 증명하므로 실제 브라우저의 버튼 상태·로그인·요청 결과는 별도의 DOM 관측과 스크린샷으로 남긴다. 이 모드 역시 Next의 자동 파일 변경이 가능한 별도 임시 복사본에서 사용한다.
+
+[설치 설계 화면 드라이버](../../docs/INSTALLED_DESIGN_UI.md)에 준비한 로컬 Git 저장소를 전달하면 실제 모델 변경을 설치 UI에서 시작할 수 있다. 원본 소스의 복제본을 만들고, 되돌리기 후에도 보존되는 `.pureobom/` 설계 메타데이터만 복제본의 `.git/info/exclude`에 추가한다. 앱의 추적 파일·잠금 파일·HEAD·index 보존 검사는 그대로 유지한다. 이 Git 제외 설정을 앱 원본의 변경이나 설계 삭제로 구현하지 않는다.
+
+2026-10-17에는 저장된 실제 모델의 변경 후보를 별도 복사본에서 실행했다. 고정 검사 9개·추가 검사 22개·타입 검사와 PostgreSQL 18.6에서 실제 로그인, member 화면 제한, owner의 초대·제거 및 SQL 상태를 확인했다. 설치 UI에서 시작한 해당 모델 작업은 Windows의 긴 실행 파일 경로 문제를 수정하다 시간 초과로 실패했다. 이 별도 앱 검증을 설치 UI의 검토·반영·undo 성공으로 합치지 않는다. [실패·브라우저 검증과 경로 수정 기록](../../docs/EXTERNAL_NEXT_BROWSER.md)을 참고한다.
+
 ## 검증 경계
 
-- 테스트 DB는 [PGlite](https://pglite.dev/docs/pglite-socket)와 loopback TCP socket이다. 앱의 Postgres 클라이언트·Drizzle·SQL을 실제 실행하지만 일반 PostgreSQL 서버의 모든 동시성·운영 동작을 증명하지 않는다.
-- Next의 요청 cookie 접근자만 검사에서 제공한다. 세션 서명·검증, 사용자 조회, 서버 액션, DB 변경은 앱 코드다. HTTP로 보낸 Next Server Action이나 실제 로그인 화면까지 검증한 것은 아니다.
-- UI 검사는 실제 컴포넌트의 React 서버 렌더링이다. 브라우저·설치 Webview의 마우스 및 키보드 전체 흐름은 별도다.
+- 고정/추가 인수 검사는 [PGlite](https://pglite.dev/docs/pglite-socket)와 loopback TCP socket을 사용한다. 실제 브라우저의 동시 요청에서는 prepared statement 오류와 연결 종료가 발생하여 PGlite 브라우저 시도를 완료로 처리하지 않았다. 브라우저 모드는 실제 PostgreSQL을 요구한다. 비대화형 HTTP 시작 검사만 PGlite를 사용할 수 있다.
+- 인수 검사에서는 Next의 요청 cookie 접근자를 제공한다. 세션 서명·검증, 사용자 조회, 서버 액션, DB 변경은 앱 코드다. 별도 브라우저 기록에는 실제 로그인과 owner의 HTTP Server Action이 포함된다. member의 직접 거절과 다른 팀 경계는 인수 검사에서 확인했으며 브라우저 버튼 차단만으로 주장하지 않는다.
+- 인수 검사의 UI 부분은 React 서버 렌더링이다. 별도 기록은 실제 외부 앱 브라우저 조작을 확인한다. 네이티브 설치 Webview와 실제 모델의 전체 검토·반영 흐름은 여전히 별도다.
 - Stripe를 호출하거나 실계정·실데이터를 사용하지 않는다. 전체 Next production build, 결제, 운영 인증, 네트워크 경계는 이 검사의 통과 범위에 포함하지 않는다.
 - `test`와 `typecheck`를 선택한다. 제품의 다른 검사 실패·미실행 상태를 자동 통과시키지 않는다. 테스트 구성·기대값 해시를 고정하고 구현 뒤 동일함을 확인한다.
 - 작업 복사본은 실행 샌드박스와 다르다. 분리 Git 작업 공간의 생성·검토·반영 경로를 시험하는 것이며, 운영 권한 보안 감사로 주장하지 않는다.

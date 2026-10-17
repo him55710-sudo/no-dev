@@ -7,7 +7,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { tmpdir } from "node:os";
-import { cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { appendFile, cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 assert.equal(
@@ -47,6 +47,9 @@ if (realProvider) {
     ["clone", "--no-hardlinks", resolve(process.argv[2]), source],
     { windowsHide: true },
   );
+  // Saved designs intentionally survive undo. Keep their metadata outside the
+  // source-restoration Git-status assertion without changing the cloned app.
+  await appendFile(resolve(source, ".git/info/exclude"), "\n.pureobom/\n");
 } else {
   await cp("tests/fixtures/installed-recovery", source, { recursive: true });
   await git("init");

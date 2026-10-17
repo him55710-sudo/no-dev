@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-10-16T12:12:54.272Z",
+  "source": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-next-browser-2c5a1c3898\\project",
+  "kind": "actual-next-dev-browser-fixture",
+  "teamProbe": {
+    "status": 200,
+    "teamId": 1
+  },
+  "snapshots": [
+    {
+      "at": "2026-10-16T12:00:25.341Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [],
+      "activity": []
+    },
+    {
+      "at": "2026-10-16T12:01:42.099Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [
+        {
+          "team_id": 1,
+          "email": "baseline-denied-expected@fixture.invalid",
+          "role": "member",
+          "invited_by": 2,
+          "status": "pending"
+        }
+      ],
+      "activity": [
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "INVITE_TEAM_MEMBER"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-16T12:12:54.270Z",
+      "members": [
+        {
+          "id": 1,
+          "user_id": 1,
+          "team_id": 1,
+          "role": "owner"
+        },
+        {
+          "id": 2,
+          "user_id": 2,
+          "team_id": 1,
+          "role": "member"
+        }
+      ],
+      "invitations": [
+        {
+          "team_id": 1,
+          "email": "baseline-denied-expected@fixture.invalid",
+          "role": "member",
+          "invited_by": 2,
+          "status": "pending"
+        }
+      ],
+      "activity": [
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_IN"
+        },
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "INVITE_TEAM_MEMBER"
+        },
+        {
+          "team_id": 1,
+          "user_id": 2,
+          "action": "SIGN_OUT"
+        }
+      ]
+    }
+  ],
+  "scope": "SQL snapshots and HTTP startup probe only. Browser UI observations must be recorded separately. Synthetic accounts/database; production build and payments are not verified."
+}

@@ -12,6 +12,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { homedir } from "node:os";
 import { relativePath } from "../../../src/workspace/model";
 import { z } from "zod";
 import { digestSchema, writeRecord, readRecord, projectLease } from "./records";
@@ -251,6 +252,7 @@ export async function createJobWorkspace(
   source: string,
   storage: string,
   requestedId: string = randomUUID(),
+  compact = false,
 ): Promise<JobWorkspace> {
   z.string().uuid().parse(requestedId);
   const root = await realpath(source);
@@ -262,11 +264,16 @@ export async function createJobWorkspace(
     throw Error("Git 저장소의 최상위 폴더에서 구현 작업을 시작해 주세요.");
   const baseCommit = (await git(root, ["rev-parse", "HEAD"])).trim();
   const id = requestedId,
-    directory = resolve(storage, id),
-    path = resolve(directory, "worktree");
+    directory = resolve(storage, id);
   if (inside(root, directory))
     throw Error("구현 작업 공간은 원본 저장소 밖에 있어야 합니다.");
   await mkdir(directory, { recursive: true });
+  const path = compact
+    ? await compactWorktreePath(await realpath(storage), id)
+    : resolve(directory, "worktree");
+  if (inside(root, path))
+    throw Error("구현 작업 공간은 원본 저장소 밖에 있어야 합니다.");
+  await mkdir(dirname(path), { recursive: true });
   const privateIndex = resolve(directory, "snapshot.index");
   const env = { GIT_INDEX_FILE: privateIndex };
   const candidates = [
@@ -751,7 +758,16 @@ export async function recoverJobReview(
   }
 }
 
-/** Only canonical child directories of the extension's storage may be restored. */
+// Keep native dependency executables out of deeply nested VS Code profiles on
+// Windows. This is durable user storage, not an OS temporary directory. The
+// profile hash and full job UUID keep independent profiles/jobs separate.
+async function compactWorktreePath(storage: string, id: string) {
+  const home = await realpath(homedir());
+  const profile = hash(Buffer.from(storage)).slice(0, 16);
+  return safePath(home, `.pureobom/worktrees/${profile}/${id}`);
+}
+
+/** Restore only canonical metadata and an independently derived worktree path. */
 export async function loadJobWorkspace(
   storage: string,
   id: string,
@@ -771,12 +787,17 @@ export async function loadJobWorkspace(
     workspaceSchema,
     16 * 1024 * 1024,
   );
+  const legacyPath = resolve(directory, "worktree");
+  const validWorktreePath =
+    workspace.path === legacyPath ||
+    workspace.path === (await compactWorktreePath(base, id));
   if (
     workspace.id !== id ||
     workspace.directory !== directory ||
-    workspace.path !== resolve(directory, "worktree") ||
+    !validWorktreePath ||
     workspace.source !== root ||
     inside(root, directory) ||
+    inside(root, workspace.path) ||
     workspace.ref !== `refs/pureobom/jobs/${id}`
   )
     throw Error("이 프로젝트의 작업 기록이 아닙니다.");

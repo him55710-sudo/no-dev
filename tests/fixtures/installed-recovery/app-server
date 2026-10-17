@@ -1,8 +1,7 @@
 // CONTROLLED TEST PEER ONLY. This is not Codex, AI inference, or a production provider.
 // The test profile intentionally sets codexPath to Node; the product uses its normal stdio path.
 import { createInterface } from "node:readline";
-import { readFileSync, writeFileSync } from "node:fs";
-import { basename } from "node:path";
+import { lstatSync, readFileSync, writeFileSync } from "node:fs";
 if (JSON.parse(readFileSync("package.json")).name !== "pureobom-installed-recovery-fixture")
   throw Error("This test peer may only run in its isolated fixture worktree.");
 const send = message => process.stdout.write(JSON.stringify(message) + "\n");
@@ -18,7 +17,8 @@ createInterface({ input: process.stdin }).on("line", line => {
     thread: { id: "fixture-thread" }, sandbox: { type: "workspaceWrite" }, approvalPolicy: "on-request",
   });
   else if (message.method === "turn/start") {
-    if (basename(process.cwd()) !== "worktree") throw Error("Fixture implementation must run only in its isolated worktree.");
+    if (!lstatSync(".git").isFile() || !readFileSync(".git", "utf8").startsWith("gitdir: "))
+      throw Error("Fixture implementation must run only in its isolated Git worktree.");
     reply(message.id, { turn: { id: "fixture-turn" } });
     send({ id: "fixture-file-approval", method: "item/fileChange/requestApproval", params: {
       threadId: "fixture-thread", turnId: "fixture-turn", itemId: "fixture-files",

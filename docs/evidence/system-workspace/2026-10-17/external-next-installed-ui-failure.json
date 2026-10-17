@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-17T03:56:11.194Z",
+  "jobId": "91f8c0ed-9a09-4c82-aa0f-12cdbeff771b",
+  "startedAt": "2026-10-16T11:55:42.380Z",
+  "phase": "failed",
+  "message": "구현 작업의 제한 시간이 초과됐습니다.",
+  "provider": "Codex Desktop/0.162.0-alpha.17.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)",
+  "checks": [
+    {
+      "name": "test",
+      "status": "failed",
+      "exitCode": 1,
+      "output": "$ vitest run --config pureobom-validation/vitest.config.mts\nfailed to load config from C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-J013kl\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\91f8c0ed-9a09-4c82-aa0f-12cdbeff771b\\worktree\\pureobom-validation\\vitest.config.mts\n\n⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯\nError: The service was stopped: spawn C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-J013kl\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\91f8c0ed-9a09-4c82-aa0f-12cdbeff771b\\worktree\\node_modules\\.pnpm\\@esbuild+win32-x64@0.28.2\\node_modules\\@esbuild\\win32-x64\\esbuild.exe ENOENT\n    at C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-J013kl\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\91f8c0ed-9a09-4c82-aa0f-12cdbeff771b\\worktree\\node_modules\\.pnpm\\esbuild@0.28.2\\node_modules\\esbuild\\lib\\main.js:1234:34\n    at responseCallbacks.<computed> (C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-J013kl\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\91f8c0ed-9a09-4c82-aa0f-12cdbeff771b\\worktree\\node_modules\\.pnpm\\esbuild@0.28.2\\node_modules\\esbuild\\lib\\main.js:886:9)\n    at ChildProcess.afterClose (C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-J013kl\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\91f8c0ed-9a09-4c82-aa0f-12cdbeff771b\\worktree\\node_modules\\.pnpm\\esbuild@0.28.2\\node_modules\\esbuild\\lib\\main.js:877:28)\n    at ChildProcess.emit (node:events:509:28)\n    at ChildProcess._handle.onexit (node:internal/child_process:293:12)\n    at onErrorNT (node:internal/child_process:525:16)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n\n\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+      "elapsedMs": 1973
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ tsc --noEmit\n",
+      "elapsedMs": 8332
+    }
+  ],
+  "artifact": {
+    "vsixSha256": "74c326cc527b8b5f6c19fde1c5c35ca8de06012903f2ad8dacb6e7a593cb2729",
+    "files": {
+      "out/extension.cjs": "df38b4840000ac2cf57fdcb0f10a2fef67d9a9198da8d89453830636291ca9e4",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "647eba9729b00db3191b413de169a308a094b0bc3303e19b143f170717a52859",
+      "media/design.css": "c5891ad9ad1b3795732ab5d8e082ec730b7f7792ce0df6cf1d21bf51aca3b5c5"
+    }
+  },
+  "scope": "Persisted installed-host job state. The real-model UI run timed out during repair after a native executable spawn failure. No complete UI request report, review, apply or undo success is claimed."
+}
