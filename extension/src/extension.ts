@@ -167,9 +167,12 @@ export function activate(context: vscode.ExtensionContext) {
             );
             break;
           case "preview":
+            if (p.lang !== undefined && p.lang !== "ko" && p.lang !== "en")
+              throw Error("Invalid language");
             result = await controller.preview(
               inputString(p.id, 100),
               r.contextId,
+              p.lang,
             );
             break;
           case "apply":

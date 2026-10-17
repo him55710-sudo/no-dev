@@ -31,34 +31,40 @@
   ],
   "images": [
     {
-      "file": "java-source-applied.png",
-      "width": 7864320,
-      "height": 4292542531,
-      "sha256": "b4abc62a4678d6cb76044f904060a49b29b848d98c41e0754c2ba410f98c211a"
+      "file": "java-source-applied.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "b4abc62a4678d6cb76044f904060a49b29b848d98c41e0754c2ba410f98c211a",
+      "mimeType": "image/jpeg"
     },
     {
-      "file": "java-source-diff.png",
-      "width": 7864320,
-      "height": 4292542531,
-      "sha256": "d290fd60b322c23bfcaee6c64e69b2d30f5b107c0cfc4e9ec9a2a26c827a7b13"
+      "file": "java-source-diff.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "d290fd60b322c23bfcaee6c64e69b2d30f5b107c0cfc4e9ec9a2a26c827a7b13",
+      "mimeType": "image/jpeg"
     },
     {
-      "file": "java-source-en.png",
-      "width": 7864320,
-      "height": 4292542531,
-      "sha256": "08f9d2163337a9123d64d6681719718a8c13ebbcf6a4d5304dbe0f89cdcf008e"
+      "file": "java-source-en.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "08f9d2163337a9123d64d6681719718a8c13ebbcf6a4d5304dbe0f89cdcf008e",
+      "mimeType": "image/jpeg"
     },
     {
-      "file": "java-source-ko.png",
-      "width": 7864320,
-      "height": 4292542531,
-      "sha256": "2073a023a52525dda02d56391e5f092a2d64a2f71ba76ec1675a7c82bf87738a"
+      "file": "java-source-ko.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "2073a023a52525dda02d56391e5f092a2d64a2f71ba76ec1675a7c82bf87738a",
+      "mimeType": "image/jpeg"
     },
     {
-      "file": "java-source-undo.png",
-      "width": 7864320,
-      "height": 4292542531,
-      "sha256": "9e5d7d4955124ff9f22ea5b29e9f43b2f0c392bcede34d7d1abe5a702b15abec"
+      "file": "java-source-undo.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "9e5d7d4955124ff9f22ea5b29e9f43b2f0c392bcede34d7d1abe5a702b15abec",
+      "mimeType": "image/jpeg"
     }
-  ]
+  ],
+  "metadataCorrection": "2026-10-17: original bytes were JPEG, not PNG. Corrected filenames, MIME type and frame dimensions without modifying image bytes or hashes."
 }

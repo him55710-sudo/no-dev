@@ -715,7 +715,7 @@ export class Controller implements vscode.Disposable {
       );
     return { doc, ...pending };
   }
-  async preview(id: string, contextId: string | undefined) {
+  async preview(id: string, contextId: string | undefined, lang: Lang = "ko") {
     const pending = this.pending(id, contextId);
     const suffix =
       this.path(pending.doc).match(/\.[a-zA-Z0-9]+$/)?.[0] || ".txt";
@@ -734,7 +734,7 @@ export class Controller implements vscode.Disposable {
       "vscode.diff",
       before,
       after,
-      `풀어봄 · ${pending.patch.description.ko}`,
+      `풀어봄 · ${pending.patch.description[lang]}`,
       { preview: true },
     );
     return { before: before.toString(), after: after.toString() };

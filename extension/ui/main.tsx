@@ -395,7 +395,9 @@ function App() {
               <>
                 <div className="section-heading">
                   <div>
-                    <span className="eyebrow">EDIT THE RULES</span>
+                    <span className="eyebrow">
+                      {t("규칙 바꾸기", "EDIT THE RULES")}
+                    </span>
                     <h2>
                       {a.kind === "json"
                         ? t(
@@ -412,8 +414,8 @@ function App() {
                 <p className="muted">
                   {a.sql
                     ? t(
-                        "SQLite 방언을 선택한 파일의 숫자·작은따옴표 문자열을 수정합니다. 표의 이름 전체(@위치 포함)를 쓰세요. 데이터베이스 결과·제약·성능은 프로젝트 검사에서 확인해야 합니다.",
-                        "Edit numeric and single-quoted string literals after selecting SQLite. Use the full table name including @position. Check database results, constraints and performance with project checks.",
+                        "SQLite 방언을 선택한 파일의 숫자·작은따옴표 문자열을 수정합니다. 아래 표에 표시된 규칙 이름 전체(@위치 포함)를 쓰세요. 데이터베이스 결과·제약·성능은 프로젝트 검사에서 확인해야 합니다.",
+                        "Edit numeric and single-quoted string literals after selecting SQLite. Use the full rule name shown in the list below, including @position. Check database results, constraints and performance with project checks.",
                       )
                     : a.web
                       ? t(
@@ -659,7 +661,7 @@ function App() {
                           void action(() =>
                             request(
                               "preview",
-                              { id: patch.id },
+                              { id: patch.id, lang },
                               state.contextId,
                             ),
                           )

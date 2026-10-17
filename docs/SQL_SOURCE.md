@@ -27,7 +27,9 @@
 
 `extension/test/sqlSource.ts`는 실제 VS Code의 방언 선택·원문 이동·SQL diff·수정·재분석·undo와 제안 무효화를 검사한다. AI 통합은 통제된 HTTP 응답이며 실제 모델 검증과 별도다. `release:check`는 저장소 밖에 추출한 Worker에서 SQLite 파서를 실행한다.
 
-[외부 sqlc SQLite 예제](evidence/local-ai/sql-source-project.md)는 공식 sqlc 재생성과 원래 Go 테스트로 통과→고정 오류 실패→undo 후 통과를 확인했다. [재현 방법](../scripts/fixtures/sqlc/README.md). SQL 전용 화면의 실제 클릭·좁은 화면·접근성 수동 검토와 다른 DB 방언은 남아 있다.
+[외부 sqlc SQLite 예제](evidence/local-ai/sql-source-project.md)는 공식 sqlc 재생성과 원래 Go 테스트로 통과→고정 오류 실패→undo 후 통과를 확인했다. [재현 방법](../scripts/fixtures/sqlc/README.md). [설치본 실제 화면](evidence/local-ai/sql-source-native.md)에서 한국어/영어 구조 설명과 한국어 숫자 수정·diff·적용·Ctrl+Z를 확인했다. 좁은 화면·접근성 전체 검토, 브라우저의 실제 SQL 가져오기 조작과 다른 DB 방언은 남아 있다.
+
+기능 커밋 `3b1aa4d`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38899949436)는 각 핵심 217개, 개발/설치 통합 각 43개를 통과했다. [원자료](evidence/local-ai/sql-source-ci.json)는 production 모드·런타임 8개 해시·추출 도구 5종을 포함한다. 실제 모델 추론이나 외부 sqlc 테스트를 이 수에 합치지 않는다.
 
 ```sh
 pnpm exec vitest run tests/sql-source.test.ts

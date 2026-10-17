@@ -1,6 +1,6 @@
 # 제품 완성 계획 · Product completion plan
 
-상태 기준: **2026-10-16 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
+상태 기준: **2026-10-17 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
 
 ## 현재 상태
 
@@ -10,7 +10,7 @@
 - **SQL 증분:** [명시적으로 선택한 SQLite 읽기·리터럴 수정](SQL_SOURCE.md)을 추가했다. [외부 sqlc 예제](evidence/local-ai/sql-source-project.md)는 공식 재생성과 원래 테스트로 1 pass → 고정 LIMIT 오류 1 fail → undo 후 1 pass를 확인했다. 다른 SQL 방언·스키마·쿼리 성능·모든 식의 자연어 설명은 미제공이다.
 - **남은 우선순위:** Rust·C#의 전용 도구와 실제 프로젝트, 다른 SQL 방언, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
-기능·CI 설정 소스 `3ecae6e`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38895781582)는 각각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시와 추출 도구 5종 실행에 성공했다. [CI 원자료](evidence/local-ai/java-source-ci.json). 실제 외부 프로젝트와 [Java 수동 화면](evidence/local-ai/java-source-native.md)은 별도 Windows 기록이며 CI 수에 합치지 않는다. 영어 diff 제목·좁은 화면·직접 수정 범위의 사용성 문제도 남아 있다. 이전 커밋별 CI와 설치본·실제 모델 기록은 작업 기록에서 추적한다.
+SQLite 기능 소스 `3b1aa4d`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38899949436)는 각각 핵심 **217개**, 개발/설치 각 **43개**, production 모드·런타임 8개 해시와 추출 도구 5종 실행에 성공했다. [CI 원자료](evidence/local-ai/sql-source-ci.json). 실제 외부 프로젝트와 [SQL 수동 화면](evidence/local-ai/sql-source-native.md)은 별도 Windows 기록이며 CI 수에 합치지 않는다. 좁은 화면·직접 수정 범위·별도 언어 서버의 진단 대기 등 사용성 제약은 남아 있다. 이전 커밋별 CI와 설치본·실제 모델 기록은 작업 기록에서 추적한다.
 
 ## 요청과 우선순위
 

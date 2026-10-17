@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-10-17T03:55:14.607Z",
+  "vscode": "1.96.4",
+  "platform": "Windows x64",
+  "featureCommit": "3b1aa4d93363b651a092055a0d84766b23534979",
+  "installedVsixSha256": "5e907fe12a7ad70a3b4c70308cc8a6bb31e59045787e48a18dea8a5a28f9198c",
+  "extensionMode": "production",
+  "verifiedRuntimeFiles": {
+    "out/extension.cjs": "6b925366c545570050f1eb8712153d95dcbe31b21e5666b2e698e59c32c0cd45",
+    "out/worker.cjs": "a7b7f984fc396767742c56859d33e963207edcd74809b70aa325a25498cd6e69",
+    "runtime/benchmark.py": "bb136c4c7bdd452aa7a75d216aa5998c41c98fc2cf9cfc089e2edae5ae80c6f9",
+    "runtime/python_source.py": "3b4ddd3535ee4bc0c578bc20463640d94b2f30ef74b463db6f7e1416a04f9ef1",
+    "runtime/go_source.go": "8c49ca4cd6b1e5fdc2b1eae3ea22b9a7c0bed7bb6a1ac0fabfcad7816d29c3ca",
+    "runtime/PureobomJavaSource.java": "6b3ef1aa18ad1b834c0e98ab6c4538d5ece40afd098bc9da6b0e0bb37fe4b9f4",
+    "media/view.js": "5e1ece939ee4720f132356bb3bcf05d5c4650b1aa9dd58524fc51fe07a26c2c0",
+    "media/view.css": "372dd77751d7a9f4d03fe57d50a7e85e8b6d540b44324f147180c413d94b2ad7"
+  },
+  "method": "Native Windows input and screenshots of the installed extension; separate test driver opens an isolated copy and records initial/final editor state. No model or database execution.",
+  "source": "examples/local-ai/orders.sql",
+  "sourceDiskPreserved": true,
+  "sourceSha256": "8abdcc813a494f60795a6ae83e5339c3ab997f347a97a6f479c3275f7d0725d3",
+  "finalEditorEqualsOriginal": true,
+  "initialVersion": 1,
+  "finalVersion": 3,
+  "finalDirty": false,
+  "sql": {
+    "dialect": "sqlite",
+    "version": "3.53.0",
+    "truncated": false
+  },
+  "checks": [
+    "Default SQL dialect is unselected; explicit SQLite selection produces four editable literals",
+    "Korean CASE, WHEN, ELSE, FROM and WHERE source structure and scope notice visible",
+    "CASE L2 source link moves the editor caret to line 2, column 1",
+    "50000 to 70000 value preview; native SQL diff changes the intended literal only",
+    "Explicit apply changes editor and reanalyzed rule to 70000 without saving",
+    "Ctrl+Z in source editor restores 50000 and a clean buffer; final editor text and disk verified",
+    "English Rules and Story show translated source structure, dialect and runtime limitations"
+  ],
+  "limitations": [
+    "English was read; the native edit/apply/undo interaction was performed in Korean",
+    "Initial 1024x768 split view requires scrolling and clips long editor lines; main checks used a maximized 1536x816 window",
+    "No SQL language server was installed; zero editor diagnostics are not a database validation, and reports remain awaiting refresh after edits",
+    "Korean Rules had an English eyebrow; English SQL rule-name instructions were ambiguous. These screenshots precede the follow-up copy and diff-title localization changes",
+    "Not a full keyboard/screen-reader, browser-import, remote-workspace or cross-platform manual UI audit",
+    "No schema, query result, performance or model-quality claim"
+  ],
+  "images": [
+    {
+      "file": "sql-native-ko-story.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "84d2bc25d8164963564182098a6217971cb95627e4dce99820d21660862b80aa"
+    },
+    {
+      "file": "sql-native-ko-diff.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "296b188d5f964d3487d53180e5422db2ceb8cba61daa9f2821d20bc1be00f8ea"
+    },
+    {
+      "file": "sql-native-ko-applied.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "adebcfb5419ecd9afa867156fd3fb3a9510af502cea9bbda1e75f6418dcdc6c9"
+    },
+    {
+      "file": "sql-native-en-story.jpg",
+      "mimeType": "image/jpeg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "a0f6e2f870d3d7c3a4f0de589bf75fef90cb14379f335e2ee5057b5f5a65b96a"
+    }
+  ]
+}

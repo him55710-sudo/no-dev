@@ -2,6 +2,15 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-17 · SQL 설치 화면 검증과 언어 안내 보정
+
+- **교차 운영체제:** 기능 커밋 `3b1aa4d93363b651a092055a0d84766b23534979`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38899949436)가 모두 성공했다. 로그에서 각 핵심 217개, 개발/설치 각 43개, production 모드·런타임 8개 해시와 추출 도구 5종 성공을 대조해 [CI 원자료](evidence/local-ai/sql-source-ci.json)로 보존했다. 외부 sqlc와 수동 UI를 이 수에 더하지 않는다.
+- **실제 설치 화면:** [SQL 네이티브 기록](evidence/local-ai/sql-source-native.md)에서 방언 미선택→SQLite, 한국어/영어 구조 설명, L2 이동, 한국어 50000→70000 변경안·diff·적용·Ctrl+Z를 확인했다. 별도 복사본의 편집기 전체와 디스크 원문이 복구됐고 dirty=false다. 화면 밖 접근성 버튼 두 차례 실패, 좁은 편집기의 긴 줄, SQL 언어 서버 없는 진단 대기도 공개했다.
+- **발견 후 수정:** `extension/ui/main.tsx`에서 한국어 Rules의 영어 제목과 SQL의 모호한 영어 `full table name`을 보정했다. 규칙 변경 diff의 현재 UI 언어를 RPC→controller로 전달해 제목의 설명도 같은 언어로 표시한다. 기존 호출의 기본 한국어는 유지하며 잘못된 RPC 언어 값은 거절한다. 위 수동 화면의 설치본과 이 후속 수정본은 다른 해시다.
+- **수정본 검증:** 확장 타입 검사·번들 빌드 후 새 VSIX `1cd0c719…`의 [설치 통합 43개](evidence/local-ai/sql-source-localization-installed.json)가 통과했다. production 모드·런타임 8개 해시를 확인했고, 별도 [실제 VS Code 탭 제목 검사](evidence/local-ai/sql-source-localization-titles.json)에서 한국어 `숫자`/영어 `number` 설명과 원문 무변경을 확인했다. 제목 검사는 controller API 방식이며 수동 클릭 재검증으로 세지 않는다.
+- **증거 자료 정정:** 앞선 Java 화면 5개의 실제 형식은 JPEG였는데 PNG 확장자와 잘못 읽은 크기를 기록했다. 원래 바이트·해시는 유지하고 `.jpg`, MIME와 실제 프레임 크기로 정정했다. SQL 화면도 실제 JPEG 형식으로 보존했다. 이 정정은 새 제품 검증 성공으로 세지 않는다.
+- **남은 범위:** 전체 UI 지역화·접근성·브라우저 실제 SQL 가져오기·Rust/C#·다른 SQL 방언·모델 의미 정확성·실측 최적화는 계속 남는다. 공개 데모와 안정판은 0.6.0이며 목표 P0–P6를 완료로 바꾸지 않았다.
+
 ## 2026-10-16 · 명시적 SQLite 분석과 실제 sqlc 재생성·테스트 연결
 
 - **범위:** P2/P3/P4/P6의 SQL 빈칸을 SQLite부터 보강했다. [사용법·한계](SQL_SOURCE.md), [외부 프로젝트](evidence/local-ai/sql-source-project.md), [재현 스크립트](../scripts/fixtures/sqlc/README.md). 모든 SQL 방언·모델 정확성·최적화·전체 목표 완료를 뜻하지 않는다. 공개 안정판과 Pages는 0.6.0이다.

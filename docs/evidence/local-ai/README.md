@@ -2,6 +2,10 @@
 
 [SQLite 원문 읽기·값 수정](../../SQL_SOURCE.md), [개발 43개](sql-source-development-integration.json), [설치 43개](sql-source-installed-integration.json), [외부 sqlc 예제](sql-source-project.md)를 추가했다. 명시적 방언·정확한 수정·diff·undo와 실제 재생성/Go 테스트 1 pass → 고정 오류 1 fail → 복구 1 pass를 확인한다. 개발 기록은 마지막 SQL 위치 보정 전이며 설치/CI는 별도 버전 근거를 따른다. 모델 의미 정확도·쿼리 최적화·전체 sqlc 테스트 성공으로 합산하지 않는다.
 
+SQLite 소스 `3b1aa4d`의 [Windows·Ubuntu CI 원자료](sql-source-ci.json): 각 핵심 **217개**, 개발/설치 각 **43개**, production 모드·런타임 8개 해시·추출 도구 5종 성공. [SQL 실제 화면](sql-source-native.md)은 한국어/영어 읽기, 한국어 값 수정·diff·적용·Ctrl+Z와 원문 복구, 남은 화면·진단 제약을 별도로 기록한다.
+
+화면에서 발견한 문구와 diff 제목 언어 수정 후 [별도 설치본 43개](sql-source-localization-installed.json)와 [한국어/영어 VS Code 탭 제목](sql-source-localization-titles.json)을 확인했다. 앞선 수동 화면·기능 CI와 후속 수정본의 해시를 구분한다.
+
 Java 기능·CI 설정 소스 `3ecae6e`의 [Windows·Ubuntu CI 원자료](java-source-ci.json): 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시·추출 도구 5종 성공. [Java 실제 화면](java-source-native.md)은 한국어/영어·원문 이동·값 수정·diff·적용·undo와 남은 사용성 제약을 별도로 기록한다.
 
 [Java 원문 파서](../../JAVA_SOURCE.md)의 [개발 41개](java-source-development-integration.json)·[설치 41개](java-source-installed-integration.json), production 모드·런타임 8개 해시를 추가했다. [외부 minimal-json](java-source-project.md)은 원본 452 pass → 고정 오류 13 fail → undo 후 452 pass와 정확한 파일 복구를 확인했다. 최신 JDK에서 원래 테스트 도구를 실행하기 위한 호환 설정과 준비 실패도 보존했다. 모델 정확성·최적화 성공 점수로 합산하지 않는다.

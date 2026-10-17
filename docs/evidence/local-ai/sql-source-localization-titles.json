@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-17T03:57:35.179Z",
+  "method": "Actual installed extension controller opens native VS Code diff; asserted tab labels for Korean and English. API-driven check, not a repeated native click session.",
+  "extensionMode": "production",
+  "vscode": "1.96.4",
+  "titles": {
+    "ko": "풀어봄 · SQL L1 @7 숫자: 50000 → 70000",
+    "en": "풀어봄 · SQL L1 @7 number: 50000 → 70000"
+  },
+  "sourceUnchanged": true,
+  "installedVsixSha256": "1cd0c71929d3439cee35edce92a6c6d18f7e6c09d8d74d220e110365d36adee6",
+  "verifiedRuntimeFiles": {
+    "out/extension.cjs": "e17356c215bcb9a099a629b14597920b9615a8c829dfbb66690929e623c0a769",
+    "out/worker.cjs": "a7b7f984fc396767742c56859d33e963207edcd74809b70aa325a25498cd6e69",
+    "runtime/benchmark.py": "bb136c4c7bdd452aa7a75d216aa5998c41c98fc2cf9cfc089e2edae5ae80c6f9",
+    "runtime/python_source.py": "3b4ddd3535ee4bc0c578bc20463640d94b2f30ef74b463db6f7e1416a04f9ef1",
+    "runtime/go_source.go": "8c49ca4cd6b1e5fdc2b1eae3ea22b9a7c0bed7bb6a1ac0fabfcad7816d29c3ca",
+    "runtime/PureobomJavaSource.java": "6b3ef1aa18ad1b834c0e98ab6c4538d5ece40afd098bc9da6b0e0bb37fe4b9f4",
+    "media/view.js": "9e802965320453213bc6cc65b2b84c0aab94ffb3c3fbe0011087f86f530876ac",
+    "media/view.css": "372dd77751d7a9f4d03fe57d50a7e85e8b6d540b44324f147180c413d94b2ad7"
+  }
+}
