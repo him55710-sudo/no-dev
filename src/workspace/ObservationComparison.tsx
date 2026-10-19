@@ -23,6 +23,7 @@ const relationLabels = {
   calls: "호출",
   renders: "화면 구성",
   passes: "함수 전달",
+  routes: "요청 경로 후보",
 };
 
 function EvidenceLink({
@@ -225,7 +226,7 @@ export function ObservationComparison({
       </details>
       <details>
         <summary>
-          호출·모듈·화면·함수 전달 {result.relations.length}개
+          호출·모듈·화면·함수 전달·경로 후보 {result.relations.length}개
           {!result.legacy ? ` · 변경·확인 필요 ${changedRelations}개` : ""}
         </summary>
         <div className="observation-list">

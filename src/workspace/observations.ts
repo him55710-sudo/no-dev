@@ -26,7 +26,7 @@ const relationSchema = z
   .object({
     from: endpoint,
     to: endpoint,
-    kind: z.enum(["imports", "calls", "renders", "passes"]),
+    kind: z.enum(["imports", "calls", "renders", "passes", "routes"]),
     count: z.number().int().positive(),
     source: sourceRefSchema,
     evidenceHash: z

@@ -93,6 +93,13 @@ export function ConnectionEvidence({
       ) : null}
       <details className="connection-limits">
         <summary>이 설명의 확인 범위</summary>
+        {edge.kind === "routes" ? (
+          <p>
+            고정 주소·키와 Next.js App Router의 파일 규칙을 대조했습니다. 동적
+            주소, 재작성, 프록시, basePath와 실제 서버 배치는 해석하지 않습니다.
+            SWR의 fetcher는 키를 다른 방식으로 사용할 수 있습니다.
+          </p>
+        ) : null}
         <p>
           전달식과 직접 감싸는 구문을 읽은 결과입니다. 실제 값, 앞선 종료문을
           포함한 전체 실행 경로, 외부 오류 처리와 데이터 계약은 확인하지

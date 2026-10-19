@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-19T22:48:50.245Z",
+  "report": "routes-installed-ui.json",
+  "sourceHead": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "requests": 27,
+  "allRequestsPassed": true,
+  "clientErrors": 0,
+  "providerJobs": 0,
+  "savedGoal": "팀 조회는 현재 팀 구성원에게 허용하고, 구성원 제거는 소유자만 가능하게 한다. 화면과 서버에서 같은 팀 권한을 확인한다.",
+  "observationFacts": 10,
+  "observationRelations": 20,
+  "witnesses": [
+    {
+      "kind": "routes",
+      "from": "TeamMembers",
+      "to": "route.ts",
+      "path": "app/(dashboard)/dashboard/page.tsx",
+      "line": 97,
+      "selectedText": "useSWR<TeamDataWithMembers>('/api/team', fetcher)",
+      "evidenceHash": "714928937b33e8e217413062a107ae69ef3e4b73968c00e02ae7896e665b8cbf",
+      "savedObservationMatches": true
+    },
+    {
+      "kind": "passes",
+      "from": "TeamMembers",
+      "to": "removeTeamMember",
+      "path": "app/(dashboard)/dashboard/page.tsx",
+      "line": 101,
+      "selectedText": "removeTeamMember",
+      "evidenceHash": "55f8834b466cb0a44505de63835ebf8ef706fb43cc6a6f42cc392ed855305916",
+      "savedObservationMatches": true
+    }
+  ],
+  "apiSourceSelection": {
+    "path": "app/api/team/route.ts",
+    "line": 1,
+    "exact": true
+  },
+  "originalFilesPreserved": 57,
+  "gitHeadIndexAndStatusPreserved": true,
+  "vsixSha256": "ec223f547d76509d5528d24c22c2b99c1836941f7a62e306872ca8294fbe4a27",
+  "vsixBytes": 1839147,
+  "screenshots": [
+    "routes-ui-canvas.jpg",
+    "routes-ui-goal.jpg"
+  ],
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified."
+}

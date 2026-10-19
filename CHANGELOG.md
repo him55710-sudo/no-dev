@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Connect literal fetch addresses and imported SWR keys to Next.js App Router file candidates. Keep framework inference distinct from compiler calls and runtime evidence, include candidate files in reviewable scope, and preserve saved goals and existing source identities. Verify the installed external-app canvas, exact source navigation and restoration; see [route candidates and limits](docs/NEXT_ROUTE_CANDIDATES.md).
 - Verify factory-created action and returned authentication-function descriptions in the installed external-app UI. Preserve three exact source selections, saved goals after reload, original files and Git state; record screenshots and the matching VSIX hash. See [installed function verification](docs/FUNCTION_DESCRIPTIONS.md#2026-10-20-후속-설치-화면-검증).
 - Cancel stalled agent initialization and account discovery, and publish cancellation completion only after process termination is confirmed. Preserve failed shutdowns and add host-state diagnostics to CI artifacts. See [reproduction and verification](docs/STARTUP_CANCELLATION.md).
 - Read arrow functions and factory-created actions through their actual function bodies. Keep creation, passed callbacks and returned functions distinct, retain branch/error order, bound summaries and preserve stored goals and source identities. See [function description evidence and limits](docs/FUNCTION_DESCRIPTIONS.md).

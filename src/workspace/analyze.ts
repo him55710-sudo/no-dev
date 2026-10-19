@@ -3,6 +3,7 @@ import type { SourceFile } from "../core/types";
 import { analyzeFile } from "../core/analyze";
 import { connectionSite } from "./connectionSite";
 import { symbolDescription } from "./symbolDescription";
+import { routeCandidates } from "./routeCandidates";
 import {
   relativePath,
   sha256,
@@ -356,6 +357,7 @@ export async function analyzeStructure(
     label: string,
     location: ts.Node,
     signature?: ts.SignatureDeclaration,
+    candidateDetail?: ReturnType<typeof connectionSite>,
   ) => {
     if (edges.length >= structureLimits.edges)
       throw Error("구조가 분석 연결 한도를 초과했습니다.");
@@ -371,11 +373,11 @@ export async function analyzeStructure(
       label,
       sources: [],
       sites: [],
-      evidence: "compiler" as const,
+      evidence: kind === "routes" ? "framework" : "compiler",
     };
     if (!existing) edges.push(edge);
     edge.sources.push(ref(location));
-    const detail = connectionSite(kind, location, signature);
+    const detail = candidateDetail ?? connectionSite(kind, location, signature);
     edge.sites!.push(detail.site);
     const pending = siteHashes.get(edge) ?? [];
     pending.push(
@@ -524,6 +526,25 @@ export async function analyzeStructure(
     };
     visit(sf);
   }
+  // Append convention-based candidates after compiler edges to preserve their IDs.
+  const routes = routeCandidates(input, sourceFiles, checker);
+  notices.push(...routes.notices);
+  for (const match of routes.matches) {
+    const owner = ownerFor(match.call);
+    const target = nodes.find(
+      (node) => node.id === idFor("file", match.targetPath),
+    );
+    if (owner?.syntaxValid && target?.syntaxValid)
+      addEdge(
+        owner.id,
+        target.id,
+        "routes",
+        "요청 경로 후보",
+        match.call,
+        undefined,
+        match.detail,
+      );
+  }
   for (const [edge, pending] of siteHashes)
     hashTasks.push(
       Promise.all(pending).then(async (hashes) => {
@@ -534,7 +555,7 @@ export async function analyzeStructure(
   return {
     schemaVersion: 1,
     revision: await sha256(
-      "static-structure:4:function-bodies\n" +
+      "static-structure:5:route-candidates\n" +
         [...hashes.entries()]
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([p, h]) => `${p}:${h}`)

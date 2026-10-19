@@ -791,22 +791,37 @@ export function DesignWorkspaceView({
                     })}
                   </nav>
                 ) : null}
-                <span className="eyebrow">{edge.kind.toUpperCase()}</span>
+                <span className="eyebrow">
+                  {edge.kind === "routes"
+                    ? "요청 경로 후보"
+                    : edge.kind.toUpperCase()}
+                </span>
                 <h2>
                   {graph.nodes.find((node) => node.id === edge.source)?.label} →{" "}
                   {graph.nodes.find((node) => node.id === edge.target)?.label}
                 </h2>
                 <p>
-                  컴파일러가 정적으로 확인한{" "}
+                  {edge.kind === "routes"
+                    ? "주소와 Next.js 파일 규칙을 대조한 "
+                    : "컴파일러가 정적으로 확인한 "}
                   {edge.kind === "calls"
                     ? "호출"
                     : edge.kind === "renders"
                       ? "화면 구성"
-                      : edge.kind === "passes"
-                        ? "함수 전달"
-                        : "모듈"}{" "}
+                      : edge.kind === "routes"
+                        ? "요청 경로 후보"
+                        : edge.kind === "passes"
+                          ? "함수 전달"
+                          : "모듈"}{" "}
                   연결입니다.
                 </p>
+                {edge.kind === "routes" ? (
+                  <p>
+                    실제 요청 도착이나 권한 검사를 증명하지 않습니다.
+                    재작성·프록시·배포 경로와 SWR fetcher 동작은 별도 확인이
+                    필요합니다.
+                  </p>
+                ) : null}
                 {edge.kind === "passes" ? (
                   <p>
                     함수 값을 전달하는 위치이며, 직접 실행한 호출은 아닙니다.
@@ -936,7 +951,7 @@ export function DesignWorkspaceView({
                     );
                   })}
                 <p>
-                  호출·화면·함수 전달로 함께 검토할 파일{" "}
+                  호출·화면·함수 전달·경로 후보로 함께 검토할 파일{" "}
                   {related?.paths.length ?? 0}개
                 </p>
                 {related?.paths.map((path) => (
