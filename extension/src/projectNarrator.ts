@@ -252,7 +252,7 @@ export class ProjectNarrator {
         );
       const result = validateChangeStory(
         await this.json(
-          `${instructions}\n실제로 달라진 동작을 변경 전(before)과 변경 후(after)로 비교하세요. beforeQuote/afterQuote는 각 버전의 실제 원문입니다. 없는 파일(null)은 빈 따옴표를 사용하세요. 변경이 없다고 하거나 요청만 되풀이하지 마세요. 검증하지 못한 점은 caution에 쓰세요.\n${JSON.stringify([file])}`,
+          `${instructions}\n실제로 달라진 동작과 구조를 변경 전(before)과 변경 후(after)로 비교하세요. 파일마다 하나의 비교에 주요 변경을 모두 담으세요. 동작·문구 변화뿐 아니라 규칙 분리, 책임 이동, 호출 관계의 변화도 빠뜨리지 마세요. 예를 들어 입력 확인을 별도 함수로 옮겼다면 '한곳에서 입력 확인과 변환을 함께 했습니다' → '입력 확인을 별도 규칙으로 분리하고 변환 전에 그 규칙을 사용합니다'처럼 쉬운 말로 구조도 설명하세요. 바뀌지 않은 구조를 만들거나 추측하지 마세요. beforeQuote/afterQuote는 각 버전의 실제 원문입니다. 없는 파일(null)은 빈 따옴표를 사용하세요. 변경이 없다고 하거나 요청만 되풀이하지 마세요. caution에는 해당 변경에서 구체적으로 주의할 점만 쓰고, 없으면 빈 문자열을 사용하세요. 실행 여부와 검사 결과는 화면의 별도 검사 결과에서 보여 주므로 '실행했는지 알 수 없다'는 일반 문구를 되풀이하지 마세요.\n${JSON.stringify([file])}`,
           changeStorySchema,
           signal,
         ),
