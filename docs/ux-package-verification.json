@@ -1,0 +1,12 @@
+{
+  "package": "pureobom-0.7.0-ux-preview.vsix",
+  "version": "0.7.0",
+  "bytes": 1419907,
+  "sha256": "bab9069bb70ab0805bb689a04207a5654ea77e0b570c79296c2c305b0103332f",
+  "matchesBuild": {
+    "extension/media/view.js": true,
+    "extension/media/view.css": true,
+    "extension/out/extension.cjs": true,
+    "extension/out/worker.cjs": true
+  }
+}

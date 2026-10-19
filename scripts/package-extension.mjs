@@ -51,7 +51,12 @@ const licenses = await Promise.all(
 await writeFile("extension/THIRD_PARTY_NOTICES.txt", licenses.join("\n"));
 await createVSIX({
   cwd: resolve("extension"),
-  packagePath: resolve(`release/pureobom-${manifest.version}.vsix`),
+  packagePath: resolve(
+    process.argv
+      .find((arg) => arg.startsWith("--output="))
+      ?.slice("--output=".length) ||
+      `release/pureobom-${manifest.version}.vsix`,
+  ),
   dependencies: false,
   allowMissingRepository: true,
 });

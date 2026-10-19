@@ -1,11 +1,13 @@
 import ts from "typescript";
 import { analyzeFile, diagnostics, parse } from "./analyze";
 import { readJsonStructure } from "./jsonData";
+import { compareParsedChanges, type ChangeFacts } from "./changeFacts";
 
 export function validateAssistantChange(
   language: string,
   source: string,
   sqlDialect?: "sqlite",
+  original?: string,
 ) {
   if (language === "sql") {
     if (sqlDialect !== "sqlite")
@@ -45,11 +47,18 @@ export function validateAssistantChange(
     typescriptreact: "tsx",
   };
   if (Object.hasOwn(extensions, language)) {
-    const errors = diagnostics(
-      parse({ path: `proposal.${extensions[language]}`, content: source }),
-    );
+    const after = parse({ path: `proposal.${extensions[language]}`, content: source });
+    const errors = diagnostics(after);
+    let changeFacts: ChangeFacts | undefined;
+    if (original !== undefined) {
+      const before = parse({ path: `original.${extensions[language]}`, content: original });
+      changeFacts = errors.length || diagnostics(before).length
+        ? { status: "unavailable" }
+        : compareParsedChanges(before, after);
+    }
     return {
       status: errors.length ? "syntax-failed" : "syntax-passed",
+      ...(changeFacts ? { changeFacts } : {}),
       detail: errors.length
         ? errors
             .slice(0, 3)

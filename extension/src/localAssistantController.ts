@@ -8,10 +8,12 @@ import type {
   AssistantProposal,
 } from "../../src/core/localAssistant";
 import { validatePython } from "./pythonValidation";
+import type { ChangeFacts } from "../../src/core/changeFacts";
 
 export type AssistantValidation = {
   status: "syntax-passed" | "syntax-failed" | "unavailable";
   detail: string;
+  changeFacts?: ChangeFacts;
 };
 export type AssistantResult = Omit<AssistantProposal, "updated"> & {
   id: string;
@@ -136,6 +138,7 @@ export class LocalAssistantController implements vscode.Disposable {
                     {
                       language: doc.languageId,
                       source: response.proposal.updated,
+                      original: input.source,
                       sqlDialect: input.sqlDialect,
                     },
                   )

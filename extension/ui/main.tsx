@@ -41,9 +41,12 @@ function App() {
   const [args, setArgs] = useState("[50000]");
   const [simulation, setSimulation] = useState<Simulation>();
   const context = useRef("");
+  const draftRevision = useRef(0);
   const editorRef = useRef<HTMLDivElement>(null);
   const patchRef = useRef<HTMLElement>(null);
   const simulationRef = useRef<HTMLElement>(null);
+  const noticeRef = useRef<HTMLDivElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const ko = lang === "ko",
     a = state.analysis;
   const disabled = working || state.busy || !a;
@@ -56,6 +59,7 @@ function App() {
       if (e.data?.type !== "state") return;
       const next = e.data.state as ViewState;
       if (context.current !== next.contextId) {
+        draftRevision.current++;
         setNotice(undefined);
         setPatch(undefined);
         setEdit(undefined);
@@ -76,6 +80,10 @@ function App() {
     host.setState({ lang });
     document.documentElement.lang = lang;
   }, [lang]);
+  useEffect(() => {
+    if (error || state.error) errorRef.current?.focus();
+    else if (notice) noticeRef.current?.focus();
+  }, [error, state.error, notice]);
   async function action(job: () => Promise<void>) {
     setWorking(true);
     setError("");
@@ -89,6 +97,7 @@ function App() {
     }
   }
   function selectRule(rule: Rule) {
+    draftRevision.current++;
     setEdit(rule);
     setValue(String(rule.value));
     setPatch(undefined);
@@ -107,15 +116,17 @@ function App() {
   }
   async function prepare(payload: Record<string, unknown>) {
     const id = context.current;
+    const draft = draftRevision.current;
     const result = await request<PatchSummary>("prepare", payload, id);
-    if (id === context.current) {
+    if (id === context.current && draft === draftRevision.current) {
       setPatch(result);
-      requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
         patchRef.current?.scrollIntoView({
           behavior: "smooth",
           block: "center",
-        }),
-      );
+        });
+        patchRef.current?.focus({ preventScroll: true });
+      });
     }
   }
   const source = (line: number) =>
@@ -204,27 +215,44 @@ function App() {
         </p>
       )}
       {(error || state.error) && (
-        <p className="banner error" role="alert">
+        <p className="banner error" role="alert" ref={errorRef} tabIndex={-1}>
           {error || state.error}
         </p>
       )}
       {notice && (
-        <div className="banner success" role="status"><p>{notice[lang]}</p><button onClick={() => setTab("checks")}>{t("확인하기로 이동 →", "Go to Check →")}</button></div>
+        <div
+          className="banner success"
+          role="status"
+          ref={noticeRef}
+          tabIndex={-1}
+        >
+          <p>{notice[lang]}</p>
+          <button onClick={() => setTab("checks")}>
+            {t("확인하기로 이동 →", "Go to Check →")}
+          </button>
+        </div>
       )}
-      {state.path && state.diagnostics && (state.diagnostics.errors > 0 || state.diagnostics.warnings > 0 || state.diagnostics.status === "edited") && (
-        <button className="diagnostic-summary" onClick={() => setTab("checks")}>
-          <span>{t("편집기 알림", "Editor reports")}</span>
-          <strong>
-            {t("오류", "Errors")} {state.diagnostics.errors} ·{" "}
-            {t("경고", "Warnings")} {state.diagnostics.warnings}
-          </strong>
-          <span>
-            {state.diagnostics.status === "edited"
-              ? t("코드 변경 후 갱신 대기", "Awaiting reports after edit")
-              : t("내용 확인 →", "Review →")}
-          </span>
-        </button>
-      )}
+      {state.path &&
+        state.diagnostics &&
+        (state.diagnostics.errors > 0 ||
+          state.diagnostics.warnings > 0 ||
+          state.diagnostics.status === "edited") && (
+          <button
+            className="diagnostic-summary"
+            onClick={() => setTab("checks")}
+          >
+            <span>{t("편집기 알림", "Editor reports")}</span>
+            <strong>
+              {t("오류", "Errors")} {state.diagnostics.errors} ·{" "}
+              {t("경고", "Warnings")} {state.diagnostics.warnings}
+            </strong>
+            <span>
+              {state.diagnostics.status === "edited"
+                ? t("코드 변경 후 갱신 대기", "Awaiting reports after edit")
+                : t("내용 확인 →", "Review →")}
+            </span>
+          </button>
+        )}
       {!a && !state.busy ? (
         <section className="empty card">
           <h2>
@@ -270,7 +298,11 @@ function App() {
                 className={`${tab === key ? "selected" : ""} ${index > 2 ? "tool-nav" : "journey-nav"}`}
                 onClick={() => setTab(key)}
               >
-                {index < 3 && <span className="nav-number" aria-hidden="true">{index + 1}</span>}
+                {index < 3 && (
+                  <span className="nav-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                )}
                 {t(korean, english)}
                 {key === "checks" && !!a?.issues.length && (
                   <span className="count">{a.issues.length}</span>
@@ -369,66 +401,172 @@ function App() {
             {a && tab === "story" && (
               <ReadingView
                 key={a.path}
-                analysis={a} lang={lang} disabled={disabled}
+                analysis={a}
+                lang={lang}
+                disabled={disabled}
                 editDisabled={disabled || !state.trusted}
-                onSource={source} onEdit={selectRule}
-                onRules={() => setTab("rules")} onChecks={() => setTab("checks")} onMap={() => setTab("map")}
-                terminology={<Terminology
-                  key={a.path}
-                  terms={a.terms || []}
-                  lang={lang}
-                  disabled={disabled}
-                  onSource={source}
-                  onSave={async (symbolId, label) => {
-                    await request(
-                      "term",
-                      { symbolId, label, lang },
+                onSource={source}
+                onEdit={selectRule}
+                onRules={() => setTab("rules")}
+                onChecks={() => setTab("checks")}
+                onMap={() => setTab("map")}
+                terminology={
+                  <Terminology
+                    key={a.path}
+                    terms={a.terms || []}
+                    lang={lang}
+                    disabled={disabled}
+                    onSource={source}
+                    onSave={async (symbolId, label) => {
+                      await request(
+                        "term",
+                        { symbolId, label, lang },
+                        state.contextId,
+                      );
+                      setNotice({
+                        ko: "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
+                        en: "Your term is now used in explanations. Source names are unchanged.",
+                      });
+                    }}
+                  />
+                }
+                onSqlDialect={(dialect) =>
+                  void action(() =>
+                    request(
+                      "sqlDialect",
+                      { dialect: dialect || "" },
                       state.contextId,
-                    );
-                    setNotice({
-                      ko: "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
-                      en: "Your term is now used in explanations. Source names are unchanged.",
-                    });
-                  }}
-                />}
-                onSqlDialect={(dialect) => void action(() => request("sqlDialect", { dialect: dialect || "" }, state.contextId))}
-                onSimulate={(name) => { setFn(name); setTab("checks"); setSimulation(undefined); setArgs("[]"); }}
+                    ),
+                  )
+                }
+                onSimulate={(name) => {
+                  setFn(name);
+                  setTab("checks");
+                  setSimulation(undefined);
+                  setArgs("[]");
+                }}
               />
             )}
             {a && tab === "rules" && (
               <RuleWorkbench
                 key={a.path}
-                analysis={a} lang={lang} disabled={disabled} trusted={state.trusted}
-                edit={edit} value={value} patch={patch} sentence={sentence}
-                onSelect={selectRule} onValue={(next) => { setValue(next); setPatch(undefined); }}
-                onSentence={(next) => { setSentence(next); setPatch(undefined); }}
-                onPrepare={(payload) => void action(() => prepare(payload))}
-                onClose={() => { setEdit(undefined); setPatch(undefined); }}
-                onSource={source} editorRef={editorRef} patchRef={patchRef}
-                onPreview={() => void action(() => request("preview", { id: patch!.id, lang }, state.contextId))}
-                onApply={() => void action(async () => {
-                  await request("apply", { id: patch!.id }, state.contextId);
+                analysis={a}
+                lang={lang}
+                disabled={disabled}
+                trusted={state.trusted}
+                edit={edit}
+                value={value}
+                patch={patch}
+                sentence={sentence}
+                onSelect={selectRule}
+                onValue={(next) => {
+                  draftRevision.current++;
+                  setValue(next);
                   setPatch(undefined);
-                  setNotice({ ko: "편집기에 적용했어요. Ctrl+Z로 되돌릴 수 있습니다. 확인하기에서 결과를 살펴보세요.", en: "Applied to the editor. Undo with Ctrl+Z. Review the result in Check." });
-                })}
-                comparison={patch && scenarioFn ? <ScenarioLab
-                  key={`${state.contextId}:${patch.id}:${scenarioFn.name}`}
-                  fn={scenarioFn} rules={a.rules} lang={lang}
-                  revision={`${state.contextId}:${patch.id}`} change={patch} disabled={disabled}
-                  run={(scenarios) => request<ScenarioReport>("compare", { name: scenarioFn.name, scenarios, patchId: patch.id }, state.contextId)}
-                  exportReport={(content) => request<void>("report", { content }, state.contextId)}
-                /> : undefined}
+                }}
+                onSentence={(next) => {
+                  draftRevision.current++;
+                  setSentence(next);
+                  setPatch(undefined);
+                }}
+                onPrepare={(payload) => void action(() => prepare(payload))}
+                onClose={() => {
+                  draftRevision.current++;
+                  setEdit(undefined);
+                  setPatch(undefined);
+                }}
+                onSource={source}
+                editorRef={editorRef}
+                patchRef={patchRef}
+                onPreview={() =>
+                  void action(() =>
+                    request(
+                      "preview",
+                      { id: patch!.id, lang },
+                      state.contextId,
+                    ),
+                  )
+                }
+                onApply={() =>
+                  void action(async () => {
+                    await request("apply", { id: patch!.id }, state.contextId);
+                    setPatch(undefined);
+                    setNotice({
+                      ko: "편집기에 적용했어요. Ctrl+Z로 되돌릴 수 있습니다. 확인하기에서 결과를 살펴보세요.",
+                      en: "Applied to the editor. Undo with Ctrl+Z. Review the result in Check.",
+                    });
+                  })
+                }
+                comparison={
+                  patch && scenarioFn ? (
+                    <ScenarioLab
+                      key={`${state.contextId}:${patch.id}:${scenarioFn.name}`}
+                      fn={scenarioFn}
+                      rules={a.rules}
+                      lang={lang}
+                      revision={`${state.contextId}:${patch.id}`}
+                      change={patch}
+                      disabled={disabled}
+                      run={(scenarios) =>
+                        request<ScenarioReport>(
+                          "compare",
+                          {
+                            name: scenarioFn.name,
+                            scenarios,
+                            patchId: patch.id,
+                          },
+                          state.contextId,
+                        )
+                      }
+                      exportReport={(content) =>
+                        request<void>("report", { content }, state.contextId)
+                      }
+                    />
+                  ) : undefined
+                }
               />
             )}
             {a && tab === "checks" && (
               <>
-                <div className="journey-heading"><span className="eyebrow">{t("의도한 대로 바뀌었는지", "CHECK YOUR INTENT")}</span><h2>{t("결과와 근거를 함께 확인하세요", "Check results alongside the evidence")}</h2><p>{t("편집기가 알려준 문제부터 읽고, 예시 입력과 프로젝트 검사로 동작을 확인해 보세요.", "Start with editor reports, then try sample inputs and project checks.")}</p></div>
-                {fn && scenarioFn && <section ref={simulationRef} className="example-check"><ScenarioLab
-                  key={`${state.contextId}:${scenarioFn.name}`}
-                  fn={scenarioFn} rules={a.rules} lang={lang} revision={state.contextId} disabled={disabled}
-                  run={(scenarios) => request<ScenarioReport>("compare", { name: scenarioFn.name, scenarios }, state.contextId)}
-                  exportReport={(content) => request<void>("report", { content }, state.contextId)}
-                /></section>}
+                <div className="journey-heading">
+                  <span className="eyebrow">
+                    {t("의도한 대로 바뀌었는지", "CHECK YOUR INTENT")}
+                  </span>
+                  <h2>
+                    {t(
+                      "결과와 근거를 함께 확인하세요",
+                      "Check results alongside the evidence",
+                    )}
+                  </h2>
+                  <p>
+                    {t(
+                      "편집기가 알려준 문제부터 읽고, 예시 입력과 프로젝트 검사로 동작을 확인해 보세요.",
+                      "Start with editor reports, then try sample inputs and project checks.",
+                    )}
+                  </p>
+                </div>
+                {fn && scenarioFn && (
+                  <section ref={simulationRef} className="example-check">
+                    <ScenarioLab
+                      key={`${state.contextId}:${scenarioFn.name}`}
+                      fn={scenarioFn}
+                      rules={a.rules}
+                      lang={lang}
+                      revision={state.contextId}
+                      disabled={disabled}
+                      run={(scenarios) =>
+                        request<ScenarioReport>(
+                          "compare",
+                          { name: scenarioFn.name, scenarios },
+                          state.contextId,
+                        )
+                      }
+                      exportReport={(content) =>
+                        request<void>("report", { content }, state.contextId)
+                      }
+                    />
+                  </section>
+                )}
                 {state.diagnostics && (
                   <EditorProblems
                     snapshot={state.diagnostics}
@@ -478,7 +616,15 @@ function App() {
                     )}
                   </p>
                 )}
-                <details className="disclosure"><summary>{t("프로젝트 검사와 성능 측정", "Project checks and performance")}</summary><ProjectChecks state={state} lang={lang} /></details>
+                <details className="disclosure">
+                  <summary>
+                    {t(
+                      "프로젝트 검사와 성능 측정",
+                      "Project checks and performance",
+                    )}
+                  </summary>
+                  <ProjectChecks state={state} lang={lang} />
+                </details>
               </>
             )}
             {tab === "map" && (
@@ -516,7 +662,9 @@ function App() {
       )}
       {fn && tab === "checks" && (
         <details className="disclosure simulation">
-          <summary>{t("고급: JSON 인자로 직접 확인", "Advanced: enter JSON arguments")}</summary>
+          <summary>
+            {t("고급: JSON 인자로 직접 확인", "Advanced: enter JSON arguments")}
+          </summary>
           <div className="section-heading">
             <h2>
               {t("값을 넣어 확인", "Try inputs")} · <code>{fn}</code>

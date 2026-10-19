@@ -43,6 +43,7 @@ export function ScenarioLab({
   const [notice, setNotice] = useState("");
   const current = useRef(revision);
   const requestId = useRef(0);
+  const resultRef = useRef<HTMLDivElement>(null);
   current.current = revision;
   useEffect(() => {
     requestId.current++;
@@ -50,6 +51,9 @@ export function ScenarioLab({
     setError("");
     setBusy(false);
   }, [revision]);
+  useEffect(() => {
+    if (result) resultRef.current?.focus({ preventScroll: true });
+  }, [result]);
   useEffect(
     () => () => {
       requestId.current++;
@@ -260,7 +264,12 @@ export function ScenarioLab({
         </p>
       )}
       {result && (
-        <div className="scenario-results">
+        <div
+          className="scenario-results"
+          ref={resultRef}
+          tabIndex={-1}
+          aria-label={t("입력별 계산 결과", "Results by input")}
+        >
           <div className="scenario-summary" role="status">
             <strong>
               {

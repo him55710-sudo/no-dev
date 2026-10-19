@@ -16,6 +16,7 @@ parentPort!.on("message", ({ id, type, payload }) => {
         payload.language,
         payload.source,
         payload.sqlDialect,
+        payload.original,
       );
     else if (type === "patch")
       result = makePatch(

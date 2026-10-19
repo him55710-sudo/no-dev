@@ -63,7 +63,7 @@ export const assistantSchema = {
     summary: {
       type: "string",
       description:
-        "What the shown code actually does: input, conditional outcomes, errors and final result. Not a file introduction or a paraphrase of its header comment.",
+        "For an explanation: actual inputs, conditional outcomes, errors and final result. For an edit: a brief description of the requested change and its scope. Never a file introduction or a paraphrase of its header comment.",
     },
     citations: {
       type: "array",
@@ -85,8 +85,15 @@ export const assistantSchema = {
         additionalProperties: false,
         required: ["before", "after", "reason"],
         properties: {
-          before: stringSchema,
-          after: stringSchema,
+          before: {
+            type: "string",
+            description: "Exact original source substring to replace.",
+          },
+          after: {
+            type: "string",
+            description:
+              "Replacement source containing the requested change. Must differ from before; include requested newlines and indentation.",
+          },
           reason: stringSchema,
         },
       },
@@ -184,9 +191,10 @@ export function assistantMessages(input: AssistantInput) {
             ].join("\n")
           : [
               "Propose only the requested changes. If you cannot propose a grounded change, return edits:[] and explain why.",
-              "Each edit.before must be a nonempty, unique exact substring of the ORIGINAL source. edit.after replaces that substring. Edits cannot overlap.",
+              "For an editing task, keep the summary to one or two sentences about the requested change. Explain the affected original logic in citations. Do not narrate unrelated functions or repeat the same explanation in every field.",
+              "Each edit.before must be a nonempty, unique exact substring of the ORIGINAL source. edit.after replaces that substring and must be different. Omit unchanged ranges; never claim a change while copying before into after. Edits cannot overlap.",
               "Every edit must overlap at least one citation of the original changed logic. Do not cite an unrelated import as evidence for a function change.",
-              "Prefer a few small edits. Preserve unrelated behavior, comments, indentation and line endings. Do not return an entire rewritten file when a small edit suffices.",
+              "Prefer a few small edits. Preserve behavior, comments and formatting OUTSIDE the requested change. For a formatting request, change the requested whitespace, line breaks and indentation while preserving syntax, operators, literals and execution order. Do not return an entire rewritten file when a small edit suffices.",
               "risks must be concrete possible consequences of the proposed change, not invented existing bugs. checks are suggestions, not executed results.",
             ].join("\n"),
         "Optimization is a hypothesis until measured. Never claim faster runtime or memory savings without measurements.",
@@ -325,7 +333,7 @@ export function parseAssistantProposal(
         after = text(e.after, 24000, true);
       if (before === after)
         throw Error(
-          "변경 전후가 같습니다. / The proposed edit changes nothing.",
+          "모델이 내용이 같은 변경안을 반환했습니다. 원본은 바뀌지 않았습니다. 요청을 구체화하거나 다른 모델로 다시 시도하세요. / The proposed edit changes nothing; the source is unchanged. Refine the request or choose another model.",
         );
       return {
         before,
