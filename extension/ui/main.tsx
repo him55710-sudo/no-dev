@@ -11,7 +11,7 @@ import { LocalAssistant } from "./LocalAssistant";
 import { ProjectChecks } from "./ProjectChecks";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
 import type { Lang, Rule, Simulation, Words } from "../../src/core/types";
-import type { PatchSummary, ViewState } from "../src/protocol";
+import type { FormatSummary, PatchSummary, ViewState } from "../src/protocol";
 import { host, request } from "./bridge";
 import "./style.css";
 import "./journey.css";
@@ -128,6 +128,28 @@ function App() {
         patchRef.current?.focus({ preventScroll: true });
       });
     }
+  }
+  async function format(functionId: string) {
+    const id = context.current,
+      draft = ++draftRevision.current;
+    setPatch(undefined);
+    setEdit(undefined);
+    const result = await request<FormatSummary>(
+      "formatFunction",
+      { functionId },
+      id,
+    );
+    if (id !== context.current || draft !== draftRevision.current) return;
+    if ("unchanged" in result) {
+      setNotice(result.description);
+      return;
+    }
+    setPatch(result);
+    setTab("rules");
+    requestAnimationFrame(() => {
+      patchRef.current?.scrollIntoView({ block: "center" });
+      patchRef.current?.focus({ preventScroll: true });
+    });
   }
   const source = (line: number) =>
     void action(() => request("source", { line }, state.contextId));
@@ -410,6 +432,17 @@ function App() {
                 onRules={() => setTab("rules")}
                 onChecks={() => setTab("checks")}
                 onMap={() => setTab("map")}
+                onFormat={
+                  state.language &&
+                  [
+                    "javascript",
+                    "javascriptreact",
+                    "typescript",
+                    "typescriptreact",
+                  ].includes(state.language)
+                    ? (functionId) => void action(() => format(functionId))
+                    : undefined
+                }
                 terminology={
                   <Terminology
                     key={a.path}
@@ -479,13 +512,19 @@ function App() {
                 editorRef={editorRef}
                 patchRef={patchRef}
                 onPreview={() =>
-                  void action(() =>
-                    request(
+                  void action(async () => {
+                    const reviewing = patch!;
+                    await request(
                       "preview",
-                      { id: patch!.id, lang },
+                      { id: reviewing.id, lang },
                       state.contextId,
-                    ),
-                  )
+                    );
+                    setPatch((current) =>
+                      current?.id === reviewing.id
+                        ? { ...current, reviewed: true }
+                        : current,
+                    );
+                  })
                 }
                 onApply={() =>
                   void action(async () => {

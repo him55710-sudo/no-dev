@@ -5,6 +5,7 @@ import { makePatch, parseRequest } from "../../src/core/edit";
 import { simulate } from "../../src/core/simulate";
 import { compareScenarios } from "../../src/core/scenarios";
 import { validateAssistantChange } from "../../src/core/assistantValidation";
+import { formatFunction } from "../../src/core/formatFunction";
 const analyzer = new ProjectAnalyzer();
 parentPort!.on("message", ({ id, type, payload }) => {
   try {
@@ -18,6 +19,8 @@ parentPort!.on("message", ({ id, type, payload }) => {
         payload.sqlDialect,
         payload.original,
       );
+    else if (type === "formatFunction")
+      result = formatFunction(payload.file, payload.functionId);
     else if (type === "patch")
       result = makePatch(
         payload.file,

@@ -26,6 +26,8 @@ import { LocalAssistantController } from "./localAssistantController";
 import { ProjectChecks } from "./projectChecks";
 import { Benchmarks } from "./benchmarks";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
+import type { FormatSummary } from "./protocol";
+import type { FunctionFormatResult } from "../../src/core/formatFunction";
 
 const FILE_BYTES = 512 * 1024,
   TOTAL_BYTES = 8 * 1024 * 1024;
@@ -35,6 +37,8 @@ type PendingPatch = {
   uri: vscode.Uri;
   version: number;
   contextId: string;
+  reviewRequired?: boolean;
+  reviewed?: boolean;
 };
 export class Controller implements vscode.Disposable {
   readonly assistant: LocalAssistantController;
@@ -775,6 +779,59 @@ export class Controller implements vscode.Disposable {
       newText: patch.newText,
     };
   }
+  async prepareFormat(
+    contextId: string | undefined,
+    functionId: string,
+  ): Promise<FormatSummary> {
+    const doc = this.current(contextId);
+    if (!vscode.workspace.isTrusted)
+      throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
+    if (
+      ![
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+      ].includes(doc.languageId)
+    )
+      throw Error("Only JS/TS functions are supported.");
+    const original = doc.getText(),
+      version = doc.version;
+    const result = await this.client.call<FunctionFormatResult>(
+      "formatFunction",
+      {
+        file: { path: this.path(doc), content: original },
+        functionId,
+      },
+    );
+    if (
+      this.current(contextId) !== doc ||
+      doc.version !== version ||
+      doc.getText() !== original
+    )
+      throw Error(
+        "파일이 바뀌었습니다. 다시 시도해 주세요. / The file changed; try again.",
+      );
+    this.patches.clear();
+    if (!result.patch)
+      return { unchanged: true, description: result.description };
+    const id = randomUUID(),
+      patch = result.patch;
+    this.patches.set(id, {
+      patch,
+      uri: doc.uri,
+      version,
+      contextId: contextId!,
+      reviewRequired: true,
+    });
+    return {
+      id,
+      kind: "function-format",
+      description: patch.description,
+      oldText: patch.oldText,
+      newText: patch.newText,
+    };
+  }
   private pending(id: string, contextId: string | undefined) {
     const doc = this.current(contextId),
       pending = this.patches.get(id);
@@ -812,12 +869,18 @@ export class Controller implements vscode.Disposable {
       `풀어봄 · ${pending.patch.description[lang]}`,
       { preview: true },
     );
+    this.pending(id, contextId);
+    this.patches.get(id)!.reviewed = true;
     return { before: before.toString(), after: after.toString() };
   }
   async apply(id: string, contextId: string | undefined) {
     if (!vscode.workspace.isTrusted)
       throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
     const pending = this.pending(id, contextId);
+    if (pending.reviewRequired && !pending.reviewed)
+      throw Error(
+        "먼저 코드 차이를 확인해 주세요. / Preview the code diff first.",
+      );
     const editor = await vscode.window.showTextDocument(pending.doc, {
       preview: false,
       preserveFocus: true,

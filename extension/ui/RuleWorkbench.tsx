@@ -33,20 +33,28 @@ export function RuleWorkbench(p: Props) {
       .includes(search.toLowerCase()),
   );
   const blocked = p.disabled || !p.trusted || !a.syntaxValid;
+  const formatting = patch?.kind === "function-format";
   return (
-    <div className="rule-workbench">
+    <div className={`rule-workbench${formatting ? " format-workbench" : ""}`}>
       <div className="journey-heading">
         <span className="eyebrow">
           {t("작은 변경부터 시작해요", "ONE CHANGE AT A TIME")}
         </span>
         <h2>
-          {t("무엇을 바꾸고 싶으세요?", "What would you like to change?")}
+          {formatting
+            ? t("줄바꿈 정리를 확인하세요", "Review the function layout")
+            : t("무엇을 바꾸고 싶으세요?", "What would you like to change?")}
         </h2>
         <p>
-          {t(
-            "값을 고르고, 차이를 확인한 뒤 적용하세요. 적용하기 전까지 코드는 바뀌지 않아요.",
-            "Choose a value, review the difference, then apply. Code stays unchanged until you apply.",
-          )}
+          {formatting
+            ? t(
+                "선택한 기능의 공백과 줄바꿈을 정리했습니다. 코드 차이를 보고 적용하세요.",
+                "Spacing and line breaks in the selected function are ready to review. Open the diff, then apply.",
+              )
+            : t(
+                "값을 고르고, 차이를 확인한 뒤 적용하세요. 적용하기 전까지 코드는 바뀌지 않아요.",
+                "Choose a value, review the difference, then apply. Code stays unchanged until you apply.",
+              )}
         </p>
       </div>
       <ol
@@ -55,11 +63,15 @@ export function RuleWorkbench(p: Props) {
       >
         <li aria-current={!edit && !patch ? "step" : undefined}>
           <span>1</span>
-          {t("값 선택", "Choose")}
+          {formatting
+            ? t("기능 선택", "Function selected")
+            : t("값 선택", "Choose")}
         </li>
         <li aria-current={edit && !patch ? "step" : undefined}>
           <span>2</span>
-          {t("새 값 입력", "Edit")}
+          {formatting
+            ? t("줄바꿈 정리", "Layout prepared")
+            : t("새 값 입력", "Edit")}
         </li>
         <li aria-current={patch ? "step" : undefined}>
           <span>3</span>
@@ -83,90 +95,95 @@ export function RuleWorkbench(p: Props) {
         </p>
       )}
       <div className={`rule-layout ${edit || patch ? "has-selection" : ""}`}>
-        <section
-          className="rule-catalog"
-          aria-label={t("바꿀 값 목록", "Editable values")}
-        >
-          <label htmlFor="rule-search">
-            {t("이름으로 찾기", "Find by name")}
-            <span>
-              {matches.length} / {a.rules.length}
-            </span>
-          </label>
-          <input
-            id="rule-search"
-            type="search"
-            placeholder={t(
-              "예: 배송, 할인, 제목",
-              "e.g. shipping, discount, title",
-            )}
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setLimit(20);
-            }}
-          />
-          <div className="rule-list">
-            {matches.slice(0, limit).map((rule) => (
-              <button
-                key={rule.id}
-                className="rule-row"
-                aria-pressed={edit?.id === rule.id}
-                disabled={blocked}
-                onClick={() => p.onSelect(rule)}
-              >
-                <span className="rule-row-title">
-                  <strong>{rule.label[lang]}</strong>
-                  <small>
-                    {rule.name} · L{rule.line}
-                  </small>
-                </span>
-                <span className="rule-row-value">
-                  {(rule.raw.length > 85
-                    ? rule.raw.slice(0, 85) + "…"
-                    : rule.raw) || '""'}
-                </span>
-                <span aria-hidden="true">→</span>
-              </button>
-            ))}
-          </div>
-          {!matches.length && (
-            <div className="catalog-empty">
-              <strong>
-                {a.rules.length
-                  ? t("일치하는 값이 없어요", "No matching values")
-                  : t(
-                      "직접 바꿀 수 있는 값이 없어요",
-                      "No directly editable values",
-                    )}
-              </strong>
-              <p>
-                {a.rules.length
-                  ? t(
-                      "다른 이름으로 찾아보거나 검색어를 지워보세요.",
-                      "Try another name or clear the search.",
-                    )
-                  : t(
-                      "이 파일은 읽기와 검토부터 시작하세요. 넓은 범위의 수정은 AI 도움에서 제안받을 수 있어요.",
-                      "Start with reading and review. AI help can propose broader changes.",
-                    )}
-              </p>
-              {search && (
-                <button onClick={() => setSearch("")}>
-                  {t("검색 지우기", "Clear search")}
+        {!formatting && (
+          <section
+            className="rule-catalog"
+            aria-label={t("바꿀 값 목록", "Editable values")}
+          >
+            <label htmlFor="rule-search">
+              {t("이름으로 찾기", "Find by name")}
+              <span>
+                {matches.length} / {a.rules.length}
+              </span>
+            </label>
+            <input
+              id="rule-search"
+              type="search"
+              placeholder={t(
+                "예: 배송, 할인, 제목",
+                "e.g. shipping, discount, title",
+              )}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setLimit(20);
+              }}
+            />
+            <div className="rule-list">
+              {matches.slice(0, limit).map((rule) => (
+                <button
+                  key={rule.id}
+                  className="rule-row"
+                  aria-pressed={edit?.id === rule.id}
+                  disabled={blocked}
+                  onClick={() => p.onSelect(rule)}
+                >
+                  <span className="rule-row-title">
+                    <strong>{rule.label[lang]}</strong>
+                    <small>
+                      {rule.name} · L{rule.line}
+                    </small>
+                  </span>
+                  <span className="rule-row-value">
+                    {(rule.raw.length > 85
+                      ? rule.raw.slice(0, 85) + "…"
+                      : rule.raw) || '""'}
+                  </span>
+                  <span aria-hidden="true">→</span>
                 </button>
-              )}
+              ))}
             </div>
-          )}
-          {matches.length > limit && (
-            <button className="load-more" onClick={() => setLimit(limit + 20)}>
-              {t(
-                `20개 더 보기 · ${matches.length - limit}개 남음`,
-                `Show 20 more · ${matches.length - limit} remaining`,
-              )}
-            </button>
-          )}
-        </section>
+            {!matches.length && (
+              <div className="catalog-empty">
+                <strong>
+                  {a.rules.length
+                    ? t("일치하는 값이 없어요", "No matching values")
+                    : t(
+                        "직접 바꿀 수 있는 값이 없어요",
+                        "No directly editable values",
+                      )}
+                </strong>
+                <p>
+                  {a.rules.length
+                    ? t(
+                        "다른 이름으로 찾아보거나 검색어를 지워보세요.",
+                        "Try another name or clear the search.",
+                      )
+                    : t(
+                        "이 파일은 읽기와 검토부터 시작하세요. 넓은 범위의 수정은 AI 도움에서 제안받을 수 있어요.",
+                        "Start with reading and review. AI help can propose broader changes.",
+                      )}
+                </p>
+                {search && (
+                  <button onClick={() => setSearch("")}>
+                    {t("검색 지우기", "Clear search")}
+                  </button>
+                )}
+              </div>
+            )}
+            {matches.length > limit && (
+              <button
+                className="load-more"
+                onClick={() => setLimit(limit + 20)}
+              >
+                {t(
+                  `20개 더 보기 · ${matches.length - limit}개 남음`,
+                  `Show 20 more · ${matches.length - limit} remaining`,
+                )}
+              </button>
+            )}
+          </section>
+        )}
         <div className="change-column">
           {edit && (
             <div className="change-editor" ref={p.editorRef}>
@@ -290,7 +307,9 @@ export function RuleWorkbench(p: Props) {
               </span>
               <h3>{t("이렇게 달라집니다", "Here is what will change")}</h3>
               <p>{patch.description[lang]}</p>
-              <div className="change-values">
+              <div
+                className={`change-values${patch.kind === "function-format" ? " function-format-values" : ""}`}
+              >
                 <div>
                   <small>{t("현재", "Before")}</small>
                   <code>{patch.oldText}</code>
@@ -303,6 +322,14 @@ export function RuleWorkbench(p: Props) {
               </div>
               <ul className="verification-facts">
                 <li>{t("문법 검사 통과", "Syntax checked")}</li>
+                {patch.kind === "function-format" && (
+                  <li>
+                    {t(
+                      "코드 토큰·주석·구문 구조 유지 확인. 선택 범위 밖 내용은 그대로입니다.",
+                      "Code tokens, comments and syntax structure preserved. Content outside the selection is unchanged.",
+                    )}
+                  </li>
+                )}
                 <li>
                   {t(
                     "타입·실제 동작은 아직 확인 필요",
@@ -320,7 +347,7 @@ export function RuleWorkbench(p: Props) {
                   "View the code diff in VS Code ↗",
                 )}
               </button>
-              {p.comparison && (
+              {p.comparison && !formatting && (
                 <details className="comparison-disclosure">
                   <summary>
                     {t(
@@ -332,9 +359,17 @@ export function RuleWorkbench(p: Props) {
                 </details>
               )}
               <div className="apply-bar">
+                {formatting && (
+                  <button disabled={p.disabled} onClick={p.onClose}>
+                    {t("변경안 닫기", "Discard proposal")}
+                  </button>
+                )}
                 <button
                   className="primary full-width"
-                  disabled={blocked}
+                  disabled={
+                    blocked ||
+                    (patch.kind === "function-format" && !patch.reviewed)
+                  }
                   onClick={p.onApply}
                 >
                   {t(
@@ -343,49 +378,56 @@ export function RuleWorkbench(p: Props) {
                   )}
                 </button>
                 <small>
-                  {t(
-                    "적용 후 Ctrl+Z로 실행 취소할 수 있어요.",
-                    "Undo afterward with Ctrl+Z.",
-                  )}
+                  {patch.kind === "function-format" && !patch.reviewed
+                    ? t(
+                        "먼저 위의 코드 차이를 열어 확인하세요.",
+                        "Open the code diff above before applying.",
+                      )
+                    : t(
+                        "적용 후 Ctrl+Z로 실행 취소할 수 있어요.",
+                        "Undo afterward with Ctrl+Z.",
+                      )}
                 </small>
               </div>
             </section>
           )}
         </div>
       </div>
-      <details className="disclosure request-disclosure">
-        <summary>
-          {t("문장으로 요청하고 싶다면", "Prefer to describe the change?")}
-        </summary>
-        <p>
-          {t(
-            "표에 있는 정확한 이름과 새 값 하나를 적어 주세요. 자유로운 기능 추가는 AI 도움에서 요청하세요.",
-            "Use an exact name from the list and one new value. For broader changes, use AI help.",
-          )}
-        </p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            p.onPrepare({ request: p.sentence });
-          }}
-        >
-          <label htmlFor="sentence">{t("변경 요청", "Change request")}</label>
-          <div className="input-row">
-            <input
-              id="sentence"
-              value={p.sentence}
-              onChange={(e) => p.onSentence(e.target.value)}
-              placeholder={t(
-                "무료 배송 기준을 70000으로 변경",
-                "Change freeShippingThreshold to 70000",
-              )}
-            />
-            <button disabled={blocked || !p.sentence.trim()}>
-              {t("변경안 보기", "Review change")}
-            </button>
-          </div>
-        </form>
-      </details>
+      {!formatting && (
+        <details className="disclosure request-disclosure">
+          <summary>
+            {t("문장으로 요청하고 싶다면", "Prefer to describe the change?")}
+          </summary>
+          <p>
+            {t(
+              "표에 있는 정확한 이름과 새 값 하나를 적어 주세요. 자유로운 기능 추가는 AI 도움에서 요청하세요.",
+              "Use an exact name from the list and one new value. For broader changes, use AI help.",
+            )}
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              p.onPrepare({ request: p.sentence });
+            }}
+          >
+            <label htmlFor="sentence">{t("변경 요청", "Change request")}</label>
+            <div className="input-row">
+              <input
+                id="sentence"
+                value={p.sentence}
+                onChange={(e) => p.onSentence(e.target.value)}
+                placeholder={t(
+                  "무료 배송 기준을 70000으로 변경",
+                  "Change freeShippingThreshold to 70000",
+                )}
+              />
+              <button disabled={blocked || !p.sentence.trim()}>
+                {t("변경안 보기", "Review change")}
+              </button>
+            </div>
+          </form>
+        </details>
+      )}
     </div>
   );
 }

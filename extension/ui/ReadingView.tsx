@@ -7,6 +7,7 @@ type Props = ComponentProps<typeof Story> & {
   onRules: () => void;
   onChecks: () => void;
   onMap: () => void;
+  onFormat?: (functionId: string) => void;
   terminology: ReactNode;
 };
 export function ReadingView(props: Props) {
@@ -258,6 +259,14 @@ export function ReadingView(props: Props) {
                   "Syntax-based · runtime behavior needs checking",
                 )}
               </span>
+              {props.onFormat && (
+                <button
+                  disabled={props.editDisabled || !a.syntaxValid}
+                  onClick={() => props.onFormat!(fn.id)}
+                >
+                  {t("이 기능의 줄바꿈 정리", "Format this function")}
+                </button>
+              )}
               {fn.simulatable && (
                 <button
                   className="primary"

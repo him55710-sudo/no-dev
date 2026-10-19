@@ -158,6 +158,12 @@ export function activate(context: vscode.ExtensionContext) {
           case "prepare":
             result = await controller.prepare(r.contextId, p);
             break;
+          case "formatFunction":
+            result = await controller.prepareFormat(
+              r.contextId,
+              inputString(p.functionId, 100),
+            );
+            break;
           case "sqlDialect":
             await controller.setSqlDialect(r.contextId, p.dialect);
             break;

@@ -1079,3 +1079,17 @@ body.vscode-high-contrast-light .app {
     flex: 0 0 33.333%;
   }
 }
+.function-format-values {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.function-format-values code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 22rem;
+  overflow: auto;
+  font-size: 0.85rem;
+}
+.format-workbench .rule-layout.has-selection {
+  grid-template-columns: minmax(0, 1fr);
+}

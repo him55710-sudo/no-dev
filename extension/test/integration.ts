@@ -12,6 +12,7 @@ import { javaSourceChecks } from "./javaSource";
 import { csharpSourceChecks } from "./csharpSource";
 import { webSourceChecks } from "./webSource";
 import { sqlSourceChecks } from "./sqlSource";
+import { functionFormatChecks } from "./formatFunction";
 const reports: string[] = [];
 async function until(
   check: () => boolean,
@@ -574,7 +575,10 @@ export async function run() {
     preserveFocus: false,
   });
   await vscode.commands.executeCommand("undo");
-  assert.equal(typedDoc.getText(), "export const shippingFee: 3000 | 5000 = 3000;\n");
+  assert.equal(
+    typedDoc.getText(),
+    "export const shippingFee: 3000 | 5000 = 3000;\n",
+  );
   await until(
     () =>
       c.state.diagnostics?.items.every(
@@ -709,6 +713,7 @@ export async function run() {
   );
   await webSourceChecks(c, ready, reports);
   await sqlSourceChecks(c, ready, reports);
+  await functionFormatChecks(c, ready, reports);
   await projectChecks(c, ready, reports);
   await benchmarkChecks(c, ready, reports);
   const report = {

@@ -35,6 +35,8 @@
 
 설계 근거: [Roslyn syntax analysis](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis), [CSharpSyntaxTree.ParseText](https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.csharpsyntaxtree.parsetext), [공식 .NET SDK 배포 metadata](https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json).
 
+2026-10-20 후속: [별도 프로필의 0.7.0 설치 VSIX 검사](evidence/local-ai/function-format-installed-integration.json)에서 C# 읽기·편집·undo·SDK 실패/복구·모델 제안 문법 검사를 포함한 전체 51개 흐름이 통과했다. SDK 10.0.402 환경이며 SDK 8/9, GuardClauses의 편집 후 전체 검사, 설치본 수동 UI 조작을 검증한 것으로 확대하지 않는다.
+
 ## English scope
 
 The development desktop extension uses an installed stable .NET SDK 8+ and Roslyn to read supported C# syntax and exact literal values. It provides Korean/English source links, native C# diffs, explicit edits and undo without implicit saving. Only a fixed helper is compiled; user source is parsed and never executed during analysis. No model or paid API is required. Types, project defines/language settings, dependencies, behavior and performance require separate project checks. Support is partial; the published 0.6.0 extension and browser demo do not include this feature.

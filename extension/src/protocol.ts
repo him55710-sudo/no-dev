@@ -26,11 +26,16 @@ export type ViewState = {
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {
+  kind?: "function-format";
+  reviewed?: boolean;
   id: string;
   description: Words;
   oldText: string;
   newText: string;
 };
+export type FormatSummary =
+  | PatchSummary
+  | { unchanged: true; description: Words };
 export type Request = {
   id: string;
   action: string;
