@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-10-19T22:19:40.5896568Z",
+  "runtime": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-recovery-5AI0sp\\extensions\\pureobom-local.pureobom-0.7.0\\out\\agent-host.cjs",
+  "hostSha256": "3f714f2691df72752c31484ba0805797e2fe43f64345f5a0ef26d7d85a4c9dcf",
+  "vsixSha256": "f063c7dfa073649b4e86635b24eb44dfed0d8f210430f9c0c18b577597c8f419",
+  "report": "startup-installed-cancel.json",
+  "scope": "Two stalled setup cancellation cases against the exact installed agent-host.cjs; synthetic local provider, not pointer UI or real-model evidence."
+}

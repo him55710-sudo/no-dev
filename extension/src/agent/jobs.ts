@@ -290,6 +290,9 @@ export class ImplementationJobs {
         signal.throwIfAborted();
         state.phase = attempt ? "repairing" : "running";
         state.approvals = [];
+        state.message = attempt
+          ? "검사 실패 수정을 위해 Codex 실행기에 다시 연결합니다."
+          : "Codex 실행기에 연결하고 로그인 상태를 확인합니다.";
         this.emit();
         await this.flush();
         const server = (this.server = new CodexAppServer({
@@ -329,10 +332,25 @@ export class ImplementationJobs {
           });
           this.emit();
         });
-        state.provider = (await server.start()).userAgent;
-        const account = await server.account();
-        if (!account.signedIn && account.requiresOpenaiAuth)
-          throw Error("Codex CLI에서 먼저 로그인해 주세요.");
+        // run() owns cancellation after the model session starts. Initialization
+        // and account discovery also need to stop, even if the peer never replies.
+        const cancelSetup = () => {
+          // execute()'s final cleanup awaits the same close promise and reports
+          // any unconfirmed termination instead of claiming cancellation finished.
+          void server.close().catch(() => {});
+        };
+        signal.addEventListener("abort", cancelSetup, { once: true });
+        try {
+          signal.throwIfAborted();
+          state.provider = (await server.start()).userAgent;
+          signal.throwIfAborted();
+          const account = await server.account();
+          signal.throwIfAborted();
+          if (!account.signedIn && account.requiresOpenaiAuth)
+            throw Error("Codex CLI에서 먼저 로그인해 주세요.");
+        } finally {
+          signal.removeEventListener("abort", cancelSetup);
+        }
         const instruction = attempt
           ? `${prompt}\n\nThe independent verification below failed. Repair the implementation and necessary dependencies, preserve acceptance criteria, and rerun checks.\n${JSON.stringify(state.checks)}`
           : prompt;
@@ -387,8 +405,12 @@ export class ImplementationJobs {
       this.emit();
       await this.flush();
     } catch (error) {
-      state.phase = signal.aborted ? "cancelled" : "failed";
-      state.message = error instanceof Error ? error.message : String(error);
+      state.phase = signal.aborted ? "cancelling" : "failed";
+      state.message = signal.aborted
+        ? "실행 프로세스의 종료를 확인하고 있습니다."
+        : error instanceof Error
+          ? error.message
+          : String(error);
       state.approvals = [];
       this.emit();
     } finally {
@@ -398,6 +420,11 @@ export class ImplementationJobs {
         this.emit();
       });
       this.server = undefined;
+      if (signal.aborted && state.phase === "cancelling") {
+        state.phase = "cancelled";
+        state.message = "구현 작업을 취소했습니다.";
+        this.emit();
+      }
       await this.pending;
       this.executing = false;
       this.emit(false);
@@ -416,6 +443,8 @@ export class ImplementationJobs {
   cancel() {
     if (!jobIsActive(this.state) || this.state?.phase === "applying") return;
     this.state!.phase = "cancelling";
+    this.state!.message =
+      "취소를 요청했습니다. 실행 프로세스의 종료를 확인하고 있습니다.";
     this.emit();
     this.abort?.abort();
   }

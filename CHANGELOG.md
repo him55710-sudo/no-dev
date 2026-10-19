@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Cancel stalled agent initialization and account discovery, and publish cancellation completion only after process termination is confirmed. Preserve failed shutdowns and add host-state diagnostics to CI artifacts. See [reproduction and verification](docs/STARTUP_CANCELLATION.md).
 - Read arrow functions and factory-created actions through their actual function bodies. Keep creation, passed callbacks and returned functions distinct, retain branch/error order, bound summaries and preserve stored goals and source identities. See [function description evidence and limits](docs/FUNCTION_DESCRIPTIONS.md).
 - Explain each connection occurrence with passed expressions, resolved parameter names, JSX props and enclosing branch/error syntax, preserving exact source navigation. Compare all occurrence evidence even when counts stay equal; retain uncertainty for older snapshots without fingerprints. See [connection evidence and limits](docs/CONNECTION_EVIDENCE.md).
 - Keep newly saved or edited business features selected after graph projection changes the navigation context. Commit the refreshed graph and selection in the host, reject delayed old navigation, and fit the changed root while preserving nested canvas locations. See [reproduction and installed validation](docs/WORKSPACE_NAVIGATION.md#2026-10-20-후속-기능-저장-뒤-선택-유지).

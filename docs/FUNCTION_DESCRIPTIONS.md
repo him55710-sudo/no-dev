@@ -44,4 +44,6 @@ node scripts/check-function-summaries.mjs '<준비한 Next baseline Git 폴더>'
 
 직전 커밋 `377fea7`의 [CI 실행](https://github.com/him55710-sudo/no-dev/actions/runs/39328562690)은 Ubuntu 성공·Windows 실패다. Windows는 `agent-host.test.ts`의 중단 작업 이어하기 검사에서 첫 승인 상태 대기가 초과됐으며, 그 뒤 빌드와 설치 검사는 실행되지 않았다. 이번 로컬 실패와 이전 CI 실패를 각각 미해결 상태로 남긴다.
 
+2026-10-20 후속 확인: 함수 설명 커밋 `0a5140c`의 [CI](https://github.com/him55710-sudo/no-dev/actions/runs/39331664538)는 Windows·Ubuntu 모두 성공했다. Windows 전체 회귀 259개, 빌드·설치 복구·패키지 검사까지 통과했다. 이전 로컬 실패 기록은 유지하며, 후속 조사에서 별도로 재현한 [초기 연결 취소 결함](STARTUP_CANCELLATION.md)과 구분한다.
+
 [연결선의 전달값과 주변 구문](CONNECTION_EVIDENCE.md) · [관측과 목표의 분리](WORKSPACE_OBSERVATIONS.md) · [전체 구현 기준](SYSTEM_WORKSPACE_STATUS.md)

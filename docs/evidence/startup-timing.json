@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-10-19T22:15:52.719Z",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "processScopeSourceHash": "3b6e8abdb24ed6b6439f36039a8f15235bac0872d507107bae4a45a2ec5284a1",
+  "scope": "Instrumented current process-scope source; synthetic Node child only. Does not reproduce or explain every prior timeout. Stage times are observed on stderr receipt, not OS-level CPU profiling.",
+  "results": [
+    {
+      "label": "first",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3062,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 494
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 652
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 758
+        }
+      ]
+    },
+    {
+      "label": "second",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3102,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 531
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 692
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 793
+        }
+      ]
+    },
+    {
+      "label": "concurrent-1",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3217,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 589
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 774
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 905
+        }
+      ]
+    },
+    {
+      "label": "concurrent-2",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3211,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 581
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 769
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 898
+        }
+      ]
+    }
+  ]
+}

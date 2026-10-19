@@ -21,7 +21,7 @@ jobs:
           python-version: '3.12'
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: pnpm test --reporter=default --reporter=json --outputFile=test-results/unit-tests.json
       - run: pnpm build
       - run: pnpm extension:build
       - run: xvfb-run -a pnpm extension:test
@@ -43,6 +43,14 @@ jobs:
         with:
           name: pureobom-${{ runner.os }}
           path: release/*.vsix
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-tests-${{ runner.os }}
+          path: |
+            test-results/unit-tests.json
+            test-results/agent-host/observations.json
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: always()
         with:
