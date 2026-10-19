@@ -1,0 +1,100 @@
+{
+  "recordedAt": "2026-10-19T17:44:20.418Z",
+  "scope": "0.7 development source, local Windows verification; not a stable release or upstream Rust evaluation",
+  "baseCommit": "07a114d",
+  "sourceFilesSha256": {
+    "src/core/rustSource.ts": "ccc268d39bb3a84ea80f30d14aa61569e6eb363c52c9d2ea996e468b0b9b164d",
+    "src/core/ruleRequest.ts": "97e81949a1666e608330674a8e0c10a221ad592b3e32a8ae6ddb2ae784341f77",
+    "extension/src/rustParser.ts": "4965bbe2786299e219928e64bb43dc3748ef5c0a67283d40d97d4ae15d5e68e6",
+    "extension/src/worker.ts": "5989643af028e0faa41c763237e1bad888f74fcd2e95eca2947b1103dffb261a",
+    "extension/src/controller.ts": "0e366313bb0602c51defd205d26c09903954adcff4c67fd7bd67c570ef40d746",
+    "extension/ui/ReadingView.tsx": "d524e2f0f67cef565193c74cecb340dbe7d0875f6ccc2acb75256357a005228a",
+    "extension/ui/RuleWorkbench.tsx": "3003aada0f7e481c55e37a6ae25624873262036a886b383315e08940581c1c92",
+    "tests/rust.test.ts": "6c4a7c4abd862db0293ac25acf587c20fde99e94af2ac4e3b2370d87728fa65c",
+    "extension/test/rustSource.ts": "27e2c8f1ad1a672a4cd4884bf9daedaf77e42192b21d6805a418de63d43ca038",
+    "extension/test/localAssistant.ts": "845197528bf12a6789c91a9c0744b94f5072e61b5544593ce239bf679c0286e6",
+    "scripts/build-extension.mjs": "f36174a28b0079730c414eaeae743fe1b1c635bbaa0d60e049e5b23f6815f73e",
+    "scripts/check-release.mjs": "e20f248c6979749faf76466723da22c547ca939d68fe41a708cc149104935dc0"
+  },
+  "grammar": {
+    "name": "tree-sitter-rust",
+    "version": "0.24.2",
+    "sha256": "24c89bd9252255e4aebbcbd7d2d308bd92c86dd95a130fdc80efa49577b8d738"
+  },
+  "binding": {
+    "name": "web-tree-sitter",
+    "version": "0.27.1"
+  },
+  "core": {
+    "command": "pnpm test --maxWorkers=2",
+    "files": 27,
+    "passed": 258,
+    "rustTests": 16,
+    "observedDurationSeconds": 83
+  },
+  "development": {
+    "passed": 54,
+    "record": "rust-source-development-integration.json",
+    "note": "Before final tail-expression label, numeric input help and output/name/parameter bounds; installed run below includes them."
+  },
+  "installed": {
+    "passed": 54,
+    "record": "rust-source-installed-integration.json",
+    "vsixSha256": "2591d4ef01aed63cbc8743fff75d27f2c74797ca16b7ae547cdf27f86cad2c8a",
+    "verifiedFiles": 11,
+    "note": "Successful first installation before output/name/parameter bounds. Not a pass for the latest package."
+  },
+  "currentArtifact": {
+    "vsixSha256": "dc749b02455fe482dd405111b95ee4716e4975030f15f6a6b596173bb039f136",
+    "changedSinceInstalledPass": [
+      "out/worker.cjs"
+    ],
+    "fullInstalledSuite": "Not passed yet; subsequent attempts failed before Rust checks. Independent CI pending."
+  },
+  "packagedWorker": {
+    "command": "pnpm release:check",
+    "exitCode": 0,
+    "logSha256": "bd6e6979ddd5e0783ce9839265164ab22f49f54ffe7e7fbddb6c245c69ea3a97",
+    "checks": [
+      "Packaged Rust WASM: parsing, Unicode/CRLF offsets, exact literal editing, malformed syntax and injection rejection verified outside the workspace.",
+      "Release 0.7.0: checksums, source manifest, demo assets, licenses, VSIX contents and packaged worker verified.",
+      "Packaged Python measurement worker verified outside the workspace.",
+      "Packaged Python AST reader and exact literal edit verified outside the workspace.",
+      "Packaged Go AST reader and exact literal edit verified outside the workspace.",
+      "Packaged Java AST reader and exact literal edit verified outside the workspace.",
+      "Packaged C# Roslyn reader and exact literal edits verified outside the workspace."
+    ]
+  },
+  "earlierFailure": {
+    "phase": "first development-host run, prepare a Rust natural-language numeric edit",
+    "message": "Provide exactly one new value.",
+    "cause": "Shared request parser treated u64 suffix digits as a second number.",
+    "resolution": "Rust numeric extraction with Korean/English regression tests; actual host flow then passed."
+  },
+  "installedFailedAttempts": [
+    "rust-source-installed-first-failure.json",
+    "rust-source-installed-diagnostic-failure.json",
+    "rust-source-installed-startup-failure.json"
+  ],
+  "ui": {
+    "kind": "actual built UI and worker, simulated editor, public sample",
+    "languages": [
+      "ko",
+      "en"
+    ],
+    "observed": [
+      "match guards and all three arms",
+      "tail expression label",
+      "exact huge integer/suffix edit",
+      "preview",
+      "applied state"
+    ],
+    "nativeEditorClaim": false
+  },
+  "limitations": [
+    "No upstream Rust project tests yet",
+    "No rustc/type/ownership/macro/cfg/edition verification",
+    "No actual Rust model quality or optimization success",
+    "No Linux/remote/all-theme claim in this local record"
+  ]
+}

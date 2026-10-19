@@ -1,0 +1,14 @@
+{
+  "observedAt": "2026-10-19T17:42:05.839Z",
+  "kind": "Failed installed-VSIX test attempt with isolated TypeScript suggestions",
+  "exitCode": 1,
+  "phase": "Initial shipping.ts analysis, before Go or Rust checks",
+  "state": {
+    "path": "shipping.ts",
+    "busy": false,
+    "error": "분석 시간이 초과되었습니다. 더 작은 파일로 시도해 주세요."
+  },
+  "logEvidence": "The VS Code extension host repeatedly reported unresponsive/responsive transitions before the initial analysis timed out.",
+  "cause": "Not established. This is not a Rust parsing result and is not proof of a specific resource bottleneck.",
+  "policy": "No worker or test deadline increased; this failed attempt is retained. Repeated local retries were stopped in favor of independent Windows/Linux CI verification."
+}
