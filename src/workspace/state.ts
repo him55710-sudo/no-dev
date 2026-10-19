@@ -1,6 +1,7 @@
 import type { StructureGraph } from "./model";
 import type { SpecDocument } from "./spec";
 import type { DesignDraft } from "./drafts";
+import type { NavigationSnapshot } from "./navigation";
 import type {
   ExecutionContext,
   ExecutionProfile,
@@ -19,6 +20,9 @@ export type DesignWorkspaceState = {
   graph?: StructureGraph;
   specs: SpecDocument;
   selectedId: string;
+  navigation?: NavigationSnapshot;
+  navigationError?: string;
+  navigationNotice?: string;
   busy: boolean;
   stale: boolean;
   trusted: boolean;

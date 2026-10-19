@@ -68,7 +68,30 @@ $provider = $providers[0];
     return JSON.parse(result.stdout);
   }
   let reconnection: unknown;
-  if (previous) {
+  let navigationRestoration: unknown;
+  if (previous && configuration.navigationValidation) {
+    assert.equal(workspace.state.job, undefined);
+    assert.notEqual(process.pid, previous.before.extensionHostPid);
+    assert.deepEqual(
+      workspace.state.navigation?.view,
+      previous.before.navigation,
+    );
+    assert.deepEqual(workspace.state.specs, previous.before.specs);
+    navigationRestoration = {
+      before: previous.before,
+      after: {
+        at: new Date().toISOString(),
+        extensionHostPid: process.pid,
+        navigation: structuredClone(workspace.state.navigation?.view),
+        specs: structuredClone(workspace.state.specs),
+      },
+    };
+    await writeFile(
+      resolve(directory, "navigation-restoration.json"),
+      JSON.stringify(navigationRestoration, null, 2),
+    );
+    console.log("SAVED NAVIGATION AND DESIGN RESTORED IN A NEW INSTALLED HOST");
+  } else if (previous) {
     assert.equal(workspace.state.job?.id, previous.before.job.id);
     assert.equal(workspace.state.job?.worktree, previous.before.job.worktree);
     assert.equal(workspace.state.job?.phase, "approval");
@@ -121,8 +144,9 @@ $provider = $providers[0];
     resolve(extension.extensionPath, "media/design.css"),
   );
   const restartControl =
-    configuration.reconnectValidation && !configuration.runIndex
-      ? '<button id="restart">승인 대기 중 창 재시작 검증</button>'
+    (configuration.reconnectValidation || configuration.navigationValidation) &&
+    !configuration.runIndex
+      ? `<button id="restart">${configuration.navigationValidation ? "탐색 위치 보관 후 창 재시작 검증" : "승인 대기 중 창 재시작 검증"}</button>`
       : "";
   const html = `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>설치본 설계 화면 검증</title><link rel="stylesheet" href="${prefix}/design.css"></head><body><aside style="position:fixed;bottom:0;right:0;z-index:10000;padding:6px;background:#fff;border:1px solid #555;color:#222;font:12px sans-serif">설치 번들 + 실제 호스트 · 테스트 전송 경로 ${restartControl}<button id="finish">검증 종료·기록 저장</button><span id="driver-result"></span></aside><div id="root"></div><script src="${prefix}/transport.js"></script><script src="${prefix}/design.js"></script></body></html>`;
   const transport = `
@@ -195,16 +219,46 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
         return send(200, {});
       }
       if (url.pathname === prefix + "/restart") {
-        assert.ok(configuration.reconnectValidation && !configuration.runIndex);
-        assert.equal(workspace.state.job?.phase, "approval");
-        assert.ok(workspace.state.job?.approvals.length);
+        assert.ok(
+          (configuration.reconnectValidation ||
+            configuration.navigationValidation) &&
+            !configuration.runIndex,
+        );
         assert.deepEqual(clientErrors, []);
-        const before = {
-          at: new Date().toISOString(),
-          extensionHostPid: process.pid,
-          job: structuredClone(workspace.state.job),
-          processes: await processWitness(),
-        };
+        if (configuration.navigationValidation) {
+          assert.equal(workspace.state.job, undefined);
+          assert.ok(workspace.state.navigation);
+          assert.notEqual(workspace.state.navigation.view.selection, "system");
+          assert.ok(workspace.state.navigation.view.scopeTrail.length > 1);
+          assert.ok(workspace.state.navigation.view.savedSpecId);
+          assert.ok(
+            workspace.state.navigation.view.canvases.some(
+              (canvas) => canvas.viewport && canvas.positions.length,
+            ),
+          );
+          assert.ok(
+            requests
+              .filter((entry) => entry.action === "saveNavigation")
+              .every((entry) => entry.ok === true),
+            "Wait for navigation writes to complete.",
+          );
+        } else {
+          assert.equal(workspace.state.job?.phase, "approval");
+          assert.ok(workspace.state.job?.approvals.length);
+        }
+        const before = configuration.navigationValidation
+          ? {
+              at: new Date().toISOString(),
+              extensionHostPid: process.pid,
+              navigation: structuredClone(workspace.state.navigation!.view),
+              specs: structuredClone(workspace.state.specs),
+            }
+          : {
+              at: new Date().toISOString(),
+              extensionHostPid: process.pid,
+              job: structuredClone(workspace.state.job),
+              processes: await processWitness(),
+            };
         await writeFile(
           partialPath,
           JSON.stringify({ before, requests, jobs, clientErrors }, null, 2),
@@ -221,6 +275,15 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
         requests.push(entry);
         try {
           const result = await workspace.handleRequest(payload);
+          if (
+            configuration.navigationValidation &&
+            payload.action === "saveNavigation"
+          ) {
+            entry.navigation = structuredClone(result);
+            // Exercise input changes while a real disk write's acknowledgement
+            // is still in flight. This delay exists only in the test transport.
+            await new Promise((done) => setTimeout(done, 800));
+          }
           entry.ok = true;
           if (["implement", "applyJob", "undoJob"].includes(payload.action)) {
             entry.job = JSON.parse(JSON.stringify(workspace.state.job));
@@ -252,19 +315,30 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
               reconnection,
               "Reconnect the live approval before finishing.",
             );
-          assert.equal(
-            workspace.state.job?.phase,
-            "undone",
-            "Complete implementation, review, apply and undo in the UI first.",
-          );
-          for (const action of [
-            "checkConnection",
-            "saveExecution",
-            "implement",
-            "reviewJob",
-            "applyJob",
-            "undoJob",
-          ])
+          if (configuration.navigationValidation) {
+            assert.ok(navigationRestoration);
+            assert.equal(workspace.state.job, undefined);
+            assert.deepEqual(
+              workspace.state.navigation?.view,
+              previous.before.navigation,
+              "The restored UI must retain the host's saved navigation.",
+            );
+          } else
+            assert.equal(
+              workspace.state.job?.phase,
+              "undone",
+              "Complete implementation, review, apply and undo in the UI first.",
+            );
+          for (const action of configuration.navigationValidation
+            ? ["saveFeature", "saveSpec", "saveNavigation"]
+            : [
+                "checkConnection",
+                "saveExecution",
+                "implement",
+                "reviewJob",
+                "applyJob",
+                "undoJob",
+              ])
             assert.ok(
               requests.some((entry) => entry.action === action && entry.ok),
               `Missing successful UI action: ${action}`,
@@ -302,10 +376,13 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
               "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
             provider: configuration.realProvider
               ? "Installed real Codex CLI; review recorded by validation agent, not a usability participant."
-              : "Explicit deterministic stdio fixture; no external inference.",
+              : configuration.navigationValidation
+                ? "No provider invoked; navigation-only validation."
+                : "Explicit deterministic stdio fixture; no external inference.",
             requests,
             jobs,
             reconnection,
+            navigationRestoration,
             clientErrors,
             finalSpecs: workspace.state.specs,
             originalRestored: true,

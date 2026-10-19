@@ -1,0 +1,132 @@
+- complementary:
+  - text: 설치 번들 + 실제 호스트 · 테스트 전송 경로
+  - button "검증 종료·기록 저장"
+- main:
+  - generic: P
+  - strong: 풀어봄
+  - generic: 시스템 설계 워크스페이스
+  - generic: project
+  - status: 6개 파일 연결됨
+  - button "구조 새로 읽기"
+  - complementary:
+    - generic: 구조 검색
+    - textbox "구조 검색":
+      - /placeholder: 기능, 규칙, 파일 검색
+    - text: 프로젝트 구조
+    - generic: "21"
+    - button "업무 기능 만들기"
+    - navigation "프로젝트 구조":
+      - list:
+        - button "프로젝트 접기" [expanded]: ⌄
+        - button "프로젝트": 프로젝트
+        - list:
+          - button "공유·권한 접기" [expanded]: ⌄
+          - button "공유·권한": 공유·권한
+          - list:
+            - button "policy.js 접기" [expanded]: ⌄
+            - button "policy.js": policy.js
+            - list:
+              - button "canEdit": canEdit
+            - button "service.js 펼치기": ›
+            - button "service.js": service.js
+            - button "ui.js 펼치기": ›
+            - button "ui.js": ui.js
+          - button "코드 구조 펼치기": ›
+          - button "코드 구조": 코드 구조
+    - text: 저장된 설계
+    - generic: "1"
+    - list:
+      - button "읽기 전용 멤버의 수정 제한 v1":
+        - text: 읽기 전용 멤버의 수정 제한
+        - generic: v1
+    - paragraph: 업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든 구현을 경로대로 탐색할 수 있어요.
+  - region "시스템 구조 캔버스":
+    - navigation "현재 탐색 위치":
+      - button "project"
+      - text: /
+      - button "공유·권한"
+      - text: /
+      - button "policy.js"
+    - text: SYSTEM EXPLORER
+    - heading "policy.js" [level=1]
+    - paragraph: 선택해서 설계를 읽고, 두 번 눌러 내부 구조로 들어가세요.
+    - application:
+      - group "기능·선언 canEdit":
+        - generic: 기능·선언
+        - strong: canEdit
+        - generic: policy.js · L1
+      - generic "Control Panel":
+        - button "Zoom In":
+        - button "Zoom Out":
+        - button "Fit View":
+      - link "React Flow attribution":
+        - /url: https://reactflow.dev?utm_source=attribution
+        - text: React Flow
+    - generic: 노드 이동은 화면 배치만 바꿉니다.
+    - generic: 11개 정적 연결
+  - complementary "선택한 구조의 설계":
+    - generic: 세부 설계
+    - button "집중 보기"
+    - generic: 선언 · canEdit
+    - button "대상에서 제외"
+    - navigation "이 코드가 포함된 업무 기능":
+      - strong: 이 코드가 포함된 업무 기능
+      - button "공유·권한"
+    - generic: 1개 대상을 함께 설계
+    - button "선택 해제"
+    - generic "직접 연결된 구현"
+    - generic: LIVING SPEC
+    - generic: 저장 v1
+    - text: 설계 이름
+    - textbox "설계 이름": 읽기 전용 멤버의 수정 제한
+    - text: 현재 구현의 기준선
+    - paragraph: ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.
+    - button "policy.js:1 ↗"
+    - button "기준 코드 비교·다시 연결"
+    - text: 역할과 목적
+    - textbox "역할과 목적":
+      - /placeholder: 이 기능이 필요한 이유를 적어 주세요.
+    - text: 원하는 동작
+    - textbox "원하는 동작":
+      - /placeholder: 어떤 동작으로 바꾸려는지 구체적으로 적어 주세요.
+      - text: viewer는 프로젝트를 조회할 수 있지만 수정할 수 없다. owner와 editor의 수정 권한은 유지한다.
+    - text: 정책과 조건
+    - textbox "정책과 조건":
+      - /placeholder: 권한, 분기, 상태 변화, 제한
+      - text: 화면과 서버 요청에서 같은 권한 정책을 사용한다.
+    - text: 입출력과 데이터
+    - textbox "입출력과 데이터":
+      - /placeholder: 받는 정보, 반환하는 결과, 저장되는 데이터
+    - text: 예외와 실패 처리
+    - textbox "예외와 실패 처리":
+      - /placeholder: 실패할 때 사용자가 확인해야 할 동작
+    - text: 유지해야 하는 동작
+    - generic: 한 줄에 한 가지씩
+    - textbox "유지해야 하는 동작 한 줄에 한 가지씩": 프로젝트 멤버의 조회 유지 owner와 editor의 기존 수정 유지
+    - text: 완료 기준
+    - generic: 한 줄에 한 가지씩
+    - textbox "완료 기준 한 줄에 한 가지씩": viewer의 수정 요청은 거절되고 데이터가 바뀌지 않는다.
+    - button "설계만 저장"
+    - paragraph: 설계만 저장하면 구현을 실행하지 않습니다.
+    - region "구현 설정":
+      - strong: Codex로 구현
+      - paragraph: 별도 Git 작업 공간에서 수정하고 검사합니다. 결과를 검토한 뒤 원본 프로젝트에 반영합니다.
+      - generic: "모델: Codex 기본 설정"
+      - button "Codex 연결 확인"
+      - button "실행기·모델 설정"
+      - paragraph: 연결 확인은 실행기와 로그인 상태를 확인합니다. 모델 구현 요청은 시작하지 않습니다.
+      - generic "실행기 경로"
+      - checkbox "설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다."
+      - text: 설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다.
+      - group "구현 후 실행할 검사":
+        - generic: 구현 후 실행할 검사
+        - checkbox "pnpm run test"
+        - text: pnpm run test
+        - code: node --test test.js
+      - button "이 프로젝트에 보관" [disabled]
+      - paragraph: 보관하면 다음에도 이 설정을 사용합니다. 해제는 이후 구현에 적용되며, 진행 중인 작업은 작업 패널에서 취소할 수 있습니다.
+      - button "저장하고 구현" [disabled]
+  - generic "이전 구현 작업 0개"
+  - status: 로컬 정적 분석 · 설계 목표와 구현 근거를 따로 보존합니다.
+  - generic "탐색 위치 저장 상태": 탐색 위치 기억함
+  - generic "확인하지 못한 범위 7"

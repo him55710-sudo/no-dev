@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, type SetStateAction } from "react";
 import {
   ancestors,
   descendantIds,
@@ -27,6 +27,11 @@ import {
 } from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
+import { enterScope, type WorkspaceNavigation } from "./navigation";
+import {
+  useWorkspaceNavigation,
+  type NavigationActions,
+} from "./useWorkspaceNavigation";
 import { jobIsActive } from "./job";
 import { executionKey, type ExecutionUse } from "./execution";
 import {
@@ -38,6 +43,7 @@ import "@xyflow/react/dist/style.css";
 import "./design.css";
 
 export type DesignActions = DraftActions &
+  NavigationActions &
   ExecutionActions & {
     refresh: () => Promise<unknown>;
     source: (id: string, index: number) => Promise<unknown>;
@@ -78,13 +84,16 @@ function StructureTree({
   selectedId,
   onSelect,
   onEnter,
+  expanded,
+  onExpanded,
 }: {
   graph: StructureGraph;
   selectedId: string;
   onSelect: (id: string) => void;
   onEnter: (id: string) => void;
+  expanded: string[];
+  onExpanded: (ids: string[]) => void;
 }) {
-  const [expanded, setExpanded] = useState(new Set(["system"]));
   const children = useMemo(() => {
     const result = new Map<string, StructureNode[]>();
     for (const node of graph.nodes) {
@@ -99,7 +108,7 @@ function StructureTree({
   const render = (parent: string, depth: number): React.ReactNode =>
     (children.get(parent) ?? []).map((node) => {
       const hasChildren = children.has(node.id),
-        open = expanded.has(node.id);
+        open = expanded.includes(node.id);
       return (
         <li key={node.id}>
           <div
@@ -112,12 +121,11 @@ function StructureTree({
                 aria-label={`${node.label} ${open ? "접기" : "펼치기"}`}
                 aria-expanded={open}
                 onClick={() =>
-                  setExpanded((old) => {
-                    const next = new Set(old);
-                    if (open) next.delete(node.id);
-                    else next.add(node.id);
-                    return next;
-                  })
+                  onExpanded(
+                    open
+                      ? expanded.filter((id) => id !== node.id)
+                      : [...expanded, node.id],
+                  )
                 }
               >
                 {open ? "⌄" : "›"}
@@ -349,38 +357,53 @@ export function DesignWorkspaceView({
   state: DesignWorkspaceState;
   actions: DesignActions;
 }) {
-  const [selection, updateSelection] = useState(state.selectedId);
-  const [savedSpecId, setSavedSpecId] = useState<string>();
+  const navigation = useWorkspaceNavigation(state, actions);
+  const {
+    selection,
+    savedSpecId,
+    connections,
+    scopeTrail,
+    search,
+    included,
+    focus,
+    expanded,
+    canvases,
+  } = navigation.view;
+  const field = <K extends keyof WorkspaceNavigation>(
+    key: K,
+    value: SetStateAction<WorkspaceNavigation[K]>,
+  ) =>
+    navigation.update((current) => ({
+      ...current,
+      [key]:
+        typeof value === "function"
+          ? (value as (old: WorkspaceNavigation[K]) => WorkspaceNavigation[K])(
+              current[key],
+            )
+          : value,
+    }));
+  const setSavedSpecId = (value: string | undefined) =>
+    field("savedSpecId", value);
+  const setIncluded = (value: SetStateAction<string[]>) =>
+    field("included", value);
+  const setConnections = (value: string[]) => field("connections", value);
+  const setSearch = (value: string) => field("search", value);
+  const setFocus = (value: boolean) => field("focus", value);
   const setSelection = (id: string) => {
-    updateSelection(id);
-    setSavedSpecId(undefined);
+    navigation.update((current) => ({
+      ...current,
+      selection: id,
+      savedSpecId: undefined,
+    }));
   };
-  const [connections, setConnections] = useState<string[]>([]);
-  const [scope, updateScope] = useState("system");
-  const [scopeTrail, setScopeTrail] = useState(["system"]);
+  const scope = scopeTrail.at(-1)!;
   const [editingFeature, setEditingFeature] = useState<string>();
-  const [search, setSearch] = useState("");
-  const [included, setIncluded] = useState<string[]>([]);
   const drafts = useDesignDrafts(state.drafts ?? [], state.projectKey, actions);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [focus, setFocus] = useState(false);
-  useEffect(() => {
-    setSelection(state.selectedId);
-  }, [state.selectedId]);
   const graph = state.graph;
   const setScope = (id: string) => {
-    updateScope(id);
-    setScopeTrail((old) =>
-      old.includes(id)
-        ? old.slice(0, old.indexOf(id) + 1)
-        : graph &&
-            structureChildren(graph, scope).some((node) => node.id === id)
-          ? [...old, id]
-          : graph
-            ? ancestors(graph, id).map((node) => node.id)
-            : ["system"],
-    );
+    if (graph) navigation.update((current) => enterScope(current, graph, id));
   };
   const selected = graph?.nodes.find((node) => node.id === selection);
   const edge = graph?.edges.find((item) => item.id === selection);
@@ -525,6 +548,7 @@ export function DesignWorkspaceView({
             <span className="sr-only">구조 검색</span>
             <input
               placeholder="기능, 규칙, 파일 검색"
+              maxLength={500}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -575,6 +599,8 @@ export function DesignWorkspaceView({
                 selectedId={selectedId}
                 onSelect={setSelection}
                 onEnter={enter}
+                expanded={expanded}
+                onExpanded={(value) => field("expanded", value)}
               />
             )
           ) : (
@@ -673,8 +699,18 @@ export function DesignWorkspaceView({
           <div className="design-canvas">
             {graph ? (
               <StructureCanvas
+                key={`${scopeId}:${state.navigation?.generation ?? 0}`}
                 graph={graph}
                 scopeId={scopeId}
+                location={canvases.find((canvas) => canvas.scopeId === scopeId)}
+                onLocation={(location) =>
+                  field("canvases", (current) => [
+                    ...current
+                      .filter((canvas) => canvas.scopeId !== location.scopeId)
+                      .slice(-199),
+                    location,
+                  ])
+                }
                 selectedId={selectedId}
                 onSelect={setSelection}
                 onEnter={enter}
@@ -972,7 +1008,7 @@ export function DesignWorkspaceView({
                     state.job?.phase !== "recovery"
                       ? async (request) => {
                           await actions.acceptBaseline!(request);
-                          updateSelection(request.targetIds[0]);
+                          setSelection(request.targetIds[0]);
                           setIncluded(request.targetIds);
                           setSavedSpecId(request.specId);
                           setFeedback(
@@ -1076,6 +1112,18 @@ export function DesignWorkspaceView({
           />
         </fieldset>
       ) : null}
+      {navigation.error || state.navigationError ? (
+        <div role="alert" className="implementation-connection-error">
+          <p>
+            이어서 볼 위치를 보관하지 못했습니다.{" "}
+            {navigation.error || state.navigationError}
+          </p>
+          <button onClick={navigation.retry}>현재 탐색 위치 다시 보관</button>
+        </div>
+      ) : null}
+      {state.navigationNotice ? (
+        <p role="status">{state.navigationNotice}</p>
+      ) : null}
       <footer className="design-statusbar">
         <span className="status-dot" />
         <span role="status">
@@ -1083,6 +1131,15 @@ export function DesignWorkspaceView({
             state.error ||
             "로컬 정적 분석 · 설계 목표와 구현 근거를 따로 보존합니다."}
         </span>
+        {actions.saveNavigation ? (
+          <span aria-label="탐색 위치 저장 상태">
+            {navigation.saving
+              ? "탐색 위치 보관 중…"
+              : navigation.error || state.navigationError
+                ? "탐색 위치 보관 안 됨"
+                : "탐색 위치 기억함"}
+          </span>
+        ) : null}
         <details>
           <summary>
             확인하지 못한 범위{" "}

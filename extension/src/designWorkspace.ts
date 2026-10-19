@@ -14,6 +14,7 @@ import { z } from "zod";
 import { AnalysisClient } from "./analysisClient";
 import {
   sha256,
+  ancestors,
   sourceNode,
   structureLimits,
   type StructureGraph,
@@ -38,6 +39,13 @@ import {
   type DesignDraft,
 } from "../../src/workspace/drafts";
 import { DesignDrafts } from "./designDrafts";
+import { NavigationStore } from "./navigationStore";
+import {
+  initialNavigation,
+  navigationWriteSchema,
+  reconcileNavigation,
+  type WorkspaceNavigation,
+} from "../../src/workspace/navigation";
 import { ExecutionProfiles } from "./executionProfiles";
 import { CodexAppServer } from "./agent/appServer";
 import {
@@ -67,6 +75,7 @@ const requestSchema = z
     action: z.enum([
       "ready",
       "refresh",
+      "saveNavigation",
       "source",
       "saveSpec",
       "saveDraft",
@@ -113,6 +122,7 @@ const included =
   "**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts,json,jsonc,md,py,go,rs,java,cs,html,css,sql}";
 
 export class DesignWorkspace implements vscode.Disposable {
+  private navigationStore?: NavigationStore;
   readonly changes = new vscode.EventEmitter<DesignWorkspaceState>();
   state: DesignWorkspaceState = {
     busy: false,
@@ -279,6 +289,20 @@ export class DesignWorkspace implements vscode.Disposable {
         await realpath(folder.uri.fsPath),
       );
       this.state.projectKey = this.drafts.projectKey;
+      this.navigationStore = new NavigationStore(
+        this.context.globalStorageUri.fsPath,
+        this.drafts.projectKey,
+      );
+      try {
+        this.state.navigation = {
+          generation: 0,
+          view: await this.navigationStore.read(),
+        };
+      } catch (error) {
+        this.state.navigation = { generation: 0, view: initialNavigation() };
+        this.state.navigationError = `이전 탐색 위치를 읽지 못했습니다. ${String(error)}`;
+      }
+      this.state.selectedId = this.state.navigation.view.selection;
       this.executionProfiles = new ExecutionProfiles(
         this.context.globalStorageUri.fsPath,
         this.drafts.projectKey,
@@ -332,6 +356,25 @@ export class DesignWorkspace implements vscode.Disposable {
           path,
           editor.document.offsetAt(editor.selection.active),
         )?.id ?? "system";
+      const chain = ancestors(this.state.graph, this.state.selectedId).map(
+        (node) => node.id,
+      );
+      await this.replaceNavigation({
+        ...(this.state.navigation?.view ?? initialNavigation()),
+        selection: this.state.selectedId,
+        scopeTrail: chain.length > 1 ? chain.slice(0, -1) : ["system"],
+        included: [],
+        savedSpecId: undefined,
+        connections: [],
+        search: "",
+        focus: false,
+        expanded: [
+          ...new Set([
+            ...(this.state.navigation?.view.expanded ?? []),
+            ...chain,
+          ]),
+        ],
+      });
       this.emit();
     }
   }
@@ -341,6 +384,8 @@ export class DesignWorkspace implements vscode.Disposable {
     let result: unknown;
     if (request.action === "ready") this.emit();
     else if (request.action === "refresh") await this.refresh();
+    else if (request.action === "saveNavigation")
+      result = await this.saveNavigation(request.payload);
     else if (request.action === "source") {
       const payload = z
         .object({
@@ -577,6 +622,23 @@ export class DesignWorkspace implements vscode.Disposable {
       this.state.notices = notices;
       this.state.stale = false;
       this.state.busy = false;
+      if (this.state.navigation) {
+        const previous = this.state.navigation.view;
+        const view = reconcileNavigation(previous, graph, [
+          ...this.state.specs.specs.map((spec) => spec.id),
+          ...(this.state.drafts ?? []).map((draft) => draft.base.id),
+        ]);
+        if (JSON.stringify(view) !== JSON.stringify(previous)) {
+          if (
+            view.selection !== previous.selection ||
+            JSON.stringify(view.scopeTrail) !==
+              JSON.stringify(previous.scopeTrail)
+          )
+            this.state.navigationNotice =
+              "이전에 보던 구조가 바뀌어 남아 있는 탐색 위치를 열었습니다.";
+          await this.replaceNavigation(view);
+        }
+      }
       await this.loadExecution();
       this.emit();
     } catch (error) {
@@ -585,6 +647,55 @@ export class DesignWorkspace implements vscode.Disposable {
       if (serial === this.serial && this.folder === folder && !this.disposed)
         throw error;
     }
+  }
+  private async replaceNavigation(view: WorkspaceNavigation) {
+    const snapshot = {
+      generation: (this.state.navigation?.generation ?? 0) + 1,
+      view,
+    };
+    const store = this.navigationStore;
+    this.state.navigation = snapshot;
+    this.state.selectedId = view.selection;
+    try {
+      await store?.save(view);
+      if (this.navigationStore === store && this.state.navigation === snapshot)
+        this.state.navigationError = undefined;
+    } catch (error) {
+      if (this.navigationStore === store && this.state.navigation === snapshot)
+        this.state.navigationError = `탐색 위치를 보관하지 못했습니다. ${String(error)}`;
+    }
+  }
+  private async saveNavigation(raw: unknown) {
+    const request = navigationWriteSchema.parse(raw);
+    if (
+      !this.navigationStore ||
+      request.projectKey !== this.state.projectKey ||
+      !this.state.navigation ||
+      !this.state.graph
+    )
+      throw Error("탐색한 프로젝트가 아닙니다. 프로젝트를 다시 열어 주세요.");
+    // A delayed UI write must not undo an explicit 'reveal this code' or graph repair.
+    if (request.generation !== this.state.navigation.generation)
+      return this.state.navigation;
+    const view = reconcileNavigation(request.view, this.state.graph, [
+      ...this.state.specs.specs.map((spec) => spec.id),
+      ...(this.state.drafts ?? []).map((draft) => draft.base.id),
+    ]);
+    const snapshot = { generation: request.generation, view };
+    const store = this.navigationStore;
+    this.state.navigation = snapshot;
+    this.state.selectedId = view.selection;
+    await store.save(view);
+    if (
+      this.navigationStore === store &&
+      this.state.navigation === snapshot &&
+      (this.state.navigationError || this.state.navigationNotice)
+    ) {
+      this.state.navigationError = undefined;
+      this.state.navigationNotice = undefined;
+      this.emit();
+    }
+    return snapshot;
   }
   async source(nodeId: string, sourceIndex = 0) {
     const graph = this.state.graph;

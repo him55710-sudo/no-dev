@@ -6,6 +6,7 @@ import type { Feature } from "../../src/workspace/features";
 import { observeSpec, draftSpec } from "../../src/workspace/spec";
 import type { DesignDraft } from "../../src/workspace/drafts";
 import { approvalMatches } from "../../src/workspace/execution";
+import { initialNavigation } from "../../src/workspace/navigation";
 import { readFile, writeFile, rename } from "node:fs/promises";
 
 export async function run() {
@@ -38,6 +39,46 @@ export async function run() {
   );
   await workspace.open(true);
   assert.equal(workspace.state.selectedId, policy.id);
+  const navigationGeneration = workspace.state.navigation!.generation;
+  await workspace.handleRequest({
+    id: "navigate",
+    action: "saveNavigation",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      generation: navigationGeneration,
+      view: { ...initialNavigation(), search: "공유 탐색" },
+    },
+  });
+  assert.equal(workspace.state.navigation!.view.search, "공유 탐색");
+  assert.equal(workspace.state.job, undefined);
+  await assert.rejects(
+    workspace.handleRequest({
+      id: "wrong-project-navigation",
+      action: "saveNavigation",
+      payload: {
+        projectKey: "0".repeat(64),
+        generation: navigationGeneration,
+        view: initialNavigation(),
+      },
+    }),
+    /프로젝트/,
+  );
+  await workspace.open(true);
+  assert.equal(workspace.state.selectedId, policy.id);
+  await workspace.handleRequest({
+    id: "late-navigation",
+    action: "saveNavigation",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      generation: navigationGeneration,
+      view: initialNavigation(),
+    },
+  });
+  assert.equal(
+    workspace.state.selectedId,
+    policy.id,
+    "late UI preference writes cannot override explicit source navigation",
+  );
   const targets = [policy.id];
   const content = {
     title: "공유 권한",
@@ -495,6 +536,8 @@ export async function run() {
       "alias/re-export shared policy",
       "node to exact source",
       "source to node",
+      "local navigation preferences do not start an agent and reject cross-project input",
+      "late UI navigation writes cannot undo explicit source navigation",
       "durable design save",
       "unfinished draft persists separately without confirming design or starting an agent",
       "explicit design save consumes only its persisted draft revision",

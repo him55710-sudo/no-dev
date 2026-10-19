@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import {
   Background,
   Controls,
@@ -8,6 +8,7 @@ import {
   type Node,
   type NodeProps,
   type NodeChange,
+  type Viewport,
 } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
 import {
@@ -16,6 +17,7 @@ import {
   type StructureGraph,
   type StructureNode,
 } from "./model";
+import type { CanvasLocation } from "./navigation";
 
 type CardData = {
   label: string;
@@ -58,6 +60,8 @@ export function StructureCanvas({
   onSelect,
   onEnter,
   onConnection,
+  location,
+  onLocation,
 }: {
   graph: StructureGraph;
   scopeId: string;
@@ -65,10 +69,30 @@ export function StructureCanvas({
   onSelect: (id: string) => void;
   onEnter: (id: string) => void;
   onConnection: (ids: string[]) => void;
+  location?: CanvasLocation;
+  onLocation: (location: CanvasLocation) => void;
 }) {
   const [positions, setPositions] = useState<
     Record<string, { x: number; y: number }>
-  >({});
+  >(() =>
+    Object.fromEntries(
+      (location?.positions ?? []).map((position) => [
+        position.id,
+        { x: position.x, y: position.y },
+      ]),
+    ),
+  );
+  const positionsRef = useRef(positions);
+  const viewportRef = useRef<Viewport | undefined>(location?.viewport);
+  const persistLocation = () =>
+    onLocation({
+      scopeId,
+      viewport: viewportRef.current,
+      positions: Object.entries(positionsRef.current).map(([id, position]) => ({
+        id,
+        ...position,
+      })),
+    });
   const layout = useMemo(() => {
     const children = structureChildren(graph, scopeId);
     const visible = children.length
@@ -97,7 +121,7 @@ export function StructureCanvas({
     type: "structure",
     width: 220,
     height: 116,
-    position: positions[`${scopeId}:${node.id}`] ?? {
+    position: positions[node.id] ?? {
       x: layout.layoutGraph.node(node.id).x - 110,
       y: layout.layoutGraph.node(node.id).y - 58,
     },
@@ -116,18 +140,27 @@ export function StructureCanvas({
     ariaLabel: `${labels[node.kind]} ${node.label}`,
     selected: selectedId === node.id,
   }));
-  const updatePositions = (changes: NodeChange<Card>[]) =>
-    setPositions((current) => {
-      if (
-        !changes.some((change) => change.type === "position" && change.position)
+  const updatePositions = (changes: NodeChange<Card>[]) => {
+    if (
+      !changes.some((change) => change.type === "position" && change.position)
+    )
+      return;
+    const next = { ...positionsRef.current };
+    for (const change of changes)
+      if (change.type === "position" && change.position)
+        next[change.id] = change.position;
+    positionsRef.current = next;
+    setPositions(next);
+    // React Flow also emits completed position changes for arrow-key movement.
+    // Persist those as well as pointer drags, without writing each drag frame.
+    if (
+      changes.some(
+        (change) =>
+          change.type === "position" && change.position && !change.dragging,
       )
-        return current;
-      const next = { ...current };
-      for (const change of changes)
-        if (change.type === "position" && change.position)
-          next[`${scopeId}:${change.id}`] = change.position;
-      return next;
-    });
+    )
+      persistLocation();
+  };
   return (
     <ReactFlow<Card>
       key={scopeId}
@@ -135,13 +168,18 @@ export function StructureCanvas({
       edges={layout.edges}
       nodeTypes={nodeTypes}
       onNodesChange={updatePositions}
+      onMoveEnd={(_, viewport) => {
+        viewportRef.current = viewport;
+        persistLocation();
+      }}
       onNodeClick={(_, node) => onSelect(node.id)}
       onNodeDoubleClick={(_, node) => onEnter(node.id)}
       onEdgeClick={(_, edge) => onConnection(edge.data!.originals as string[])}
       nodesConnectable={false}
       edgesReconnectable={false}
       deleteKeyCode={null}
-      fitView
+      defaultViewport={location?.viewport}
+      fitView={!location?.viewport}
       minZoom={0.2}
       maxZoom={1.5}
       defaultEdgeOptions={{ type: "smoothstep", selectable: true }}

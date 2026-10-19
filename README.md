@@ -32,6 +32,8 @@ The first target is an existing feature spanning a React interface, server actio
 
 [Install and first task](docs/SYSTEM_WORKSPACE_START.md) · [Execution settings](docs/EXECUTION_SETTINGS.md) · [Review and apply](docs/IMPLEMENTATION_REVIEW.md) · [Recovery](docs/AGENT_IMPLEMENTATION.md)
 
+[Resume exploring](docs/WORKSPACE_NAVIGATION.md): the workspace remembers the selected structure and saved design, feature breadcrumb, tree, search and canvas arrangement per project in the same editor profile. Moving a node changes its display position only.
+
 ## Earlier single-file preview — published 0.6.0
 
 The video, hosted demo and single-file capabilities below describe the earlier release. They do not demonstrate the system design workflow above.

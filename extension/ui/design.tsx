@@ -5,6 +5,7 @@ import type { DesignWorkspaceState } from "../../src/workspace/state";
 import type { LivingSpec } from "../../src/workspace/spec";
 import type { Feature } from "../../src/workspace/features";
 import type { DesignDraft } from "../../src/workspace/drafts";
+import type { NavigationSnapshot } from "../../src/workspace/navigation";
 import { request } from "./bridge";
 
 function DesignApp() {
@@ -33,6 +34,8 @@ function DesignApp() {
       state={state}
       actions={{
         refresh: () => request("refresh"),
+        saveNavigation: (payload) =>
+          request<NavigationSnapshot>("saveNavigation", payload),
         source: (nodeId, sourceIndex) =>
           request("source", { nodeId, sourceIndex }),
         save: (targetIds, content, expectedRevision, specId, draftRevision) =>
