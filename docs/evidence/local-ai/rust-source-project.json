@@ -1,0 +1,413 @@
+{
+  "checkedAt": "2026-10-19T17:59:26.902Z",
+  "project": "https://github.com/chronotope/humantime",
+  "commit": "7994b7129851ea3b0e5df8bee67870898e52fa1c",
+  "file": "src/duration.rs",
+  "sourceSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+  "vscode": "1.96.4",
+  "kind": "Known hour-conversion regression through actual VS Code source reading, literal edit, native diff, task execution and undo. Unmodified humantime unit tests and doc tests with all features; no model or optimization claim.",
+  "encoding": {
+    "utf8Bom": false,
+    "editorTextSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+    "diskCharacters": 30736,
+    "editorCharacters": 30736
+  },
+  "analysis": {
+    "rust": {
+      "version": "tree-sitter-rust 0.24.2",
+      "truncated": false
+    },
+    "explained": 174,
+    "total": 328,
+    "selectedRule": {
+      "start": 9439,
+      "end": 9443,
+      "line": 261,
+      "endLine": 261,
+      "id": "rust:9439",
+      "name": "value @ L261:34",
+      "label": {
+        "ko": "value @ L261:34",
+        "en": "value @ L261:34"
+      },
+      "raw": "3600",
+      "value": "3600",
+      "type": "number",
+      "syntax": "rust",
+      "scope": "Parser<'_>::parse_unit",
+      "note": {
+        "ko": "원문에 적힌 값입니다. 타입·범위·소유권·실행 결과는 검사하지 않습니다.",
+        "en": "Value written in source. Types, ranges, ownership and runtime outcomes are unchecked."
+      }
+    },
+    "ko": [
+      "- L242: 지역 바인딩: unit = match Unit::from_str(&self.src[start..end]) {\r\n            Ok(u) => u,\r\n            Err(()) => {\r\n                return Err(Error::UnknownUnit {\r\n                    start,\r\n                    end,\r\n                    unit: self.src[start..end].to_owned(),\r\n                    value: n,\r\n                });\r\n            }\r\n        }",
+      "  - L242: 값을 패턴과 비교: Unit::from_str(&self.src[start..end])",
+      "    - 패턴·가드: Ok(u)",
+      "      - L243: 식 원문: u. 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Err(())",
+      "      - L245: 현재 함수·클로저에서 명시적으로 반환: Err(Error::UnknownUnit {\r\n                    start,\r\n                    end,\r\n                    unit: self.src[start..end].to_owned(),\r\n                    value: n,\r\n                })",
+      "- L255: 지역 바인딩: (sec, nsec) = match unit {\r\n            Unit::Nanosecond => (0u64, n),\r\n            Unit::Microsecond => (0u64, n.mul(1000)?),\r\n            Unit::Millisecond => (0u64, n.mul(1_000_000)?),\r\n            Unit::Second => (n, 0),\r\n            Unit::Minute => (n.mul(60)?, 0),\r\n            Unit::Hour => (n.mul(3600)?, 0),\r\n            Unit::Day => (n.mul(86400)?, 0),\r\n            Unit::Week => (n.mul(86400 * 7)?, 0),\r…",
+      "  - L255: 값을 패턴과 비교: unit",
+      "    - 패턴·가드: Unit::Nanosecond",
+      "      - L256: 식 원문: (0u64, n). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Microsecond",
+      "      - L257: 식 원문: (0u64, n.mul(1000)?). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Millisecond",
+      "      - L258: 식 원문: (0u64, n.mul(1_000_000)?). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Second",
+      "      - L259: 식 원문: (n, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Minute",
+      "      - L260: 식 원문: (n.mul(60)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Hour",
+      "      - L261: 식 원문: (n.mul(3600)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Day",
+      "      - L262: 식 원문: (n.mul(86400)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Week",
+      "      - L263: 식 원문: (n.mul(86400 * 7)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Month",
+      "      - L264: 식 원문: (n.mul(2_630_016)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "    - 패턴·가드: Unit::Year",
+      "      - L265: 식 원문: (n.mul(31_557_600)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "- L267: ? 식: add_current(sec, nsec, out)?. 값·타입에 따라 이어가거나 현재 반환 경계로 전파할 수 있습니다.",
+      "- L270: 조건 또는 패턴 확인: let Some(Fraction {\r\n            numerator: n,\r\n            denominator: d,\r\n        }) = frac",
+      "  - L275: 지역 바인딩: (sec, nsec) = match unit {\r\n                Unit::Nanosecond => return Err(Error::NumberOverflow),\r\n                Unit::Microsecond => (0, n.mul(1000)?.div(d)?),\r\n                Unit::Millisecond => (0, n.mul(1_000_000)?.div(d)?),\r\n                Unit::Second => (0, n.mul(1_000_000_000)?.div(d)?),\r\n                Unit::Minute => (0, n.mul(60_000_000_000)?.div(d)?),\r\n                Unit::Hour => (n.mul(360…",
+      "    - L275: 값을 패턴과 비교: unit",
+      "      - 패턴·가드: Unit::Nanosecond",
+      "        - L276: 현재 함수·클로저에서 명시적으로 반환: Err(Error::NumberOverflow)",
+      "      - 패턴·가드: Unit::Microsecond",
+      "        - L277: 식 원문: (0, n.mul(1000)?.div(d)?). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Millisecond",
+      "        - L278: 식 원문: (0, n.mul(1_000_000)?.div(d)?). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Second",
+      "        - L279: 식 원문: (0, n.mul(1_000_000_000)?.div(d)?). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Minute",
+      "        - L280: 식 원문: (0, n.mul(60_000_000_000)?.div(d)?). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Hour",
+      "        - L281: 식 원문: (n.mul(3600)?.div(d)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Day",
+      "        - L282: 식 원문: (n.mul(86400)?.div(d)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Week",
+      "        - L283: 식 원문: (n.mul(86400 * 7)?.div(d)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Month",
+      "        - L284: 식 원문: (n.mul(2_630_016)?.div(d)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "      - 패턴·가드: Unit::Year",
+      "        - L285: 식 원문: (n.mul(31_557_600)?.div(d)?, 0). 값과 타입은 평가하지 않았습니다.",
+      "  - L287: ? 식: add_current(sec, nsec, out)?. 값·타입에 따라 이어가거나 현재 반환 경계로 전파할 수 있습니다.",
+      "- L290: 블록의 마지막 식 — 호출 식: Ok(()). 실제 대상과 효과는 미확인입니다."
+    ],
+    "en": [
+      "- L242: Local binding: unit = match Unit::from_str(&self.src[start..end]) {\r\n            Ok(u) => u,\r\n            Err(()) => {\r\n                return Err(Error::UnknownUnit {\r\n                    start,\r\n                    end,\r\n                    unit: self.src[start..end].to_owned(),\r\n                    value: n,\r\n                });\r\n            }\r\n        }",
+      "  - L242: Match a value against patterns: Unit::from_str(&self.src[start..end])",
+      "    - Pattern / guard: Ok(u)",
+      "      - L243: Expression source: u. Its value and type were not evaluated.",
+      "    - Pattern / guard: Err(())",
+      "      - L245: Explicit return from the current function or closure: Err(Error::UnknownUnit {\r\n                    start,\r\n                    end,\r\n                    unit: self.src[start..end].to_owned(),\r\n                    value: n,\r\n                })",
+      "- L255: Local binding: (sec, nsec) = match unit {\r\n            Unit::Nanosecond => (0u64, n),\r\n            Unit::Microsecond => (0u64, n.mul(1000)?),\r\n            Unit::Millisecond => (0u64, n.mul(1_000_000)?),\r\n            Unit::Second => (n, 0),\r\n            Unit::Minute => (n.mul(60)?, 0),\r\n            Unit::Hour => (n.mul(3600)?, 0),\r\n            Unit::Day => (n.mul(86400)?, 0),\r\n            Unit::Week => (n.mul(86400 * 7)?, 0),\r…",
+      "  - L255: Match a value against patterns: unit",
+      "    - Pattern / guard: Unit::Nanosecond",
+      "      - L256: Expression source: (0u64, n). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Microsecond",
+      "      - L257: Expression source: (0u64, n.mul(1000)?). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Millisecond",
+      "      - L258: Expression source: (0u64, n.mul(1_000_000)?). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Second",
+      "      - L259: Expression source: (n, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Minute",
+      "      - L260: Expression source: (n.mul(60)?, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Hour",
+      "      - L261: Expression source: (n.mul(3600)?, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Day",
+      "      - L262: Expression source: (n.mul(86400)?, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Week",
+      "      - L263: Expression source: (n.mul(86400 * 7)?, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Month",
+      "      - L264: Expression source: (n.mul(2_630_016)?, 0). Its value and type were not evaluated.",
+      "    - Pattern / guard: Unit::Year",
+      "      - L265: Expression source: (n.mul(31_557_600)?, 0). Its value and type were not evaluated.",
+      "- L267: ? expression: add_current(sec, nsec, out)?. Depending on value and type, it can continue or propagate to the current return boundary.",
+      "- L270: Check condition or pattern: let Some(Fraction {\r\n            numerator: n,\r\n            denominator: d,\r\n        }) = frac",
+      "  - L275: Local binding: (sec, nsec) = match unit {\r\n                Unit::Nanosecond => return Err(Error::NumberOverflow),\r\n                Unit::Microsecond => (0, n.mul(1000)?.div(d)?),\r\n                Unit::Millisecond => (0, n.mul(1_000_000)?.div(d)?),\r\n                Unit::Second => (0, n.mul(1_000_000_000)?.div(d)?),\r\n                Unit::Minute => (0, n.mul(60_000_000_000)?.div(d)?),\r\n                Unit::Hour => (n.mul(360…",
+      "    - L275: Match a value against patterns: unit",
+      "      - Pattern / guard: Unit::Nanosecond",
+      "        - L276: Explicit return from the current function or closure: Err(Error::NumberOverflow)",
+      "      - Pattern / guard: Unit::Microsecond",
+      "        - L277: Expression source: (0, n.mul(1000)?.div(d)?). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Millisecond",
+      "        - L278: Expression source: (0, n.mul(1_000_000)?.div(d)?). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Second",
+      "        - L279: Expression source: (0, n.mul(1_000_000_000)?.div(d)?). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Minute",
+      "        - L280: Expression source: (0, n.mul(60_000_000_000)?.div(d)?). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Hour",
+      "        - L281: Expression source: (n.mul(3600)?.div(d)?, 0). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Day",
+      "        - L282: Expression source: (n.mul(86400)?.div(d)?, 0). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Week",
+      "        - L283: Expression source: (n.mul(86400 * 7)?.div(d)?, 0). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Month",
+      "        - L284: Expression source: (n.mul(2_630_016)?.div(d)?, 0). Its value and type were not evaluated.",
+      "      - Pattern / guard: Unit::Year",
+      "        - L285: Expression source: (n.mul(31_557_600)?.div(d)?, 0). Its value and type were not evaluated.",
+      "  - L287: ? expression: add_current(sec, nsec, out)?. Depending on value and type, it can continue or propagate to the current return boundary.",
+      "- L290: Final expression of this block — Call expression: Ok(()). The resolved target and effects are unchecked."
+    ]
+  },
+  "baseline": {
+    "result": {
+      "id": "30ee13d6-9a39-4f0c-95f2-40c8d4efd1b0",
+      "name": "humantime Rust regression",
+      "folder": "humantime",
+      "file": "src/duration.rs",
+      "sourceSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+      "startedAt": "2026-10-19T17:59:35.877Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 12285
+    },
+    "checkedAt": "2026-10-19T17:59:39.267Z",
+    "command": "<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\bin\\cargo.exe",
+    "args": [
+      "test",
+      "--manifest-path",
+      "<workspace>\\test-results\\projects\\humantime\\Cargo.toml",
+      "--all-features",
+      "--no-fail-fast",
+      "--locked",
+      "--offline",
+      "--color",
+      "never"
+    ],
+    "counts": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "filtered": 0,
+      "total": 42
+    },
+    "suites": [
+      {
+        "status": "ok",
+        "passed": 38,
+        "failed": 0,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      {
+        "status": "ok",
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      }
+    ],
+    "failedTests": [],
+    "exitCode": 0,
+    "lockSha256": "0feff9aebd2817717008a6dc46c50093927d6aa7958b0b58accdebd2813e6447",
+    "stdout": "\nrunning 38 tests\ntest date::test::big_day - should panic ... ok\ntest date::test::big_day2 - should panic ... ok\ntest date::test::big_hour - should panic ... ok\ntest date::test::big_minute - should panic ... ok\ntest date::test::big_month - should panic ... ok\ntest date::test::break_data ... ok\ntest date::test::big_second - should panic ... ok\ntest date::test::leap_second ... ok\ntest date::test::milliseconds ... ok\ntest date::test::parse_offset_00 ... ok\ntest date::test::first_731_days ... ok\ntest date::test::smoke_tests_format ... ok\ntest date::test::smoke_tests_format_micros ... ok\ntest date::test::smoke_tests_format_millis ... ok\ntest date::test::random_past ... ok\ntest date::test::the_731_consecutive_days ... ok\ntest date::test::smoke_tests_format_nanos ... ok\ntest date::test::smoke_tests_parse ... ok\ntest date::test::upper_bound ... ok\ntest date::test::weak_parse_offset_00 ... ok\ntest date::test::weak_smoke_tests ... ok\ntest duration::test::allow_0_with_no_unit ... ok\ntest date::test::zero_day - should panic ... ok\ntest date::test::zero_month - should panic ... ok\ntest duration::test::test_format_micros ... ok\ntest duration::test::test_error_cases ... ok\ntest duration::test::test_combo ... ok\ntest duration::test::test_fractional_units ... ok\ntest duration::test::test_fractional_combined ... ok\ntest duration::test::test_fractional_bad_input ... ok\ntest duration::test::random_second ... ok\ntest duration::test::test_units ... ok\ntest duration::test::all_86400_seconds ... ok\ntest duration::test::test_nice_error_message ... ok\ntest duration::test::test_overlow ... ok\ntest duration::test::random_any ... ok\ntest date::test::all_86400_seconds ... ok\ntest date::test::random_wide_range ... ok\n\ntest result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s\n\n\nrunning 4 tests\ntest src\\duration.rs - duration::format_duration (line 383) ... ok\ntest src\\wrapper.rs - wrapper::Duration (line 18) ... ok\ntest src\\wrapper.rs - wrapper::Timestamp (line 39) ... ok\ntest src\\duration.rs - duration::parse_duration (line 356) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.03s\n\n",
+    "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s\n     Running unittests src\\lib.rs (<workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-d62151439965bf3f.exe)\n   Doc-tests humantime\n",
+    "cargoExitCode": 0,
+    "compilerFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ],
+    "docFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ]
+  },
+  "change": {
+    "before": "3600",
+    "after": "3601",
+    "start": 9439,
+    "end": 9443,
+    "semanticChecked": false
+  },
+  "unsavedBlocked": true,
+  "changedSha256": "623f6b8f51198aecdf046ea13caa26a7648190c3ceb439e270f01a9fe816c51d",
+  "regression": {
+    "result": {
+      "id": "12de6ee3-2db8-4180-a3f4-374c6a2746db",
+      "name": "humantime Rust regression",
+      "folder": "humantime",
+      "file": "src/duration.rs",
+      "sourceSha256": "623f6b8f51198aecdf046ea13caa26a7648190c3ceb439e270f01a9fe816c51d",
+      "startedAt": "2026-10-19T17:59:52.349Z",
+      "status": "failed",
+      "stale": false,
+      "exitCode": 101,
+      "elapsedMs": 7429
+    },
+    "checkedAt": "2026-10-19T17:59:53.737Z",
+    "command": "<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\bin\\cargo.exe",
+    "args": [
+      "test",
+      "--manifest-path",
+      "<workspace>\\test-results\\projects\\humantime\\Cargo.toml",
+      "--all-features",
+      "--no-fail-fast",
+      "--locked",
+      "--offline",
+      "--color",
+      "never"
+    ],
+    "counts": {
+      "passed": 34,
+      "failed": 8,
+      "skipped": 0,
+      "filtered": 0,
+      "total": 42
+    },
+    "suites": [
+      {
+        "status": "FAILED",
+        "passed": 32,
+        "failed": 6,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      {
+        "status": "FAILED",
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      }
+    ],
+    "failedTests": [
+      "duration::test::random_any",
+      "duration::test::all_86400_seconds",
+      "duration::test::test_combo",
+      "duration::test::random_second",
+      "duration::test::test_fractional_units",
+      "duration::test::test_units",
+      "src\\wrapper.rs - wrapper::Duration (line 18)",
+      "src\\duration.rs - duration::parse_duration (line 356)"
+    ],
+    "exitCode": 101,
+    "lockSha256": "0feff9aebd2817717008a6dc46c50093927d6aa7958b0b58accdebd2813e6447",
+    "stdout": "\nrunning 38 tests\ntest date::test::big_day2 - should panic ... ok\ntest date::test::big_day - should panic ... ok\ntest date::test::big_hour - should panic ... ok\ntest date::test::big_minute - should panic ... ok\ntest date::test::big_month - should panic ... ok\ntest date::test::break_data ... ok\ntest date::test::big_second - should panic ... ok\ntest date::test::leap_second ... ok\ntest date::test::milliseconds ... ok\ntest date::test::parse_offset_00 ... ok\ntest date::test::smoke_tests_format ... ok\ntest date::test::first_731_days ... ok\ntest date::test::smoke_tests_format_micros ... ok\ntest date::test::smoke_tests_format_nanos ... ok\ntest date::test::smoke_tests_parse ... ok\ntest date::test::weak_parse_offset_00 ... ok\ntest date::test::smoke_tests_format_millis ... ok\ntest date::test::weak_smoke_tests ... ok\ntest date::test::upper_bound ... ok\ntest date::test::zero_day - should panic ... ok\ntest date::test::the_731_consecutive_days ... ok\ntest duration::test::allow_0_with_no_unit ... ok\ntest date::test::zero_month - should panic ... ok\ntest duration::test::random_any ... FAILED\ntest duration::test::all_86400_seconds ... FAILED\ntest duration::test::test_format_micros ... ok\ntest duration::test::test_combo ... FAILED\ntest duration::test::test_error_cases ... ok\ntest duration::test::random_second ... FAILED\ntest duration::test::test_fractional_combined ... ok\ntest duration::test::test_fractional_units ... FAILED\ntest duration::test::test_fractional_bad_input ... ok\ntest duration::test::test_nice_error_message ... ok\ntest duration::test::test_overlow ... ok\ntest duration::test::test_units ... FAILED\ntest date::test::random_past ... ok\ntest date::test::all_86400_seconds ... ok\ntest date::test::random_wide_range ... ok\n\nfailures:\n\n---- duration::test::random_any stdout ----\n\nthread 'duration::test::random_any' panicked at src\\duration.rs:739:13:\nassertion `left == right` failed\n  left: 31607610416.523428554s\n right: 31607610427.523428554s\n\n---- duration::test::all_86400_seconds stdout ----\n\nthread 'duration::test::all_86400_seconds' panicked at src\\duration.rs:720:13:\nassertion `left == right` failed\n  left: 3600s\n right: 3601s\n\n---- duration::test::test_combo stdout ----\n\nthread 'duration::test::test_combo' panicked at src\\duration.rs:712:9:\nassertion `left == right` failed\n  left: Ok(8102s)\n right: Ok(8100s)\n\n---- duration::test::random_second stdout ----\n\nthread 'duration::test::random_second' panicked at src\\duration.rs:729:13:\nassertion `left == right` failed\n  left: 37279832825s\n right: 37279832848s\n\n---- duration::test::test_fractional_units stdout ----\n\nthread 'duration::test::test_fractional_units' panicked at src\\duration.rs:645:9:\nassertion `left == right` failed\n  left: Ok(7202s)\n right: Ok(7200s)\n\n---- duration::test::test_units stdout ----\n\nthread 'duration::test::test_units' panicked at src\\duration.rs:499:9:\nassertion `left == right` failed\n  left: Ok(7202s)\n right: Ok(7200s)\n\n\nfailures:\n    duration::test::all_86400_seconds\n    duration::test::random_any\n    duration::test::random_second\n    duration::test::test_combo\n    duration::test::test_fractional_units\n    duration::test::test_units\n\ntest result: FAILED. 32 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.84s\n\n\nrunning 4 tests\ntest src\\duration.rs - duration::format_duration (line 383) ... ok\ntest src\\wrapper.rs - wrapper::Timestamp (line 39) ... ok\ntest src\\wrapper.rs - wrapper::Duration (line 18) ... FAILED\ntest src\\duration.rs - duration::parse_duration (line 356) ... FAILED\n\nfailures:\n\n---- src\\wrapper.rs - wrapper::Duration (line 18) stdout ----\nTest executable failed (exit code: 101).\n\nstderr:\n\nthread 'main' panicked at src\\wrapper.rs:8:1:\nassertion `left == right` failed\n  left: 43512.000000002s\n right: 43500.000000002s\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\n---- src\\duration.rs - duration::parse_duration (line 356) stdout ----\nTest executable failed (exit code: 101).\n\nstderr:\n\nthread 'main' panicked at src\\duration.rs:8:1:\nassertion `left == right` failed\n  left: Ok(9422s)\n right: Ok(9420s)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\n\nfailures:\n    src\\duration.rs - duration::parse_duration (line 356)\n    src\\wrapper.rs - wrapper::Duration (line 18)\n\ntest result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.19s\n\n",
+    "stderr": "   Compiling humantime v2.3.0 (<workspace>\\test-results\\projects\\humantime)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.98s\n     Running unittests src\\lib.rs (<workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-d62151439965bf3f.exe)\nerror: test failed, to rerun pass `--lib`\n   Doc-tests humantime\nerror: doctest failed, to rerun pass `--doc`\nerror: 2 targets failed:\n    `--lib`\n    `--doc`\n",
+    "cargoExitCode": 101,
+    "compilerFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ],
+    "docFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ]
+  },
+  "restored": {
+    "result": {
+      "id": "07aa05db-7470-4aa8-ae19-1618687ef2d4",
+      "name": "humantime Rust regression",
+      "folder": "humantime",
+      "file": "src/duration.rs",
+      "sourceSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+      "startedAt": "2026-10-19T18:00:01.716Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 7245
+    },
+    "checkedAt": "2026-10-19T18:00:02.822Z",
+    "command": "<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\bin\\cargo.exe",
+    "args": [
+      "test",
+      "--manifest-path",
+      "<workspace>\\test-results\\projects\\humantime\\Cargo.toml",
+      "--all-features",
+      "--no-fail-fast",
+      "--locked",
+      "--offline",
+      "--color",
+      "never"
+    ],
+    "counts": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "filtered": 0,
+      "total": 42
+    },
+    "suites": [
+      {
+        "status": "ok",
+        "passed": 38,
+        "failed": 0,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      },
+      {
+        "status": "ok",
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0,
+        "measured": 0,
+        "filtered": 0
+      }
+    ],
+    "failedTests": [],
+    "exitCode": 0,
+    "lockSha256": "0feff9aebd2817717008a6dc46c50093927d6aa7958b0b58accdebd2813e6447",
+    "stdout": "\nrunning 38 tests\ntest date::test::big_day - should panic ... ok\ntest date::test::big_minute - should panic ... ok\ntest date::test::big_month - should panic ... ok\ntest date::test::big_hour - should panic ... ok\ntest date::test::big_second - should panic ... ok\ntest date::test::big_day2 - should panic ... ok\ntest date::test::break_data ... ok\ntest date::test::milliseconds ... ok\ntest date::test::leap_second ... ok\ntest date::test::first_731_days ... ok\ntest date::test::parse_offset_00 ... ok\ntest date::test::smoke_tests_format ... ok\ntest date::test::smoke_tests_format_micros ... ok\ntest date::test::smoke_tests_format_millis ... ok\ntest date::test::smoke_tests_format_nanos ... ok\ntest date::test::smoke_tests_parse ... ok\ntest date::test::random_past ... ok\ntest date::test::upper_bound ... ok\ntest date::test::weak_parse_offset_00 ... ok\ntest date::test::zero_month - should panic ... ok\ntest date::test::zero_day - should panic ... ok\ntest date::test::weak_smoke_tests ... ok\ntest duration::test::allow_0_with_no_unit ... ok\ntest date::test::the_731_consecutive_days ... ok\ntest duration::test::test_error_cases ... ok\ntest duration::test::test_format_micros ... ok\ntest duration::test::test_combo ... ok\ntest duration::test::test_fractional_units ... ok\ntest duration::test::random_second ... ok\ntest duration::test::test_fractional_bad_input ... ok\ntest duration::test::test_fractional_combined ... ok\ntest duration::test::random_any ... ok\ntest duration::test::test_nice_error_message ... ok\ntest duration::test::test_overlow ... ok\ntest duration::test::test_units ... ok\ntest date::test::all_86400_seconds ... ok\ntest duration::test::all_86400_seconds ... ok\ntest date::test::random_wide_range ... ok\n\ntest result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s\n\n\nrunning 4 tests\ntest src\\wrapper.rs - wrapper::Duration (line 18) ... ok\ntest src\\duration.rs - duration::format_duration (line 383) ... ok\ntest src\\wrapper.rs - wrapper::Timestamp (line 39) ... ok\ntest src\\duration.rs - duration::parse_duration (line 356) ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.17s\n\n",
+    "stderr": "   Compiling humantime v2.3.0 (<workspace>\\test-results\\projects\\humantime)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.21s\n     Running unittests src\\lib.rs (<workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-d62151439965bf3f.exe)\n   Doc-tests humantime\n",
+    "cargoExitCode": 0,
+    "compilerFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ],
+    "docFlags": [
+      "-Cdlltool=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe",
+      "-Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe",
+      "-Clinker-flavor=ld.lld",
+      "-Clink-self-contained=yes"
+    ]
+  },
+  "originalRestored": true,
+  "restoredSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+  "restoredEditorSha256": "ffef134290916ee01befbd0464d3c413790878a7231352b83304766f08acf888",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: x86_64-pc-windows-gnu\nrelease: 1.90.0\nLLVM version: 20.1.8",
+    "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)",
+    "llvmArSha256": "22b0ceca6189c4e63ce7c9c81b334015849d502baafab89fdb026b036df0240f",
+    "llvmDlltoolSha256": "22b0ceca6189c4e63ce7c9c81b334015849d502baafab89fdb026b036df0240f",
+    "toolchainSetup": {
+      "url": "https://static.rust-lang.org/rustup/archive/1.28.2/x86_64-pc-windows-gnu/rustup-init.exe",
+      "sha256": "ccbfd951d8024856043b3a0c3903a59f39937bce8d3074768b0d3da55f21e817",
+      "toolchain": "1.90.0-x86_64-pc-windows-gnu",
+      "kind": "Isolated validation tools, not a product runtime requirement"
+    }
+  },
+  "verification": {
+    "productCommit": "7df2ee628cecc80383cb37ca2be0a55eda3c426b",
+    "extensionHost": "development",
+    "workerSha256": "5cd396304334f36f4bf8247034e4c17f669e0b8af8ee1ed0df5225ff6dc114a0",
+    "checkoutClean": true,
+    "independentReviewer": false,
+    "allFeatures": true,
+    "defaultFeatureOnlyRun": false,
+    "optimizationClaim": false,
+    "modelUsed": false,
+    "paidApiUsed": false
+  }
+}

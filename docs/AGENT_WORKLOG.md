@@ -2,6 +2,14 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-20 · Rust 실제 프로젝트 검사·복구와 교차 OS CI
+
+- **실제 코드:** [humantime 2.3.0 고정 커밋](evidence/local-ai/rust-source-project.md)의 원래 소스·단위/문서 테스트를 사용했다. Windows VS Code 개발 호스트에서 시간 상수 `3600 → 3601` 한 범위만 native diff·적용·저장하고, task로 원래 Cargo 검사를 실행했다. **42 pass → 34 pass / 8 fail → native undo·저장 후 42 pass**, 미저장 실행 차단·원본 바이트 해시·clean checkout을 확인했다. 고정 오류 검출 검사이며 실제 upstream 결함 발견·모델 품질·최적화 성공은 아니다.
+- **환경과 실패:** 격리된 Rust 1.90.0 GNU 도구·LLVM component를 사용했다. 원본 검사 전 dlltool 경로, subprocess 오류, 없는 LLVM 별칭 가정, GNU 링커의 한글 경로 처리, PowerShell 플래그 목록 조립 실패를 [다섯 시도](evidence/local-ai/rust-source-project-setup.json)로 남겼다. LLVM의 dlltool driver 별칭과 포함된 rust-lld를 정확한 인자로 지정한 뒤 원본과 native 전후 흐름이 통과했다. 테스트·프로젝트 코드를 바꾸지 않았고 시스템 PATH·레지스트리를 변경하지 않았다.
+- **재현과 공개:** `extension/test/rustSourceProject.ts`, `scripts/test-rust-source-project.mjs`, `scripts/run-humantime-tests.mjs`, [fixture 안내·Cargo.lock](../scripts/fixtures/humantime/README.md), MIT 고지·기계 판독 결과를 추가했다. 보고서의 로컬 경로를 치환하고 사용자 비공개 프로젝트 소스는 포함하지 않았다. 실제 원문 구조 174/328을 정확도 점수로 해석하지 않는다. 원래 일부 테스트는 난수를 사용하므로 실행 시간·실패 순서도 고정하지 않는다.
+- **제품 CI:** 커밋 `7df2ee6`의 [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/39296850732) 로그에서 각각 핵심 258개, 개발/production 설치 각 54개, 파일 11개 해시와 추출 Rust WASM 실행 성공을 대조했다. [CI 원자료](evidence/local-ai/rust-source-ci.json). 앞선 로컬 설치 실패를 성공으로 바꾸지 않으며, 외부 humantime 검사는 이 CI에 포함되지 않는다. 제품 소스 변경 없이 후속 harness TypeScript 검사도 통과했다.
+- **남은 범위:** 실제 사용자 요청에서 모델의 설명·일반 수정 품질, 실측 성능 향상, 사용성, 다른 Rust SDK·원격/테마·버전 조합. stable/Pages 0.6.0 배포는 유지하며 0.7 개발 검증 기록을 공개한다.
+
 ## 2026-10-20 · 포함된 Rust 파서와 실제 편집기 경로
 
 - **구현:** tree-sitter-rust 0.24.2 공식 WASM과 web-tree-sitter 0.27.1을 고정해 포함했다. 빌드에서 grammar SHA-256을 검증하고 MIT 고지를 패키지에 추가했다. worker가 현재 Rust 원문을 읽고 함수·impl/trait 본문·분기·패턴·guard·반복·반환·일부 식과 정확한 값 범위를 표시한다. API·모델·Rust SDK를 호출하지 않는다. [구현 범위](RUST_SOURCE.md).

@@ -35,7 +35,7 @@
   "development": {
     "passed": 54,
     "record": "rust-source-development-integration.json",
-    "note": "Before final tail-expression label, numeric input help and output/name/parameter bounds; installed run below includes them."
+    "note": "Before final tail-expression label, numeric input help and output/name/parameter bounds. The first installed run includes the tail label and numeric input help, but precedes the bounds."
   },
   "installed": {
     "passed": 54,
@@ -96,5 +96,11 @@
     "No rustc/type/ownership/macro/cfg/edition verification",
     "No actual Rust model quality or optimization success",
     "No Linux/remote/all-theme claim in this local record"
-  ]
+  ],
+  "followUp": {
+    "commit": "7df2ee628cecc80383cb37ca2be0a55eda3c426b",
+    "ci": "rust-source-ci.json",
+    "project": "rust-source-project.md",
+    "note": "Subsequent Windows/Ubuntu CI builds each passed 258 core and 54 development/installed flows. This does not change the failed local installed attempts or rerun their VSIX."
+  }
 }

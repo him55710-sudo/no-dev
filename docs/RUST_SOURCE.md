@@ -34,6 +34,10 @@
 
 다음 시도는 기존 TypeScript 진단 대기에서 실패했다. [언어 서버 로그 근거](evidence/local-ai/rust-source-installed-diagnostic-failure.json)는 상위 저장소의 자동 가져오기 의존성 탐색과 앞선 가상 문서 요청의 적체를 보여 준다. 격리된 테스트 프로필에서 자동 가져오기 제안·타입 자동 취득을 끄고 실제 TS 2322 오류 검사와 60초 제한은 유지했다. 이 변경은 제품 사용자의 설정을 바꾸지 않는다.
 
-그 뒤 재검사는 [작은 JS 예제 초기 분석 timeout](evidence/local-ai/rust-source-installed-startup-failure.json)으로 끝났다. 확장 호스트의 반복적인 응답 지연을 관찰했으나 원인은 확정하지 않는다. **마지막 한도 보완본의 전체 설치 suite는 아직 성공으로 표시하지 않는다.** 핵심 258개와 마지막 패키지 추출 worker 검사는 통과했다. 로컬 반복 재시도 대신 별도 Windows/Linux CI를 진행하며, 기존 설치 54개 성공 기록을 마지막 패키지의 성공으로 바꾸지 않는다.
+그 뒤 로컬 재검사는 [작은 JS 예제 초기 분석 timeout](evidence/local-ai/rust-source-installed-startup-failure.json)으로 끝났다. 확장 호스트의 반복적인 응답 지연을 관찰했으나 원인은 확정하지 않는다. **해당 로컬 패키지의 전체 설치 재검사는 성공으로 표시하지 않는다.** 핵심 258개와 마지막 패키지 추출 worker 검사는 통과했다. 로컬 반복 재시도 대신 별도 Windows/Linux CI로 이어갔으며 후속 결과는 아래에 기록한다.
 
-**실제 외부 Rust 프로젝트의 기존 테스트 전후·복구, Linux 실행, 다른 VS Code 버전·테마·좁은 화면·원격 작업 공간은 아직 이 기록의 검증 범위가 아니다.** 실제 Rust 유지보수·최적화 성공으로 주장하지 않는다. 사용자가 지정한 실제 프로젝트 평가와 원래 [제품 완성 계획](PRODUCT_COMPLETION.md)의 남은 범위는 계속 진행 중이다.
+**후속 CI:** 최종 한도 보완을 포함한 커밋 `7df2ee6`의 [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/39296850732)가 모두 성공했다. 각 핵심 258개, 개발/production 설치 각 54개, 실제 파일 11개 해시, 저장소 밖 Rust WASM 실행을 로그에서 대조했다. [정규화한 CI 원자료](evidence/local-ai/rust-source-ci.json). 앞선 로컬 실패 기록은 유지하며, 이 결과는 해당 커밋을 CI에서 빌드한 패키지에 대한 근거다. 이전 로컬 패키지를 다시 실행한 결과로 바꾸지 않는다. Linux 인증 대기·D-Bus·SIGPIPE와 Windows N-API 경고는 종료 코드 0과 구별한다.
+
+**실제 외부 프로젝트:** [humantime 2.3.0의 기존 테스트](evidence/local-ai/rust-source-project.md)를 Windows VS Code에서 연결했다. 원문 시간 상수 `3600 → 3601`의 정확한 변경·native diff·적용·저장 후 **42 pass → 34 pass / 8 fail → native undo·저장 후 42 pass**, 원본 바이트·clean checkout 복구를 확인했다. SDK/LLVM 환경 준비 중 다섯 실패 시도도 공개한다. 고정 오류 검출 검사이며 실제 upstream 버그 발견·모델 품질·최적화 성공은 아니다.
+
+**다른 VS Code 버전·테마·좁은 화면·원격 작업 공간과 모든 Rust SDK 조합은 아직 검증 범위가 아니다.** 사용자가 지정한 실제 프로젝트 평가와 원래 [제품 완성 계획](PRODUCT_COMPLETION.md)의 남은 범위는 계속 진행 중이다.

@@ -10,7 +10,7 @@
 - **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md)·[C#](CSHARP_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md)·개발 검증 중인 [Rust](RUST_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
 - **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다. [Java minimal-json](evidence/local-ai/java-source-project.md)은 별도 JDK 호환 adapter로 452 pass → 고정 오류 13 fail → undo 후 452 pass를 확인했다.
 - **SQL 증분:** [명시적으로 선택한 SQLite 읽기·리터럴 수정](SQL_SOURCE.md)을 추가했다. [외부 sqlc 예제](evidence/local-ai/sql-source-project.md)는 공식 재생성과 원래 테스트로 1 pass → 고정 LIMIT 오류 1 fail → undo 후 1 pass를 확인했다. 다른 SQL 방언·스키마·쿼리 성능·모든 식의 자연어 설명은 미제공이다.
-- **설치 후속:** Rust 초기 0.7.0 로컬 VSIX의 별도 프로필에서 production 모드·실제 파일 11개 해시와 개발판과 같은 54개 흐름을 확인했다. [설치 기록](evidence/local-ai/rust-source-installed-integration.json). 후속 출력·이름·매개변수 한도 보완본은 핵심·추출 worker 검사 통과, 전체 설치 재검사는 Rust 이전 단계에서 실패해 별도 CI를 진행한다. [시도별 기록](RUST_SOURCE.md). 안정 릴리스 게시나 모든 수동 UI 검증은 아니다.
+- **설치 후속:** Rust 초기 로컬 설치 54개 성공 이후 한도 보완본의 로컬 재검사는 Rust 이전 단계에서 실패했다. [시도별 기록](RUST_SOURCE.md)을 유지한다. 최종 제품 커밋 `7df2ee6`의 [Windows·Ubuntu CI](evidence/local-ai/rust-source-ci.json)는 각 핵심 258개, 개발/production 설치 각 54개, 실제 파일 11개 해시·추출 Rust worker 실행을 통과했다. CI 패키지의 결과이며 안정 릴리스 게시나 모든 수동 UI 검증은 아니다.
 - **C# 외부 연동:** [GuardClauses](evidence/local-ai/csharp-source-project.md)에서 원래 테스트 959 pass → 검증용 경계값 편집으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 처리 오류는 검증 스크립트에서 수정했고 실패 기록을 보존했다. 실제 발견한 upstream 버그나 모델 품질·최적화 사례가 아니다.
 - **남은 우선순위:** 사용자 지정 실제 프로젝트의 수정 흐름·설명 품질, Rust 실제 프로젝트·Linux 검증, C# 새 설치본 수동 UI 검증과 다른 SDK 조합, 다른 SQL 방언, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
@@ -46,7 +46,7 @@
 
 ## 연결 설계
 
-Rust 전용 경로의 사전 [구현 계획](RUST_SOURCE_PLAN.md)에 이어 [0.7 개발판 읽기·값 수정·AI 문법 검사](RUST_SOURCE.md)를 연결했다. Windows 개발/설치 각 54개 흐름과 포함된 WASM 실행을 확인했다. 실제 외부 Rust 프로젝트의 기존 검사·복구와 Linux 검증은 남아 있으므로 전체 지원 완료로 처리하지 않는다.
+Rust 전용 경로의 사전 [구현 계획](RUST_SOURCE_PLAN.md)에 이어 [0.7 개발판 읽기·값 수정·AI 문법 검사](RUST_SOURCE.md)를 연결했다. Windows·Ubuntu CI에서 개발/설치 각 54개와 포함된 WASM 실행을 확인했다. 별도 Windows 실제 편집기에서 [humantime의 원래 검사](evidence/local-ai/rust-source-project.md) 42 pass → 고정 시간 상수 변경으로 8 fail → undo 후 42 pass·원본 복구를 확인했다. 모델 의미 정확성·최적화·다른 SDK/환경을 포함한 전체 지원 완료로 처리하지 않는다.
 
 - 첫 연결은 데스크톱 VS Code 확장 호스트에서 `127.0.0.1`의 Ollama HTTP API로만 한다. 외부 주소·리디렉션·클라우드 모델·유료 API로의 자동 대체를 허용하지 않는다. 원격 VS Code와 공개 웹 데모에서 로컬 PC에 연결하는 기능은 별도 검증 전까지 지원으로 표기하지 않는다.
 - 모델의 JSON 출력도 검증해야 하는 입력이다. 인용은 실제 문자열, 변경은 유일한 원문 범위에 연결한다. 모델은 파일 경로, 셸 명령, 네트워크 주소, 적용 여부를 실행 권한으로 사용할 수 없다.

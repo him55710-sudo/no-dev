@@ -4,7 +4,7 @@ Go addition in the 0.7 development source: [model-free syntax reading and exact 
 
 ## 0.7.0 — local AI development preview (unreleased)
 
-- Add [bundled Rust source reading and exact literal edits](docs/RUST_SOURCE.md) in desktop VS Code, without an API, model or Rust SDK. Preserve source positions, numeric suffixes and raw strings; show match arms and parser limits. Validate Rust AI proposals syntactically. Windows development/installed flows are verified; actual upstream Rust tests, compilation, types, ownership and optimization are still unverified.
+- Add [bundled Rust source reading and exact literal edits](docs/RUST_SOURCE.md) in desktop VS Code, without an API, model or Rust SDK. Preserve source positions, numeric suffixes and raw strings; show match arms and parser limits. Validate Rust AI proposals syntactically. Windows/Ubuntu development and installed flows pass. The original humantime tests pass 42 → fail 8 after a deliberate constant edit → pass 42 after native undo in a separate Windows run. Parser-level types, ownership, general compilation and optimization remain unchecked.
 
 - Read supported Python statement structure in Korean/English through an isolated local AST helper; no model or user-code execution. Preserve loop else, ordered exception branches and finally. Edit assigned literals with exact numeric spelling, Unicode source positions, native diff/apply/undo and stale checks. Publish limits, interpreter setup and an actual itsdangerous regression/restore in [Python source](docs/PYTHON_SOURCE.md).
 

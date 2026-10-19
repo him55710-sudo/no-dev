@@ -1,0 +1,61 @@
+{
+  "scope": "Failed preparation attempts, before native source editing or upstream test execution; not failures of the Pureobom Rust parser",
+  "recordedAt": "2026-10-19T18:01:26.329Z",
+  "attempts": [
+    {
+      "file": "humantime-setup-tests.log",
+      "sha256": "2b3544c7ec0a0624e4b4ff04327831f21734df4d8b87295b4f53659732d40bd0",
+      "reason": "GNU raw-dylib dependency compilation could not find dlltool on PATH.",
+      "observedDiagnostics": [
+        "error: Error calling dlltool 'dlltool.exe': program not found",
+        "error: could not compile `getrandom` (lib) due to 1 previous error"
+      ]
+    },
+    {
+      "file": "humantime-setup-tests-with-path.log",
+      "sha256": "45d387f34aaf284fd044094c70e3673603f35ab6a7b34fc8803f93cdb3a4e48a",
+      "reason": "Bundled GNU dlltool was found but its subprocess failed with CreateProcess.",
+      "observedDiagnostics": [
+        "error: Dlltool could not create import library with <workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\self-contained\\dlltool.exe -d <temp>\\rustcW5ZfRL\\bcryptprimitives.dll_imports.def -D bcryptprimitives.dll -l <temp>\\rustcW5ZfRL\\bcryptprimitives.dll_imports.lib -m i386:x86-64 -f --64 --no-leading-underscore --temp-prefix <temp>\\rustcW5ZfRL\\bcryptprimitives.dll:",
+        "       <workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\self-contained\\dlltool.exe: CreateProcess␍",
+        "error: could not compile `getrandom` (lib) due to 1 previous error"
+      ]
+    },
+    {
+      "file": "humantime-preflight.json",
+      "sha256": "3d6619e949d3fb8152b3f3395032d83a8cbb62ad7e767f1042ccf556d54791e7",
+      "reason": "Harness incorrectly assumed the llvm-tools component provided the llvm-dlltool filename. It did not; no tests executed.",
+      "observedDiagnostics": [
+        "error: Error calling dlltool '<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe': 지정된 파일을 찾을 수 없습니다. (os error 2)",
+        "error: could not compile `getrandom` (lib) due to 1 previous error"
+      ]
+    },
+    {
+      "file": "humantime-ready.json",
+      "sha256": "9ad8995119e0cd4e6cbbb36ba258aac5155aeda775f0c967ed9465ce3c4f9fbe",
+      "reason": "After creating the LLVM driver alias, GNU ld could not resolve existing libraries under the Unicode workspace path.",
+      "observedDiagnostics": [
+        "error: linking with `x86_64-w64-mingw32-gcc` failed: exit code: 1",
+        "  = note: ld: cannot find <workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\self-contained\\crt2.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\rsbegin.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.017alaxapthyad5d6ut8jhc2f.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.02iiup8yfgm6f14fn776h8urn.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.0clt7rnx2pflwlr1jl74yo7ia.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.0endaib8gad41d5szhk923hlh.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.0n00x5mqcflaq4l5jzd1b2m4u.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.0vj93yawathlt5yma2rjocwp5.0uii22h.rcgu.o: No such file or directory␍",
+        "          ld: cannot find <workspace>\\test-results\\humantime-target\\debug\\deps\\humantime-4a1c793376d7176d.0x7n34dhfhwruwewoa7xs9nvz.0uii22h.rcgu.o: No such file or directory␍"
+      ]
+    },
+    {
+      "file": "humantime-flag-setup-failure.json",
+      "sha256": "1f72f391376abec52ffd4e9071320b6091a7d0e735f32ecc128b3eac5444ddbc",
+      "reason": "PowerShell argument-list construction combined compiler flags into one dlltool pathname. Corrected list construction; no project source changes.",
+      "observedDiagnostics": [
+        "error: Error calling dlltool '<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\llvm-dlltool.exe -Clinker=<workspace>\\test-results\\tools\\rust\\rustup\\toolchains\\1.90.0-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\rust-lld.exe -Clinker-flavor=ld.lld -Clink-self-contained=yes': 지정된 경로를 찾을 수 없습니다. (os error 3)",
+        "error: could not compile `getrandom` (lib) due to 1 previous error"
+      ]
+    }
+  ],
+  "resolution": "Rust 1.90.0 LLVM dlltool driver alias plus included rust-lld, explicit compiler/doc flags, unchanged upstream source/tests. Successful native project report is separate."
+}
