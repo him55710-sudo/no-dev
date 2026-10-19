@@ -29,6 +29,10 @@ const relationSchema = z
     kind: z.enum(["imports", "calls", "renders", "passes"]),
     count: z.number().int().positive(),
     source: sourceRefSchema,
+    evidenceHash: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .optional(),
   })
   .strict();
 export const observationSnapshotSchema = z
@@ -61,7 +65,7 @@ export type FactChange = {
   current?: ObservedFact;
 };
 export type RelationChange = {
-  status: "unchanged" | "changed" | "added" | "unresolved";
+  status: "unchanged" | "changed" | "added" | "unresolved" | "unverified";
   before?: ObservedRelation;
   current?: ObservedRelation;
 };
@@ -109,14 +113,19 @@ export function captureObservations(
     if (!from || !to || !source) continue;
     const key = JSON.stringify([edge.kind, edge.source, edge.target]);
     const previous = relations.get(key);
-    if (previous) previous.count += edge.sources.length;
-    else
+    if (previous) {
+      previous.count += edge.sources.length;
+      // Production analysis merges occurrences before hashing. Imported/manual
+      // graphs may not; a single edge's hash cannot represent the merged group.
+      previous.evidenceHash = undefined;
+    } else
       relations.set(key, {
         from: { id: from.id, label: from.label.slice(0, 2000) },
         to: { id: to.id, label: to.label.slice(0, 2000) },
         kind: edge.kind,
         count: edge.sources.length,
         source,
+        evidenceHash: edge.evidenceHash,
       });
   }
   const notices = graph.notices
@@ -279,7 +288,11 @@ export function compareObservations(
         ? "unresolved"
         : relation.count !== old.count
           ? "changed"
-          : "unchanged",
+          : !old.evidenceHash || !relation.evidenceHash
+            ? "unverified"
+            : old.evidenceHash !== relation.evidenceHash
+              ? "changed"
+              : "unchanged",
     };
   });
   for (const relation of current.relations)

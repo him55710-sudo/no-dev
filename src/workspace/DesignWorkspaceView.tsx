@@ -27,6 +27,7 @@ import {
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
 import { ObservationComparison } from "./ObservationComparison";
+import { ConnectionEvidence } from "./ConnectionEvidence";
 import { enterScope, type WorkspaceNavigation } from "./navigation";
 import {
   useWorkspaceNavigation,
@@ -804,21 +805,14 @@ export function DesignWorkspaceView({
                       : edge.kind === "passes"
                         ? "함수 전달"
                         : "모듈"}{" "}
-                  연결입니다. 런타임 실행·데이터 계약·실패 처리는 별도 확인이
-                  필요합니다.
+                  연결입니다.
                 </p>
                 {edge.kind === "passes" ? (
                   <p>
-                    함수 값을 인수나 화면 속성으로 넘긴 위치입니다. 이곳에서
-                    함수를 직접 호출했거나 전달받은 쪽이 실행한다고 단정하지
-                    않습니다.
+                    함수 값을 전달하는 위치이며, 직접 실행한 호출은 아닙니다.
                   </p>
                 ) : null}
-                {edge.sources.map((ref, index) => (
-                  <button key={index} onClick={() => source(edge.id, index)}>
-                    {ref.path}:{ref.line} 원문 ↗
-                  </button>
-                ))}
+                <ConnectionEvidence key={edge.id} edge={edge} source={source} />
                 <button
                   className="primary"
                   onClick={() => {

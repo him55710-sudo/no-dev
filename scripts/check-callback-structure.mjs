@@ -78,6 +78,15 @@ const references = [
   assert.equal(edges.length, 1, name);
   assert.equal(edges[0].kind, "passes", name);
   const edge = edges[0];
+  assert.equal(edge.sites.length, edge.sources.length);
+  assert.match(edge.evidenceHash, /^[a-f0-9]{64}$/);
+  assert.ok(
+    edge.sites[0].summary.includes(
+      name === "customerPortalAction"
+        ? "action 화면 속성"
+        : "useActionState의 1번째 인수",
+    ),
+  );
   const owner = graph.nodes.find((n) => n.id === edge.source);
   assert.ok(
     implementationScope(graph, [owner.id]).paths.includes(
@@ -98,8 +107,53 @@ const references = [
     path: target.sources[0].path,
     kind: edge.kind,
     sources: excerpts,
+    sites: edge.sites,
+    evidenceHash: edge.evidenceHash,
   };
 });
+for (const edge of graph.edges) {
+  assert.equal(edge.sites.length, edge.sources.length, edge.id);
+  assert.match(edge.evidenceHash, /^[a-f0-9]{64}$/);
+}
+const activity = graph.nodes.find(
+  (node) => node.kind === "symbol" && node.label === "logActivity",
+);
+const remove = graph.nodes.find(
+  (node) => node.kind === "symbol" && node.label === "removeTeamMember",
+);
+const activityEdge = graph.edges.find(
+  (edge) =>
+    edge.kind === "calls" &&
+    edge.source === remove.id &&
+    edge.target === activity.id,
+);
+assert.ok(activityEdge);
+assert.deepEqual(
+  activityEdge.sites[0].inputs.map((input) => input.code),
+  ["userWithTeam.teamId", "user.id", "ActivityType.REMOVE_TEAM_MEMBER"],
+);
+assert.ok(activityEdge.sites[0].result.includes("await"));
+assert.deepEqual(
+  activityEdge.sites[0].contexts,
+  [],
+  "Earlier guard returns are not enclosing syntax",
+);
+const contextual = graph.edges.filter(
+  (edge) =>
+    edge.kind === "calls" && edge.sites.some((site) => site.contexts.length),
+);
+assert.ok(
+  contextual.length > 0,
+  "External app contains calls within branch/error syntax",
+);
+const connectionEvidence = [activityEdge, ...contextual].map((edge) => ({
+  from: graph.nodes.find((node) => node.id === edge.source).label,
+  to: graph.nodes.find((node) => node.id === edge.target).label,
+  kind: edge.kind,
+  sources: edge.sources,
+  sites: edge.sites,
+  evidenceHash: edge.evidenceHash,
+}));
 const before = process.argv[3]
   ? JSON.parse(await readFile(resolve(process.argv[3]), "utf8"))
   : undefined;
@@ -132,6 +186,7 @@ const report = {
   graphRevision: graph.revision,
   selected: page,
   references,
+  connectionEvidence,
   scopePaths: implementationScope(graph, [pageNode.id]).paths,
   beforeHead: before?.head,
   matchedBeforeSnapshot: !!before,
@@ -157,5 +212,7 @@ console.log(
     files: graph.files.length,
     preserved: tracked.length,
     matchedBeforeSnapshot: !!before,
+    detailedEdges: graph.edges.length,
+    contextualCalls: contextual.length,
   }),
 );

@@ -51,6 +51,18 @@ export type StructureEdge = {
   label: string;
   sources: SourceRef[];
   evidence: "compiler";
+  /** One syntax observation per source occurrence; not a runtime contract. */
+  sites?: ConnectionSite[];
+  evidenceHash?: string;
+};
+export type ConnectionSite = {
+  summary: string;
+  code: string;
+  inputs: { label: string; code: string; description: string }[];
+  contexts: { description: string; code: string; line: number }[];
+  result?: string;
+  omittedInputs: number;
+  omittedContexts: number;
 };
 export type StructureGraph = {
   schemaVersion: 1;

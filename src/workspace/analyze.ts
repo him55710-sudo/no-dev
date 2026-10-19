@@ -1,6 +1,7 @@
 import ts from "typescript";
 import type { SourceFile } from "../core/types";
 import { analyzeFile } from "../core/analyze";
+import { connectionSite } from "./connectionSite";
 import {
   relativePath,
   sha256,
@@ -167,6 +168,19 @@ export async function analyzeStructure(
   const declarations = new Map<ts.Node, StructureNode>();
   const sourceFiles = new Map<string, ts.SourceFile>();
   const hashTasks: Promise<void>[] = [];
+  const nodeHashes = new WeakMap<ts.Node, Promise<string>>();
+  const printer = ts.createPrinter({ removeComments: true });
+  const contentHash = (node: ts.Node) => {
+    let hash = nodeHashes.get(node);
+    if (!hash) {
+      hash = sha256(
+        printer.printNode(ts.EmitHint.Unspecified, node, node.getSourceFile()),
+      );
+      nodeHashes.set(node, hash);
+    }
+    return hash;
+  };
+  const siteHashes = new Map<StructureEdge, Promise<string>[]>();
   const ref = (node: ts.Node, symbol = ""): SourceRef => {
     const sf = node.getSourceFile();
     const start = node.getStart(sf),
@@ -181,11 +195,8 @@ export async function analyzeStructure(
       fileHash: hashes.get(sourcePath(sf))!,
       contentHash: "",
     };
-    const printed = ts
-      .createPrinter({ removeComments: true })
-      .printNode(ts.EmitHint.Unspecified, node, sf);
     hashTasks.push(
-      sha256(printed).then((hash) => {
+      contentHash(node).then((hash) => {
         reference.contentHash = hash;
       }),
     );
@@ -339,6 +350,7 @@ export async function analyzeStructure(
     kind: StructureEdge["kind"],
     label: string,
     location: ts.Node,
+    signature?: ts.SignatureDeclaration,
   ) => {
     if (edges.length >= structureLimits.edges)
       throw Error("구조가 분석 연결 한도를 초과했습니다.");
@@ -346,17 +358,29 @@ export async function analyzeStructure(
       (edge) =>
         edge.source === source && edge.target === target && edge.kind === kind,
     );
-    if (existing) existing.sources.push(ref(location));
-    else
-      edges.push({
-        id: `edge:${edges.length}:${source}:${target}`,
-        source,
-        target,
-        kind,
-        label,
-        sources: [ref(location)],
-        evidence: "compiler",
-      });
+    const edge: StructureEdge = existing ?? {
+      id: `edge:${edges.length}:${source}:${target}`,
+      source,
+      target,
+      kind,
+      label,
+      sources: [],
+      sites: [],
+      evidence: "compiler" as const,
+    };
+    if (!existing) edges.push(edge);
+    edge.sources.push(ref(location));
+    const detail = connectionSite(kind, location, signature);
+    edge.sites!.push(detail.site);
+    const pending = siteHashes.get(edge) ?? [];
+    pending.push(
+      Promise.all(
+        detail.evidence.map((part) =>
+          typeof part === "string" ? part : contentHash(part),
+        ),
+      ).then((parts) => sha256(JSON.stringify(parts))),
+    );
+    siteHashes.set(edge, pending);
   };
   for (const [path, sf] of sourceFiles) {
     // A function value passed to a hook/form is a dependency, not a call at
@@ -446,6 +470,9 @@ export async function analyzeStructure(
             "calls",
             node.expression.getText(sf),
             node,
+            signature?.declaration?.kind === ts.SyntaxKind.JSDocSignature
+              ? undefined
+              : signature?.declaration,
           );
         else if (
           ts.isIdentifier(node.expression) &&
@@ -492,11 +519,17 @@ export async function analyzeStructure(
     };
     visit(sf);
   }
+  for (const [edge, pending] of siteHashes)
+    hashTasks.push(
+      Promise.all(pending).then(async (hashes) => {
+        edge.evidenceHash = await sha256(JSON.stringify(hashes));
+      }),
+    );
   await Promise.all(hashTasks);
   return {
     schemaVersion: 1,
     revision: await sha256(
-      "static-structure:2:function-passes\n" +
+      "static-structure:3:connection-sites\n" +
         [...hashes.entries()]
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([p, h]) => `${p}:${h}`)

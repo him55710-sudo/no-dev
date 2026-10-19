@@ -472,6 +472,27 @@ const observationChange=document.getElementById('observation-change');if(observa
               path: vscode.workspace.asRelativePath(editor.document.uri),
               text: editor.document.getText(editor.selection),
             };
+            if (configuration.structureValidation) {
+              const edge = workspace.state.graph!.edges.find(
+                (edge) => edge.id === payload.payload.nodeId,
+              );
+              if (edge) {
+                const site = edge.sites?.[payload.payload.sourceIndex ?? 0];
+                assert.ok(site);
+                assert.match(edge.evidenceHash ?? "", /^[a-f0-9]{64}$/);
+                entry.connection = {
+                  kind: edge.kind,
+                  from: workspace.state.graph!.nodes.find(
+                    (node) => node.id === edge.source,
+                  )!.label,
+                  to: workspace.state.graph!.nodes.find(
+                    (node) => node.id === edge.target,
+                  )!.label,
+                  site,
+                  evidenceHash: edge.evidenceHash,
+                };
+              }
+            }
           }
           if (
             ["implement", "resumeJob", "applyJob", "undoJob"].includes(
@@ -528,7 +549,8 @@ const observationChange=document.getElementById('observation-change');if(observa
                 spec.baseline.observations?.relations.some(
                   (relation) =>
                     relation.kind === "passes" &&
-                    relation.to.label === "removeTeamMember",
+                    relation.to.label === "removeTeamMember" &&
+                    /^[a-f0-9]{64}$/.test(relation.evidenceHash ?? ""),
                 ),
               ),
               "Save a design with the real callback relation in its observations.",

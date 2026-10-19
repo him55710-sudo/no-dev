@@ -605,6 +605,41 @@ textarea {
   width: 100%;
   overflow-wrap: anywhere;
 }
+.connection-site {
+  border-top: 1px solid var(--design-line);
+  margin-top: 20px;
+  padding-top: 12px;
+}
+.connection-site h3 {
+  font-size: 13px;
+}
+.connection-site code {
+  display: block;
+  font-size: 11px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--design-muted);
+  margin-top: 6px;
+}
+.connection-site dt {
+  font-size: 12px;
+  font-weight: 600;
+}
+.connection-site dd {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.connection-site summary {
+  font-size: 12px;
+  cursor: pointer;
+}
+.connection-context {
+  padding: 6px 0;
+}
+.connection-limits {
+  margin-top: 18px;
+}
 .design-statusbar {
   height: 35px;
   flex: none;
