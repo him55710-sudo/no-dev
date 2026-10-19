@@ -176,8 +176,8 @@ export function expression(
       : `create ${n.expression.getText(sf)} (${n.arguments?.map(e).join(", ") || ""})`;
   if (ts.isArrowFunction(n) || ts.isFunctionExpression(n))
     return ko
-      ? "전달받아 나중에 실행할 기능 (아래 기능 설명 참조)"
-      : "a function to run later (see function details)";
+      ? "함수 값 (본문은 아래 기능 설명 참조, 호출 시점은 호출하는 코드에 따름)"
+      : "a function value (see its body below; the calling code determines when it runs)";
   if (
     ts.isJsxElement(n) ||
     ts.isJsxSelfClosingElement(n) ||

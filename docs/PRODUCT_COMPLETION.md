@@ -5,10 +5,10 @@
 ## 현재 상태
 
 - **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
-- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
+- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md)·개발 검증 중인 [C#](CSHARP_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
 - **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다. [Java minimal-json](evidence/local-ai/java-source-project.md)은 별도 JDK 호환 adapter로 452 pass → 고정 오류 13 fail → undo 후 452 pass를 확인했다.
 - **SQL 증분:** [명시적으로 선택한 SQLite 읽기·리터럴 수정](SQL_SOURCE.md)을 추가했다. [외부 sqlc 예제](evidence/local-ai/sql-source-project.md)는 공식 재생성과 원래 테스트로 1 pass → 고정 LIMIT 오류 1 fail → undo 후 1 pass를 확인했다. 다른 SQL 방언·스키마·쿼리 성능·모든 식의 자연어 설명은 미제공이다.
-- **남은 우선순위:** Rust·C#의 전용 도구와 실제 프로젝트, 다른 SQL 방언, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
+- **남은 우선순위:** 사용자 지정 실제 프로젝트의 수정 흐름·설명 품질, Rust 전용 도구와 실제 프로젝트, C# 전체 편집 흐름·설치 검증, 다른 SQL 방언, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
 
 SQLite 기능 소스 `3b1aa4d`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38899949436)는 각각 핵심 **217개**, 개발/설치 각 **43개**, production 모드·런타임 8개 해시와 추출 도구 5종 실행에 성공했다. [CI 원자료](evidence/local-ai/sql-source-ci.json). 실제 외부 프로젝트와 [SQL 수동 화면](evidence/local-ai/sql-source-native.md)은 별도 Windows 기록이며 CI 수에 합치지 않는다. 좁은 화면·직접 수정 범위·별도 언어 서버의 진단 대기 등 사용성 제약은 남아 있다. 이전 커밋별 CI와 설치본·실제 모델 기록은 작업 기록에서 추적한다.
 
@@ -48,6 +48,8 @@ SQLite 기능 소스 `3b1aa4d`의 [Windows·Ubuntu CI](https://github.com/him557
 - 로컬 문법 분석·편집 경로는 모델 없이도 유지한다. 무거운 분석과 추론은 UI와 분리한다. 요청 중 파일 변경·탭 전환·취소를 처리한다.
 
 ## 실제 프로젝트 검증 방법
+
+사용자 추가 요구(2026-10-20): 만든 예제·고정 오류 검사만으로 실사용 가능성을 판단하지 않는다. 사용자가 직접 지정한 자신의 프로젝트에서 기존 코드·기존 검사와 실제 유지보수 요청을 평가한다. [실제 프로젝트 평가 절차](REAL_PROJECT_EVALUATION.md)에 따라 읽기·설명 정확성·수정 의도·기존 동작·편집기 연동·사용성을 구분하고, 비공개 소스는 공개 증거 자료에 넣지 않는다. 이는 기존 P2–P6를 대체하지 않고 그 실사용 근거를 보강하는 요구다.
 
 본 저장소만 분석한 결과를 외부 프로젝트 검증으로 부르지 않는다. 공개 라이선스를 확인한 외부 저장소를 별도 검증 폴더에 고정 커밋으로 가져온다. URL·커밋·대상 파일·작업 목적·수정 diff·검증 명령·도구 버전·결과를 공개한다. 원격 저장소에 변경을 보내지 않는다. 비공개 사용자 파일·계정·토큰은 공개 자료에 포함하지 않는다.
 
