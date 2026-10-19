@@ -126,6 +126,8 @@ export async function projectChecks(
     /unsaved/,
   );
   assert.equal(doc.isDirty, true, "must not automatically save");
+  // A task may leave the terminal focused; route the native undo to this file.
+  await vscode.window.showTextDocument(doc, { viewColumn: vscode.ViewColumn.One, preserveFocus: false });
   await vscode.commands.executeCommand("undo");
   await ready();
   assert.equal(doc.isDirty, false);
