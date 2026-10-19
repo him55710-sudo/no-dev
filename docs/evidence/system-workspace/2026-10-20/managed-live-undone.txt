@@ -1,0 +1,442 @@
+Browser tab: 6, Title: "설치본 설계 화면 검증", URL: "[temporary local test transport]".
+1 AXWebArea 설치본 설계 화면 검증, URL: [temporary local test transport]
+	2 container
+		3 text 설치 번들 + 실제 호스트 · 테스트 전송 경로
+		4 button 검증 종료·기록 저장, ID: finish
+	5 container
+		6 text P
+		7 text 풀어봄
+		8 text 시스템 설계 워크스페이스 project
+		9 text 52개 파일 연결됨
+		10 button 구조 새로 읽기
+		11 container
+			12 text 구조 검색
+			13 text field (settable) 구조 검색
+		14 text 프로젝트 구조 499
+		15 button 업무 기능 만들기
+		16 container 프로젝트 구조
+			17 content list
+				18 container
+					19 button (expanded) Description: 프로젝트 접기, Secondary Actions: Collapse
+					20 button 프로젝트
+					21 content list
+						22 container
+							23 button (collapsed) Description: 팀 구성원 권한 · 재연결 검증 펼치기, Secondary Actions: Expand
+							24 button 팀 구성원 권한 · 재연결 검증
+						25 container
+							26 button (collapsed) Description: 코드 구조 펼치기, Secondary Actions: Expand
+							27 button 코드 구조
+		28 text 저장된 설계 1
+		29 content list
+			30 button 팀 구성원 권한 · 재연결 검증 v1
+				31 text 팀 구성원 권한 · 재연결 검증
+				32 text v
+				33 text 1
+		34 text 업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든 구현을 경로대로 탐색할 수 있어요.
+		35 container 시스템 구조 캔버스
+			36 container 현재 탐색 위치
+				37 button project
+			38 text SYSTEM EXPLORER
+			39 heading 프로젝트, Value: 1
+				40 text 프로젝트
+			41 text 선택해서 설계를 읽고, 두 번 눌러 내부 구조로 들어가세요.
+			42 container
+				43 container
+					44 container 업무 기능 · 사용자 정의 팀 구성원 권한 · 재연결 검증
+						45 text 업무 기능 · 사용자 정의
+						46 text 팀 구성원 권한 · 재연결 검증
+						47 text 4개 코드 연결 · 0개 재연결 필요
+						48 text 4
+						49 text 개 하위 구조 ↗
+					50 container 모듈 묶음 코드 구조
+						51 text 모듈 묶음
+						52 text 코드 구조
+						53 text 코드 경로에서 추출
+						54 text 12
+						55 text 개 하위 구조 ↗
+				56 image
+				57 container Control Panel
+					58 button Zoom In
+						59 image
+					60 button Zoom Out
+						61 image
+					62 button Fit View
+						63 image
+				64 link Description: React Flow attribution, Value: reactflow.dev/?utm_source=attribution
+			65 text 노드 이동은 화면 배치만 바꿉니다. 288 개 정적 연결
+		66 container 선택한 구조의 설계
+			67 container
+				68 text 세부 설계
+				69 checkbox 집중 보기, Value: 0
+			70 text 업무 기능  ·  팀 구성원 권한 · 재연결 검증
+			71 button 대상에서 제외
+			149 container
+				150 text 사용자가 정의한 업무 기능 대시보드와 서버 액션, 현재 팀 조회를 함께 수정한다.
+				151 button 기능 이름·코드 묶음 편집
+			152 text 1 개 대상을 함께 설계
+			153 button 선택 해제
+			72 button (collapsed) 직접 연결된 구현, Secondary Actions: Expand
+				73 text 직접 연결된 구현
+			154 text LIVING SPEC 저장 v1
+			155 container
+				156 text 설계 이름
+				157 text field (settable) 설계 이름, Value: 팀 구성원 권한 · 재연결 검증
+			158 container
+				159 text 현재 구현의 기준선 사용자가 묶은 업무 기능입니다. 4개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.
+
+page.tsx: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+actions.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+queries.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+route.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+				489 button 기준 코드 비교·다시 연결
+			160 container
+				161 text 역할과 목적
+				162 text entry area (settable) 역할과 목적, Value: 현재 팀의 소유자만 구성원을 초대하거나 제거할 수 있도록 화면, 서버 액션, 팀 조회를 함께 연결한다.
+			163 container
+				164 text 원하는 동작
+				165 text entry area (settable) 원하는 동작, Value: 읽기 전용 member는 현재 팀과 구성원을 조회할 수 있지만 초대와 제거를 할 수 없다. 화면에는 제한 이유를 명확히 표시하고 직접 호출한 서버 액션도 데이터 변경 없이 거절한다. owner는 기존처럼 유효한 구성원을 초대하고 제거할 수 있다.
+			166 container
+				167 text 정책과 조건
+				168 text entry area (settable) 정책과 조건, Value: 권한은 현재 팀의 teamMembers.role로 판단한다. users.role 또는 다른 팀에서 가진 owner 역할을 사용하지 않는다. 대시보드, /api/team, 서버 액션은 같은 현재 팀 선택 기준을 쓴다. 기존 첫 번째 membership 기준을 유지한다. owner의 제거 버튼은 배열 위치(index > 1)로 제한하지 않는다.
+			169 container
+				170 text 입출력과 데이터
+				171 text entry area (settable) 입출력과 데이터, Value: FormData의 멤버 ID는 양의 정수 문자열만 허용하고 잘못된 값은 거절한다. 초대와 제거 성공 후 SWR 데이터를 갱신하여 현재 화면을 최신화한다. 기존 팀·멤버 스키마와 응답 호환성을 유지한다. 의존성은 가능한 한 로컬 pnpm 캐시로 설치한다.
+			172 container
+				173 text 예외와 실패 처리
+				174 text entry area (settable) 예외와 실패 처리, Value: 권한이 없는 직접 호출은 오류를 반환하며 DB를 변경하지 않는다. 인증되지 않은 요청과 잘못된 ID도 거절한다. 운영 DB, 결제 서비스, 실제 이메일 전송을 호출하지 않는다.
+			175 container
+				176 text 유지해야 하는 동작 한 줄에 한 가지씩
+				177 text entry area (settable) 유지해야 하는 동작 한 줄에 한 가지씩, Value: 로그인과 결제 관련 기존 동작을 유지한다.
+pureobom-validation/permissions.test.tsx, pureobom-validation/vitest.config.mts, package.json, pnpm-lock.yaml 파일을 변경하지 않는다.
+설치 및 검사에는 테스트용 로컬 데이터만 사용한다.
+			178 container
+				179 text 완료 기준 한 줄에 한 가지씩
+				180 text entry area (settable) 완료 기준 한 줄에 한 가지씩, Value: member가 현재 팀과 구성원을 정상 조회한다.
+member에게 초대·제거가 비활성화되고 제한 이유가 보인다.
+member가 초대·제거 서버 액션을 직접 호출해도 거절되고 데이터는 그대로다.
+owner가 유효한 FormData ID로 구성원을 초대하고 제거한다.
+다른 팀의 owner 역할을 현재 팀의 권한으로 사용하지 않는다.
+잘못된 ID를 거절하고 성공한 변경은 화면 데이터에 반영한다.
+			181 container
+				182 button 설계만 저장
+				183 text 설계만 저장하면 구현을 실행하지 않습니다.
+				184 container 구현 설정
+					185 text Codex로 구현
+					186 text 별도 Git 작업 공간에서 수정하고 검사합니다. 결과를 검토한 뒤 원본 프로젝트에 반영합니다.
+					187 text 모델:  Codex 기본 설정
+					188 button Codex 연결 확인
+					189 button 실행기·모델 설정
+					190 text 연결 확인은 실행기와 로그인 상태를 확인합니다. 모델 구현 요청은 시작하지 않습니다.
+					191 button (collapsed) 실행기 경로, Secondary Actions: Expand
+						192 text 실행기 경로
+					193 text 이 컴퓨터에 보관한 프로젝트 설정을 불러왔습니다.
+					194 checkbox (settable, integer) Description: 설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다., Value: 1
+					195 container 구현 후 실행할 검사
+						196 text 구현 후 실행할 검사
+						197 checkbox (settable, integer) Description: pnpm run test, Value: 1
+						198 text vitest run --config pureobom-validation/vitest.config.mts
+						199 checkbox (settable, integer) Description: pnpm run typecheck, Value: 1
+						200 text tsc --noEmit
+						201 checkbox (settable, integer) Description: pnpm run build, Value: 0
+						202 text next build
+					203 button (disabled) 이 프로젝트에 보관
+					204 button 보관 해제
+					205 text 보관하면 다음에도 이 설정을 사용합니다. 해제는 이후 구현에 적용되며, 진행 중인 작업은 작업 패널에서 취소할 수 있습니다.
+					206 button 저장하고 구현
+		127 button (collapsed) 이전 구현 작업 1개, Secondary Actions: Expand
+			128 text 이전 구현 작업
+			129 text 1
+			130 text 개
+		131 container 구현 작업 연결
+			132 container 구현 작업
+				133 container
+					134 text 변경 되돌림 설계 v 1
+					212 checkbox 검토 크게 보기, Value: 0
+				491 container
+					492 button (expanded) 현재 파일 상태, Secondary Actions: Collapse
+						493 text 현재 파일 상태
+					494 text app/(dashboard)/dashboard/page.tsx  · 변경 전 app/(login)/actions.ts  · 변경 전 app/api/team/route.ts  · 변경 전 lib/db/queries.ts  · 변경 전 lib/teams/permissions.ts  · 변경 전 pureobom-validation/team-permissions-ui.test.tsx  · 변경 전 pureobom-validation/team-permissions.test.tsx  · 변경 전 pureobom-validation/team-permissions.vitest.config.mts  · 변경 전
+				207 container
+					208 button (expanded) 진행 내용, Secondary Actions: Collapse
+						209 text 진행 내용
+					210 text 이번 작업의 변경을 되돌렸습니다. 작업 복사본:  C:\Users\user\.pureobom\worktrees\a12bd6b4261842d5\a3d96794-25a0-4f76-9146-adbbcdf267b1
+				213 container
+					214 button (expanded) 실제 검사 2/2 통과, Secondary Actions: Collapse
+						215 text 실제 검사
+						216 text 2
+						217 text /
+						218 text 2
+						219 text  통과
+					220 button (collapsed) test · passed · 6.6초, Secondary Actions: Expand
+						221 text test
+						222 text  ·
+						223 text passed
+						224 text  ·
+						225 text 6.6
+						226 text 초
+					227 button (collapsed) typecheck · passed · 4.8초, Secondary Actions: Expand
+						228 text typecheck
+						229 text  ·
+						230 text passed
+						231 text  ·
+						232 text 4.8
+						233 text 초
+				234 container
+					235 button (expanded) 변경 파일 8개, Secondary Actions: Collapse
+						236 text 변경 파일
+						237 text 8
+						238 text 개
+					239 button modified · app/(dashboard)/dashboard/page.tsx ↗
+						240 text modified
+						241 text  ·
+						242 text app/(dashboard)/dashboard/page.tsx
+						243 text  ↗
+					244 button modified · app/(login)/actions.ts ↗
+						245 text modified
+						246 text  ·
+						247 text app/(login)/actions.ts
+						248 text  ↗
+					249 button modified · app/api/team/route.ts ↗
+						250 text modified
+						251 text  ·
+						252 text app/api/team/route.ts
+						253 text  ↗
+					254 button modified · lib/db/queries.ts ↗
+						255 text modified
+						256 text  ·
+						257 text lib/db/queries.ts
+						258 text  ↗
+					259 button added · lib/teams/permissions.ts ↗
+						260 text added
+						261 text  ·
+						262 text lib/teams/permissions.ts
+						263 text  ↗
+					264 button added · pureobom-validation/team-permissions-ui.test.tsx ↗
+						265 text added
+						266 text  ·
+						267 text pureobom-validation/team-permissions-ui.test.tsx
+						268 text  ↗
+					269 button added · pureobom-validation/team-permissions.test.tsx ↗
+						270 text added
+						271 text  ·
+						272 text pureobom-validation/team-permissions.test.tsx
+						273 text  ↗
+					274 button added · pureobom-validation/team-permissions.vitest.config.mts ↗
+						275 text added
+						276 text  ·
+						277 text pureobom-validation/team-permissions.vitest.config.mts
+						278 text  ↗
+				279 container 변경 범위와 완료 기준 검토
+					280 heading 변경 범위와 완료 기준, Value: 3
+						281 text 변경 범위와 완료 기준
+					282 text 검사 명령의 성공과 기준별 확인은 별도로 기록합니다. 아래 확인 결과는 사용자의 검토 기록이며 자동 판정이 아닙니다.
+					283 container
+						284 button (expanded) 반영할 파일 8개 · 범위 밖 4개, Secondary Actions: Collapse
+							285 text 반영할 파일
+							286 text 8
+							287 text 개 · 범위 밖
+							288 text 4
+							289 text 개
+						290 text 처음 수집한 코드 범위와 실제 변경을 비교합니다. 테스트·검사 설정 표시는 경로에 따른 후보 분류이며, 테스트가 약해졌다는 판정은 아닙니다.
+						291 button app/(dashboard)/dashboard/page.tsx · 변경 보기 ↗
+							292 text app/(dashboard)/dashboard/page.tsx
+							293 text  · 변경 보기 ↗
+						294 text 연결된 코드 범위
+						295 button app/(login)/actions.ts · 변경 보기 ↗
+							296 text app/(login)/actions.ts
+							297 text  · 변경 보기 ↗
+						298 text 연결된 코드 범위
+						299 button app/api/team/route.ts · 변경 보기 ↗
+							300 text app/api/team/route.ts
+							301 text  · 변경 보기 ↗
+						302 text 연결된 코드 범위
+						303 button lib/db/queries.ts · 변경 보기 ↗
+							304 text lib/db/queries.ts
+							305 text  · 변경 보기 ↗
+						306 text 연결된 코드 범위
+						307 button lib/teams/permissions.ts · 변경 보기 ↗
+							308 text lib/teams/permissions.ts
+							309 text  · 변경 보기 ↗
+						310 text 처음 수집한 범위 밖
+						311 checkbox (disabled, settable, integer) Description: lib/teams/permissions.ts 범위 밖 변경의 반영을 허용합니다., Value: 1
+						312 button pureobom-validation/team-permissions-ui.test.tsx · 변경 보기 ↗
+							313 text pureobom-validation/team-permissions-ui.test.tsx
+							314 text  · 변경 보기 ↗
+						315 text 처음 수집한 범위 밖  · 테스트 변경 후보
+						316 checkbox (disabled, settable, integer) Description: pureobom-validation/team-permissions-ui.test.tsx 범위 밖 변경의 반영을 허용합니다., Value: 1
+						317 checkbox (disabled, settable, integer) Description: pureobom-validation/team-permissions-ui.test.tsx 검사 내용·기대값·대상 변경을 확인했습니다., Value: 1
+						318 button pureobom-validation/team-permissions.test.tsx · 변경 보기 ↗
+							319 text pureobom-validation/team-permissions.test.tsx
+							320 text  · 변경 보기 ↗
+						321 text 처음 수집한 범위 밖  · 테스트 변경 후보
+						322 checkbox (disabled, settable, integer) Description: pureobom-validation/team-permissions.test.tsx 범위 밖 변경의 반영을 허용합니다., Value: 1
+						323 checkbox (disabled, settable, integer) Description: pureobom-validation/team-permissions.test.tsx 검사 내용·기대값·대상 변경을 확인했습니다., Value: 1
+						324 button pureobom-validation/team-permissions.vitest.config.mts · 변경 보기 ↗
+							325 text pureobom-validation/team-permissions.vitest.config.mts
+							326 text  · 변경 보기 ↗
+						327 text 처음 수집한 범위 밖
+						328 checkbox (disabled, settable, integer) Description: pureobom-validation/team-permissions.vitest.config.mts 범위 밖 변경의 반영을 허용합니다., Value: 1
+					329 container 완료 기준 · member가 현재 팀과 구성원을 정상 조회한다.
+						330 container
+							331 text 완료 기준  · member가 현재 팀과 구성원을 정상 조회한다.
+						332 container
+							333 text 확인 결과
+							334 pop up button (disabled, collapsed, settable) 확인 결과, Value: 사용자가 직접 확인, Secondary Actions: Expand
+								335 menu
+									336 아직 확인하지 않음
+									337 (selected) 사용자가 직접 확인
+									338 실패 확인
+						339 container
+							340 text 관찰한 결과와 근거
+							341 text entry area (disabled) 관찰한 결과와 근거, Value: 검증 에이전트 확인: 제품의 고정 인수 검사에서 member가 실제 팀 API를 호출하고 PGlite SQL의 현재 팀·구성원 목록을 조회했다. 9/9 통과.
+						342 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						343 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						344 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							345 text test
+							346 text  실제 실행 결과
+					347 container 완료 기준 · member에게 초대·제거가 비활성화되고 제한 이유가 보인다.
+						348 container
+							349 text 완료 기준  · member에게 초대·제거가 비활성화되고 제한 이유가 보인다.
+						350 container
+							351 text 확인 결과
+							352 pop up button (disabled, collapsed, settable) 확인 결과, Value: 아직 확인하지 않음, Secondary Actions: Expand
+								353 menu
+									354 (selected) 아직 확인하지 않음
+									355 사용자가 직접 확인
+									356 실패 확인
+						357 container
+							358 text 관찰한 결과와 근거
+							359 text entry area (disabled) 관찰한 결과와 근거, Value: 고정 인수 검사와 추가 회귀 검사에서 서버 렌더링 결과의 초대·제거 비활성화 및 설명 문구를 확인했다. 이번 후보의 실제 앱 브라우저 조작은 수행하지 않아 전체 UI 기준은 미확인으로 남긴다.
+						360 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						361 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						362 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							363 text test
+							364 text  실제 실행 결과
+					365 container 완료 기준 · member가 초대·제거 서버 액션을 직접 호출해도 거절되고 데이터는 그대로다.
+						366 container
+							367 text 완료 기준  · member가 초대·제거 서버 액션을 직접 호출해도 거절되고 데이터는 그대로다.
+						368 container
+							369 text 확인 결과
+							370 pop up button (disabled, collapsed, settable) 확인 결과, Value: 사용자가 직접 확인, Secondary Actions: Expand
+								371 menu
+									372 아직 확인하지 않음
+									373 (selected) 사용자가 직접 확인
+									374 실패 확인
+						375 container
+							376 text 관찰한 결과와 근거
+							377 text entry area (disabled) 관찰한 결과와 근거, Value: 검증 에이전트 확인: 실제 서버 액션·JWT·Drizzle·PGlite SQL을 사용한 검사에서 member의 초대와 제거가 오류를 반환했고 구성원·초대·활동 기록의 전후 상태가 같았다.
+						378 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						379 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						380 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							381 text test
+							382 text  실제 실행 결과
+					383 container 완료 기준 · owner가 유효한 FormData ID로 구성원을 초대하고 제거한다.
+						384 container
+							385 text 완료 기준  · owner가 유효한 FormData ID로 구성원을 초대하고 제거한다.
+						386 container
+							387 text 확인 결과
+							388 pop up button (disabled, collapsed, settable) 확인 결과, Value: 사용자가 직접 확인, Secondary Actions: Expand
+								389 menu
+									390 아직 확인하지 않음
+									391 (selected) 사용자가 직접 확인
+									392 실패 확인
+						393 container
+							394 text 관찰한 결과와 근거
+							395 text entry area (disabled) 관찰한 결과와 근거, Value: 검증 에이전트 확인: owner의 초대 및 정상 FormData 문자열 ID 제거가 성공했다. SQL에 현재 팀의 초대·구성원 삭제·활동 기록이 반영됨을 고정 인수 검사로 확인했다.
+						396 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						397 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						398 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							399 text test
+							400 text  실제 실행 결과
+					401 container 완료 기준 · 다른 팀의 owner 역할을 현재 팀의 권한으로 사용하지 않는다.
+						402 container
+							403 text 완료 기준  · 다른 팀의 owner 역할을 현재 팀의 권한으로 사용하지 않는다.
+						404 container
+							405 text 확인 결과
+							406 pop up button (disabled, collapsed, settable) 확인 결과, Value: 사용자가 직접 확인, Secondary Actions: Expand
+								407 menu
+									408 아직 확인하지 않음
+									409 (selected) 사용자가 직접 확인
+									410 실패 확인
+						411 container
+							412 text 관찰한 결과와 근거
+							413 text entry area (disabled) 관찰한 결과와 근거, Value: 검증 에이전트 확인: 계정 전역 role과 다른 팀의 owner 역할을 가진 현재 팀 member도 직접 변경을 거절당했다. 추가 검사에서 첫 membership 선택, 권한 강등 이후 재검사, 타 팀 구성원 삭제 거절을 확인했다.
+						414 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						415 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						416 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							417 text test
+							418 text  실제 실행 결과
+					419 container 완료 기준 · 잘못된 ID를 거절하고 성공한 변경은 화면 데이터에 반영한다.
+						420 container
+							421 text 완료 기준  · 잘못된 ID를 거절하고 성공한 변경은 화면 데이터에 반영한다.
+						422 container
+							423 text 확인 결과
+							424 pop up button (disabled, collapsed, settable) 확인 결과, Value: 아직 확인하지 않음, Secondary Actions: Expand
+								425 menu
+									426 (selected) 아직 확인하지 않음
+									427 사용자가 직접 확인
+									428 실패 확인
+						429 container
+							430 text 관찰한 결과와 근거
+							431 text entry area (disabled) 관찰한 결과와 근거, Value: 추가 검사 50개(고정 9개 포함) 통과. 잘못된 문자열·파일 ID는 SQL 변경 없이 거절됐다. 화면 갱신은 React action 연결과 SWR mutate mock 및 재렌더링으로 확인했으며 실제 브라우저와 서버 사이의 전체 갱신은 이번 실행에서 미확인이다.
+						432 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 1
+						433 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+						434 button (collapsed) test 실제 실행 결과, Secondary Actions: Expand
+							435 text test
+							436 text  실제 실행 결과
+					437 container 유지 조건 · 로그인과 결제 관련 기존 동작을 유지한다.
+						438 container
+							439 text 유지 조건  · 로그인과 결제 관련 기존 동작을 유지한다.
+						440 container
+							441 text 확인 결과
+							442 pop up button (disabled, collapsed, settable) 확인 결과, Value: 아직 확인하지 않음, Secondary Actions: Expand
+								443 menu
+									444 (selected) 아직 확인하지 않음
+									445 사용자가 직접 확인
+									446 실패 확인
+						447 container
+							448 text 관찰한 결과와 근거
+							449 text entry area (disabled) 관찰한 결과와 근거, Value: 로그인·결제 전체 회귀는 이번 실행에서 수행하지 않았다. 인증 실패 관련 로컬 검사 일부와 타입 검사는 통과했으나 전체 유지 조건의 증거로 일반화하지 않는다.
+						450 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 0
+						451 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+					452 container 유지 조건 · pureobom-validation/permissions.test.tsx, pureobom-validation/vitest.config.mts, package.json, pnpm-lock.yaml 파일을 변경하지 않는다.
+						453 container
+							454 text 유지 조건  · pureobom-validation/permissions.test.tsx, pureobom-validation/vitest.config.mts, package.json, pnpm-lock.yaml 파일을 변경하지 않는다.
+						455 container
+							456 text 확인 결과
+							457 pop up button (disabled, collapsed, settable) 확인 결과, Value: 사용자가 직접 확인, Secondary Actions: Expand
+								458 menu
+									459 아직 확인하지 않음
+									460 (selected) 사용자가 직접 확인
+									461 실패 확인
+						462 container
+							463 text 관찰한 결과와 근거
+							464 text entry area (disabled) 관찰한 결과와 근거, Value: 검증 에이전트가 4개 보호 파일의 SHA-256을 실행 전 원본 해시와 대조해 모두 동일함을 확인했다. managed-live-candidate.json의 protected에 원본/후보 해시를 보존한다.
+						465 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 0
+						466 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+					467 container 유지 조건 · 설치 및 검사에는 테스트용 로컬 데이터만 사용한다.
+						468 container
+							469 text 유지 조건  · 설치 및 검사에는 테스트용 로컬 데이터만 사용한다.
+						470 container
+							471 text 확인 결과
+							472 pop up button (disabled, collapsed, settable) 확인 결과, Value: 아직 확인하지 않음, Secondary Actions: Expand
+								473 menu
+									474 (selected) 아직 확인하지 않음
+									475 사용자가 직접 확인
+									476 실패 확인
+						477 container
+							478 text 관찰한 결과와 근거
+							479 text entry area (disabled) 관찰한 결과와 근거, Value: 고정 및 추가 검사는 임시 PGlite DB와 fixture 자격값을 사용한다. 모델은 오프라인 설치를 보고했지만 설치·모델 실행 전체의 외부 접근 부재를 독립적으로 기록하지 않았으므로 유지 조건 전체는 미확인이다.
+						480 checkbox (disabled, settable, integer) Description: test 실행 로그를 근거로 연결, Value: 0
+						481 checkbox (disabled, settable, integer) Description: typecheck 실행 로그를 근거로 연결, Value: 0
+					482 checkbox (disabled, settable, integer) Description: 미확인 기준이 남아 있음을 알고 이번 변경을 반영합니다. 해당 기준은 확인 완료로 바뀌지 않습니다., Value: 1
+					495 text 저장된 검토 기록입니다. 당시 미확인 기준은 그대로 표시합니다.
+		145 text 로컬 정적 분석 · 설계 목표와 구현 근거를 따로 보존합니다.
+		146 button (collapsed) 확인하지 못한 범위 323, Secondary Actions: Expand
+			147 text 확인하지 못한 범위
+			148 text 323
+
+The focused UI element is 1 AXWebArea 설치본 설계 화면 검증, URL: [temporary local test transport]

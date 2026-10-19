@@ -28,7 +28,7 @@
 
 첫 병렬 회귀 실행에서는 213개 중 Windows 검사 종료 시험 1개가 실패했다. `taskkill /T /F`가 자손 종료를 보고한 뒤 부모에 대해 접근 거부와 종료 코드 255를 반환했고, 제품은 종료 확인 실패를 성공으로 바꾸지 않았다. 이후 해당 PID들은 관측되지 않았으며 단독 시험 2개와 전체 순차 시험 214개가 통과했다. 간헐적인 Windows 종료 확인 문제까지 해결됐다고 주장하지 않는다. [실패와 후속 검사 기록](evidence/system-workspace/2026-10-20/managed-verification-observation.json).
 
-설치본과 프로세스 시험의 구현 응답은 명시한 결정적 테스트용 stdio 실행기다. 새 프로세스 소유 구조에서 **실제 Codex 모델의 창 종료·재연결**, Linux/macOS 실기기, 네이티브 Webview의 전체 포인터 조작, 전원 손실은 아직 검증하지 않았다. 이전 [실제 Codex·Next 앱 검증](INSTALLED_NEXT_FLOW.md)과 이번 재연결 시험의 범위를 섞지 않는다.
+위 설치본 6회와 프로세스 시험의 구현 응답은 명시한 결정적 테스트용 stdio 실행기다. 후속 [실제 Codex 재연결 검증](MANAGED_LIVE_CODEX.md)에서는 Windows의 실제 승인 대기 중 창을 종료하고 동일 프로세스·작업·승인을 이어받아 검사·검토·반영·undo까지 완료했다. Linux/macOS 실기기의 실제 모델 재연결, 네이티브 Webview의 전체 포인터 조작, 전원 손실은 아직 검증하지 않았다. [Windows·Linux CI](https://github.com/him55710-sudo/no-dev/actions/runs/39288714238)는 양쪽 모두 통과했다.
 
 ## 재현
 

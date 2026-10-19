@@ -37,6 +37,63 @@ export async function run() {
   const workspace = api.designWorkspace;
   await vscode.commands.executeCommand("pureobom.openWorkspace");
   assert.ok(workspace.state.graph);
+  const partialPath = resolve(directory, "reconnect-partial.json");
+  const previous = configuration.runIndex
+    ? JSON.parse(await readFile(partialPath, "utf8"))
+    : undefined;
+  // Test-only observation of processes belonging to this exact isolated project.
+  // No PID is killed or adopted, and unrelated process details are not returned.
+  async function processWitness() {
+    assert.equal(
+      process.platform,
+      "win32",
+      "This live reconnection witness currently targets Windows.",
+    );
+    const script = `$workers = @(Get-CimInstance Win32_Process -Filter "Name='Code.exe' OR Name='node.exe'" | Where-Object { $_.CommandLine -and $_.CommandLine.Contains('agent-host.cjs') -and $_.CommandLine.Contains($env:PUREOBOM_WITNESS_ROOT) });
+if ($workers.Count -ne 1) { throw 'Expected one project-owned agent host' }
+$worker = $workers[0];
+$providers = @(Get-CimInstance Win32_Process -Filter ("ParentProcessId=" + $worker.ProcessId) | Where-Object { $_.Name -eq 'codex.exe' -and $_.CommandLine -match 'app-server' });
+if ($providers.Count -ne 1) { throw 'Expected one directly owned Codex app-server' }
+$provider = $providers[0];
+@{workerPid=$worker.ProcessId;workerCreated=$worker.CreationDate.ToUniversalTime().ToString('o');providerPid=$provider.ProcessId;providerCreated=$provider.CreationDate.ToUniversalTime().ToString('o');providerExecutable=$provider.ExecutablePath} | ConvertTo-Json -Compress`;
+    const result = await promisify(execFile)(
+      "powershell.exe",
+      ["-NoProfile", "-NonInteractive", "-Command", script],
+      {
+        windowsHide: true,
+        timeout: 15000,
+        env: { ...process.env, PUREOBOM_WITNESS_ROOT: source },
+      },
+    );
+    return JSON.parse(result.stdout);
+  }
+  let reconnection: unknown;
+  if (previous) {
+    assert.equal(workspace.state.job?.id, previous.before.job.id);
+    assert.equal(workspace.state.job?.worktree, previous.before.job.worktree);
+    assert.equal(workspace.state.job?.phase, "approval");
+    assert.deepEqual(
+      workspace.state.job?.approvals,
+      previous.before.job.approvals,
+    );
+    const processes = await processWitness();
+    assert.deepEqual(processes, previous.before.processes);
+    assert.notEqual(process.pid, previous.before.extensionHostPid);
+    reconnection = {
+      before: previous.before,
+      after: {
+        at: new Date().toISOString(),
+        extensionHostPid: process.pid,
+        job: structuredClone(workspace.state.job),
+        processes,
+      },
+    };
+    await writeFile(
+      resolve(directory, "reconnection.json"),
+      JSON.stringify(reconnection, null, 2),
+    );
+    console.log("SAME LIVE CODEX PROCESS AND PENDING APPROVAL RECONNECTED");
+  }
   let revision = 1,
     phase = "",
     origin = "",
@@ -45,9 +102,9 @@ export async function run() {
   const completed = new Promise<void>((done) => {
     finish = done;
   });
-  const requests: Record<string, unknown>[] = [],
-    jobs: unknown[] = [],
-    clientErrors: unknown[] = [];
+  const requests: Record<string, unknown>[] = previous?.requests ?? [],
+    jobs: unknown[] = previous?.jobs ?? [],
+    clientErrors: unknown[] = previous?.clientErrors ?? [];
   const subscription = workspace.changes.event((state) => {
     revision++;
     if (state.job && phase !== state.job.phase) {
@@ -63,7 +120,11 @@ export async function run() {
   const css = await readFile(
     resolve(extension.extensionPath, "media/design.css"),
   );
-  const html = `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>설치본 설계 화면 검증</title><link rel="stylesheet" href="${prefix}/design.css"></head><body><aside style="position:fixed;bottom:0;right:0;z-index:10000;padding:6px;background:#fff;border:1px solid #555;color:#222;font:12px sans-serif">설치 번들 + 실제 호스트 · 테스트 전송 경로 <button id="finish">검증 종료·기록 저장</button><span id="driver-result"></span></aside><div id="root"></div><script src="${prefix}/transport.js"></script><script src="${prefix}/design.js"></script></body></html>`;
+  const restartControl =
+    configuration.reconnectValidation && !configuration.runIndex
+      ? '<button id="restart">승인 대기 중 창 재시작 검증</button>'
+      : "";
+  const html = `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>설치본 설계 화면 검증</title><link rel="stylesheet" href="${prefix}/design.css"></head><body><aside style="position:fixed;bottom:0;right:0;z-index:10000;padding:6px;background:#fff;border:1px solid #555;color:#222;font:12px sans-serif">설치 번들 + 실제 호스트 · 테스트 전송 경로 ${restartControl}<button id="finish">검증 종료·기록 저장</button><span id="driver-result"></span></aside><div id="root"></div><script src="${prefix}/transport.js"></script><script src="${prefix}/design.js"></script></body></html>`;
   const transport = `
 let revision=0, polling=false;
 function deliver(value){window.dispatchEvent(new MessageEvent('message',{data:value}));}
@@ -73,6 +134,7 @@ setInterval(()=>poll().catch(()=>{}),250);
 window.addEventListener('error',event=>fetch('${prefix}/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:event.message})}));
 window.addEventListener('unhandledrejection',event=>fetch('${prefix}/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:String(event.reason)})}));
 document.getElementById('finish').onclick=async()=>{const response=await fetch('${prefix}/finish',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const value=await response.json();document.getElementById('driver-result').textContent=value.error||'기록 저장 완료';};
+const restart=document.getElementById('restart');if(restart)restart.onclick=async()=>{restart.disabled=true;try{const response=await fetch('${prefix}/restart',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const value=await response.json();document.getElementById('driver-result').textContent=value.error||'창을 닫고 같은 작업에 다시 연결합니다.';if(value.error)restart.disabled=false;}catch(error){document.getElementById('driver-result').textContent=String(error);}};
 `;
   const server = createServer(async (request, response) => {
     response.setHeader("Cache-Control", "no-store");
@@ -132,6 +194,25 @@ document.getElementById('finish').onclick=async()=>{const response=await fetch('
         clientErrors.push(payload);
         return send(200, {});
       }
+      if (url.pathname === prefix + "/restart") {
+        assert.ok(configuration.reconnectValidation && !configuration.runIndex);
+        assert.equal(workspace.state.job?.phase, "approval");
+        assert.ok(workspace.state.job?.approvals.length);
+        assert.deepEqual(clientErrors, []);
+        const before = {
+          at: new Date().toISOString(),
+          extensionHostPid: process.pid,
+          job: structuredClone(workspace.state.job),
+          processes: await processWitness(),
+        };
+        await writeFile(
+          partialPath,
+          JSON.stringify({ before, requests, jobs, clientErrors }, null, 2),
+        );
+        send(200, { restarting: true });
+        finish();
+        return;
+      }
       if (url.pathname === prefix + "/request") {
         const entry: Record<string, unknown> = {
           action: payload.action,
@@ -166,6 +247,11 @@ document.getElementById('finish').onclick=async()=>{const response=await fetch('
       }
       if (url.pathname === prefix + "/finish") {
         try {
+          if (configuration.reconnectValidation)
+            assert.ok(
+              reconnection,
+              "Reconnect the live approval before finishing.",
+            );
           assert.equal(
             workspace.state.job?.phase,
             "undone",
@@ -219,6 +305,7 @@ document.getElementById('finish').onclick=async()=>{const response=await fetch('
               : "Explicit deterministic stdio fixture; no external inference.",
             requests,
             jobs,
+            reconnection,
             clientErrors,
             finalSpecs: workspace.state.specs,
             originalRestored: true,

@@ -23,6 +23,18 @@ assert.equal(
   "Explicitly enable the manual installed UI test.",
 );
 const realProvider = !!process.argv[2];
+const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
+if (reconnectValidation) {
+  assert.ok(
+    realProvider,
+    "Live reconnect validation requires a real Codex run.",
+  );
+  assert.equal(
+    process.platform,
+    "win32",
+    "Live reconnect process observation currently supports Windows.",
+  );
+}
 if (realProvider) {
   assert.equal(
     process.env.PUREOBOM_RUN_CODEX,
@@ -140,6 +152,8 @@ const configuration = {
   artifact: { vsixSha256: digest(vsix), files },
   token: randomBytes(32).toString("hex"),
   realProvider,
+  reconnectValidation,
+  runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),
   originalIndex: await git("diff", "--cached"),
@@ -150,25 +164,44 @@ await writeFile(
   JSON.stringify(configuration, null, 2),
 );
 console.log(`INSTALLED UI RUN ${directory}`);
-await runTests({
-  version: "1.96.4",
-  extensionDevelopmentPath: driver,
-  extensionTestsPath: resolve(driver, "tests.cjs"),
-  extensionTestsEnv: {
-    PUREOBOM_UI_CONFIGURATION: resolve(directory, "configuration.json"),
-  },
-  launchArgs: [
-    source,
-    "--disable-workspace-trust",
-    "--skip-welcome",
-    "--skip-release-notes",
-    "--disable-updates",
-    "--user-data-dir",
-    profile,
-    "--extensions-dir",
-    extensions,
-  ],
-});
+async function launch() {
+  await runTests({
+    version: "1.96.4",
+    extensionDevelopmentPath: driver,
+    extensionTestsPath: resolve(driver, "tests.cjs"),
+    extensionTestsEnv: {
+      PUREOBOM_UI_CONFIGURATION: resolve(directory, "configuration.json"),
+    },
+    launchArgs: [
+      source,
+      "--disable-workspace-trust",
+      "--skip-welcome",
+      "--skip-release-notes",
+      "--disable-updates",
+      "--user-data-dir",
+      profile,
+      "--extensions-dir",
+      extensions,
+    ],
+  });
+}
+await launch();
+if (configuration.reconnectValidation) {
+  const partial = JSON.parse(
+    await readFile(resolve(directory, "reconnect-partial.json"), "utf8"),
+  );
+  assert.ok(
+    partial.before.job.approvals.length,
+    "Restart must interrupt a real pending approval.",
+  );
+  configuration.runIndex = 1;
+  await writeFile(
+    resolve(directory, "configuration.json"),
+    JSON.stringify(configuration, null, 2),
+  );
+  console.log("REOPENING INSTALLED UI WITH THE SAME PROJECT AND PROFILE");
+  await launch();
+}
 const report = await readFile(resolve(directory, "report.json"), "utf8");
 await mkdir("test-results", { recursive: true });
 await writeFile("test-results/installed-design-ui.json", report);

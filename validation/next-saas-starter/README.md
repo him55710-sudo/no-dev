@@ -14,6 +14,8 @@
 
 [실행 기록](../../docs/INSTALLED_NEXT_FLOW.md)은 실제 Codex가 설치 화면에서 시작한 설계에 따라 7개 파일을 변경하고, 제품 독립 검사·기준별 검토·반영·새 파일 재수집·되돌리기까지 완료한 사례다. 같은 후보를 독립 설치한 복제본에서 고정 검사 9개·추가 권한 21개·기존 기능 회귀 18개·타입 검사와 실제 브라우저/PostgreSQL로 확인했다. 분석 파일 수는 52→55→52로 변했고 설계 목표와 원본을 보존했다. 네이티브 Webview 전달, production build와 운영 인증/결제 전체는 별도 미검증이다.
 
+후속 [실제 Codex 재연결 검증](../../docs/MANAGED_LIVE_CODEX.md)은 Windows의 승인 대기 중 편집기를 종료하고 같은 프로세스·작업·승인을 이어받았다. 다른 후보 8개 파일의 검사·검토·반영·undo, 고정 9개·타입 검사와 추가 실행한 50개 검사(고정 9개 포함)를 확인했다. 이 후보의 앱 브라우저 동작은 앞선 후보의 증거와 구분해 미확인으로 남겼다.
+
 ## 2026-10-16 실행 결과
 
 [원본 기준](../../docs/evidence/system-workspace/2026-10-16/external-next-baseline.json)은 9개 중 5개 통과·4개 실패, skip 0개였다. [준비 patch](../../docs/evidence/system-workspace/2026-10-16/external-next-baseline.patch)는 검사 환경·잠금 파일만 추가하며 앱 코드는 그대로다.

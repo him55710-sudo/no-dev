@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T17:19:18.269Z",
+  "jobId": "a3d96794-25a0-4f76-9146-adbbcdf267b1",
+  "artifact": {
+    "vsixSha256": "56ea33d2582fe02a4e584ce4e9d2e3c600753dda8017be15174cef06e0736397",
+    "files": {
+      "out/extension.cjs": "e177826e8673298fb49f2d4aad3ce991e0df52a1db722185e9d0861080cb4f21",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "14ae65ab6d0a32dfab3ffdd0e3d7aed49868873ae915e26dfda66f5f93c9b83a",
+      "media/design.js": "9261cea3a0ebfabb6a1fa9b86a08b120b3441f0e17a0ccfbe48aa0242eaae25a",
+      "media/design.css": "05ad4e666cdff53e9517be1f2cf087bf3c787f4799e610c9a45102daa01b2566"
+    }
+  },
+  "sourceBaseline": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "sameLiveProcesses": {
+    "providerExecutable": "C:\\Users\\user\\AppData\\Local\\OpenAI\\Codex\\bin\\896a0166b774037a\\codex.exe",
+    "providerCreated": "2026-10-19T16:58:16.5615280Z",
+    "providerPid": 20488,
+    "workerPid": 38800,
+    "workerCreated": "2026-10-19T16:53:13.2136160Z"
+  },
+  "extensionHosts": [
+    20248,
+    2680
+  ],
+  "sameApproval": [
+    {
+      "id": "0",
+      "kind": "command",
+      "command": "\"C:\\\\Users\\\\user\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\native\\\\powershell\\\\pwsh.exe\" -Command 'pnpm test'",
+      "reason": "The sandbox blocked Vitest/esbuild from resolving the worktree config. Allow the test suite to run outside the sandbox using its in-memory local test database?",
+      "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\a12bd6b4261842d5\\a3d96794-25a0-4f76-9146-adbbcdf267b1"
+    }
+  ],
+  "implementationRequests": 1,
+  "changedFiles": 8,
+  "protectedFiles": 4,
+  "graphFiles": [
+    52,
+    56,
+    52
+  ],
+  "graphObservations": [
+    "unchanged",
+    "changed",
+    "unchanged"
+  ],
+  "originalTrackedFiles": 57,
+  "originalRestored": true,
+  "designPreserved": true,
+  "checks": [
+    {
+      "name": "test",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0
+    }
+  ],
+  "additionalSuite": {
+    "total": 50,
+    "passed": 50,
+    "failed": 0,
+    "pending": 0,
+    "includesLockedAcceptance": 9
+  },
+  "review": {
+    "confirmed": 5,
+    "unverified": 4,
+    "acceptUnverified": true
+  },
+  "requests": 19,
+  "requestErrors": 0,
+  "clientErrors": 0,
+  "scope": "Evidence consistency check plus current source/VSIX hash comparison. Runtime and browser results are recorded by the installed driver. This check does not rerun the model or prove native VS Code Webview behavior."
+}
