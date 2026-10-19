@@ -1,6 +1,10 @@
 import { useState } from "react";
 import type { ImplementationJob } from "./job";
 import { assertReviewReady, type ReviewDecision } from "./review";
+import {
+  VerificationEvidence,
+  verificationStatusLabels,
+} from "./VerificationEvidence";
 
 export function ImplementationReview({
   job,
@@ -188,34 +192,31 @@ export function ImplementationReview({
                   }
                 />
               </label>
-              {job.checks
-                .filter((check) => check.status === "passed")
-                .map((check) => (
-                  <label className="review-check" key={check.name}>
-                    <input
-                      type="checkbox"
-                      checked={item.checkNames.includes(check.name)}
-                      onChange={(event) =>
-                        updateCriterion(item.id, {
-                          checkNames: event.target.checked
-                            ? [...item.checkNames, check.name]
-                            : item.checkNames.filter(
-                                (name) => name !== check.name,
-                              ),
-                        })
-                      }
-                    />
-                    {check.name} 실행 로그를 근거로 연결
-                  </label>
-                ))}
-              {item.checkNames.map((name) => (
-                <details key={name}>
-                  <summary>{name} 실제 실행 결과</summary>
-                  <pre>
-                    {job.checks.find((check) => check.name === name)?.output}
-                  </pre>
-                </details>
+              {job.checks.map((check) => (
+                <label className="review-check" key={check.name}>
+                  <input
+                    type="checkbox"
+                    checked={item.checkNames.includes(check.name)}
+                    onChange={(event) =>
+                      updateCriterion(item.id, {
+                        checkNames: event.target.checked
+                          ? [...item.checkNames, check.name]
+                          : item.checkNames.filter(
+                              (name) => name !== check.name,
+                            ),
+                      })
+                    }
+                  />
+                  {check.name} · {verificationStatusLabels[check.status]} · 실행
+                  기록을 근거로 연결
+                </label>
               ))}
+              {item.checkNames.map((name) => {
+                const check = job.checks.find((check) => check.name === name);
+                return check ? (
+                  <VerificationEvidence key={name} check={check} />
+                ) : null;
+              })}
             </fieldset>
           );
         })}

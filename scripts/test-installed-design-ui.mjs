@@ -23,6 +23,7 @@ assert.equal(
   "Explicitly enable the manual installed UI test.",
 );
 const structureValidation = process.env.PUREOBOM_STRUCTURE_UI === "1";
+const verificationValidation = process.env.PUREOBOM_VERIFICATION_UI === "1";
 const realProvider = !!process.argv[2] && !structureValidation;
 const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
 const navigationValidation = process.env.PUREOBOM_NAVIGATION_UI === "1";
@@ -35,8 +36,13 @@ assert.ok(
     observationValidation,
     continuationValidation,
     structureValidation,
+    verificationValidation,
   ].filter(Boolean).length <= 1,
   "Choose one restart validation mode.",
+);
+assert.ok(
+  !(verificationValidation && realProvider),
+  "Verification failure UI uses the controlled local fixture, not a model.",
 );
 if (structureValidation)
   assert.ok(
@@ -98,6 +104,16 @@ if (process.argv[2]) {
   await appendFile(resolve(source, ".git/info/exclude"), "\n.pureobom/\n");
 } else {
   await cp("tests/fixtures/installed-recovery", source, { recursive: true });
+  if (verificationValidation) {
+    const peer = resolve(source, "app-server");
+    await writeFile(
+      peer,
+      (await readFile(peer, "utf8")).replace(
+        'const source = readFileSync(path, "utf8");',
+        'if (path === "service.js") continue;\n      const source = readFileSync(path, "utf8");\n      if (!source.includes(before) && source.includes(after)) continue;',
+      ),
+    );
+  }
   if (continuationValidation) {
     const peer = resolve(source, "app-server");
     await writeFile(
@@ -197,6 +213,7 @@ const configuration = {
   observationValidation,
   continuationValidation,
   structureValidation,
+  verificationValidation,
   runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),

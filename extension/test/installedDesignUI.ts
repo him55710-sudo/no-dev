@@ -535,12 +535,68 @@ const observationChange=document.getElementById('observation-change');if(observa
       }
       if (url.pathname === prefix + "/finish") {
         try {
+          let verificationWitness: unknown;
+          if (configuration.verificationValidation) {
+            const job = structuredClone(workspace.state.job!);
+            assert.equal(job.phase, "review");
+            assert.deepEqual(
+              job.verificationAttempts?.map((attempt) => [
+                attempt.attempt,
+                attempt.completed,
+                attempt.checks[0].status,
+              ]),
+              [
+                [1, true, "failed"],
+                [2, true, "failed"],
+              ],
+            );
+            assert.equal(job.checks[0].status, "failed");
+            assert.ok(
+              job.reviewDecision?.criteria.some(
+                (criterion) =>
+                  criterion.outcome === "failed" &&
+                  criterion.note.trim() &&
+                  criterion.checkNames.includes("test"),
+              ),
+            );
+            await workspace.handleRequest({
+              id: "verification-restore",
+              action: "restoreJob",
+              payload: { workspaceId: job.id },
+            });
+            assert.deepEqual(
+              workspace.state.job?.reviewDecision,
+              job.reviewDecision,
+            );
+            assert.deepEqual(
+              workspace.state.job?.verificationAttempts,
+              job.verificationAttempts,
+            );
+            await assert.rejects(
+              workspace.handleRequest({
+                id: "verification-apply-rejected",
+                action: "applyJob",
+                payload: { reviewId: job.reviewId },
+              }),
+              /검사가 통과/,
+            );
+            assert.ok(requests.every((entry) => entry.ok));
+            verificationWitness = {
+              job,
+              reviewAndHistoryRestored: true,
+              failedApplyRejected: true,
+              scope:
+                "UI creates and saves the failed review; finish assertions restore it and directly invoke the shared handler to verify rejection. No external model ran.",
+            };
+          }
           if (configuration.reconnectValidation)
             assert.ok(
               reconnection,
               "Reconnect the live approval before finishing.",
             );
-          if (configuration.structureValidation) {
+          if (configuration.verificationValidation) {
+            assert.ok(verificationWitness);
+          } else if (configuration.structureValidation) {
             assert.equal(workspace.state.job, undefined);
             assert.deepEqual(jobs, []);
             assert.ok(requests.every((entry) => entry.ok === true));
@@ -586,20 +642,22 @@ const observationChange=document.getElementById('observation-change');if(observa
               "undone",
               "Complete implementation, review, apply and undo in the UI first.",
             );
-          for (const action of configuration.structureValidation
-            ? ["saveFeature", "saveSpec", "source", "saveNavigation"]
-            : configuration.observationValidation
-              ? ["saveSpec", "source", "acceptBaseline"]
-              : configuration.navigationValidation
-                ? ["saveFeature", "saveSpec", "saveNavigation"]
-                : [
-                    "checkConnection",
-                    "saveExecution",
-                    "implement",
-                    "reviewJob",
-                    "applyJob",
-                    "undoJob",
-                  ])
+          for (const action of configuration.verificationValidation
+            ? ["checkConnection", "saveExecution", "implement", "reviewJob"]
+            : configuration.structureValidation
+              ? ["saveFeature", "saveSpec", "source", "saveNavigation"]
+              : configuration.observationValidation
+                ? ["saveSpec", "source", "acceptBaseline"]
+                : configuration.navigationValidation
+                  ? ["saveFeature", "saveSpec", "saveNavigation"]
+                  : [
+                      "checkConnection",
+                      "saveExecution",
+                      "implement",
+                      "reviewJob",
+                      "applyJob",
+                      "undoJob",
+                    ])
             assert.ok(
               requests.some((entry) => entry.action === action && entry.ok),
               `Missing successful UI action: ${action}`,
@@ -687,6 +745,7 @@ const observationChange=document.getElementById('observation-change');if(observa
             navigationRestoration,
             observationWitness,
             continuationWitness,
+            verificationWitness,
             clientErrors,
             finalSpecs: workspace.state.specs,
             finalNavigation: workspace.state.navigation,

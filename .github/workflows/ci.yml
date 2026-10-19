@@ -50,6 +50,8 @@ jobs:
           path: |
             test-results/unit-tests.json
             test-results/agent-host/observations.json
+            test-results/verification-history/repaired.json
+            test-results/verification-history/failed.json
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: always()

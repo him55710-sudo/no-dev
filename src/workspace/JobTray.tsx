@@ -1,6 +1,7 @@
 import { jobIsActive, type ImplementationJob } from "./job";
 import { useState } from "react";
 import { ImplementationReview } from "./ImplementationReview";
+import { VerificationEvidence } from "./VerificationEvidence";
 export const phaseNames: Record<ImplementationJob["phase"], string> = {
   preparing: "작업 공간 준비",
   running: "구현 중",
@@ -172,13 +173,42 @@ export function JobTray({
               {job.checks.length} 통과
             </summary>
             {job.checks.map((check, i) => (
-              <details key={`${check.name}:${i}`}>
-                <summary>
-                  {check.name} · {check.status} ·{" "}
-                  {(check.elapsedMs / 1000).toFixed(1)}초
-                </summary>
-                <pre>{check.output}</pre>
-              </details>
+              <VerificationEvidence key={`${check.name}:${i}`} check={check} />
+            ))}
+          </details>
+        ) : null}
+        {job.verificationAttempts?.length ? (
+          <details>
+            <summary>
+              검사 실행 이력 · {job.verificationAttempts.length}회
+            </summary>
+            <p>
+              자동 수정 전후의 기록입니다. 이전 검사는 현재 변경의 반영 근거로
+              사용하지 않습니다.
+            </p>
+            {job.verificationAttempts.map((attempt) => (
+              <section
+                key={attempt.attempt}
+                aria-label={`${attempt.attempt}차 검사`}
+              >
+                <h4>
+                  {attempt.attempt}차 검사 ·{" "}
+                  {
+                    attempt.checks.filter((check) => check.status === "passed")
+                      .length
+                  }
+                  /{attempt.checks.length} 통과 ·{" "}
+                  {attempt.completed
+                    ? "선택한 명령 실행 완료"
+                    : "일부 실행 또는 중단"}
+                </h4>
+                {attempt.checks.map((check, index) => (
+                  <VerificationEvidence
+                    key={`${check.name}:${index}`}
+                    check={check}
+                  />
+                ))}
+              </section>
             ))}
           </details>
         ) : null}
@@ -188,12 +218,10 @@ export function JobTray({
               이전 검사 기록 · 현재 변경의 통과 근거로 사용하지 않음
             </summary>
             {job.previousChecks.map((check, index) => (
-              <details key={`${check.name}:${index}`}>
-                <summary>
-                  {check.name} · {check.status}
-                </summary>
-                <pre>{check.output}</pre>
-              </details>
+              <VerificationEvidence
+                key={`${check.name}:${index}`}
+                check={check}
+              />
             ))}
           </details>
         ) : null}

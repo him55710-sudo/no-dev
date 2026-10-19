@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-19T23:02:53.394Z",
+  "requests": 13,
+  "clientErrors": 0,
+  "originalFilesPreserved": 8,
+  "gitPreserved": true,
+  "rounds": [
+    {
+      "attempt": 1,
+      "completed": true,
+      "status": "failed",
+      "exitCode": 1
+    },
+    {
+      "attempt": 2,
+      "completed": true,
+      "status": "failed",
+      "exitCode": 1
+    }
+  ],
+  "review": [
+    {
+      "id": "acceptance:0",
+      "outcome": "failed",
+      "note": "test에서 viewer 요청의 403 검증이 실패했다. 5개 중 2개 실패로 데이터 보존까지 통과했다고 판단할 수 없다.",
+      "checkNames": [
+        "test"
+      ]
+    }
+  ],
+  "reviewAndHistoryRestored": true,
+  "failedApplyRejected": true,
+  "changedPaths": [
+    "policy.js",
+    "ui.js"
+  ],
+  "vsixSha256": "27f87bb1156e4f4dee84c177a4ebcfb95add79aaead8b4312a17cbdb1423f337",
+  "vsixBytes": 1840058,
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified."
+}

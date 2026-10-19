@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Preserve verification attempts across automatic repair, including earlier failures, and mark omitted log output. Let failed or unresolved criteria link current failure, timeout and missing-command records while keeping confirmed criteria and apply guards strict. See [verification evidence](docs/VERIFICATION_EVIDENCE.md).
 - Connect literal fetch addresses and imported SWR keys to Next.js App Router file candidates. Keep framework inference distinct from compiler calls and runtime evidence, include candidate files in reviewable scope, and preserve saved goals and existing source identities. Verify the installed external-app canvas, exact source navigation and restoration; see [route candidates and limits](docs/NEXT_ROUTE_CANDIDATES.md).
 - Verify factory-created action and returned authentication-function descriptions in the installed external-app UI. Preserve three exact source selections, saved goals after reload, original files and Git state; record screenshots and the matching VSIX hash. See [installed function verification](docs/FUNCTION_DESCRIPTIONS.md#2026-10-20-후속-설치-화면-검증).
 - Cancel stalled agent initialization and account discovery, and publish cancellation completion only after process termination is confirmed. Preserve failed shutdowns and add host-state diagnostics to CI artifacts. See [reproduction and verification](docs/STARTUP_CANCELLATION.md).

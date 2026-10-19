@@ -144,7 +144,7 @@ describe("implementation review evidence", () => {
     );
     value.criteria[0].checkNames = ["invented"];
     expect(() => validateReviewDecision(assessment, checks, value)).toThrow(
-      /통과한 검사/,
+      /현재 변경/,
     );
   });
   it("binds records to the exact job, proposal, criteria and files and never applies known failures", () => {
@@ -190,6 +190,47 @@ describe("implementation review evidence", () => {
     ).toBe("failed");
     expect(() => assertReviewReady(assessment, checks, value)).toThrow(
       /실패한 완료 기준/,
+    );
+  });
+  it("links failed, timed-out and missing checks to unresolved criteria without treating them as confirmation", () => {
+    const actual: VerificationResult[] = [
+      checks[1],
+      {
+        name: "test",
+        status: "timeout",
+        output: "request did not finish",
+        elapsedMs: 100,
+      },
+      {
+        name: "typecheck",
+        status: "missing",
+        output: "script missing",
+        elapsedMs: 1,
+      },
+    ];
+    const value = decision();
+    value.criteria[0].checkNames = actual.map((check) => check.name);
+    expect(
+      validateReviewDecision(assessment, actual, value).criteria[0].outcome,
+    ).toBe("unverified");
+    value.criteria[0].outcome = "failed";
+    value.criteria[0].note =
+      "The build failed; the other checks could not establish the expected behavior.";
+    expect(
+      validateReviewDecision(assessment, actual, value).criteria[0].checkNames,
+    ).toEqual(["build", "test", "typecheck"]);
+    value.criteria[0].outcome = "confirmed";
+    expect(() => validateReviewDecision(assessment, actual, value)).toThrow(
+      /통과한 검사/,
+    );
+    value.criteria[0].outcome = "unverified";
+    value.criteria[0].checkNames = ["invented"];
+    expect(() => validateReviewDecision(assessment, actual, value)).toThrow(
+      /현재 변경/,
+    );
+    value.criteria[0].checkNames = ["test", "test"];
+    expect(() => validateReviewDecision(assessment, actual, value)).toThrow(
+      /현재 변경/,
     );
   });
 });

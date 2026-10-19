@@ -364,6 +364,14 @@ export class ImplementationJobs {
         state.phase = "checking";
         state.approvals = [];
         state.checks = [];
+        const verificationAttempt: NonNullable<
+          ImplementationJob["verificationAttempts"]
+        >[number] = {
+          attempt: attempt === 0 ? 1 : 2,
+          completed: false,
+          checks: [],
+        };
+        (state.verificationAttempts ??= []).push(verificationAttempt);
         this.emit();
         for (const name of options.checks) {
           state.checks.push(
@@ -376,8 +384,13 @@ export class ImplementationJobs {
               verification.manager,
             ),
           );
+          verificationAttempt.checks = structuredClone(state.checks);
           this.emit();
         }
+        verificationAttempt.completed = true;
+        this.emit();
+        // Save the failed evidence before a repair turn can replace current checks.
+        await this.flush();
         if (state.checks.every((check) => check.status === "passed")) break;
       }
       signal.throwIfAborted();

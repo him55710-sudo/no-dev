@@ -114,12 +114,15 @@ export async function verifyWorkspace(
       },
     );
     let output = "",
+      outputTruncated = false,
       timedOut = false,
       settled = false;
     let terminationTimer: ReturnType<typeof setTimeout> | undefined;
     let stopDetails = "종료 요청을 전달했습니다.";
     const append = (chunk: Buffer) => {
-      output = (output + chunk.toString("utf8")).slice(-24000);
+      const combined = output + chunk.toString("utf8");
+      outputTruncated ||= combined.length > 24000;
+      output = combined.slice(-24000);
     };
     child.stdout.on("data", append);
     child.stderr.on("data", append);
@@ -137,6 +140,7 @@ export async function verifyWorkspace(
         status: timedOut ? "timeout" : code === 0 ? "passed" : "failed",
         ...(code === null ? {} : { exitCode: code }),
         output,
+        outputTruncated,
         elapsedMs: Date.now() - start,
       });
     };
