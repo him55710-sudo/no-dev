@@ -139,23 +139,30 @@ describe("managed implementation host", { timeout: 60000 }, () => {
       const [root,storage,runtime,request,options]=JSON.parse(process.argv[2]);
       const c=new ManagedImplementationJobs(storage,runtime,job=>{if(job?.phase==='approval'){console.log(JSON.stringify(job));process.exit(0)}});
       c.start(root,request,options).catch(e=>{console.error(e);process.exit(1)});`;
-    const initial = JSON.parse(
-      (
-        await exec(
-          process.execPath,
-          [
-            "-e",
-            script,
-            clientBundle,
-            JSON.stringify([f.root, f.storage, runtime, f.request, f.options]),
-          ],
-          { windowsHide: true, timeout: 30000 },
-        )
-      ).stdout,
-    );
-    await delay(800); // More than the host idle interval: pending approval keeps it alive.
     let c = f.client();
+    let initial: { id: string; approvals: { id: string }[] };
     try {
+      initial = JSON.parse(
+        (
+          await exec(
+            process.execPath,
+            [
+              "-e",
+              script,
+              clientBundle,
+              JSON.stringify([
+                f.root,
+                f.storage,
+                runtime,
+                f.request,
+                f.options,
+              ]),
+            ],
+            { windowsHide: true, timeout: 30000 },
+          )
+        ).stdout,
+      );
+      await delay(800); // More than the host idle interval: pending approval keeps it alive.
       const history = await c.history(f.root);
       expect(c.state?.id).toBe(initial.id);
       expect(c.state?.phase).toBe("approval");
@@ -204,6 +211,13 @@ describe("managed implementation host", { timeout: 60000 }, () => {
         (await exec("git", ["-C", f.root, "status", "--porcelain"])).stdout,
       ).toBe("");
     } finally {
+      // Even a timeout launching the original client must clean up this fixture's
+      // owned job. Reconnect to the same host; never terminate by a stored PID.
+      if (!c.state) await c.history(f.root);
+      if (c.isRunning) {
+        await c.cancel();
+        await until(() => !c.isRunning);
+      }
       c.dispose();
     }
     await delay(1100);
@@ -380,4 +394,90 @@ describe("managed implementation host", { timeout: 60000 }, () => {
       await new Promise<void>((done) => server.close(() => done()));
     }
   });
+
+  it.runIf(process.platform === "win32")(
+    "stops a stubborn provider and detached writer when its managed host dies, preserving the interrupted job and original",
+    async () => {
+      const f = await fixture();
+      const peer = resolve(f.root, "app-server");
+      const marker = resolve(f.directory, "writer.json");
+      const stop = resolve(f.directory, "stop-writer");
+      const original = await readFile(resolve(f.root, "policy.js"));
+      const writer = `const fs=require('node:fs'),path=require('node:path');
+      const target=path.join(process.cwd(),'late-write.txt');
+      fs.writeFileSync(target,'x');
+      fs.writeFileSync(${JSON.stringify(marker)},JSON.stringify({pid:process.pid,target}));
+      const deadline=Date.now()+45000;
+      setInterval(()=>{if(fs.existsSync(${JSON.stringify(stop)})||Date.now()>deadline)process.exit();fs.appendFileSync(target,'x');},20);`;
+      await writeFile(
+        peer,
+        `import {spawn} from 'node:child_process';
+      spawn(process.execPath,['-e',${JSON.stringify(writer)}],{detached:true,stdio:'ignore',windowsHide:true}).unref();
+      setInterval(()=>{},1000);
+      ${(await readFile(peer, "utf8")).replace('.on("close", () => process.exit(0))', '.on("close", () => {})')}`,
+      );
+      const worker = spawn(process.execPath, [runtime, f.root, f.storage], {
+        windowsHide: true,
+        stdio: "ignore",
+      });
+      const exited = new Promise<void>((done) =>
+        worker.once("exit", () => done()),
+      );
+      const c = f.client();
+      try {
+        await until(async () => !(await closed(f.root, f.storage)));
+        await c.start(f.root, f.request, f.options);
+        await until(() => c.state?.phase === "approval");
+        const id = c.state!.id;
+        await until(
+          async () =>
+            JSON.parse(
+              await readFile(resolve(f.storage, id, "job.json"), "utf8"),
+            ).state.phase === "approval",
+        );
+        await until(async () => {
+          try {
+            await readFile(marker);
+            return true;
+          } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT")
+              return false;
+            throw error;
+          }
+        });
+        const observed = JSON.parse(await readFile(marker, "utf8")) as {
+          pid: number;
+          target: string;
+        };
+        await until(async () => (await readFile(observed.target)).length > 0);
+        expect(() => process.kill(observed.pid, 0)).not.toThrow();
+        worker.kill();
+        await exited;
+        await until(() => {
+          try {
+            process.kill(observed.pid, 0);
+            return false;
+          } catch (error) {
+            return (error as NodeJS.ErrnoException).code === "ESRCH";
+          }
+        });
+        const last = await readFile(observed.target);
+        await delay(200);
+        expect(await readFile(observed.target)).toEqual(last);
+        await c.history(f.root);
+        await c.restore(f.root, id);
+        expect(c.state?.phase).toBe("interrupted");
+        expect(c.state?.approvals).toEqual([]);
+        expect(c.state?.checks).toEqual([]);
+        expect(await readFile(f.trace, "utf8")).toBe("turn\n");
+        expect(await readFile(resolve(f.root, "policy.js"))).toEqual(original);
+      } finally {
+        await writeFile(stop, "fixture cleanup");
+        c.dispose();
+        if (worker.exitCode === null && worker.signalCode === null)
+          worker.kill();
+        await exited;
+      }
+    },
+  );
 });

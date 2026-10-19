@@ -7,10 +7,12 @@ function client(scenario: string) {
     executable: process.execPath,
     cwd: process.cwd(),
     args: [resolve("tests/fixtures/app-server.cjs"), scenario],
-    requestTimeoutMs: 2000,
+    // Includes cold Windows PowerShell/.NET startup. Turn-budget assertions below
+    // still use their explicit 500/1000ms clocks after protocol initialization.
+    requestTimeoutMs: 15000,
   });
 }
-describe("Codex App Server protocol", () => {
+describe("Codex App Server protocol", { timeout: 45000 }, () => {
   it("decodes split UTF-8, redacts identity, and handles terminal events before the response", async () => {
     const server = client("early");
     expect((await server.start()).userAgent).toBe("테스트 protocol");

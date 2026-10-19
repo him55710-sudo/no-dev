@@ -1,0 +1,27 @@
+2026-10-19T18:36:21.1984718Z AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+2026-10-19T18:36:21.1985602Z Asking native host service to exit with code 1.
+2026-10-19T18:36:21.2052002Z
+2026-10-19T18:36:21.2105725Z '' !== '공유 탐색'
+2026-10-19T18:36:21.2151716Z
+2026-10-19T18:36:21.2231996Z 	at Object.run (d:\a\no-dev\no-dev\extension\out\design-integration.cjs:20359:11)
+2026-10-19T18:36:21.2241931Z Extension host test runner error AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+2026-10-19T18:36:21.2256000Z
+2026-10-19T18:36:21.2271451Z '' !== '공유 탐색'
+2026-10-19T18:36:21.2288724Z
+2026-10-19T18:36:21.2307937Z 	at Object.run (d:\a\no-dev\no-dev\extension\out\design-integration.cjs:20359:11)
+2026-10-19T18:36:21.2848647Z [main 2026-10-19T18:36:21.268Z] Extension host with pid 5820 exited with code: 0, signal: unknown.
+2026-10-19T18:36:21.4399172Z Exit code:   1
+2026-10-19T18:36:21.4414283Z D:\a\no-dev\no-dev\node_modules\.pnpm\@vscode+test-electron@2.5.2_supports-color@7.2.0\node_modules\@vscode\test-electron\out\runTest.js:110
+2026-10-19T18:36:21.4416190Z                 reject(new TestRunFailedError(code ?? undefined, signal ?? undefined));
+2026-10-19T18:36:21.4416845Z                        ^
+2026-10-19T18:36:21.4417002Z
+2026-10-19T18:36:21.4417192Z TestRunFailedError: Test run failed with code 1
+2026-10-19T18:36:21.4418108Z     at ChildProcess.onProcessClosed (D:\a\no-dev\no-dev\node_modules\.pnpm\@vscode+test-electron@2.5.2_supports-color@7.2.0\node_modules\@vscode\test-electron\out\runTest.js:110:24)
+2026-10-19T18:36:21.4418918Z     at ChildProcess.emit (node:events:514:28)
+2026-10-19T18:36:21.4419376Z     at ChildProcess._handle.onexit (node:internal/child_process:295:12) {
+2026-10-19T18:36:21.4419734Z   code: 1,
+2026-10-19T18:36:21.4419911Z   signal: undefined
+2026-10-19T18:36:21.4420097Z }
+2026-10-19T18:36:21.4420186Z
+2026-10-19T18:36:21.4420267Z Node.js v24.21.0
+2026-10-19T18:36:21.4746007Z [ELIFECYCLE] Command failed with exit code 1.

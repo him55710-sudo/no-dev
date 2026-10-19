@@ -55,4 +55,6 @@
 
 실제 변경 범위·검사 파일 후보·기준별 사용자 확인과 반영 조건: [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md).
 
+Windows에서 관리 프로세스·실행기 종료 후 하위 프로세스와 파일 쓰기 중지: [실행 수명 관리](WINDOWS_PROCESS_SCOPE.md). 새 실행을 Windows Job Object에 생성 시점부터 묶고, 종료 뒤 남은 자손 수를 확인한다. 2026-10-20 전체 회귀 233개·설치본 여섯 번 실행·호스트 검사 33개와 실제 Codex의 Node 명령 실행을 확인했다. Linux/macOS의 같은 수명 보장, 죽은 모델 세션에서 이어 실행하기와 기존 버전 잔류 프로세스 처리는 남아 있다. 직전 관측 비교 커밋의 Windows CI 설계 호스트 검사는 실패했으며, 이번 로컬 통과와 별도 사실로 보존한다.
+
 외부 Next 앱의 고정 기준·독립 검사·실제 모델·반영/되돌리기·한계: [재현 안내](../validation/next-saas-starter/README.md). 외부 팀 권한 변경 사례를 기존 대표 프로젝트 공유 권한의 모든 배포 환경에 일반화하지 않는다.

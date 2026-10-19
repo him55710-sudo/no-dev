@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-19T18:50:36.123Z",
+  "platform": "win32",
+  "userAgent": "Codex Desktop/0.163.0-alpha.10.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)",
+  "inferenceRun": true,
+  "commands": [
+    {
+      "command": "\"C:\\\\Users\\\\user\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\native\\\\powershell\\\\pwsh.exe\" -Command \"& \\\"C:\\\\Users\\\\user\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\node\\\\bin\\\\node.exe\\\" -e 'require(\\\"fs\\\").writeFileSync(\\\"scope-proof.json\\\", JSON.stringify({ok:true}))'\"",
+      "exitCode": 0
+    }
+  ],
+  "approvals": [],
+  "proof": {
+    "ok": true
+  },
+  "scope": "Actual Codex terminal execution inside a Windows job; not full product or recovery verification."
+}

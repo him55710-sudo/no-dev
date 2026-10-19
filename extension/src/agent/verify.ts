@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawnOwnedProcess } from "./ownedProcess";
 import { access, readFile } from "node:fs/promises";
 import { delimiter, resolve } from "node:path";
 import type {
@@ -98,29 +98,24 @@ export async function verifyWorkspace(
     // On Windows package-manager launchers are .cmd files. All interpolated tokens
     // are fixed allowlisted names; cwd and source text never enter the shell command.
     const windows = process.platform === "win32";
-    const child = spawn(
+    const child = spawnOwnedProcess(
       windows ? "cmd.exe" : available.manager,
       windows
         ? ["/d", "/s", "/c", `${available.manager} run ${name}`]
         : ["run", name],
       {
         cwd: root,
-        windowsHide: true,
-        shell: false,
-        detached: !windows,
         env: {
           ...process.env,
           CI: "true",
           FORCE_COLOR: "0",
           pnpm_config_verify_deps_before_run: "false",
         },
-        stdio: "pipe",
       },
     );
     let output = "",
       timedOut = false,
-      settled = false,
-      windowsTreeStopped = false;
+      settled = false;
     let terminationTimer: ReturnType<typeof setTimeout> | undefined;
     let stopDetails = "종료 요청을 전달했습니다.";
     const append = (chunk: Buffer) => {
@@ -145,16 +140,6 @@ export async function verifyWorkspace(
         elapsedMs: Date.now() - start,
       });
     };
-    const finishStoppedTree = () => {
-      // On Windows inherited output handles can outlive the terminated tree.
-      // Only release them after BOTH taskkill /T /F succeeds and our child exits.
-      // An exit alone is not evidence that its descendants have stopped.
-      if (windowsTreeStopped && child.exitCode !== null) {
-        child.stdout.destroy();
-        child.stderr.destroy();
-        finish(child.exitCode);
-      }
-    };
     const stop = () => {
       if (terminationTimer || settled) return;
       terminationTimer = setTimeout(() => {
@@ -171,27 +156,8 @@ export async function verifyWorkspace(
       // leave the verification promise pending forever either.
       if (!child.pid || child.exitCode !== null) return;
       if (windows) {
-        const killer = spawn(
-          "taskkill.exe",
-          ["/PID", String(child.pid), "/T", "/F"],
-          { windowsHide: true, stdio: "pipe" },
-        );
-        const detail = (chunk: Buffer) => {
-          stopDetails = (stopDetails + chunk.toString("utf8")).slice(-2000);
-        };
-        killer.stdout.on("data", detail);
-        killer.stderr.on("data", detail);
-        killer.stdin.end();
-        killer.on("error", (error) => {
-          stopDetails = String(error);
-          child.kill();
-        });
-        killer.on("exit", (code) => {
-          stopDetails += ` (taskkill exit ${code})`;
-          windowsTreeStopped = code === 0;
-          finishStoppedTree();
-          if (code !== 0 && child.exitCode === null) child.kill();
-        });
+        stopDetails = "작업 프로세스 묶음의 종료를 요청했습니다.";
+        child.kill();
       } else {
         try {
           process.kill(-child.pid, "SIGKILL");
@@ -217,9 +183,7 @@ export async function verifyWorkspace(
       cleanup();
       reject(error);
     });
-    child.on("exit", finishStoppedTree);
     child.on("close", (code) => {
-      if (windows && terminationTimer && !windowsTreeStopped) return;
       finish(code);
     });
     if (signal.aborted) stop();

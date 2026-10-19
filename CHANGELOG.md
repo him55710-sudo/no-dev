@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Contain Windows implementation providers and verification commands in per-invocation OS jobs, including detached descendants. Preserve stdio and exit codes, stop leftover writers after launcher or managed-host exit, and retain interrupted jobs for explicit review. See [process lifetime and verification scope](docs/WINDOWS_PROCESS_SCOPE.md).
 - Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.
 - Ground citations and edits in unique original source ranges, require changed-source evidence, bound requests, and cancel stale work. Review the native diff and unchecked behavior before explicit apply; use normal editor undo.
 - Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Other language checks remain unavailable.

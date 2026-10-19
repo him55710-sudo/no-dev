@@ -1,6 +1,7 @@
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { type ChildProcessWithoutNullStreams } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
 import { z } from "zod";
+import { spawnOwnedProcess } from "./ownedProcess";
 
 // Protocol: https://learn.chatgpt.com/docs/app-server
 // Verified against locally generated 0.162.0-alpha.17.2 bindings. No private APIs.
@@ -57,6 +58,7 @@ export class CodexAppServer {
   private closing?: Promise<void>;
   private stderr = "";
   private runActive = false;
+  private processClosed = false;
   private syncRunTimeout?: () => void;
   private approvalHandler?: (request: ApprovalRequest) => void;
   constructor(
@@ -79,15 +81,11 @@ export class CodexAppServer {
   async start() {
     if (this.child || this.stopped)
       throw Error("에이전트 연결은 다시 사용할 수 없습니다.");
-    const child = (this.child = spawn(
+    const child = (this.child = spawnOwnedProcess(
       this.options.executable,
       this.options.args ?? ["app-server", "--listen", "stdio://"],
       {
         cwd: this.options.cwd,
-        stdio: "pipe",
-        shell: false,
-        windowsHide: true,
-        detached: process.platform !== "win32",
       },
     ));
     child.stdout.on("data", (chunk: Buffer) => this.receive(chunk));
@@ -97,8 +95,17 @@ export class CodexAppServer {
     child.stdin.on("error", (e) => this.fail(e));
     child.on("error", (e) => this.fail(e));
     child.on("exit", (code, signal) =>
-      this.fail(Error(`Codex 연결이 종료됐습니다 (${code ?? signal}).`)),
+      this.fail(
+        Error(
+          this.stderr.includes("Pureobom process scope:")
+            ? "실행 프로세스를 안전하게 시작하거나 종료하지 못했습니다. Windows PowerShell 사용 정책과 실행 파일 경로를 확인해 주세요."
+            : `Codex 연결이 종료됐습니다 (${code ?? signal}).`,
+        ),
+      ),
     );
+    child.once("close", () => {
+      this.processClosed = true;
+    });
     try {
       const result = object.parse(
         await this.request("initialize", {
@@ -382,7 +389,7 @@ export class CodexAppServer {
     this.fail(Error("Codex 연결을 닫았습니다."));
     const child = this.child;
     this.closing = new Promise((resolve, reject) => {
-      if (!child?.pid || child.exitCode !== null || child.signalCode !== null) {
+      if (!child?.pid || this.processClosed) {
         resolve();
         return;
       }
@@ -396,17 +403,12 @@ export class CodexAppServer {
         clearTimeout(deadline);
         resolve();
       };
-      child.once("exit", done);
+      child.once("close", done);
       const force = setTimeout(() => {
         if (process.platform === "win32") {
-          const killer = spawn(
-            "taskkill.exe",
-            ["/PID", String(child.pid), "/T", "/F"],
-            { windowsHide: true, stdio: "ignore", shell: false },
-          );
-          killer.once("error", () => {
-            child.kill();
-          });
+          // Killing this owned wrapper closes its non-inherited Windows job
+          // handle, including children whose launcher has already exited.
+          child.kill();
         } else {
           try {
             process.kill(-child.pid!, "SIGKILL");
