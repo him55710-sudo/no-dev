@@ -117,8 +117,9 @@ describe("workspace navigation", () => {
     const request = {
       projectKey: "a".repeat(64),
       generation: 0,
-      view: initialNavigation(),
+      patch: { search: "공유" },
     };
+    expect(navigationWriteSchema.parse(request)).toEqual(request);
     expect(() =>
       navigationWriteSchema.parse({ ...request, command: "run" }),
     ).toThrow();
@@ -129,8 +130,8 @@ describe("workspace navigation", () => {
       expect(() =>
         navigationWriteSchema.parse({
           ...request,
-          view: {
-            ...request.view,
+          patch: {
+            ...request.patch,
             canvases: [
               {
                 scopeId: "system",

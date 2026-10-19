@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   Controls,
@@ -84,15 +84,33 @@ export function StructureCanvas({
   );
   const positionsRef = useRef(positions);
   const viewportRef = useRef<Viewport | undefined>(location?.viewport);
-  const persistLocation = () =>
-    onLocation({
-      scopeId,
-      viewport: viewportRef.current,
-      positions: Object.entries(positionsRef.current).map(([id, position]) => ({
-        id,
-        ...position,
-      })),
+  const locationFrame = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (locationFrame.current !== null)
+        cancelAnimationFrame(locationFrame.current);
+    },
+    [],
+  );
+  const persistLocation = () => {
+    if (locationFrame.current !== null) return;
+    // Automatic fit can end inside React Flow's ResizeObserver. Updating the
+    // parent external store synchronously there can re-enter layout delivery.
+    // Publish the latest geometry in the next frame, and cancel on scope exit.
+    locationFrame.current = requestAnimationFrame(() => {
+      locationFrame.current = null;
+      onLocation({
+        scopeId,
+        viewport: viewportRef.current,
+        positions: Object.entries(positionsRef.current).map(
+          ([id, position]) => ({
+            id,
+            ...position,
+          }),
+        ),
+      });
     });
+  };
   const layout = useMemo(() => {
     const children = structureChildren(graph, scopeId);
     const visible = children.length

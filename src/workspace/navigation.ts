@@ -36,16 +36,70 @@ export const navigationSchema = z
 export type WorkspaceNavigation = z.infer<typeof navigationSchema>;
 export type NavigationSnapshot = {
   generation: number;
+  revision: number;
   view: WorkspaceNavigation;
 };
+// Unchanged fields must not be written by a delayed canvas update.
+// Canvas entries are upserts by scope; topology reconciliation removes stale ones.
+export const navigationPatchSchema = navigationSchema.partial().extend({
+  savedSpecId: id.nullable().optional(),
+});
+export type NavigationPatch = z.infer<typeof navigationPatchSchema>;
 export const navigationWriteSchema = z
   .object({
     projectKey: z.string().regex(/^[a-f0-9]{64}$/),
     generation: z.number().int().nonnegative(),
-    view: navigationSchema,
+    patch: navigationPatchSchema,
   })
   .strict();
 export type NavigationWrite = z.infer<typeof navigationWriteSchema>;
+
+export function mergeNavigationPatch(
+  before: NavigationPatch,
+  after: NavigationPatch,
+): NavigationPatch {
+  const patch = { ...before, ...after };
+  if (after.canvases) {
+    const updated = new Set(after.canvases.map((canvas) => canvas.scopeId));
+    patch.canvases = [
+      ...(before.canvases ?? []).filter(
+        (canvas) => !updated.has(canvas.scopeId),
+      ),
+      ...after.canvases,
+    ].slice(-200);
+  }
+  return patch;
+}
+
+export function applyNavigationPatch(
+  view: WorkspaceNavigation,
+  patch: NavigationPatch,
+): WorkspaceNavigation {
+  const merged = mergeNavigationPatch(view, patch);
+  return { ...view, ...merged, savedSpecId: merged.savedSpecId ?? undefined };
+}
+
+export function navigationDifference(
+  before: WorkspaceNavigation,
+  after: WorkspaceNavigation,
+): NavigationPatch {
+  const patch: NavigationPatch = {};
+  for (const key of Object.keys(after) as (keyof WorkspaceNavigation)[]) {
+    if (key === "canvases" || key === "savedSpecId") continue;
+    if (JSON.stringify(before[key]) !== JSON.stringify(after[key]))
+      Object.assign(patch, { [key]: after[key] });
+  }
+  if (before.savedSpecId !== after.savedSpecId)
+    patch.savedSpecId = after.savedSpecId ?? null;
+  const canvases = after.canvases.filter(
+    (canvas) =>
+      JSON.stringify(
+        before.canvases.find((old) => old.scopeId === canvas.scopeId),
+      ) !== JSON.stringify(canvas),
+  );
+  if (canvases.length) patch.canvases = canvases;
+  return patch;
+}
 
 export function initialNavigation(selection = "system"): WorkspaceNavigation {
   return {

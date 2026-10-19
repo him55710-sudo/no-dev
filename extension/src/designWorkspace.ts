@@ -43,6 +43,7 @@ import { NavigationStore } from "./navigationStore";
 import {
   initialNavigation,
   navigationWriteSchema,
+  applyNavigationPatch,
   reconcileNavigation,
   type WorkspaceNavigation,
 } from "../../src/workspace/navigation";
@@ -296,10 +297,15 @@ export class DesignWorkspace implements vscode.Disposable {
       try {
         this.state.navigation = {
           generation: 0,
+          revision: 0,
           view: await this.navigationStore.read(),
         };
       } catch (error) {
-        this.state.navigation = { generation: 0, view: initialNavigation() };
+        this.state.navigation = {
+          generation: 0,
+          revision: 0,
+          view: initialNavigation(),
+        };
         this.state.navigationError = `이전 탐색 위치를 읽지 못했습니다. ${String(error)}`;
       }
       this.state.selectedId = this.state.navigation.view.selection;
@@ -651,6 +657,7 @@ export class DesignWorkspace implements vscode.Disposable {
   private async replaceNavigation(view: WorkspaceNavigation) {
     const snapshot = {
       generation: (this.state.navigation?.generation ?? 0) + 1,
+      revision: 0,
       view,
     };
     const store = this.navigationStore;
@@ -675,22 +682,28 @@ export class DesignWorkspace implements vscode.Disposable {
     )
       throw Error("탐색한 프로젝트가 아닙니다. 프로젝트를 다시 열어 주세요.");
     // A delayed UI write must not undo an explicit 'reveal this code' or graph repair.
-    if (request.generation !== this.state.navigation.generation)
+    if (request.generation !== this.state.navigation.generation) {
+      this.emit();
       return this.state.navigation;
-    const view = reconcileNavigation(request.view, this.state.graph, [
-      ...this.state.specs.specs.map((spec) => spec.id),
-      ...(this.state.drafts ?? []).map((draft) => draft.base.id),
-    ]);
-    const snapshot = { generation: request.generation, view };
+    }
+    const view = reconcileNavigation(
+      applyNavigationPatch(this.state.navigation.view, request.patch),
+      this.state.graph,
+      [
+        ...this.state.specs.specs.map((spec) => spec.id),
+        ...(this.state.drafts ?? []).map((draft) => draft.base.id),
+      ],
+    );
+    const snapshot = {
+      generation: request.generation,
+      revision: this.state.navigation.revision + 1,
+      view,
+    };
     const store = this.navigationStore;
     this.state.navigation = snapshot;
     this.state.selectedId = view.selection;
     await store.save(view);
-    if (
-      this.navigationStore === store &&
-      this.state.navigation === snapshot &&
-      (this.state.navigationError || this.state.navigationNotice)
-    ) {
+    if (this.navigationStore === store && this.state.navigation === snapshot) {
       this.state.navigationError = undefined;
       this.state.navigationNotice = undefined;
       this.emit();

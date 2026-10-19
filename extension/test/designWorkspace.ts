@@ -45,15 +45,33 @@ export async function run() {
   await workspace.open(true);
   assert.equal(workspace.state.selectedId, policy.id);
   const navigationGeneration = workspace.state.navigation!.generation;
-  await workspace.handleRequest({
+  const searchWrite = workspace.handleRequest({
     id: "navigate",
     action: "saveNavigation",
     payload: {
       projectKey: workspace.state.projectKey,
       generation: navigationGeneration,
-      view: { ...initialNavigation(), search: "공유 탐색" },
+      patch: { search: "공유 탐색" },
     },
   });
+  const canvasWrite = workspace.handleRequest({
+    id: "late-canvas-layout",
+    action: "saveNavigation",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      generation: navigationGeneration,
+      patch: {
+        canvases: [
+          {
+            scopeId: "system",
+            positions: [],
+            viewport: { x: 20, y: 30, zoom: 0.8 },
+          },
+        ],
+      },
+    },
+  });
+  await Promise.all([searchWrite, canvasWrite]);
   assert.equal(workspace.state.navigation!.view.search, "공유 탐색");
   assert.equal(workspace.state.job, undefined);
   await assert.rejects(
@@ -63,7 +81,7 @@ export async function run() {
       payload: {
         projectKey: "0".repeat(64),
         generation: navigationGeneration,
-        view: initialNavigation(),
+        patch: { search: "다른 프로젝트" },
       },
     }),
     /프로젝트/,
@@ -76,7 +94,7 @@ export async function run() {
     payload: {
       projectKey: workspace.state.projectKey,
       generation: navigationGeneration,
-      view: initialNavigation(),
+      patch: { selection: "system", search: "오래된 탐색" },
     },
   });
   assert.equal(
@@ -566,6 +584,7 @@ export async function run() {
       "node to exact source",
       "source to node",
       "local navigation preferences do not start an agent and reject cross-project input",
+      "overlapping search and delayed canvas updates preserve independent navigation fields",
       "late UI navigation writes cannot undo explicit source navigation",
       "durable design save",
       "unfinished draft persists separately without confirming design or starting an agent",

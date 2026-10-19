@@ -34,6 +34,8 @@ pnpm extension:recovery-test
 
 ## 2026-10-20 검증 결과
 
+후속 확인: 프로세스 수명 관리 커밋 `1e9fbb5`의 [원격 CI 실행 39306950673](https://github.com/him55710-sudo/no-dev/actions/runs/39306950673)은 Windows·Ubuntu 모두 통과했다. 이전 관측 비교 커밋의 Windows 탐색 저장 실패는 아래 기록대로 보존하고, 겹치는 쓰기는 [별도의 탐색 저장 수정](WORKSPACE_NAVIGATION.md#2026-10-20-후속-겹치는-탐색-저장)으로 다룬다.
+
 - [전체 회귀 28개 파일·233개 검사](evidence/system-workspace/2026-10-20/process-scope-regression.json) 통과. 강제 종료 뒤 분리된 작성기 중지, 관계없는 프로세스 보존, 중단 기록 복원과 원본 보존을 포함한다.
 - [설치 VSIX의 여섯 번 독립 실행](evidence/system-workspace/2026-10-20/process-scope-installed.json)에서 승인 재연결, 실제 검사, 검토·반영·undo, 확장 호스트 강제 종료 중 반영 지속과 원본·Git 상태 복원을 확인했다. VSIX SHA-256: `6fa7634a706f8d02f371d24a0a0b1b719db11d951a6f7ba0c0997cecde2c975f`.
 - [실제 Codex 0.163.0-alpha.10.2](evidence/system-workspace/2026-10-20/process-scope-live.json)가 이 실행 경로 안에서 터미널로 Node 명령을 실행하고 기대한 JSON 파일을 생성했다. 합성 응답이 아니며 명령 종료 코드 0과 파일 내용으로 확인했다. 전체 실제 모델 복구 흐름의 증거로 확대하지 않는다.

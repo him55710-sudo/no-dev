@@ -37,3 +37,22 @@ React Flow의 `defaultViewport`, `onMoveEnd`, `onNodesChange`를 사용하고 �
 전체 회귀 실행은 **219개 통과·1개 실패**였다. 기존 관리 프로세스의 첫 클라이언트 실행이 실패했고, 작업 시작 약 29초 뒤 승인 기록이 만들어졌다. 해당 검사에는 30초 실행 제한이 있으나 당시 오류에 종료 신호 정보가 없어 시간 초과를 확정 원인으로 주장하지 않는다. 제한이나 제품 코드를 바꾸지 않은 **해당 파일의 단독 재실행 4개는 통과**했다. 첫 실행을 전체 통과로 바꾸지 않는다. 남아 있던 합성 테스트 작업은 정확한 프로젝트·작업 ID의 관리 연결로 취소했고 승인 0개·관리 프로세스 종료를 확인했다. 검사 실행기 실패 경로의 정리와 Windows 시작 시간 안정성은 별도 개선 대상으로 남는다.
 
 [재시작 전](evidence/system-workspace/2026-10-20/navigation-before.jpg) · [재시작 후](evidence/system-workspace/2026-10-20/navigation-after.jpg) · [검색·집중 보기 복원](evidence/system-workspace/2026-10-20/navigation-focus.jpg)
+
+## 2026-10-20 후속: 겹치는 탐색 저장
+
+이전 Windows CI에서는 호스트가 저장한 `공유 탐색`이 빈 문자열로 덮이는 실패가 있었다. 캔버스의 자동 배치 완료도 전체 탐색 상태를 저장하므로, 화면에 남은 오래된 검색어를 뒤늦게 쓸 수 있었다. 이제 화면은 바뀐 필드만 보내고 호스트가 최신 상태에 합친다. 캔버스 변경은 탐색 범위별로 합쳐 다른 범위의 배치를 보존한다. 저장 설계 해제는 명시적인 빈 선택으로 전달한다.
+
+화면마다 저장 요청 하나만 진행하며, 기다리는 동안의 입력은 별도 보관한다. 호스트 상태와 응답에 순번을 붙여 오래된 응답이 최신 상태를 되돌리지 않게 했다. 쓰기 실패 후에도 마지막 입력을 표시하고 명시적 재시도나 다음 조작으로 다시 저장한다. 화면을 떠난 뒤에는 남은 대기 입력을 보내지 않으며, 코드에서 새 대상으로 이동한 경우 이전 탐색 세대의 입력을 재사용하지 않는다.
+
+첫 설치 실행은 `ResizeObserver` 오류 한 건 때문에 재시작 검사에서 실패했다. [당시 화면·오류 기록](evidence/system-workspace/2026-10-20/navigation-writes-initial-browser.json)을 별도로 보존한다. 자동 배치 콜백에서 부모 외부 저장소를 즉시 갱신하는 경로를 발견해 캔버스 저장을 다음 프레임으로 옮기고 범위 종료 시 취소하도록 했다. 이는 크기 변경 관측 중 재배치가 발생하는 경로를 줄이는 수정이다. 오류 메시지만으로 모든 원인을 확정하지 않으며, 오류 수집·실패 조건을 완화하지 않았다. 동작 원리는 [MDN ResizeObserver 설명](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors)을 참고했다.
+
+수정 설치본의 [호스트 기록](evidence/system-workspace/2026-10-20/navigation-writes-installed-ui.json)과 [화면 대조](evidence/system-workspace/2026-10-20/navigation-writes-browser.json)는 다음을 확인한다.
+
+- 요청 23개 성공, 탐색 저장 14개, 브라우저 오류 0개, 구현 작업 0개. 응답을 800ms 늦추는 전송 경로는 그대로 유지했다.
+- 검색어 `canEdit`, 직후 지운 빈 검색어, 집중 보기를 각각 화면 재로딩 후 확인했다.
+- 호스트 PID `32520 → 16224` 재시작 전후 함수 선택, 저장 설계, 업무 기능을 거친 경로, 펼친 트리, 노드 `(35, 35)`와 확대율 `1.041666…`를 복원했다. DOM의 노드·뷰포트 스타일도 같았다.
+- 원본 파일 8개, Git HEAD·인덱스·상태와 저장 설계를 보존했다. 설치 VSIX SHA-256은 `9cfe5d48885014dda678789edce4ac5f5803b54bce98dd44318947df7dcfe124`다.
+- [요청 순서 검사](../tests/navigation-writer.test.ts)는 늦은 캔버스 쓰기, 연속 입력과 지우기, 오래된 응답, 쓰기 실패와 재시도, 화면 종료, 새 코드 선택과 범위별 병합을 검사한다. 실제 호스트 검사는 겹치는 검색·캔버스 요청을 포함한다.
+- 최종 [전체 회귀 241개](evidence/system-workspace/2026-10-20/navigation-writes-regression.json), [호스트 검사 34개](evidence/system-workspace/2026-10-20/navigation-writes-host-integration.json), 웹·확장 빌드를 통과했다. 탐색 관련 14개 검사는 전체 회귀에도 포함되므로 별도로 더해 집계하지 않는다. [독립 대조와 소스 해시](evidence/system-workspace/2026-10-20/navigation-writes-verification.json)를 함께 보존한다.
+
+[재시작 전](evidence/system-workspace/2026-10-20/navigation-writes-before.jpg) · [재시작 후](evidence/system-workspace/2026-10-20/navigation-writes-after.jpg) · [집중 보기 복원](evidence/system-workspace/2026-10-20/navigation-writes-focus.jpg)
