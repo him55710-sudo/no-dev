@@ -1117,6 +1117,34 @@ export function DesignWorkspaceView({
             key={state.job.id}
             job={state.job}
             action={(action, payload) => actions.jobAction!(action, payload)}
+            continuation={
+              state.job.worktree &&
+              ["interrupted", "failed", "cancelled"].includes(
+                state.job.phase,
+              ) ? (
+                <ImplementationOptions
+                  key={
+                    state.execution
+                      ? `resume:${state.job.id}:${executionKey(state.execution.context)}:${state.execution.profile.revision}`
+                      : "resume-loading"
+                  }
+                  state={state}
+                  actions={actions}
+                  disabled={
+                    saving || !state.trusted || state.busy || state.stale
+                  }
+                  submitLabel="이 변경으로 이어하기"
+                  onImplement={(execution) =>
+                    perform(() =>
+                      actions.jobAction!("resumeJob", {
+                        jobId: state.job!.id,
+                        execution,
+                      }),
+                    )
+                  }
+                />
+              ) : undefined
+            }
           />
         </fieldset>
       ) : null}

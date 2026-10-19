@@ -1,0 +1,4321 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T19:39:14.068Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "3361845dccb2c09c6dc004ba64c5b477bba345ce3dac8df9ba3d9867b82c85b4",
+    "files": {
+      "out/extension.cjs": "0a1e75a950789add38b391ae5af31690f81ea01bfa27a18b6b4f44420c820fa7",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "1fc847b9803cd0a6c2153035e1da0558bd89b49e197ad305af845c5f59f48ee5",
+      "media/design.js": "0166b21f08cf53b98f1e0f238d023741527ae13dee19f5c612c6c8a4385f4196",
+      "media/design.css": "e09a7b37d8a461a015a9b5ab90796617670f7a476f80dabd837546cc35fd33d1"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "Explicit deterministic stdio fixture; no external inference.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:32:38.703Z",
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:36:13.008Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T19:36:21.205Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T19:36:21.284Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T19:36:21.360Z",
+      "ok": true
+    },
+    {
+      "action": "checkConnection",
+      "at": "2026-10-19T19:36:21.462Z",
+      "ok": true
+    },
+    {
+      "action": "saveExecution",
+      "at": "2026-10-19T19:36:44.718Z",
+      "ok": true
+    },
+    {
+      "action": "implement",
+      "at": "2026-10-19T19:36:45.064Z",
+      "ok": true,
+      "job": {
+        "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+        "specId": "system",
+        "specRevision": 1,
+        "phase": "preparing",
+        "startedAt": "2026-10-19T19:36:45.279Z",
+        "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+        "checks": [],
+        "files": [],
+        "approvals": []
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "system",
+            "targetIds": [
+              "system"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "중단 후 공유 권한 구현",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": [
+                "viewer 편집 화면이 읽기 전용으로 표시된다.",
+                "viewer의 수정 요청은 403으로 거절된다.",
+                "owner와 editor의 편집이 유지된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24",
+              "observed": "코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.",
+              "sources": [
+                {
+                  "path": "package.json",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 167,
+                  "line": 1,
+                  "endLine": 10,
+                  "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                  "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                },
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "README.md",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 2264,
+                  "line": 1,
+                  "endLine": 20,
+                  "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                  "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 1350,
+                  "line": 1,
+                  "endLine": 39,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "047136375732eb67e14ace74baf4ee216f4679024db0ec1f687b84ab37adceb1"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "file:package.json:",
+                    "kind": "file",
+                    "label": "package.json",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "package.json",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 167,
+                      "line": 1,
+                      "endLine": 10,
+                      "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                      "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                    }
+                  },
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "file:README.md:",
+                    "kind": "file",
+                    "label": "README.md",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "README.md",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 2264,
+                      "line": 1,
+                      "endLine": 20,
+                      "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                      "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n(「project」의 「title」 에 저장: 「title」)\n「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:readProject",
+                    "kind": "symbol",
+                    "label": "readProject",
+                    "summary": "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님\n「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject",
+                      "start": 207,
+                      "end": 337,
+                      "line": 7,
+                      "endLine": 10,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "6e7c5ab61abd942273918343cc6472fea32e0d3e8ddf842f751b22839f3f55ba"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:readProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!project.members[userId]",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject::condition#0",
+                      "start": 256,
+                      "end": 311,
+                      "line": 8,
+                      "endLine": 8,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "56eeba9762ffde417189d1ef2edfb19a7114bea8e92b193def7b701432b7f1c5"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:project",
+                    "kind": "symbol",
+                    "label": "project",
+                    "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "project",
+                      "start": 180,
+                      "end": 285,
+                      "line": 5,
+                      "endLine": 8,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "3473dfd94e2a61165b1d8a49fd422d58023cb9dcfa90ed75f0b65ec8209ed340"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item",
+                      "start": 371,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "76ab968fe4c7995c7738b48ce8df4ea688ecddc42bd6d7d936970f39680c0838"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:before",
+                    "kind": "symbol",
+                    "label": "before",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "before",
+                      "start": 393,
+                      "end": 423,
+                      "line": 11,
+                      "endLine": 11,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "6815420d0fda50a7a686f010f0c234202264d9d9da0509ee19742fed080a963e"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:user",
+                    "kind": "symbol",
+                    "label": "user",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "user",
+                      "start": 641,
+                      "end": 645,
+                      "line": 19,
+                      "endLine": 19,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item%231",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item#1",
+                      "start": 865,
+                      "end": 924,
+                      "line": 24,
+                      "endLine": 24,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "c605ed971bc1a3cd652d4ed32586e384dc76897978620d44f33775df1100cde9"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 75,
+                      "end": 133,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "9da2e6acd6a6192cb74e06d3ad3b05f1fee5f8bed946111df62566883e6fdaea"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 134,
+                      "end": 173,
+                      "line": 4,
+                      "endLine": 4,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "743c4ec50fba8c4dee1d5cd3825ae6963d47e5b45421e7a308a85f7585639839"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:test.js:item",
+                      "label": "item"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 378,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:readProject",
+                      "label": "readProject"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 440,
+                      "end": 468,
+                      "line": 12,
+                      "endLine": 12,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "7f26a9a7b188e6994445613959f73e2d10c767a7445a55e151d004d10bcdaf19"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 740,
+                      "end": 749,
+                      "line": 21,
+                      "endLine": 21,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [
+                  "test.js:1 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:test",
+                  "test.js:2 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:assert/strict",
+                  "test.js:9 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:11 · 호출 대상을 정적으로 확인하지 못했습니다: structuredClone",
+                  "test.js:20 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:23 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:31 · 호출 대상을 정적으로 확인하지 못했습니다: test"
+                ],
+                "totals": {
+                  "facts": 14,
+                  "relations": 11,
+                  "notices": 7
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:36:45.152Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24"
+      },
+      "observations": [
+        {
+          "id": "system",
+          "status": "unchanged"
+        }
+      ]
+    },
+    {
+      "action": "cancelJob",
+      "at": "2026-10-19T19:37:01.659Z",
+      "ok": true
+    },
+    {
+      "action": "resumeJob",
+      "at": "2026-10-19T19:37:24.491Z",
+      "ok": true,
+      "job": {
+        "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "specId": "system",
+        "specRevision": 1,
+        "phase": "preparing",
+        "startedAt": "2026-10-19T19:37:25.490Z",
+        "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+        "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+        "checks": [],
+        "files": [],
+        "approvals": []
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "system",
+            "targetIds": [
+              "system"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "중단 후 공유 권한 구현",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": [
+                "viewer 편집 화면이 읽기 전용으로 표시된다.",
+                "viewer의 수정 요청은 403으로 거절된다.",
+                "owner와 editor의 편집이 유지된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24",
+              "observed": "코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.",
+              "sources": [
+                {
+                  "path": "package.json",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 167,
+                  "line": 1,
+                  "endLine": 10,
+                  "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                  "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                },
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "README.md",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 2264,
+                  "line": 1,
+                  "endLine": 20,
+                  "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                  "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 1350,
+                  "line": 1,
+                  "endLine": 39,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "047136375732eb67e14ace74baf4ee216f4679024db0ec1f687b84ab37adceb1"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "file:package.json:",
+                    "kind": "file",
+                    "label": "package.json",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "package.json",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 167,
+                      "line": 1,
+                      "endLine": 10,
+                      "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                      "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                    }
+                  },
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "file:README.md:",
+                    "kind": "file",
+                    "label": "README.md",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "README.md",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 2264,
+                      "line": 1,
+                      "endLine": 20,
+                      "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                      "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n(「project」의 「title」 에 저장: 「title」)\n「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:readProject",
+                    "kind": "symbol",
+                    "label": "readProject",
+                    "summary": "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님\n「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject",
+                      "start": 207,
+                      "end": 337,
+                      "line": 7,
+                      "endLine": 10,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "6e7c5ab61abd942273918343cc6472fea32e0d3e8ddf842f751b22839f3f55ba"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:readProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!project.members[userId]",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject::condition#0",
+                      "start": 256,
+                      "end": 311,
+                      "line": 8,
+                      "endLine": 8,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "56eeba9762ffde417189d1ef2edfb19a7114bea8e92b193def7b701432b7f1c5"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:project",
+                    "kind": "symbol",
+                    "label": "project",
+                    "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "project",
+                      "start": 180,
+                      "end": 285,
+                      "line": 5,
+                      "endLine": 8,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "3473dfd94e2a61165b1d8a49fd422d58023cb9dcfa90ed75f0b65ec8209ed340"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item",
+                      "start": 371,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "76ab968fe4c7995c7738b48ce8df4ea688ecddc42bd6d7d936970f39680c0838"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:before",
+                    "kind": "symbol",
+                    "label": "before",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "before",
+                      "start": 393,
+                      "end": 423,
+                      "line": 11,
+                      "endLine": 11,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "6815420d0fda50a7a686f010f0c234202264d9d9da0509ee19742fed080a963e"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:user",
+                    "kind": "symbol",
+                    "label": "user",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "user",
+                      "start": 641,
+                      "end": 645,
+                      "line": 19,
+                      "endLine": 19,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item%231",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item#1",
+                      "start": 865,
+                      "end": 924,
+                      "line": 24,
+                      "endLine": 24,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "c605ed971bc1a3cd652d4ed32586e384dc76897978620d44f33775df1100cde9"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 75,
+                      "end": 133,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "9da2e6acd6a6192cb74e06d3ad3b05f1fee5f8bed946111df62566883e6fdaea"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 134,
+                      "end": 173,
+                      "line": 4,
+                      "endLine": 4,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "743c4ec50fba8c4dee1d5cd3825ae6963d47e5b45421e7a308a85f7585639839"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:test.js:item",
+                      "label": "item"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 378,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:readProject",
+                      "label": "readProject"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 440,
+                      "end": 468,
+                      "line": 12,
+                      "endLine": 12,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "7f26a9a7b188e6994445613959f73e2d10c767a7445a55e151d004d10bcdaf19"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 740,
+                      "end": 749,
+                      "line": 21,
+                      "endLine": 21,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [
+                  "test.js:1 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:test",
+                  "test.js:2 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:assert/strict",
+                  "test.js:9 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:11 · 호출 대상을 정적으로 확인하지 못했습니다: structuredClone",
+                  "test.js:20 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:23 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:31 · 호출 대상을 정적으로 확인하지 못했습니다: test"
+                ],
+                "totals": {
+                  "facts": 14,
+                  "relations": 11,
+                  "notices": 7
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:36:45.152Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24"
+      },
+      "observations": [
+        {
+          "id": "system",
+          "status": "unchanged"
+        }
+      ]
+    },
+    {
+      "action": "decideJob",
+      "at": "2026-10-19T19:37:42.328Z",
+      "ok": true
+    },
+    {
+      "action": "reviewJob",
+      "at": "2026-10-19T19:38:31.682Z",
+      "ok": true
+    },
+    {
+      "action": "applyJob",
+      "at": "2026-10-19T19:38:45.629Z",
+      "ok": true,
+      "job": {
+        "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "specId": "system",
+        "specRevision": 1,
+        "phase": "applied",
+        "startedAt": "2026-10-19T19:37:25.490Z",
+        "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+        "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "provider": "Pureobom deterministic installed-recovery protocol fixture",
+        "message": "원본 프로젝트에 반영했습니다.",
+        "checks": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+            "elapsedMs": 3950
+          }
+        ],
+        "files": [
+          {
+            "path": "policy.js",
+            "kind": "modified"
+          },
+          {
+            "path": "service.js",
+            "kind": "modified"
+          },
+          {
+            "path": "ui.js",
+            "kind": "modified"
+          }
+        ],
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "assessment": {
+          "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+          "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+          "files": [
+            {
+              "path": "policy.js",
+              "outsideScope": false
+            },
+            {
+              "path": "service.js",
+              "outsideScope": false
+            },
+            {
+              "path": "ui.js",
+              "outsideScope": false
+            }
+          ],
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "kind": "acceptance",
+              "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+            },
+            {
+              "id": "acceptance:1",
+              "kind": "acceptance",
+              "text": "viewer의 수정 요청은 403으로 거절된다."
+            },
+            {
+              "id": "acceptance:2",
+              "kind": "acceptance",
+              "text": "owner와 editor의 편집이 유지된다."
+            }
+          ]
+        },
+        "reviewDecision": {
+          "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+          "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+          "approvedScopePaths": [],
+          "reviewedVerificationPaths": [],
+          "acceptUnverified": true,
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "outcome": "unverified",
+              "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:1",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+              "checkNames": [
+                "test"
+              ]
+            }
+          ]
+        },
+        "approvals": [],
+        "recovery": [
+          {
+            "path": "policy.js",
+            "state": "after"
+          },
+          {
+            "path": "service.js",
+            "state": "after"
+          },
+          {
+            "path": "ui.js",
+            "state": "after"
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "system",
+            "targetIds": [
+              "system"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "중단 후 공유 권한 구현",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": [
+                "viewer 편집 화면이 읽기 전용으로 표시된다.",
+                "viewer의 수정 요청은 403으로 거절된다.",
+                "owner와 editor의 편집이 유지된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24",
+              "observed": "코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.",
+              "sources": [
+                {
+                  "path": "package.json",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 167,
+                  "line": 1,
+                  "endLine": 10,
+                  "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                  "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                },
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "README.md",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 2264,
+                  "line": 1,
+                  "endLine": 20,
+                  "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                  "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 1350,
+                  "line": 1,
+                  "endLine": 39,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "047136375732eb67e14ace74baf4ee216f4679024db0ec1f687b84ab37adceb1"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "file:package.json:",
+                    "kind": "file",
+                    "label": "package.json",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "package.json",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 167,
+                      "line": 1,
+                      "endLine": 10,
+                      "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                      "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                    }
+                  },
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "file:README.md:",
+                    "kind": "file",
+                    "label": "README.md",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "README.md",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 2264,
+                      "line": 1,
+                      "endLine": 20,
+                      "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                      "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n(「project」의 「title」 에 저장: 「title」)\n「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:readProject",
+                    "kind": "symbol",
+                    "label": "readProject",
+                    "summary": "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님\n「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject",
+                      "start": 207,
+                      "end": 337,
+                      "line": 7,
+                      "endLine": 10,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "6e7c5ab61abd942273918343cc6472fea32e0d3e8ddf842f751b22839f3f55ba"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:readProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!project.members[userId]",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject::condition#0",
+                      "start": 256,
+                      "end": 311,
+                      "line": 8,
+                      "endLine": 8,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "56eeba9762ffde417189d1ef2edfb19a7114bea8e92b193def7b701432b7f1c5"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:project",
+                    "kind": "symbol",
+                    "label": "project",
+                    "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "project",
+                      "start": 180,
+                      "end": 285,
+                      "line": 5,
+                      "endLine": 8,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "3473dfd94e2a61165b1d8a49fd422d58023cb9dcfa90ed75f0b65ec8209ed340"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item",
+                      "start": 371,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "76ab968fe4c7995c7738b48ce8df4ea688ecddc42bd6d7d936970f39680c0838"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:before",
+                    "kind": "symbol",
+                    "label": "before",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "before",
+                      "start": 393,
+                      "end": 423,
+                      "line": 11,
+                      "endLine": 11,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "6815420d0fda50a7a686f010f0c234202264d9d9da0509ee19742fed080a963e"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:user",
+                    "kind": "symbol",
+                    "label": "user",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "user",
+                      "start": 641,
+                      "end": 645,
+                      "line": 19,
+                      "endLine": 19,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item%231",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item#1",
+                      "start": 865,
+                      "end": 924,
+                      "line": 24,
+                      "endLine": 24,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "c605ed971bc1a3cd652d4ed32586e384dc76897978620d44f33775df1100cde9"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 75,
+                      "end": 133,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "9da2e6acd6a6192cb74e06d3ad3b05f1fee5f8bed946111df62566883e6fdaea"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 134,
+                      "end": 173,
+                      "line": 4,
+                      "endLine": 4,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "743c4ec50fba8c4dee1d5cd3825ae6963d47e5b45421e7a308a85f7585639839"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:test.js:item",
+                      "label": "item"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 378,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:readProject",
+                      "label": "readProject"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 440,
+                      "end": 468,
+                      "line": 12,
+                      "endLine": 12,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "7f26a9a7b188e6994445613959f73e2d10c767a7445a55e151d004d10bcdaf19"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 740,
+                      "end": 749,
+                      "line": 21,
+                      "endLine": 21,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [
+                  "test.js:1 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:test",
+                  "test.js:2 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:assert/strict",
+                  "test.js:9 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:11 · 호출 대상을 정적으로 확인하지 못했습니다: structuredClone",
+                  "test.js:20 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:23 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:31 · 호출 대상을 정적으로 확인하지 못했습니다: test"
+                ],
+                "totals": {
+                  "facts": 14,
+                  "relations": 11,
+                  "notices": 7
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:36:45.152Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "7de57cc9ea9b81de3b2680bc70e1f144e229ea4756eb187aaed8104e1115688b",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "e9acb963c8678be0ddc973db98d3b9def0cb451315763a4c0b1d1b3421d5a6bf",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "d43f06c3b80a741e45b88f9245ed434bc1e8cf9ac9e5f59384f5b56776d35d69",
+            "supported": true
+          }
+        ],
+        "revision": "92384ce4ed0a4ed2e6e14e8b27aadf4bd50fd372782dd1e970cc45de6ebcf37c"
+      },
+      "observations": [
+        {
+          "id": "system",
+          "status": "changed"
+        }
+      ]
+    },
+    {
+      "action": "undoJob",
+      "at": "2026-10-19T19:39:03.276Z",
+      "ok": true,
+      "job": {
+        "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "specId": "system",
+        "specRevision": 1,
+        "phase": "undone",
+        "startedAt": "2026-10-19T19:37:25.490Z",
+        "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+        "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "provider": "Pureobom deterministic installed-recovery protocol fixture",
+        "message": "이번 작업의 변경을 되돌렸습니다.",
+        "checks": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+            "elapsedMs": 3950
+          }
+        ],
+        "files": [
+          {
+            "path": "policy.js",
+            "kind": "modified"
+          },
+          {
+            "path": "service.js",
+            "kind": "modified"
+          },
+          {
+            "path": "ui.js",
+            "kind": "modified"
+          }
+        ],
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "assessment": {
+          "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+          "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+          "files": [
+            {
+              "path": "policy.js",
+              "outsideScope": false
+            },
+            {
+              "path": "service.js",
+              "outsideScope": false
+            },
+            {
+              "path": "ui.js",
+              "outsideScope": false
+            }
+          ],
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "kind": "acceptance",
+              "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+            },
+            {
+              "id": "acceptance:1",
+              "kind": "acceptance",
+              "text": "viewer의 수정 요청은 403으로 거절된다."
+            },
+            {
+              "id": "acceptance:2",
+              "kind": "acceptance",
+              "text": "owner와 editor의 편집이 유지된다."
+            }
+          ]
+        },
+        "reviewDecision": {
+          "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+          "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+          "approvedScopePaths": [],
+          "reviewedVerificationPaths": [],
+          "acceptUnverified": true,
+          "criteria": [
+            {
+              "id": "acceptance:0",
+              "outcome": "unverified",
+              "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:1",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+              "checkNames": [
+                "test"
+              ]
+            },
+            {
+              "id": "acceptance:2",
+              "outcome": "confirmed",
+              "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+              "checkNames": [
+                "test"
+              ]
+            }
+          ]
+        },
+        "approvals": [],
+        "recovery": [
+          {
+            "path": "policy.js",
+            "state": "before"
+          },
+          {
+            "path": "service.js",
+            "state": "before"
+          },
+          {
+            "path": "ui.js",
+            "state": "before"
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "system",
+            "targetIds": [
+              "system"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "중단 후 공유 권한 구현",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": [
+                "viewer 편집 화면이 읽기 전용으로 표시된다.",
+                "viewer의 수정 요청은 403으로 거절된다.",
+                "owner와 editor의 편집이 유지된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24",
+              "observed": "코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.",
+              "sources": [
+                {
+                  "path": "package.json",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 167,
+                  "line": 1,
+                  "endLine": 10,
+                  "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                  "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                },
+                {
+                  "path": "policy.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 103,
+                  "line": 1,
+                  "endLine": 4,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                },
+                {
+                  "path": "README.md",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 2264,
+                  "line": 1,
+                  "endLine": 20,
+                  "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                  "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 338,
+                  "line": 1,
+                  "endLine": 11,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                },
+                {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 1350,
+                  "line": 1,
+                  "endLine": 39,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "047136375732eb67e14ace74baf4ee216f4679024db0ec1f687b84ab37adceb1"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 147,
+                  "line": 1,
+                  "endLine": 6,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "file:package.json:",
+                    "kind": "file",
+                    "label": "package.json",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "package.json",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 167,
+                      "line": 1,
+                      "endLine": 10,
+                      "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                      "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                    }
+                  },
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "file:README.md:",
+                    "kind": "file",
+                    "label": "README.md",
+                    "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": false,
+                    "source": {
+                      "path": "README.md",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 2264,
+                      "line": 1,
+                      "endLine": 20,
+                      "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                      "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n(「project」의 「title」 에 저장: 「title」)\n「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:readProject",
+                    "kind": "symbol",
+                    "label": "readProject",
+                    "summary": "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님\n「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject",
+                      "start": 207,
+                      "end": 337,
+                      "line": 7,
+                      "endLine": 10,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "6e7c5ab61abd942273918343cc6472fea32e0d3e8ddf842f751b22839f3f55ba"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:readProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!project.members[userId]",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "readProject::condition#0",
+                      "start": 256,
+                      "end": 311,
+                      "line": 8,
+                      "endLine": 8,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "56eeba9762ffde417189d1ef2edfb19a7114bea8e92b193def7b701432b7f1c5"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:project",
+                    "kind": "symbol",
+                    "label": "project",
+                    "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "project",
+                      "start": 180,
+                      "end": 285,
+                      "line": 5,
+                      "endLine": 8,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "3473dfd94e2a61165b1d8a49fd422d58023cb9dcfa90ed75f0b65ec8209ed340"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item",
+                      "start": 371,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "76ab968fe4c7995c7738b48ce8df4ea688ecddc42bd6d7d936970f39680c0838"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:before",
+                    "kind": "symbol",
+                    "label": "before",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "before",
+                      "start": 393,
+                      "end": 423,
+                      "line": 11,
+                      "endLine": 11,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "6815420d0fda50a7a686f010f0c234202264d9d9da0509ee19742fed080a963e"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:user",
+                    "kind": "symbol",
+                    "label": "user",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "user",
+                      "start": 641,
+                      "end": 645,
+                      "line": 19,
+                      "endLine": 19,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+                    }
+                  },
+                  {
+                    "id": "symbol:test.js:item%231",
+                    "kind": "symbol",
+                    "label": "item",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "item#1",
+                      "start": 865,
+                      "end": 924,
+                      "line": 24,
+                      "endLine": 24,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "c605ed971bc1a3cd652d4ed32586e384dc76897978620d44f33775df1100cde9"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:service.js:",
+                      "label": "service.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 75,
+                      "end": 133,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "9da2e6acd6a6192cb74e06d3ad3b05f1fee5f8bed946111df62566883e6fdaea"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 134,
+                      "end": 173,
+                      "line": 4,
+                      "endLine": 4,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "743c4ec50fba8c4dee1d5cd3825ae6963d47e5b45421e7a308a85f7585639839"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:test.js:item",
+                      "label": "item"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 378,
+                      "end": 387,
+                      "line": 10,
+                      "endLine": 10,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:readProject",
+                      "label": "readProject"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 440,
+                      "end": 468,
+                      "line": 12,
+                      "endLine": 12,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "7f26a9a7b188e6994445613959f73e2d10c767a7445a55e151d004d10bcdaf19"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:test.js:project",
+                      "label": "project"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 740,
+                      "end": 749,
+                      "line": 21,
+                      "endLine": 21,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "file:ui.js:",
+                      "label": "ui.js"
+                    },
+                    "to": {
+                      "id": "file:policy.js:",
+                      "label": "policy.js"
+                    },
+                    "kind": "imports",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 0,
+                      "end": 38,
+                      "line": 1,
+                      "endLine": 1,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [
+                  "test.js:1 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:test",
+                  "test.js:2 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:assert/strict",
+                  "test.js:9 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:11 · 호출 대상을 정적으로 확인하지 못했습니다: structuredClone",
+                  "test.js:20 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:23 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+                  "test.js:31 · 호출 대상을 정적으로 확인하지 못했습니다: test"
+                ],
+                "totals": {
+                  "facts": 14,
+                  "relations": 11,
+                  "notices": 7
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:36:45.152Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24"
+      },
+      "observations": [
+        {
+          "id": "system",
+          "status": "unchanged"
+        }
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "preparing",
+      "startedAt": "2026-10-19T19:36:45.279Z",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T19:36:45.279Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "approval",
+      "startedAt": "2026-10-19T19:36:45.279Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54"
+        }
+      ]
+    },
+    {
+      "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "cancelling",
+      "startedAt": "2026-10-19T19:36:45.279Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54"
+        }
+      ]
+    },
+    {
+      "id": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "cancelled",
+      "startedAt": "2026-10-19T19:36:45.279Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "구현 작업을 취소했습니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "preparing",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "approval",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723"
+        }
+      ]
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "checking",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "review",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+          "elapsedMs": 3950
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+      "assessment": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer의 수정 요청은 403으로 거절된다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor의 편집이 유지된다."
+          }
+        ]
+      },
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "applying",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+          "elapsedMs": 3950
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+      "assessment": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer의 수정 요청은 403으로 거절된다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor의 편집이 유지된다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "unverified",
+            "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "approvals": []
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "applied",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "원본 프로젝트에 반영했습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+          "elapsedMs": 3950
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+      "assessment": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer의 수정 요청은 403으로 거절된다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor의 편집이 유지된다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "unverified",
+            "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "approvals": [],
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "after"
+        },
+        {
+          "path": "service.js",
+          "state": "after"
+        },
+        {
+          "path": "ui.js",
+          "state": "after"
+        }
+      ]
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "applying",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "원본 프로젝트에 반영했습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+          "elapsedMs": 3950
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+      "assessment": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer의 수정 요청은 403으로 거절된다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor의 편집이 유지된다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "unverified",
+            "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "approvals": [],
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "after"
+        },
+        {
+          "path": "service.js",
+          "state": "after"
+        },
+        {
+          "path": "ui.js",
+          "state": "after"
+        }
+      ]
+    },
+    {
+      "id": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "specId": "system",
+      "specRevision": 1,
+      "phase": "undone",
+      "startedAt": "2026-10-19T19:37:25.490Z",
+      "continuedFrom": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\4326a31447da6b22\\9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "이번 작업의 변경을 되돌렸습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+          "elapsedMs": 3950
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "service.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+      "assessment": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "service.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer 편집 화면이 읽기 전용으로 표시된다."
+          },
+          {
+            "id": "acceptance:1",
+            "kind": "acceptance",
+            "text": "viewer의 수정 요청은 403으로 거절된다."
+          },
+          {
+            "id": "acceptance:2",
+            "kind": "acceptance",
+            "text": "owner와 editor의 편집이 유지된다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+        "reviewId": "b07eadfaa5e783c41cb92b2f23f0138c3c9fdbbc0aa3774216ff19b41b85f268",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": true,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "unverified",
+            "note": "검증 에이전트 기록: node --test test.js에서 viewer controls 데이터의 editable=false, reason=읽기 전용을 확인했다. 이 시험 프로젝트에는 실제 화면 렌더러가 없어 화면 표시 자체는 미확인으로 남긴다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:1",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: 실제 Node 검사에서 updateProject의 viewer 요청이 status=403 예외를 반환하고 데이터가 보존됨을 확인했다. HTTP 서버 전체의 검증은 아니다.",
+            "checkNames": [
+              "test"
+            ]
+          },
+          {
+            "id": "acceptance:2",
+            "outcome": "confirmed",
+            "note": "검증 에이전트 기록: alice(owner), bob(editor)의 updateProject 결과와 편집 가능 데이터가 실제 Node 검사에서 통과했다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "approvals": [],
+      "recovery": [
+        {
+          "path": "policy.js",
+          "state": "before"
+        },
+        {
+          "path": "service.js",
+          "state": "before"
+        },
+        {
+          "path": "ui.js",
+          "state": "before"
+        }
+      ]
+    }
+  ],
+  "continuationWitness": {
+    "previousJobId": "f8c3e0a2-d53a-4cce-88e7-2cfd2a5ffe54",
+    "resumedJobId": "9dc792fb-0f83-4a86-82f0-d8cd759c8723",
+    "originalPartialSha256": "aebfff9dd63f0c9cc16c22a1fe67186744837f4461584da7cb72c4b5d4af26af",
+    "oldWorkspacePreserved": true,
+    "freshChecks": [
+      {
+        "name": "test",
+        "status": "passed",
+        "exitCode": 0,
+        "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (2.9527ms)\n✔ alice retains editing (0.1594ms)\n✔ bob retains editing (0.106ms)\n✔ membership in another project does not grant access (0.1939ms)\n✔ viewer controls are disabled with an explanation (0.186ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 113.3475\n",
+        "elapsedMs": 3950
+      }
+    ]
+  },
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "system",
+        "targetIds": [
+          "system"
+        ],
+        "revision": 1,
+        "content": {
+          "title": "중단 후 공유 권한 구현",
+          "purpose": "",
+          "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+          "policies": "",
+          "inputsOutputs": "",
+          "failures": "",
+          "invariants": [],
+          "acceptance": [
+            "viewer 편집 화면이 읽기 전용으로 표시된다.",
+            "viewer의 수정 요청은 403으로 거절된다.",
+            "owner와 editor의 편집이 유지된다."
+          ]
+        },
+        "baseline": {
+          "graphRevision": "d5f483c79d5cf2ec277893136848e32c404f0be345eb2bd18407ed898321eb24",
+          "observed": "코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.",
+          "sources": [
+            {
+              "path": "package.json",
+              "symbol": "",
+              "start": 0,
+              "end": 167,
+              "line": 1,
+              "endLine": 10,
+              "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+              "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+            },
+            {
+              "path": "policy.js",
+              "symbol": "",
+              "start": 0,
+              "end": 103,
+              "line": 1,
+              "endLine": 4,
+              "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+              "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+            },
+            {
+              "path": "README.md",
+              "symbol": "",
+              "start": 0,
+              "end": 2264,
+              "line": 1,
+              "endLine": 20,
+              "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+              "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+            },
+            {
+              "path": "service.js",
+              "symbol": "",
+              "start": 0,
+              "end": 338,
+              "line": 1,
+              "endLine": 11,
+              "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+              "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+            },
+            {
+              "path": "test.js",
+              "symbol": "",
+              "start": 0,
+              "end": 1350,
+              "line": 1,
+              "endLine": 39,
+              "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+              "contentHash": "047136375732eb67e14ace74baf4ee216f4679024db0ec1f687b84ab37adceb1"
+            },
+            {
+              "path": "ui.js",
+              "symbol": "",
+              "start": 0,
+              "end": 147,
+              "line": 1,
+              "endLine": 6,
+              "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+              "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+            }
+          ],
+          "observations": {
+            "schemaVersion": 1,
+            "facts": [
+              {
+                "id": "file:package.json:",
+                "kind": "file",
+                "label": "package.json",
+                "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": false,
+                "source": {
+                  "path": "package.json",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 167,
+                  "line": 1,
+                  "endLine": 10,
+                  "fileHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+                  "contentHash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae"
+                }
+              },
+              {
+                "id": "symbol:policy.js:canEdit",
+                "kind": "symbol",
+                "label": "canEdit",
+                "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              },
+              {
+                "id": "file:README.md:",
+                "kind": "file",
+                "label": "README.md",
+                "summary": "구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": false,
+                "source": {
+                  "path": "README.md",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 2264,
+                  "line": 1,
+                  "endLine": 20,
+                  "fileHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+                  "contentHash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d"
+                }
+              },
+              {
+                "id": "symbol:service.js:updateProject",
+                "kind": "symbol",
+                "label": "updateProject",
+                "summary": "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n(「project」의 「title」 에 저장: 「title」)\n「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "updateProject",
+                  "start": 39,
+                  "end": 206,
+                  "line": 2,
+                  "endLine": 6,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                }
+              },
+              {
+                "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "!canEdit(project.members[userId])",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "updateProject::condition#0",
+                  "start": 97,
+                  "end": 161,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                }
+              },
+              {
+                "id": "symbol:service.js:readProject",
+                "kind": "symbol",
+                "label": "readProject",
+                "summary": "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님\n「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "readProject",
+                  "start": 207,
+                  "end": 337,
+                  "line": 7,
+                  "endLine": 10,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "6e7c5ab61abd942273918343cc6472fea32e0d3e8ddf842f751b22839f3f55ba"
+                }
+              },
+              {
+                "id": "rule:service.js:readProject%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "!project.members[userId]",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "readProject::condition#0",
+                  "start": 256,
+                  "end": 311,
+                  "line": 8,
+                  "endLine": 8,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "56eeba9762ffde417189d1ef2edfb19a7114bea8e92b193def7b701432b7f1c5"
+                }
+              },
+              {
+                "id": "symbol:test.js:project",
+                "kind": "symbol",
+                "label": "project",
+                "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "project",
+                  "start": 180,
+                  "end": 285,
+                  "line": 5,
+                  "endLine": 8,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "3473dfd94e2a61165b1d8a49fd422d58023cb9dcfa90ed75f0b65ec8209ed340"
+                }
+              },
+              {
+                "id": "symbol:test.js:item",
+                "kind": "symbol",
+                "label": "item",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "item",
+                  "start": 371,
+                  "end": 387,
+                  "line": 10,
+                  "endLine": 10,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "76ab968fe4c7995c7738b48ce8df4ea688ecddc42bd6d7d936970f39680c0838"
+                }
+              },
+              {
+                "id": "symbol:test.js:before",
+                "kind": "symbol",
+                "label": "before",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "before",
+                  "start": 393,
+                  "end": 423,
+                  "line": 11,
+                  "endLine": 11,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "6815420d0fda50a7a686f010f0c234202264d9d9da0509ee19742fed080a963e"
+                }
+              },
+              {
+                "id": "symbol:test.js:user",
+                "kind": "symbol",
+                "label": "user",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "user",
+                  "start": 641,
+                  "end": 645,
+                  "line": 19,
+                  "endLine": 19,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+                }
+              },
+              {
+                "id": "symbol:test.js:item%231",
+                "kind": "symbol",
+                "label": "item",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "item#1",
+                  "start": 865,
+                  "end": 924,
+                  "line": 24,
+                  "endLine": 24,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "c605ed971bc1a3cd652d4ed32586e384dc76897978620d44f33775df1100cde9"
+                }
+              },
+              {
+                "id": "symbol:ui.js:editControls",
+                "kind": "symbol",
+                "label": "editControls",
+                "summary": "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "editControls",
+                  "start": 39,
+                  "end": 146,
+                  "line": 2,
+                  "endLine": 5,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                }
+              },
+              {
+                "id": "symbol:ui.js:editControls.editable",
+                "kind": "symbol",
+                "label": "editable",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "editControls.editable",
+                  "start": 84,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "from": {
+                  "id": "file:service.js:",
+                  "label": "service.js"
+                },
+                "to": {
+                  "id": "file:policy.js:",
+                  "label": "policy.js"
+                },
+                "kind": "imports",
+                "count": 1,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 38,
+                  "line": 1,
+                  "endLine": 1,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                }
+              },
+              {
+                "from": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 102,
+                  "end": 134,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "file:service.js:",
+                  "label": "service.js"
+                },
+                "kind": "imports",
+                "count": 1,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 75,
+                  "end": 133,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "9da2e6acd6a6192cb74e06d3ad3b05f1fee5f8bed946111df62566883e6fdaea"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "file:ui.js:",
+                  "label": "ui.js"
+                },
+                "kind": "imports",
+                "count": 1,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 134,
+                  "end": 173,
+                  "line": 4,
+                  "endLine": 4,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "743c4ec50fba8c4dee1d5cd3825ae6963d47e5b45421e7a308a85f7585639839"
+                }
+              },
+              {
+                "from": {
+                  "id": "symbol:test.js:item",
+                  "label": "item"
+                },
+                "to": {
+                  "id": "symbol:test.js:project",
+                  "label": "project"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 378,
+                  "end": 387,
+                  "line": 10,
+                  "endLine": 10,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:service.js:readProject",
+                  "label": "readProject"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 440,
+                  "end": 468,
+                  "line": 12,
+                  "endLine": 12,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "7f26a9a7b188e6994445613959f73e2d10c767a7445a55e151d004d10bcdaf19"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "kind": "calls",
+                "count": 3,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 508,
+                  "end": 548,
+                  "line": 14,
+                  "endLine": 14,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:test.js:project",
+                  "label": "project"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 740,
+                  "end": 749,
+                  "line": 21,
+                  "endLine": 21,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "794e74b560af9c316e117291efd721a5ebf54b539587099e20258637528e4054"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:ui.js:editControls",
+                  "label": "editControls"
+                },
+                "kind": "calls",
+                "count": 3,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 1163,
+                  "end": 1185,
+                  "line": 32,
+                  "endLine": 32,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                }
+              },
+              {
+                "from": {
+                  "id": "file:ui.js:",
+                  "label": "ui.js"
+                },
+                "to": {
+                  "id": "file:policy.js:",
+                  "label": "policy.js"
+                },
+                "kind": "imports",
+                "count": 1,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 0,
+                  "end": 38,
+                  "line": 1,
+                  "endLine": 1,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "3ea92462ec5d72e487bd463a9269a52b1873f50c369ffe7a68198bf02e90236a"
+                }
+              },
+              {
+                "from": {
+                  "id": "symbol:ui.js:editControls.editable",
+                  "label": "editable"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 95,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                }
+              }
+            ],
+            "notices": [
+              "test.js:1 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:test",
+              "test.js:2 · 가져온 범위 밖의 모듈 또는 미해석 경로: node:assert/strict",
+              "test.js:9 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+              "test.js:11 · 호출 대상을 정적으로 확인하지 못했습니다: structuredClone",
+              "test.js:20 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+              "test.js:23 · 호출 대상을 정적으로 확인하지 못했습니다: test",
+              "test.js:31 · 호출 대상을 정적으로 확인하지 못했습니다: test"
+            ],
+            "totals": {
+              "facts": 14,
+              "relations": 11,
+              "notices": 7
+            }
+          }
+        },
+        "updatedAt": "2026-10-19T19:36:45.152Z"
+      }
+    ]
+  },
+  "originalRestored": true
+}

@@ -18,6 +18,7 @@ import {
 import { CodexAppServer } from "./appServer";
 import {
   createJobWorkspace,
+  seedJobWorkspace,
   reviewJobWorkspace,
   applyJobReview,
   undoJobReview,
@@ -50,6 +51,16 @@ export const jobRecordSchema = z
   })
   .strict();
 
+type StartOptions = {
+  executable: string;
+  model?: string;
+  checks: VerificationName[];
+  allowExternal: boolean;
+  specSnapshot?: LivingSpec;
+  verification?: Pick<ExecutionContext, "manager" | "scripts">;
+};
+type Continuation = { workspace: JobWorkspace; review: ChangeReview };
+
 export class ImplementationJobs {
   state?: ImplementationJob;
   private workspace?: JobWorkspace;
@@ -57,6 +68,7 @@ export class ImplementationJobs {
   private abort?: AbortController;
   private server?: CodexAppServer;
   private executing = false;
+  private continuing = false;
   private source?: string;
   private request?: ChangeRequest;
   private specSnapshot?: LivingSpec;
@@ -65,7 +77,7 @@ export class ImplementationJobs {
   private storageError?: Error;
   private disposed = false;
   get isRunning() {
-    return this.executing || jobIsActive(this.state);
+    return this.continuing || this.executing || jobIsActive(this.state);
   }
   get savedSpec() {
     return this.specSnapshot ? JSON.stringify(this.specSnapshot) : undefined;
@@ -113,26 +125,75 @@ export class ImplementationJobs {
     await this.pending;
     if (this.storageError) throw this.storageError;
   }
-  start(
-    root: string,
-    request: ChangeRequest,
-    options: {
-      executable: string;
-      model?: string;
-      checks: VerificationName[];
-      allowExternal: boolean;
-      specSnapshot?: LivingSpec;
-      verification?: Pick<ExecutionContext, "manager" | "scripts">;
-    },
-  ) {
+  start(root: string, request: ChangeRequest, options: StartOptions) {
     if (!options.allowExternal)
       throw Error("Codex에 설계와 프로젝트 코드를 전달하는 선택이 필요합니다.");
     if (!options.checks.length)
       throw Error("구현 후 실행할 검사 명령을 선택해 주세요.");
-    if (this.executing || jobIsActive(this.state))
-      throw Error("이미 구현 작업이 실행 중입니다.");
+    if (this.isRunning) throw Error("이미 구현 작업이 실행 중입니다.");
     if (this.state?.phase === "recovery")
       throw Error("미완료 파일 변경을 먼저 복구해 주세요.");
+    return this.begin(root, request, options);
+  }
+  async resume(root: string, options: StartOptions) {
+    if (!options.allowExternal || !options.checks.length)
+      throw Error(
+        "Codex에 전달할 선택과 다시 실행할 검사 명령을 확인해 주세요.",
+      );
+    if (
+      this.isRunning ||
+      !this.state ||
+      !this.state.worktree ||
+      !this.workspace ||
+      !this.request ||
+      !["interrupted", "failed", "cancelled"].includes(this.state.phase)
+    )
+      throw Error("중단된 작업 복사본이 있어야 이어할 수 있습니다.");
+    if (
+      !this.specSnapshot ||
+      JSON.stringify(options.specSnapshot) !== JSON.stringify(this.specSnapshot)
+    )
+      throw Error(
+        "이전 작업의 설계와 현재 설계가 다릅니다. 새 설계로 구현해 주세요.",
+      );
+    this.continuing = true;
+    try {
+      if ((await realpath(root)) !== this.source)
+        throw Error("이전 작업의 프로젝트가 아닙니다.");
+      if (await readApplyJournal(this.workspace))
+        throw Error("파일 반영 기록이 있는 작업은 이어할 수 없습니다.");
+      const continuation = {
+        workspace: this.workspace,
+        review: await reviewJobWorkspace(this.workspace),
+      };
+      // Persist the exact candidate before another model can change its copy.
+      // Old approval IDs and review decisions never grant the new job anything.
+      this.review = continuation.review;
+      this.state.reviewId = this.review.id;
+      this.state.files = this.review.files.map((file) => ({
+        path: file.path,
+        kind:
+          file.before === null
+            ? "added"
+            : file.after === null
+              ? "deleted"
+              : "modified",
+      }));
+      this.state.approvals = [];
+      this.state.reviewDecision = undefined;
+      this.emit();
+      await this.flush();
+      return this.begin(root, this.request, options, continuation);
+    } finally {
+      this.continuing = false;
+    }
+  }
+  private begin(
+    root: string,
+    request: ChangeRequest,
+    options: StartOptions,
+    continuation?: Continuation,
+  ) {
     this.request = changeRequestSchema.parse(request);
     this.specSnapshot = options.specSnapshot
       ? livingSpecSchema.parse(options.specSnapshot)
@@ -150,13 +211,14 @@ export class ImplementationJobs {
       specRevision: request.specRevision,
       phase: "preparing",
       startedAt: new Date().toISOString(),
+      continuedFrom: continuation?.workspace.id,
       message: "현재 파일을 별도 Git 작업 공간에 복사합니다.",
       checks: [],
       files: [],
       approvals: [],
     };
     this.emit();
-    void this.execute(root, request, options, this.abort.signal);
+    void this.execute(root, request, options, this.abort.signal, continuation);
     return this.state;
   }
   private async execute(
@@ -169,6 +231,7 @@ export class ImplementationJobs {
       verification?: Pick<ExecutionContext, "manager" | "scripts">;
     },
     signal: AbortSignal,
+    continuation?: Continuation,
   ) {
     const state = this.state!;
     try {
@@ -188,6 +251,12 @@ export class ImplementationJobs {
         process.platform === "win32",
       ));
       signal.throwIfAborted();
+      if (continuation)
+        await seedJobWorkspace(
+          workspace,
+          continuation.workspace,
+          continuation.review,
+        );
       const copiedChecks = await availableChecks(workspace.path, true);
       if (
         copiedChecks.manager !== verification.manager ||
@@ -205,6 +274,12 @@ export class ImplementationJobs {
           throw Error(`분석 후 원본이 바뀌었습니다: ${ref.path}`);
       state.worktree = workspace.path;
       const prompt = [
+        ...(continuation
+          ? [
+              "Continue an interrupted implementation. This new worktree contains the captured partial changes from the earlier job. Inspect and preserve useful changes, finish the same confirmed design, and rerun every selected check. Prior approvals, completion claims and test results are not valid evidence for this new session.",
+              `Existing partial changes: ${continuation.review.files.map((file) => file.path).join(", ") || "none"}.`,
+            ]
+          : []),
         "Implement this confirmed design across the real UI, API, shared policies and relevant tests in the provided worktree.",
         "Keep unrelated behavior unchanged. Inspect the existing code before changing it. Use the acceptance criteria as regression cases. Do not simply alter test expectations to make failures disappear.",
         "The following JSON is the user's design and source-backed context. The scope is a starting point; follow real dependencies and include necessary tests. Report any unresolved acceptance criteria honestly.",
@@ -562,6 +637,8 @@ export class ImplementationJobs {
     }
     // Validate the transaction before replacing the selected in-memory job.
     const journal = await readApplyJournal(workspace);
+    const incompleteContinuation =
+      !!record.state.continuedFrom && !record.state.worktree && !journal;
     let reviewMatches = true;
     if (!journal && record.state.phase === "review")
       reviewMatches =
@@ -569,13 +646,30 @@ export class ImplementationJobs {
         record.review.id === record.state.reviewId &&
         (await reviewJobWorkspace(workspace)).id === record.review.id;
     this.source = source;
-    this.workspace = workspace;
+    this.workspace = incompleteContinuation ? undefined : workspace;
     this.request = record.request;
     this.specSnapshot = record.specSnapshot;
     this.recordDirectory = workspace.directory;
     this.state = record.state;
-    this.state.worktree = workspace.path;
+    this.state.worktree = incompleteContinuation ? undefined : workspace.path;
     this.review = record.review;
+    if (incompleteContinuation) {
+      this.state.phase = "interrupted";
+      this.state.approvals = [];
+      this.state.previousChecks = this.state.checks.length
+        ? this.state.checks
+        : this.state.previousChecks;
+      this.state.checks = [];
+      this.state.files = [];
+      this.state.reviewId = undefined;
+      this.state.reviewDecision = undefined;
+      this.state.assessment = undefined;
+      this.review = undefined;
+      this.state.message =
+        "이어하기 복사 준비가 완료되지 않았습니다. 이전 작업 보기를 열어 보존된 변경에서 다시 이어해 주세요.";
+      this.emit(false);
+      return this.state;
+    }
     if (this.review) {
       this.state.assessment = assessReview(record.request, this.review);
       if (this.state.reviewDecision) {
@@ -606,6 +700,9 @@ export class ImplementationJobs {
     this.state.approvals = [];
     if (jobIsActive(this.state) && this.state.phase !== "applying") {
       this.state.phase = "interrupted";
+      this.state.previousChecks = this.state.checks.length
+        ? this.state.checks
+        : this.state.previousChecks;
       this.state.checks = [];
       this.state.reviewDecision = undefined;
       this.state.message =
@@ -625,6 +722,9 @@ export class ImplementationJobs {
     } else if (this.state.phase === "review") {
       if (!reviewMatches) {
         this.state.phase = "interrupted";
+        this.state.previousChecks = this.state.checks.length
+          ? this.state.checks
+          : this.state.previousChecks;
         this.state.checks = [];
         this.state.reviewDecision = undefined;
         this.state.message =

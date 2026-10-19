@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Continue interrupted, failed or cancelled implementation changes in a fresh worktree and model session. Preserve the previous candidate, require the same design and original files, request fresh approvals and rerun checks before review/apply/undo. Verify managed-host death and installed UI cancellation separately; see [continuation evidence and limits](docs/IMPLEMENTATION_CONTINUATION.md).
 - Preserve current search, selection and canvas locations when navigation saves overlap. Merge changed fields, order acknowledgements, retain failed edits for retry and cancel pending layout publication on scope exit. Verify delayed saves and installed-host restoration; retain the initial browser failure separately. See [navigation verification](docs/WORKSPACE_NAVIGATION.md).
 - Contain Windows implementation providers and verification commands in per-invocation OS jobs, including detached descendants. Preserve stdio and exit codes, stop leftover writers after launcher or managed-host exit, and retain interrupted jobs for explicit review. See [process lifetime and verification scope](docs/WINDOWS_PROCESS_SCOPE.md).
 - Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.

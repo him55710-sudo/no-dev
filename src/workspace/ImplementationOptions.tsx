@@ -22,11 +22,13 @@ export function ImplementationOptions({
   actions,
   disabled,
   onImplement,
+  submitLabel = "저장하고 구현",
 }: {
   state: DesignWorkspaceState;
   actions: ExecutionActions;
   disabled: boolean;
   onImplement: (request: ExecutionUse) => void;
+  submitLabel?: string;
 }) {
   const execution = state.execution;
   const matches = execution
@@ -224,7 +226,7 @@ export function ImplementationOptions({
               })
             }
           >
-            저장하고 구현
+            {submitLabel}
           </button>
         </>
       ) : (

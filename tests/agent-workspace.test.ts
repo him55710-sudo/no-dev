@@ -13,6 +13,7 @@ import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import {
   createJobWorkspace,
+  seedJobWorkspace,
   reviewJobWorkspace,
   applyJobReview,
   undoJobReview,
@@ -48,6 +49,56 @@ async function fixture() {
   return { directory, source, storage: resolve(directory, "jobs") };
 }
 describe("isolated implementation and review", { timeout: 30000 }, () => {
+  it("carries modified, added and deleted files into an independent continuation without touching the original candidate", async () => {
+    const f = await fixture();
+    const before = await createJobWorkspace(f.source, f.storage);
+    await writeFile(
+      resolve(before.path, "policy.ts"),
+      "export const canEdit = false;\n",
+    );
+    await unlink(resolve(before.path, "api.ts"));
+    await writeFile(
+      resolve(before.path, "new.ts"),
+      "export const kept = true;\n",
+    );
+    const checkpoint = await reviewJobWorkspace(before);
+    const after = await createJobWorkspace(f.source, f.storage);
+    await seedJobWorkspace(after, before, checkpoint);
+    expect((await reviewJobWorkspace(after)).id).toBe(checkpoint.id);
+    expect(await readFile(resolve(f.source, "policy.ts"), "utf8")).toContain(
+      "true",
+    );
+    expect(await git(f.source, "status", "--porcelain")).toBe("");
+    await writeFile(
+      resolve(after.path, "policy.ts"),
+      "// later implementation\n",
+    );
+    expect((await reviewJobWorkspace(before)).id).toBe(checkpoint.id);
+  });
+  it("rejects changed source and unrelated checkpoints before copying any partial change", async () => {
+    const f = await fixture();
+    const before = await createJobWorkspace(f.source, f.storage);
+    await writeFile(
+      resolve(before.path, "policy.ts"),
+      "export const canEdit = false;\n",
+    );
+    const checkpoint = await reviewJobWorkspace(before);
+    const same = await createJobWorkspace(f.source, f.storage);
+    await expect(
+      seedJobWorkspace(same, before, { ...checkpoint, workspaceId: same.id }),
+    ).rejects.toThrow(/원본/);
+    await writeFile(resolve(f.source, "api.ts"), "// new user edit\n");
+    const changed = await createJobWorkspace(f.source, f.storage);
+    await expect(seedJobWorkspace(changed, before, checkpoint)).rejects.toThrow(
+      /원본/,
+    );
+    expect(
+      await readFile(resolve(changed.path, "policy.ts"), "utf8"),
+    ).toContain("true");
+    expect(await readFile(resolve(f.source, "api.ts"), "utf8")).toBe(
+      "// new user edit\n",
+    );
+  });
   it("keeps native tools runnable outside a deep profile and restores the exact compact worktree", async () => {
     const f = await fixture();
     const storage = resolve(

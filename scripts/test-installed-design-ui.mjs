@@ -26,11 +26,19 @@ const realProvider = !!process.argv[2];
 const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
 const navigationValidation = process.env.PUREOBOM_NAVIGATION_UI === "1";
 const observationValidation = process.env.PUREOBOM_OBSERVATION_UI === "1";
+const continuationValidation = process.env.PUREOBOM_CONTINUATION_UI === "1";
 assert.ok(
-  [navigationValidation, reconnectValidation, observationValidation].filter(
-    Boolean,
-  ).length <= 1,
+  [
+    navigationValidation,
+    reconnectValidation,
+    observationValidation,
+    continuationValidation,
+  ].filter(Boolean).length <= 1,
   "Choose one restart validation mode.",
+);
+assert.ok(
+  !(continuationValidation && realProvider),
+  "The continuation UI fixture uses a deterministic partial edit; real inference is a separate validation.",
 );
 assert.ok(
   !((navigationValidation || observationValidation) && realProvider),
@@ -83,6 +91,19 @@ if (realProvider) {
   await appendFile(resolve(source, ".git/info/exclude"), "\n.pureobom/\n");
 } else {
   await cp("tests/fixtures/installed-recovery", source, { recursive: true });
+  if (continuationValidation) {
+    const peer = resolve(source, "app-server");
+    await writeFile(
+      peer,
+      (await readFile(peer, "utf8")).replace(
+        "reply(message.id, { turn: {",
+        `if (message.params.input[0].text.includes('Continue an interrupted implementation.')) {
+        if (!readFileSync('policy.js', 'utf8').startsWith('// partial implementation')) throw Error('Partial change missing from continuation');
+      } else writeFileSync('policy.js', '// partial implementation\\n' + readFileSync('policy.js', 'utf8'));
+      reply(message.id, { turn: {`,
+      ),
+    );
+  }
   await git("init");
   await git("config", "user.name", "Installed UI fixture");
   await git("config", "user.email", "fixture@example.invalid");
@@ -167,6 +188,7 @@ const configuration = {
   reconnectValidation,
   navigationValidation,
   observationValidation,
+  continuationValidation,
   runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),

@@ -121,6 +121,9 @@ export async function runAgentHost(
             case "cancel":
               jobs.cancel();
               break;
+            case "resume":
+              result = await jobs.resume(location.root, request.options);
+              break;
             case "decide":
               jobs.decide(request.approvalId, request.decision);
               break;

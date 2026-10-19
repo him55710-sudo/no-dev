@@ -13,6 +13,7 @@ import {
   type LivingSpec,
 } from "../../src/workspace/spec";
 import { compareObservations } from "../../src/workspace/observations";
+import type { ImplementationJob } from "../../src/workspace/job";
 
 /** Test-only loopback transport for the unmodified installed Webview bundle.
  * This is browser UI + installed host evidence, not native VS Code pointer evidence. */
@@ -431,7 +432,11 @@ const observationChange=document.getElementById('observation-change');if(observa
               text: editor.document.getText(editor.selection),
             };
           }
-          if (["implement", "applyJob", "undoJob"].includes(payload.action)) {
+          if (
+            ["implement", "resumeJob", "applyJob", "undoJob"].includes(
+              payload.action,
+            )
+          ) {
             entry.job = JSON.parse(JSON.stringify(workspace.state.job));
             entry.specs = workspace.state.specs;
             entry.graph = {
@@ -497,6 +502,43 @@ const observationChange=document.getElementById('observation-change');if(observa
               `Missing successful UI action: ${action}`,
             );
           assert.deepEqual(clientErrors, []);
+          let continuationWitness: unknown;
+          if (configuration.continuationValidation) {
+            const final = workspace.state.job!;
+            const original = (jobs as ImplementationJob[]).find(
+              (job) =>
+                job.id === final.continuedFrom && job.phase === "cancelled",
+            );
+            assert.ok(original?.worktree && final.continuedFrom);
+            assert.notEqual(original.id, final.id);
+            assert.ok(
+              requests.some(
+                (entry) => entry.action === "cancelJob" && entry.ok,
+              ),
+            );
+            assert.ok(
+              requests.some(
+                (entry) => entry.action === "resumeJob" && entry.ok,
+              ),
+            );
+            const partial = await readFile(
+              resolve(original.worktree, "policy.js"),
+              "utf8",
+            );
+            assert.ok(partial.startsWith("// partial implementation"));
+            assert.ok(partial.includes('role === "viewer"'));
+            assert.ok(
+              final.checks.length &&
+                final.checks.every((check) => check.status === "passed"),
+            );
+            continuationWitness = {
+              previousJobId: original.id,
+              resumedJobId: final.id,
+              originalPartialSha256: digest(Buffer.from(partial)),
+              oldWorkspacePreserved: true,
+              freshChecks: final.checks,
+            };
+          }
           for (const [path, hash] of Object.entries(originalHashes))
             assert.equal(
               digest(await readFile(resolve(source, path))),
@@ -539,6 +581,7 @@ const observationChange=document.getElementById('observation-change');if(observa
             reconnection,
             navigationRestoration,
             observationWitness,
+            continuationWitness,
             clientErrors,
             finalSpecs: workspace.state.specs,
             originalRestored: true,

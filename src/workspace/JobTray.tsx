@@ -26,12 +26,15 @@ export type JobAction =
   | "undoJob"
   | "recoverJob"
   | "restoreJob"
+  | "resumeJob"
   | "jobHistory";
 export function JobTray({
   job,
   action: dispatch,
+  continuation,
 }: {
   job: ImplementationJob;
+  continuation?: React.ReactNode;
   action: (
     name: JobAction,
     payload?: Record<string, unknown>,
@@ -78,6 +81,30 @@ export function JobTray({
           </button>
         ) : null}
       </header>
+      {job.continuedFrom ? (
+        <p>
+          중단된 변경을 이어서 진행하는 작업입니다.{" "}
+          <button
+            disabled={jobIsActive(job)}
+            onClick={() =>
+              action("restoreJob", { workspaceId: job.continuedFrom })
+            }
+          >
+            이전 작업 보기
+          </button>
+        </p>
+      ) : null}
+      {continuation ? (
+        <details>
+          <summary>중단된 변경 이어하기</summary>
+          <p>
+            현재 남은 변경을 새 작업 복사본에 가져와 같은 설계로 이어갑니다.
+            이전 작업은 보존하며 새 모델 세션에서 선택한 검사를 모두 다시
+            실행합니다.
+          </p>
+          {continuation}
+        </details>
+      ) : null}
       {jobIsActive(job) ? (
         <p>
           창을 닫아도 작업은 계속됩니다. 같은 프로젝트를 다시 열면 연결됩니다.
@@ -149,6 +176,21 @@ export function JobTray({
                 <summary>
                   {check.name} · {check.status} ·{" "}
                   {(check.elapsedMs / 1000).toFixed(1)}초
+                </summary>
+                <pre>{check.output}</pre>
+              </details>
+            ))}
+          </details>
+        ) : null}
+        {job.previousChecks?.length ? (
+          <details>
+            <summary>
+              이전 검사 기록 · 현재 변경의 통과 근거로 사용하지 않음
+            </summary>
+            {job.previousChecks.map((check, index) => (
+              <details key={`${check.name}:${index}`}>
+                <summary>
+                  {check.name} · {check.status}
                 </summary>
                 <pre>{check.output}</pre>
               </details>

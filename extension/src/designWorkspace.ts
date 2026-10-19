@@ -99,6 +99,7 @@ const requestSchema = z
       "undoJob",
       "recoverJob",
       "restoreJob",
+      "resumeJob",
       "jobHistory",
     ]),
     payload: z.unknown().optional(),
@@ -420,6 +421,8 @@ export class DesignWorkspace implements vscode.Disposable {
       result = await this.removeFeature(request.payload);
     else if (request.action === "implement")
       result = await this.implement(request.payload);
+    else if (request.action === "resumeJob")
+      result = await this.resumeJob(request.payload);
     else if (
       request.action === "saveExecution" ||
       request.action === "revokeExecution"
@@ -1262,6 +1265,59 @@ export class DesignWorkspace implements vscode.Disposable {
       return await store.use(payload.execution, start);
     } finally {
       await this.loadExecution();
+    }
+  }
+  private async resumeJob(raw: unknown) {
+    this.assertExecutionReady();
+    const payload = z
+      .object({ jobId: z.string().uuid(), execution: executionUseSchema })
+      .strict()
+      .parse(raw);
+    const job = this.state.job;
+    if (!job || job.id !== payload.jobId || this.jobs.isRunning)
+      throw Error("현재 중단된 작업을 다시 확인해 주세요.");
+    const store = this.executionProfiles!;
+    const folder = this.folder!;
+    assertExecutionContext(payload.execution, await this.executionContext());
+    try {
+      return await store.use(payload.execution, async () => {
+        await this.loadDesign();
+        await this.refresh();
+        this.assertExecutionReady();
+        if (
+          this.executionProfiles !== store ||
+          this.folder !== folder ||
+          this.state.job?.id !== payload.jobId
+        )
+          throw Error("프로젝트나 선택한 작업이 바뀌었습니다.");
+        const current = this.state.specs.specs.find(
+          (spec) => spec.id === job.specId,
+        );
+        if (
+          !current ||
+          current.revision !== job.specRevision ||
+          JSON.stringify(current) !== this.jobs.savedSpec
+        )
+          throw Error(
+            "이전 작업 이후 설계가 바뀌었습니다. 새 설계로 구현해 주세요.",
+          );
+        if (this.state.busy || this.state.stale || !this.state.graph)
+          throw Error("구조 분석이 갱신된 뒤 이어해 주세요.");
+        prepareChange(current, this.state.graph, "behavior");
+        const context = await this.executionContext();
+        assertExecutionContext(payload.execution, context);
+        return this.jobs.resume(folder.uri.fsPath, payload.jobId, {
+          executable: context.executable,
+          model: context.model || undefined,
+          checks: payload.execution.checks,
+          allowExternal: true,
+          verification: { manager: context.manager, scripts: context.scripts },
+          specSnapshot: current,
+        });
+      });
+    } finally {
+      await this.loadExecution();
+      await this.loadJobHistory();
     }
   }
   async loadJobHistory() {
