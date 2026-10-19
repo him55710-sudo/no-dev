@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createVSIX } from "@vscode/vsce";
+import { bundledNotices } from "./bundled-notices.mjs";
 await mkdir("release", { recursive: true });
 const manifest = JSON.parse(await readFile("extension/package.json", "utf8"));
 const licenses = await Promise.all(
@@ -56,7 +57,14 @@ const licenses = await Promise.all(
       `${title}\n${"=".repeat(72)}\n${await readFile(path, "utf8")}\n`,
   ),
 );
-await writeFile("extension/THIRD_PARTY_NOTICES.txt", licenses.join("\n"));
+await writeFile(
+  "extension/THIRD_PARTY_NOTICES.txt",
+  licenses.join("\n") +
+    "\n" +
+    (await bundledNotices(
+      JSON.parse(await readFile("extension/out/bundle-inputs.json", "utf8")),
+    )),
+);
 await createVSIX({
   cwd: resolve("extension"),
   packagePath: resolve(

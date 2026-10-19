@@ -7,11 +7,13 @@ import { compareScenarios } from "../../src/core/scenarios";
 import { validateAssistantChange } from "../../src/core/assistantValidation";
 import { formatFunction } from "../../src/core/formatFunction";
 import { rustSource } from "./rustParser";
+import { analyzeStructure } from "../../src/workspace/analyze";
 const analyzer = new ProjectAnalyzer();
 parentPort!.on("message", async ({ id, type, payload }) => {
   try {
     let result: unknown;
-    if (type === "rust") result = await rustSource(payload.file, payload);
+    if (type === "structure") result = await analyzeStructure(payload.files);
+    else if (type === "rust") result = await rustSource(payload.file, payload);
     else if (type === "validateAssistant" && payload.language === "rust")
       result = await rustSource(
         { path: "proposal.rs", content: payload.source },

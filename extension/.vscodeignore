@@ -3,6 +3,9 @@ ui/**
 test/**
 tsconfig.json
 out/integration.cjs
+out/design-integration.cjs
+out/project-reader-integration.cjs
+out/bundle-inputs.json
 out/real-project.cjs
 node_modules/**
 **/*.map

@@ -11,3 +11,5 @@ extension/runtime/rust/web-tree-sitter.wasm
 release/
 .DS_Store
 *.log
+extension/media/design.js
+extension/media/design.css

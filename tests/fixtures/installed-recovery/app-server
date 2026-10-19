@@ -1,0 +1,42 @@
+// CONTROLLED TEST PEER ONLY. This is not Codex, AI inference, or a production provider.
+// The test profile intentionally sets codexPath to Node; the product uses its normal stdio path.
+import { createInterface } from "node:readline";
+import { lstatSync, readFileSync, writeFileSync } from "node:fs";
+if (JSON.parse(readFileSync("package.json")).name !== "pureobom-installed-recovery-fixture")
+  throw Error("This test peer may only run in its isolated fixture worktree.");
+const send = message => process.stdout.write(JSON.stringify(message) + "\n");
+const reply = (id, result) => send({ id, result });
+function done(status) {
+  send({ method: "turn/completed", params: { threadId: "fixture-thread", turn: { id: "fixture-turn", status } } });
+}
+createInterface({ input: process.stdin }).on("line", line => {
+  const message = JSON.parse(line);
+  if (message.method === "initialize") reply(message.id, { userAgent: "Pureobom deterministic installed-recovery protocol fixture" });
+  else if (message.method === "account/read") reply(message.id, { account: null, requiresOpenaiAuth: false });
+  else if (message.method === "thread/start") reply(message.id, {
+    thread: { id: "fixture-thread" }, sandbox: { type: "workspaceWrite" }, approvalPolicy: "on-request",
+  });
+  else if (message.method === "turn/start") {
+    if (!lstatSync(".git").isFile() || !readFileSync(".git", "utf8").startsWith("gitdir: "))
+      throw Error("Fixture implementation must run only in its isolated Git worktree.");
+    reply(message.id, { turn: { id: "fixture-turn" } });
+    send({ id: "fixture-file-approval", method: "item/fileChange/requestApproval", params: {
+      threadId: "fixture-thread", turnId: "fixture-turn", itemId: "fixture-files",
+      reason: "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.", grantRoot: process.cwd(),
+    } });
+  } else if (message.id === "fixture-file-approval") {
+    if (message.result?.decision !== "accept") { done("interrupted"); return; }
+    const replacements = [
+      ["policy.js", 'role === "owner" || role === "editor" || role === "viewer"', 'role === "owner" || role === "editor"'],
+      ["service.js", 'throw Error("Forbidden");', 'throw Object.assign(new Error("Forbidden"), { status: 403 });'],
+      ["ui.js", 'reason: ""', 'reason: editable ? "" : "읽기 전용"'],
+    ];
+    for (const [path, before, after] of replacements) {
+      const source = readFileSync(path, "utf8");
+      if (!source.includes(before)) throw Error(`Unexpected fixture source: ${path}`);
+      writeFileSync(path, source.replace(before, after));
+    }
+    send({ method: "item/agentMessage/delta", params: { delta: "Controlled fixture changed three files. No external model ran." } });
+    done("completed");
+  } else if (message.method === "turn/interrupt") { reply(message.id, {}); done("interrupted"); }
+}).on("close", () => process.exit(0));
