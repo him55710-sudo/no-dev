@@ -65,7 +65,8 @@ export function LocalAssistant({
   useEffect(() => {
     if (generationStarted === undefined) return;
     const timer = window.setInterval(
-      () => setElapsedSeconds(Math.floor((Date.now() - generationStarted) / 1000)),
+      () =>
+        setElapsedSeconds(Math.floor((Date.now() - generationStarted) / 1000)),
       1000,
     );
     return () => window.clearInterval(timer);
@@ -311,9 +312,16 @@ export function LocalAssistant({
                   "로컬 모델 응답을 기다리고 있습니다. PC와 모델에 따라 몇 분이 걸릴 수 있습니다. 취소하거나 파일을 바꾸면 요청이 중단됩니다.",
                   "Waiting for the local model. This can take minutes depending on your PC and model. Cancel or change the file to stop the request.",
                 )
-              : t("요청한 작업을 처리하고 있습니다.", "Processing the requested action.")}
+              : t(
+                  "요청한 작업을 처리하고 있습니다.",
+                  "Processing the requested action.",
+                )}
             {generationStarted !== undefined ? (
-              <span role="timer" aria-live="off"> · {elapsedSeconds}{t("초 경과", "s elapsed")}</span>
+              <span role="timer" aria-live="off">
+                {" "}
+                · {elapsedSeconds}
+                {t("초 경과", "s elapsed")}
+              </span>
             ) : null}
           </p>
         ) : null}
@@ -416,21 +424,63 @@ export function LocalAssistant({
               </p>
               {result.validation.changeFacts ? (
                 <div className="banner">
-                  <strong>{t("원문과 직접 비교한 결과", "Compared directly with the source")}</strong>
+                  <strong>
+                    {t(
+                      "원문과 직접 비교한 결과",
+                      "Compared directly with the source",
+                    )}
+                  </strong>
                   {result.validation.changeFacts.status === "available" ? (
                     <>
-                      <p>{result.validation.changeFacts.whitespaceOnly
-                        ? t("공백·줄바꿈만 달라졌고, 파서가 읽은 코드 구조와 주석은 같습니다.", "Only spacing or line breaks differ; the parsed code structure and comment text match.")
-                        : result.validation.changeFacts.codeTokensChanged || result.validation.changeFacts.parseStructureChanged
-                          ? t("코드 내용이나 구조도 달라졌습니다. 공백·들여쓰기만 바꾼 제안이 아닙니다.", "Code content or structure also changed. This proposal changes more than spacing or indentation.")
-                          : t("파서가 읽은 코드는 같지만 주석 등 원문 차이가 있습니다.", "The parsed code matches, but comments or other source text differ.")}</p>
-                      {result.validation.changeFacts.braces.before !== result.validation.changeFacts.braces.after ? (
-                        <p>{t("중괄호 수", "Curly braces")}: {result.validation.changeFacts.braces.before} → {result.validation.changeFacts.braces.after}</p>
+                      <p>
+                        {result.validation.changeFacts.whitespaceOnly
+                          ? t(
+                              "공백·줄바꿈만 달라졌고, 파서가 읽은 코드 구조와 주석은 같습니다.",
+                              "Only spacing or line breaks differ; the parsed code structure and comment text match.",
+                            )
+                          : result.validation.changeFacts.codeTokensChanged ||
+                              result.validation.changeFacts
+                                .parseStructureChanged
+                            ? t(
+                                "코드 내용이나 구조도 달라졌습니다. 공백·들여쓰기만 바꾼 제안이 아닙니다.",
+                                "Code content or structure also changed. This proposal changes more than spacing or indentation.",
+                              )
+                            : t(
+                                "파서가 읽은 코드는 같지만 주석 등 원문 차이가 있습니다.",
+                                "The parsed code matches, but comments or other source text differ.",
+                              )}
+                      </p>
+                      {result.validation.changeFacts.braces.before !==
+                      result.validation.changeFacts.braces.after ? (
+                        <p>
+                          {t("중괄호 수", "Curly braces")}:{" "}
+                          {result.validation.changeFacts.braces.before} →{" "}
+                          {result.validation.changeFacts.braces.after}
+                        </p>
                       ) : null}
-                      {result.validation.changeFacts.commentsChanged ? <p>{t("주석 내용도 바뀌었습니다.", "Comment text also changed.")}</p> : null}
-                      <p className="muted">{t("JS/TS 원문 비교입니다. 요청을 지켰는지, 실행 결과가 같은지는 별도 검토와 프로젝트 검사가 필요합니다.", "This is a JS/TS source comparison. Request compliance and runtime equivalence still need review and project checks.")}</p>
+                      {result.validation.changeFacts.commentsChanged ? (
+                        <p>
+                          {t(
+                            "주석 내용도 바뀌었습니다.",
+                            "Comment text also changed.",
+                          )}
+                        </p>
+                      ) : null}
+                      <p className="muted">
+                        {t(
+                          "JS/TS 원문 비교입니다. 요청을 지켰는지, 실행 결과가 같은지는 별도 검토와 프로젝트 검사가 필요합니다.",
+                          "This is a JS/TS source comparison. Request compliance and runtime equivalence still need review and project checks.",
+                        )}
+                      </p>
                     </>
-                  ) : <p>{t("원본 또는 변경안에 문법 오류가 있어 구조를 비교할 수 없습니다.", "A syntax error in the original or proposal prevents a structural comparison.")}</p>}
+                  ) : (
+                    <p>
+                      {t(
+                        "원본 또는 변경안에 문법 오류가 있어 구조를 비교할 수 없습니다.",
+                        "A syntax error in the original or proposal prevents a structural comparison.",
+                      )}
+                    </p>
+                  )}
                 </div>
               ) : null}
               <button

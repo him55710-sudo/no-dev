@@ -14,6 +14,7 @@ export async function localAssistantChecks(
       | "normal"
       | "hold"
       | "invalid"
+      | "format-with-braces"
       | "go-valid"
       | "go-invalid"
       | "csharp-valid"
@@ -56,50 +57,62 @@ export async function localAssistantChecks(
     chatSeen = true;
     if (mode === "hold") return;
     const input = JSON.parse(body.messages[1].content);
-    const quote = mode.startsWith("sql-")
-      ? "3000"
-      : mode === "invalid"
-        ? "const fee = 3000;"
-        : "fee = 3000";
+    const quote =
+      mode === "format-with-braces"
+        ? "if (ready) run(); else wait();"
+        : mode.startsWith("sql-")
+          ? "3000"
+          : mode === "invalid"
+            ? "const fee = 3000;"
+            : "fee = 3000";
     assert.ok(input.source.includes(quote));
-    const edits = mode.startsWith("sql-")
-      ? [
-          {
-            before: quote,
-            after: mode === "sql-valid" ? "4000" : ")",
-            reason: "SQLite 문법 검증용 변경",
-          },
-        ]
-      : mode.startsWith("go-") ||
-          mode.startsWith("java-") ||
-          mode.startsWith("csharp-")
+    const edits =
+      mode === "format-with-braces"
         ? [
             {
               before: quote,
-              after: mode.endsWith("-invalid") ? "fee = " : "fee = 4000",
-              reason: "언어별 문법 검증용 변경",
+              after: "if (ready) { run(); } else { wait(); }",
+              reason: "서식만 바꿨다는 잘못된 모델 설명",
             },
           ]
-        : mode === "invalid"
+        : mode.startsWith("sql-")
           ? [
               {
                 before: quote,
-                after: "const fee = ;",
-                reason: "문법 오류 검증용",
+                after: mode === "sql-valid" ? "4000" : ")",
+                reason: "SQLite 문법 검증용 변경",
               },
             ]
-          : [
-              {
-                before: "fee = 3000",
-                after: "fee = 4000",
-                reason: "배송비 변경",
-              },
-              {
-                before: "threshold = 50000",
-                after: "threshold = 70000",
-                reason: "기준 변경",
-              },
-            ];
+          : mode.startsWith("go-") ||
+              mode.startsWith("java-") ||
+              mode.startsWith("csharp-")
+            ? [
+                {
+                  before: quote,
+                  after: mode.endsWith("-invalid") ? "fee = " : "fee = 4000",
+                  reason: "언어별 문법 검증용 변경",
+                },
+              ]
+            : mode === "invalid"
+              ? [
+                  {
+                    before: quote,
+                    after: "const fee = ;",
+                    reason: "문법 오류 검증용",
+                  },
+                ]
+              : [
+                  {
+                    before: "fee = 3000",
+                    after: "fee = 4000",
+                    reason: "배송비 변경",
+                  },
+                  {
+                    before: "threshold = 50000",
+                    after: "threshold = 70000",
+                    reason: "기준 변경",
+                  },
+                ];
     const citations = edits.map((edit) => ({
       quote: edit.before,
       explanation: "변경 지점의 원문",
@@ -243,6 +256,7 @@ export async function localAssistantChecks(
     await ready();
     const invalid = await c.assistant.generate(c.state.contextId, payload);
     assert.equal(invalid.validation.status, "syntax-failed");
+    assert.deepEqual(invalid.validation.changeFacts, { status: "unavailable" });
     await c.assistant.preview(invalid.id, c.state.contextId);
     await assert.rejects(
       () => c.assistant.apply(invalid.id, c.state.contextId, true),
@@ -251,6 +265,34 @@ export async function localAssistantChecks(
     assert.equal(tsDoc.getText(), "const fee = 3000;\n");
     reports.push(
       "local AI controlled fixture: malformed TypeScript proposal remains reviewable but cannot be applied",
+    );
+
+    mode = "format-with-braces";
+    const formatSource = "if (ready) run(); else wait();\n";
+    const formatDoc = await vscode.workspace.openTextDocument({
+      language: "typescript",
+      content: formatSource,
+    });
+    await vscode.window.showTextDocument(formatDoc, vscode.ViewColumn.One);
+    await c.setDocument(formatDoc);
+    await ready();
+    const formatting = await c.assistant.generate(c.state.contextId, {
+      ...payload,
+      instruction: "줄바꿈과 들여쓰기만 바꿔줘. 중괄호를 유지해줘.",
+    });
+    assert.equal(formatting.validation.status, "syntax-passed");
+    assert.deepEqual(formatting.validation.changeFacts, {
+      status: "available",
+      codeTokensChanged: true,
+      parseStructureChanged: true,
+      commentsChanged: false,
+      whitespaceOnly: false,
+      braces: { before: 0, after: 4 },
+    });
+    await c.assistant.preview(formatting.id, c.state.contextId);
+    assert.equal(formatDoc.getText(), formatSource);
+    reports.push(
+      "local AI controlled fixture: source comparison exposes added braces and changed structure despite the model claiming formatting; proposal preview leaves source unchanged",
     );
 
     const goDoc = await vscode.workspace.openTextDocument({

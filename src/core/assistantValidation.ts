@@ -47,14 +47,21 @@ export function validateAssistantChange(
     typescriptreact: "tsx",
   };
   if (Object.hasOwn(extensions, language)) {
-    const after = parse({ path: `proposal.${extensions[language]}`, content: source });
+    const after = parse({
+      path: `proposal.${extensions[language]}`,
+      content: source,
+    });
     const errors = diagnostics(after);
     let changeFacts: ChangeFacts | undefined;
     if (original !== undefined) {
-      const before = parse({ path: `original.${extensions[language]}`, content: original });
-      changeFacts = errors.length || diagnostics(before).length
-        ? { status: "unavailable" }
-        : compareParsedChanges(before, after);
+      const before = parse({
+        path: `original.${extensions[language]}`,
+        content: original,
+      });
+      changeFacts =
+        errors.length || diagnostics(before).length
+          ? { status: "unavailable" }
+          : compareParsedChanges(before, after);
     }
     return {
       status: errors.length ? "syntax-failed" : "syntax-passed",
