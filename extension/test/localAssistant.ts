@@ -15,6 +15,7 @@ export async function localAssistantChecks(
       | "hold"
       | "invalid"
       | "format-with-braces"
+      | "format-valid"
       | "go-valid"
       | "go-invalid"
       | "csharp-valid"
@@ -57,62 +58,63 @@ export async function localAssistantChecks(
     chatSeen = true;
     if (mode === "hold") return;
     const input = JSON.parse(body.messages[1].content);
-    const quote =
-      mode === "format-with-braces"
-        ? "if (ready) run(); else wait();"
-        : mode.startsWith("sql-")
-          ? "3000"
-          : mode === "invalid"
-            ? "const fee = 3000;"
-            : "fee = 3000";
+    const quote = mode.startsWith("format-")
+      ? "if (ready) run(); else wait();"
+      : mode.startsWith("sql-")
+        ? "3000"
+        : mode === "invalid"
+          ? "const fee = 3000;"
+          : "fee = 3000";
     assert.ok(input.source.includes(quote));
-    const edits =
-      mode === "format-with-braces"
+    const edits = mode.startsWith("format-")
+      ? [
+          {
+            before: quote,
+            after:
+              mode === "format-valid"
+                ? "if (ready)\n  run();\nelse\n  wait();"
+                : "if (ready) { run(); } else { wait(); }",
+            reason: "서식만 바꿨다는 잘못된 모델 설명",
+          },
+        ]
+      : mode.startsWith("sql-")
         ? [
             {
               before: quote,
-              after: "if (ready) { run(); } else { wait(); }",
-              reason: "서식만 바꿨다는 잘못된 모델 설명",
+              after: mode === "sql-valid" ? "4000" : ")",
+              reason: "SQLite 문법 검증용 변경",
             },
           ]
-        : mode.startsWith("sql-")
+        : mode.startsWith("go-") ||
+            mode.startsWith("java-") ||
+            mode.startsWith("csharp-")
           ? [
               {
                 before: quote,
-                after: mode === "sql-valid" ? "4000" : ")",
-                reason: "SQLite 문법 검증용 변경",
+                after: mode.endsWith("-invalid") ? "fee = " : "fee = 4000",
+                reason: "언어별 문법 검증용 변경",
               },
             ]
-          : mode.startsWith("go-") ||
-              mode.startsWith("java-") ||
-              mode.startsWith("csharp-")
+          : mode === "invalid"
             ? [
                 {
                   before: quote,
-                  after: mode.endsWith("-invalid") ? "fee = " : "fee = 4000",
-                  reason: "언어별 문법 검증용 변경",
+                  after: "const fee = ;",
+                  reason: "문법 오류 검증용",
                 },
               ]
-            : mode === "invalid"
-              ? [
-                  {
-                    before: quote,
-                    after: "const fee = ;",
-                    reason: "문법 오류 검증용",
-                  },
-                ]
-              : [
-                  {
-                    before: "fee = 3000",
-                    after: "fee = 4000",
-                    reason: "배송비 변경",
-                  },
-                  {
-                    before: "threshold = 50000",
-                    after: "threshold = 70000",
-                    reason: "기준 변경",
-                  },
-                ];
+            : [
+                {
+                  before: "fee = 3000",
+                  after: "fee = 4000",
+                  reason: "배송비 변경",
+                },
+                {
+                  before: "threshold = 50000",
+                  after: "threshold = 70000",
+                  reason: "기준 변경",
+                },
+              ];
     const citations = edits.map((edit) => ({
       quote: edit.before,
       explanation: "변경 지점의 원문",
@@ -254,9 +256,13 @@ export async function localAssistantChecks(
     await vscode.window.showTextDocument(tsDoc, vscode.ViewColumn.One);
     await c.setDocument(tsDoc);
     await ready();
-    const invalid = await c.assistant.generate(c.state.contextId, payload);
+    const invalid = await c.assistant.generate(c.state.contextId, {
+      ...payload,
+      editConstraint: "whitespace-only",
+    });
     assert.equal(invalid.validation.status, "syntax-failed");
     assert.deepEqual(invalid.validation.changeFacts, { status: "unavailable" });
+    assert.equal(invalid.constraint?.status, "unavailable");
     await c.assistant.preview(invalid.id, c.state.contextId);
     await assert.rejects(
       () => c.assistant.apply(invalid.id, c.state.contextId, true),
@@ -281,6 +287,7 @@ export async function localAssistantChecks(
       instruction: "줄바꿈과 들여쓰기만 바꿔줘. 중괄호를 유지해줘.",
     });
     assert.equal(formatting.validation.status, "syntax-passed");
+    assert.equal(formatting.constraint, undefined);
     assert.deepEqual(formatting.validation.changeFacts, {
       status: "available",
       codeTokensChanged: true,
@@ -293,6 +300,49 @@ export async function localAssistantChecks(
     assert.equal(formatDoc.getText(), formatSource);
     reports.push(
       "local AI controlled fixture: source comparison exposes added braces and changed structure despite the model claiming formatting; proposal preview leaves source unchanged",
+    );
+    const constrainedPayload = {
+      ...payload,
+      instruction: "줄바꿈과 들여쓰기만 바꿔줘. 중괄호를 유지해줘.",
+      editConstraint: "whitespace-only",
+    };
+    const rejectedFormat = await c.assistant.generate(
+      c.state.contextId,
+      constrainedPayload,
+    );
+    assert.equal(rejectedFormat.validation.status, "syntax-passed");
+    assert.equal(rejectedFormat.constraint?.status, "failed");
+    await c.assistant.preview(rejectedFormat.id, c.state.contextId);
+    await assert.rejects(
+      c.assistant.apply(rejectedFormat.id, c.state.contextId, true),
+      /whitespace-only constraint/,
+    );
+    assert.equal(formatDoc.getText(), formatSource);
+    reports.push(
+      "local AI controlled fixture: explicit spacing-only restriction blocks a syntax-valid brace-changing proposal at the host even after diff review and acknowledgment",
+    );
+    mode = "format-valid";
+    const acceptedFormat = await c.assistant.generate(
+      c.state.contextId,
+      constrainedPayload,
+    );
+    assert.equal(acceptedFormat.constraint?.status, "passed");
+    await c.assistant.preview(acceptedFormat.id, c.state.contextId);
+    await c.assistant.apply(acceptedFormat.id, c.state.contextId, true);
+    await ready();
+    assert.equal(
+      formatDoc.getText(),
+      "if (ready)\n  run();\nelse\n  wait();\n",
+    );
+    await vscode.window.showTextDocument(formatDoc, {
+      viewColumn: vscode.ViewColumn.One,
+      preserveFocus: false,
+    });
+    await vscode.commands.executeCommand("undo");
+    await ready();
+    assert.equal(formatDoc.getText(), formatSource);
+    reports.push(
+      "local AI controlled fixture: verified spacing-only proposal previews, applies and native undo restores the exact original without changing its code tokens or syntax structure",
     );
 
     const goDoc = await vscode.workspace.openTextDocument({

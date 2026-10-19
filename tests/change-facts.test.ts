@@ -1,9 +1,30 @@
 import { describe, expect, it } from "vitest";
 import { validateAssistantChange } from "../src/core/assistantValidation";
+import { checkAssistantConstraint } from "../src/core/localAssistant";
 
 const facts = (before: string, after: string, language = "javascript") =>
   validateAssistantChange(language, after, undefined, before).changeFacts;
 describe("independent source change facts", () => {
+  it("fails a selected spacing-only restriction closed without blocking ordinary edits", () => {
+    const compare = (before: string, after: string) =>
+      checkAssistantConstraint("whitespace-only", facts(before, after));
+    expect(compare("const x=1;", "const x = 1;\n")?.status).toBe("passed");
+    for (const [before, after] of [
+      ["const x=1;", "const x=2;"],
+      ["if (x) run();", "if (x) { run(); }"],
+      ["function f(){return x;}", "function f(){return\nx;}"],
+      ["/* keep */const x=1;", "const x=1;/* keep */"],
+      ['const s="x y";', 'const s="x  y";'],
+    ])
+      expect(compare(before, after)?.status).toBe("failed");
+    expect(compare("const x=;", "const x=1;")?.status).toBe("unavailable");
+    expect(checkAssistantConstraint("whitespace-only")?.status).toBe(
+      "unavailable",
+    );
+    expect(
+      checkAssistantConstraint(undefined, facts("const x=1;", "const x=2;")),
+    ).toBeUndefined();
+  });
   it("recognizes actual formatting without changing source or comments", () => {
     expect(
       facts(

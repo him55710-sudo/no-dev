@@ -3,6 +3,7 @@ import {
   assistantMessages,
   assistantContextSize,
   assistantLimits,
+  validateAssistantInput,
   parseAssistantProposal,
   type AssistantInput,
 } from "../src/core/localAssistant";
@@ -28,6 +29,44 @@ const parse = (r: unknown, i = input) =>
   parseAssistantProposal(JSON.stringify(r), i);
 
 describe("grounded local assistant proposals", () => {
+  it("accepts an explicit whitespace restriction only for supported editing requests", () => {
+    const constrained = {
+      ...input,
+      language: "javascript",
+      editConstraint: "whitespace-only" as const,
+    };
+    for (const language of [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+    ]) {
+      expect(() =>
+        validateAssistantInput({ ...constrained, language }),
+      ).not.toThrow();
+      const messages = assistantMessages({ ...constrained, language });
+      expect(JSON.parse(messages[1].content).editConstraint).toBe(
+        "whitespace-only",
+      );
+      expect(messages[0].content).toContain("WHITESPACE-ONLY");
+    }
+    for (const override of [
+      { language: "python" },
+      { task: "explain" },
+      { task: "optimize" },
+      { editConstraint: "anything" },
+      { editConstraint: null },
+    ])
+      expect(() =>
+        validateAssistantInput({
+          ...constrained,
+          ...override,
+        } as AssistantInput),
+      ).toThrow(/Whitespace-only constraints/);
+    expect(assistantMessages(input)[0].content).not.toContain(
+      "WHITESPACE-ONLY",
+    );
+  });
   it("reserves input, output and template space without allocating the maximum for every file", () => {
     const small = assistantMessages(input);
     expect(assistantContextSize(small)).toBeLessThan(32768);

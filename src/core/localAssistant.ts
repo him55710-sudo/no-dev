@@ -1,4 +1,5 @@
 import type { Lang } from "./types";
+import type { ChangeFacts } from "./changeFacts";
 
 export type AssistantTask = "explain" | "edit" | "optimize";
 export type AssistantInput = {
@@ -8,7 +9,32 @@ export type AssistantInput = {
   instruction: string;
   task: AssistantTask;
   lang: Lang;
+  editConstraint?: "whitespace-only";
 };
+export type AssistantConstraintCheck = {
+  kind: "whitespace-only";
+  status: "passed" | "failed" | "unavailable";
+};
+export const supportsWhitespaceConstraint = (language: string) =>
+  ["javascript", "javascriptreact", "typescript", "typescriptreact"].includes(
+    language,
+  );
+
+export function checkAssistantConstraint(
+  constraint: AssistantInput["editConstraint"],
+  facts?: ChangeFacts,
+): AssistantConstraintCheck | undefined {
+  if (!constraint) return undefined;
+  return {
+    kind: constraint,
+    status:
+      facts?.status !== "available"
+        ? "unavailable"
+        : facts.whitespaceOnly
+          ? "passed"
+          : "failed",
+  };
+}
 export type AssistantCitation = {
   quote: string;
   explanation: string;
@@ -114,6 +140,15 @@ export function validateAssistantInput(input: AssistantInput) {
       "지원하는 언어와 작업을 선택하세요. / Select a supported language and task.",
     );
   if (
+    input.editConstraint !== undefined &&
+    (input.editConstraint !== "whitespace-only" ||
+      input.task !== "edit" ||
+      !supportsWhitespaceConstraint(input.language))
+  )
+    throw Error(
+      "공백·줄바꿈 제한은 JS/TS 수정 요청에서만 사용할 수 있습니다. / Whitespace-only constraints require a JS/TS edit request.",
+    );
+  if (
     typeof input.source !== "string" ||
     !input.source.trim() ||
     input.source.includes("\0") ||
@@ -198,6 +233,11 @@ export function assistantMessages(input: AssistantInput) {
               "risks must be concrete possible consequences of the proposed change, not invented existing bugs. checks are suggestions, not executed results.",
             ].join("\n"),
         "Optimization is a hypothesis until measured. Never claim faster runtime or memory savings without measurements.",
+        ...(input.editConstraint === "whitespace-only"
+          ? [
+              "The user explicitly selected WHITESPACE-ONLY. Change only whitespace BETWEEN source tokens. Preserve every identifier, literal, operator, semicolon, brace, comment and their order. Preserve string/template/JSX text exactly. Do not add if/else braces. Do not move comments or add line breaks that change parsing (such as after return). Keep the containing block's indentation when formatting nested code. This restriction is checked before applying; still fulfill the user's entire request within it.",
+            ]
+          : []),
         "Include at least one citation. risks and checks may be empty arrays. Schema: " +
           JSON.stringify(assistantSchema),
       ].join("\n"),
@@ -212,6 +252,9 @@ export function assistantMessages(input: AssistantInput) {
             ? "한국어: 요약, 설명, 변경 이유, 주의점, 확인 항목을 한국어 문장으로 작성하세요. 원문 코드와 식별자만 그대로 유지하세요."
             : "English: write every explanation in English; preserve source code exactly.",
         task: input.task,
+        ...(input.editConstraint
+          ? { editConstraint: input.editConstraint }
+          : {}),
         request:
           input.instruction ||
           (input.lang === "ko"

@@ -3,6 +3,7 @@ import type { Lang, Words } from "../../src/core/types";
 import {
   assistantLanguages,
   assistantLimits,
+  supportsWhitespaceConstraint,
   type AssistantTask,
 } from "../../src/core/localAssistant";
 import type { AssistantResult } from "../src/localAssistantController";
@@ -22,6 +23,7 @@ export function LocalAssistant({
   const [model, setModel] = useState("");
   const [origin, setOrigin] = useState("");
   const [task, setTask] = useState<AssistantTask>("explain");
+  const [whitespaceOnly, setWhitespaceOnly] = useState(false);
   const [instruction, setInstruction] = useState("");
   const [busy, setBusy] = useState(false);
   const [generationStarted, setGenerationStarted] = useState<number>();
@@ -105,6 +107,8 @@ export function LocalAssistant({
     !!state.language &&
     Object.hasOwn(assistantLanguages, state.language) &&
     (state.sourceBytes ?? Infinity) <= assistantLimits.sourceBytes;
+  const canConstrainWhitespace =
+    task === "edit" && supportsWhitespaceConstraint(state.language || "");
   function clearProposal() {
     setGenerated(undefined);
     setReviewed(false);
@@ -248,6 +252,23 @@ export function LocalAssistant({
             )}
           />
         </label>
+        {canConstrainWhitespace ? (
+          <label className="local-ack">
+            <input
+              type="checkbox"
+              disabled={busy}
+              checked={whitespaceOnly}
+              onChange={(event) => {
+                setWhitespaceOnly(event.target.checked);
+                clearProposal();
+              }}
+            />
+            {t(
+              "공백과 줄바꿈만 바꾸기 — 코드·문자열·주석·구조 변경은 적용하지 않기",
+              "Only change spacing and line breaks — block changes to code, literals, comments or structure",
+            )}
+          </label>
+        ) : null}
         {state.busy ? (
           <p role="status">
             {t(
@@ -277,7 +298,15 @@ export function LocalAssistant({
                 clearProposal();
                 const response = await request<AssistantResult>(
                   "localGenerate",
-                  { model, task, instruction, lang },
+                  {
+                    model,
+                    task,
+                    instruction,
+                    lang,
+                    ...(canConstrainWhitespace && whitespaceOnly
+                      ? { editConstraint: "whitespace-only" }
+                      : {}),
+                  },
                   state.contextId,
                 );
                 if (
@@ -422,6 +451,30 @@ export function LocalAssistant({
               >
                 {result.validation.detail}
               </p>
+              {result.constraint ? (
+                <p
+                  className={
+                    result.constraint.status === "passed"
+                      ? "banner"
+                      : "banner error"
+                  }
+                >
+                  {result.constraint.status === "passed"
+                    ? t(
+                        "선택한 공백·줄바꿈 제한을 확인했습니다. 요청 전체를 충족했는지는 차이에서 확인해 주세요.",
+                        "The selected spacing-only restriction passed. Review the diff to check the full request was fulfilled.",
+                      )
+                    : result.constraint.status === "failed"
+                      ? t(
+                          "선택한 공백·줄바꿈 제한을 벗어나 적용할 수 없습니다. 차이를 확인하고 다시 요청해 주세요.",
+                          "The proposal exceeds your spacing-only restriction and cannot be applied. Review the diff and request again.",
+                        )
+                      : t(
+                          "공백·줄바꿈 제한을 확인할 수 없어 적용할 수 없습니다.",
+                          "The spacing-only restriction could not be verified, so this proposal cannot be applied.",
+                        )}
+                </p>
+              ) : null}
               {result.validation.changeFacts ? (
                 <div className="banner">
                   <strong>
@@ -516,7 +569,8 @@ export function LocalAssistant({
                   !state.trusted ||
                   !reviewed ||
                   !acknowledged ||
-                  result.validation.status === "syntax-failed"
+                  result.validation.status === "syntax-failed" ||
+                  (!!result.constraint && result.constraint.status !== "passed")
                 }
                 onClick={() =>
                   void run(async () => {

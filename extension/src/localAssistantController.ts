@@ -6,7 +6,9 @@ import type { AnalysisClient } from "./analysisClient";
 import type {
   AssistantInput,
   AssistantProposal,
+  AssistantConstraintCheck,
 } from "../../src/core/localAssistant";
+import { checkAssistantConstraint } from "../../src/core/localAssistant";
 import { validatePython } from "./pythonValidation";
 import type { ChangeFacts } from "../../src/core/changeFacts";
 
@@ -21,6 +23,7 @@ export type AssistantResult = Omit<AssistantProposal, "updated"> & {
   digest: string;
   elapsedMs: number;
   validation: AssistantValidation;
+  constraint?: AssistantConstraintCheck;
 };
 type Pending = {
   result: AssistantResult;
@@ -104,6 +107,8 @@ export class LocalAssistantController implements vscode.Disposable {
       instruction: inputString(payload.instruction, 2000),
       task: payload.task as AssistantInput["task"],
       lang: payload.lang as AssistantInput["lang"],
+      editConstraint:
+        payload.editConstraint as AssistantInput["editConstraint"],
     };
     const version = doc.version;
     const controller = new AbortController();
@@ -115,7 +120,7 @@ export class LocalAssistantController implements vscode.Disposable {
         input,
         controller.signal,
       );
-      const validation = response.proposal.edits.length
+      const validation: AssistantValidation = response.proposal.edits.length
         ? doc.languageId === "python"
           ? await validatePython(response.proposal.updated)
           : doc.languageId === "csharp" && this.validateCSharp
@@ -163,6 +168,10 @@ export class LocalAssistantController implements vscode.Disposable {
         digest: response.model.digest,
         elapsedMs: response.elapsedMs,
         validation,
+        constraint: checkAssistantConstraint(
+          input.editConstraint,
+          validation.changeFacts,
+        ),
       };
       this.pending = {
         result,
@@ -278,6 +287,10 @@ export class LocalAssistantController implements vscode.Disposable {
     if (p.result.validation.status === "syntax-failed")
       throw Error(
         "문법 오류가 있는 제안은 적용할 수 없습니다. / A syntax-invalid proposal cannot be applied.",
+      );
+    if (p.result.constraint && p.result.constraint.status !== "passed")
+      throw Error(
+        "선택한 공백·줄바꿈 제한을 확인하지 못한 제안은 적용할 수 없습니다. / The whitespace-only constraint was not satisfied; this proposal cannot be applied.",
       );
     if (acknowledgeUnchecked !== true)
       throw Error(
