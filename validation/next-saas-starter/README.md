@@ -1,5 +1,7 @@
 # 외부 Next.js 앱의 설계 변경 검증
 
+배포되는 코드 발췌의 [upstream MIT 라이선스](LICENSE.upstream.txt)는 아래 고정 커밋의 원문을 보존한다. 공통 사용자 검토 자료는 [관찰 계획](../../docs/USER_STUDY.md)에 따라 생성하며, 새로운 모델 실행이나 참가자 결과를 뜻하지 않는다.
+
 대상은 [Next.js SaaS Starter](https://github.com/nextjs/saas-starter/tree/6e33e58b1e553a41fe22e6b941a7229a002de361)의 고정 커밋 `6e33e58b1e553a41fe22e6b941a7229a002de361`이다. upstream은 MIT 라이선스이며 Vercel의 저작권 고지를 유지한다. 앱을 새 합성 예제로 대체하지 않는다. 실제 `app/(login)/actions.ts`, 팀 조회 API, 대시보드 React 컴포넌트, JWT, Drizzle, 원본 SQL migration을 사용한다.
 
 이 upstream에는 테스트 명령이 없어서 **독립 인수 검사 환경을 추가**한다. 이를 upstream의 기존 검사로 설명하지 않는다. `prepare.mjs`는 `package.json`과 `pureobom-validation/`만 만들고 앱 구현을 바꾸지 않는다. 원본 패키지 설치와 추가 검사 도구 설치는 풀어봄의 `node_modules`를 찾을 수 없는 별도 디렉터리에서 수행한다. pnpm 패키지 캐시는 재사용할 수 있지만 다른 프로젝트의 설치 폴더를 연결하지 않는다.

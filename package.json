@@ -30,6 +30,7 @@
     "release:package": "node scripts/package-release.mjs",
     "release:check": "node scripts/check-release.mjs",
     "demo:record": "node scripts/build-system-demo.mjs",
+    "study:package": "node scripts/package-user-study.mjs",
     "pages:package": "node scripts/package-pages.mjs",
     "pages:preview": "node scripts/serve.mjs --site",
     "verify": "pnpm test && pnpm build && pnpm extension:build && pnpm extension:test",

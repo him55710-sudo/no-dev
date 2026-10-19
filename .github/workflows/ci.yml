@@ -23,6 +23,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test --reporter=default --reporter=json --outputFile=test-results/unit-tests.json
       - run: pnpm demo:record
+      - run: pnpm study:package
       - run: pnpm build
       - run: pnpm pages:package
       - run: pnpm extension:build
@@ -52,6 +53,13 @@ jobs:
           path: |
             release/*-site.zip
             release/site-evidence.json
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: user-study-review
+          path: |
+            release/user-study-review.zip
+            release/user-study-evidence.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
