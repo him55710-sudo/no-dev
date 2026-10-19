@@ -6,7 +6,7 @@
 
 - **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
 - **설명 대상 연결:** [선택한 함수 설명](FOCUSED_EXPLANATIONS.md)을 읽기 화면에 연결했다. 호스트가 최신 원문 범위를 확인하고 해당 함수의 실제 인용을 요구한다. 전체 원문을 선택 함수와 앞뒤 문맥으로 구분해 보존한다. 첫 두 실제 요청은 timeout, [후속 CPU 응답 세 건](evidence/local-ai/focused-context-cpu.md)은 인용 또는 의미 검토에 실패했다. 요청별 CPU 선택은 제공하지만 실제 과제의 설명 품질은 아직 부족하다.
-- **함수 선택 후속 검증:** `9758dac`의 [Windows·Ubuntu CI](evidence/local-ai/focused-explanation-ci.json)는 각 핵심 259개·개발/설치 각 55개·파일 11개 해시·추출 도구 실행을 통과했다. 로컬 개발/설치도 55개를 통과했지만 전체 핵심 검사의 Java timeout은 별도 실패로 남긴다. 실제 사용자 프로젝트의 모델 품질이나 원격·모든 환경 지원을 입증한 결과는 아니다.
+- **함수 선택 후속 검증:** CPU 옵션과 원문 구분을 포함한 `954d6cf`의 [Windows·Ubuntu CI](evidence/local-ai/focused-context-cpu-ci.json)는 각 핵심 260개·개발/설치 각 55개·파일 11개 해시·추출 도구 실행을 통과했다. 로컬에서도 같은 수가 통과했으며 이전 시도의 Java timeout은 별도 실패로 남긴다. 실제 사용자 프로젝트의 모델 품질이나 원격·모든 환경 지원을 입증한 결과는 아니다.
 - **사용자 지정 실제 프로젝트 후속:** JS/TS 원문 비교와 사용자가 선택하는 [공백·줄바꿈 제한](evidence/local-ai/whitespace-constraint.md)을 추가했다. 실제 요청 밖 변경의 호스트 적용 차단을 확인했지만, 해당 실제 유지보수 과제의 모델 수정은 아직 실패다. 비교·차단 기능을 요청 달성이나 최적화 성공으로 세지 않는다.
 - **모델 없는 함수 정리:** [선택한 JS/TS 함수의 줄바꿈 정리](FUNCTION_FORMATTING.md)를 추가했다. 사용자 프로젝트의 실제 함수에서 명시적 적용·기존 테스트 **8→8→8 통과**·native undo·원본 복구를 확인했다. 이는 요청의 서식 부분을 해결한 별도 경로이며 모델의 설명·수정 품질이나 성능 최적화 성공은 아니다. [검증 기록](evidence/local-ai/function-format.md).
 - **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md)·[C#](CSHARP_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md)·개발 검증 중인 [Rust](RUST_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.

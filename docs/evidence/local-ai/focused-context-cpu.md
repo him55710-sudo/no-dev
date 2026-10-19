@@ -30,6 +30,8 @@ CPU 선택은 요청 옵션이며 영구 서버 설정을 저장하지 않는다
 
 핵심 검사 **260개**, 웹/확장 빌드, VS Code 1.96.4의 [개발 55개](focused-context-cpu-development.json)·[production 설치 55개](focused-context-cpu-installed.json)가 통과했다. 설치 VSIX 해시와 실행 파일 11개 해시를 대조했고, 저장소 밖에서 추출한 분석 worker·Rust WASM·Python 측정 및 AST·Go·Java·C# 도구와 패키지 체크섬/manifest/라이선스를 검사했다. [익명 평가·검증 원자료](focused-context-cpu.json). 단위/통합 검사는 제어된 HTTP 응답이며 실제 모델 의미 정확도와 합산하지 않는다. 호스트의 인증 제공자 대기 timeout과 종료 시 N-API 경고는 있었으며 suite 종료 코드는 0이었다.
 
+제품 커밋 `954d6cf76f7bbe29ba72f49bcb1ed49eed160b6d`의 [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/39308112923)도 양쪽 모두 성공했다. 각 핵심 260개·개발/설치 각 55개·production 모드·실행 파일 11개 해시·추출 도구 실행을 로그에서 확인한 [CI 원자료](focused-context-cpu-ci.json)를 공개한다. 같은 검사를 실행 환경 수만큼 새로운 기능으로 합산하지 않는다. 실제 비공개 모델 생성과 의미 검토는 이 CI에 포함되지 않는다.
+
 `pnpm exec vitest run tests/local-assistant.test.ts tests/ollama.test.ts --maxWorkers=1`의 22개 검사는 원문 조립 보존(Unicode/CRLF 포함), CPU 옵션·잘못된 값 거절·기본 자동 선택과 전송 플래그 등을 포함한다. `extension/test/localAssistant.ts`는 실제 호스트가 같은 값을 전달하고 인용을 원문에서 선택하는지 검사한다.
 
 화면 재현은 확장 빌드 후 `node scripts/preview-function-format.mjs --focus`다. 실제 빌드 UI/worker와 공개 예제를 사용하지만 편집기·모델 답변은 모의 구현이다. 한국어 CPU 선택→생성→결과 표시, 자동 선택 전환→기존 결과 제거, 영어 전환→이전 언어 응답 숨김→새 결과를 확인했다. 설치된 VS Code의 수동 클릭 또는 실제 모델 품질 검증으로 세지 않는다.

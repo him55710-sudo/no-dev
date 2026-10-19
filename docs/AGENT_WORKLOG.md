@@ -10,6 +10,8 @@
 - **화면:** 실제 빌드 UI/worker와 공개 예제·제어된 모델 응답으로 한국어 CPU 선택·결과 표시→자동 선택 시 결과 제거→영어 전환과 새 결과를 확인했다. [한국어](evidence/local-ai/cpu-explanation-ko.jpg), [영어](evidence/local-ai/cpu-explanation-en.jpg). React 스킬 기준으로 레이블·요청 상태·결과 초기화·type-only import를 검토했다. CPU 표시를 실제 측정값으로 오인하지 않도록 요청값이라고 썼다.
 - **검증:** 관련 단위 검사 22개, 전체 핵심 260개, 웹/확장 빌드, 실제 VS Code 개발/production 설치 각 55개, 설치 파일 11개 해시·추출 도구·패키지 검사를 통과했다. [원자료](evidence/local-ai/focused-context-cpu.json). 인증 제공자 대기와 종료 N-API 경고는 있었으며 suite 종료는 0이었다. 전체 검사에서 재측정한 합성 파서 기록은 로컬에 따로 보존하고 공개 benchmark 파일은 이전 값으로 복원했다. 교차 OS CI는 별도 확인한다. 제품 검사 성공을 실제 모델 정확성으로 합산하지 않는다. 안정판/Pages 0.6.0은 교체하지 않는다.
 
+- **교차 운영체제 확인:** `954d6cf`를 명시적으로 `origin main`에 push했고 [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/39308112923)가 모두 성공했다. 각 핵심 260개·개발/설치 각 55개·production 모드·파일 11개 해시와 추출 도구를 로그에서 대조했다. [CI 원자료](evidence/local-ai/focused-context-cpu-ci.json). 실제 비공개 모델의 설명 실패와 별개이며 안정판 배포는 하지 않았다.
+
 ## 2026-10-20 · 선택한 함수 설명과 실제 사용자 코드 후속 평가
 
 - **구현:** `localAssistant.ts`의 설명 범위·프롬프트·인용 조건, 호스트의 함수 ID 해석, `ReadingView.tsx` → `LocalAssistant.tsx` 진입과 한국어/영어 선택기를 연결했다. 코드에 존재하는 검사와 호출자 전제를 구별하도록 요청한다. 선택 함수 안의 실제 인용이 최소 하나 있어야 하지만 설명 의미의 참·거짓을 판정하지 않는다. 전체 현재 파일과 기존 크기/시간 제한을 유지한다. [사용법](FOCUSED_EXPLANATIONS.md).
