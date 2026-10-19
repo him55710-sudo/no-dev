@@ -1,0 +1,11 @@
+:root {
+  --vscode-sideBar-background: #f1f4ef;
+  --vscode-textCodeBlock-background: #edf1eb;
+  --vscode-textLink-foreground: #267460;
+  --vscode-button-secondaryBackground: #ecf1eb;
+  --vscode-button-secondaryForeground: #253830;
+  --vscode-button-secondaryHoverBackground: #e4ebe3;
+  --vscode-button-hoverBackground: #1e604e;
+  --vscode-errorForeground: #a1260d;
+  --vscode-inputValidation-errorBorder: #be1100;
+}

@@ -1,0 +1,109 @@
+{
+  "checkedAt": "2026-10-19T16:28:50.053Z",
+  "kind": "Actual React component browser interaction; simulated model and editor operations, real product worker comparison. This is not an installed VSIX or user study.",
+  "source": {
+    "baseCommit": "d82c50f0f901d4c0663b3f6d40e22f00c34004ad",
+    "state": "Development working tree with explicit whitespace-only request constraint",
+    "sha256": {
+      "src/core/localAssistant.ts": "83d3ff8c4d785de5641e2c0f574e845a9f10b910f089291c883e8df912e836df",
+      "src/core/changeFacts.ts": "0575a1a734908055dd81feaa2ae8d407b3adf6d81837467bbe1152c7da11d678",
+      "extension/src/localAssistantController.ts": "f87b104e7b6d5ca09589476000b508578b98a396a8c58b3dddb11187f25e17c3",
+      "extension/ui/LocalAssistant.tsx": "2df3b8a89d6320a47aab247539fdded3eb491f8d369d216087f849c1bd3e7be4",
+      "extension/test/localAssistant.ts": "e926578a4dca9f26b96dabc15dee1c8ac7aef266f427ee5df0ab43b4c2d8d67a",
+      "tests/local-assistant.test.ts": "937234c0aeead113c6f08755bbfc46e70908cff7673213fd397799cec66da785",
+      "tests/change-facts.test.ts": "04a71b06b9c36578830bf51dbc8088b88603a8ba57eb9a5f26181cbab5288095",
+      "extension/out/extension.cjs": "7ef2edeef3239cac10cdd66c353233eb0bf73a633ec3bc3076271b619c040340",
+      "extension/out/worker.cjs": "34bdf10dd151006f76d395e10d612e782c9e959453d39ed28fd8a5082a81757e",
+      "extension/media/view.js": "cc7c4adae71b6b590a0d4af8e749b24822cb2c565a22461e7e5f87795da274ca"
+    }
+  },
+  "checks": [
+    "Korean selected constraint sent in the actual UI request; rejected proposal remains disabled after review and acknowledgment.",
+    "English rejected proposal also remains disabled.",
+    "An exact valid-whitespace request passes the restriction; review and acknowledgment enable Apply.",
+    "Switching to optimization hides the restriction and omits it from the next request."
+  ],
+  "limitations": [
+    "Initial harness omitted light theme surface variables; those fixture variables were added before these captures.",
+    "Native input left IME text and a label locator did not match; the final exact request used the observed textbox role.",
+    "No real model inference, native editor apply, narrow viewport or dark theme is certified by these browser screenshots."
+  ],
+  "requests": [
+    {
+      "id": "2",
+      "action": "localGenerate",
+      "payload": {
+        "model": "fixture:local",
+        "task": "edit",
+        "instruction": "중괄호를 유지하고 들여쓰기만 정리해 줘",
+        "lang": "ko",
+        "editConstraint": "whitespace-only"
+      },
+      "contextId": "fixture"
+    },
+    {
+      "id": "5",
+      "action": "localGenerate",
+      "payload": {
+        "model": "fixture:local",
+        "task": "edit",
+        "instruction": "Preserve braces and only reindent.",
+        "lang": "en",
+        "editConstraint": "whitespace-only"
+      },
+      "contextId": "fixture"
+    },
+    {
+      "id": "7",
+      "action": "localGenerate",
+      "payload": {
+        "model": "fixture:local",
+        "task": "edit",
+        "instruction": "valid whitespaceㅅ",
+        "lang": "en",
+        "editConstraint": "whitespace-only"
+      },
+      "contextId": "fixture"
+    },
+    {
+      "id": "8",
+      "action": "localGenerate",
+      "payload": {
+        "model": "fixture:local",
+        "task": "edit",
+        "instruction": "valid whitespace",
+        "lang": "en",
+        "editConstraint": "whitespace-only"
+      },
+      "contextId": "fixture"
+    },
+    {
+      "id": "10",
+      "action": "localGenerate",
+      "payload": {
+        "model": "fixture:local",
+        "task": "optimize",
+        "instruction": "valid whitespace",
+        "lang": "en"
+      },
+      "contextId": "fixture"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/evidence/local-ai/whitespace-constraint-blocked-ko.jpg",
+      "mime": "image/jpeg",
+      "sha256": "f0c00876aa7706d5ec2ad7616a29a21f69e811a13112914415ffda7de7302ada"
+    },
+    {
+      "path": "docs/evidence/local-ai/whitespace-constraint-blocked-en.jpg",
+      "mime": "image/jpeg",
+      "sha256": "d5f1f96cb6ae9e66068320e309b3f40a989fd2571368bcc8191bc372d4b3ee87"
+    },
+    {
+      "path": "docs/evidence/local-ai/whitespace-constraint-passed-en.jpg",
+      "mime": "image/jpeg",
+      "sha256": "b400026666686f18cdc4154a391fb4eaafecc6519d690206005b5a1b347bd427"
+    }
+  ]
+}

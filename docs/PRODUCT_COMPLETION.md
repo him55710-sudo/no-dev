@@ -1,10 +1,11 @@
 # 제품 완성 계획 · Product completion plan
 
-상태 기준: **2026-10-17 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
+상태 기준: **2026-10-20 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
 
 ## 현재 상태
 
 - **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
+- **사용자 지정 실제 프로젝트 후속:** JS/TS 원문 비교와 사용자가 선택하는 [공백·줄바꿈 제한](evidence/local-ai/whitespace-constraint.md)을 추가했다. 실제 요청 밖 변경의 호스트 적용 차단을 확인했지만, 해당 실제 유지보수 과제의 모델 수정은 아직 실패다. 비교·차단 기능을 요청 달성이나 최적화 성공으로 세지 않는다.
 - **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md)·개발 검증 중인 [C#](CSHARP_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
 - **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다. [Java minimal-json](evidence/local-ai/java-source-project.md)은 별도 JDK 호환 adapter로 452 pass → 고정 오류 13 fail → undo 후 452 pass를 확인했다.
 - **SQL 증분:** [명시적으로 선택한 SQLite 읽기·리터럴 수정](SQL_SOURCE.md)을 추가했다. [외부 sqlc 예제](evidence/local-ai/sql-source-project.md)는 공식 재생성과 원래 테스트로 1 pass → 고정 LIMIT 오류 1 fail → undo 후 1 pass를 확인했다. 다른 SQL 방언·스키마·쿼리 성능·모든 식의 자연어 설명은 미제공이다.
