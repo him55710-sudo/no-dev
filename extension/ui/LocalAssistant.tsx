@@ -244,6 +244,10 @@ export function LocalAssistant({
             {t("설명할 범위", "Explanation focus")}
             <select
               value={focusedFunction?.id || ""}
+              aria-label={t("설명할 범위", "Explanation focus")}
+              aria-describedby={
+                focusedFunction ? "local-focus-description" : undefined
+              }
               disabled={busy || state.busy}
               onChange={(event) => {
                 setFocusChoice({
@@ -261,7 +265,7 @@ export function LocalAssistant({
               ))}
             </select>
             {focusedFunction && (
-              <span className="muted">
+              <span className="muted" id="local-focus-description">
                 {t(
                   "이 기능의 역할·입력·실제 검사와 호출자가 지킬 조건을 설명합니다. 같은 파일의 관련 코드를 참고하도록 현재 파일 전체를 보냅니다.",
                   "Explain its purpose, inputs, actual checks and caller preconditions. The entire current file is sent as context for related code.",

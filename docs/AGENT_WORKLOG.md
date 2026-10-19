@@ -2,6 +2,17 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-20 · 선택한 함수 설명과 실제 사용자 코드 후속 평가
+
+- **구현:** `localAssistant.ts`의 설명 범위·프롬프트·인용 조건, 호스트의 함수 ID 해석, `ReadingView.tsx` → `LocalAssistant.tsx` 진입과 한국어/영어 선택기를 연결했다. 코드에 존재하는 검사와 호출자 전제를 구별하도록 요청한다. 선택 함수 안의 실제 인용이 최소 하나 있어야 하지만 설명 의미의 참·거짓을 판정하지 않는다. 전체 현재 파일과 기존 크기/시간 제한을 유지한다. [사용법](FOCUSED_EXPLANATIONS.md).
+- **실제 프로젝트:** 이전 서식 과제와 같은 원문의 설명 부분을 두 로컬 모델로 요청했지만 각각 180초 시간 초과였다. 전송 전 모델 부재와 평가 도구의 모듈 해석 실패도 따로 보존했다. 분석기는 제품의 빌드 worker를 사용하도록 평가 도구만 수정했다. 변경하지 않은 함수에 평가자가 정한 경계 입력 7개를 실행했으나 모델 완성 응답이 없어 정확도 채점을 하지 않았다. 실제 소스·원시 요청·상세 결과는 비공개 로컬 자료로 남긴다. [공개 시도별 기록](evidence/local-ai/focused-explanation.md).
+- **실제 편집기:** Windows VS Code 1.96.4 개발 호스트 **55개 흐름 통과**. 새 흐름은 잘못된/오래된 함수 ID·수정 작업의 함수 선택을 전송 전에 거절하고, 전체 파일 전송·선택 함수 인용·정확한 원문 이동·무변경·편집 후 무효화를 확인했다. 모델 응답은 제어된 HTTP fixture다. [원자료](evidence/local-ai/focused-explanation-development-integration.json).
+- **화면과 용어:** 실제 확장 UI/worker와 공개 예제로 한국어/영어 함수 선택·결과 초기화·이름/줄 범위 표시를 조작했다. 접근성 이름을 별도 지정하고 긴 도움말을 설명으로 연결했다. 일반 숫자 합계를 결제 금액으로 단정하던 사전을 범용 표현으로 수정했다. [한국어](evidence/local-ai/focused-explanation-ko.jpg), [영어](evidence/local-ai/focused-explanation-en.jpg). 모의 편집기·제어된 답변이며 설치 VS Code 수동 UI나 모델 품질 검증으로 집계하지 않는다. React 스킬 기준으로 파생 선택값·문서 ID·안정된 키·접근성을 검토했다.
+- **검사 실패도 보존:** 로컬 AI 핵심 14개는 통과했다. 첫 전체 실행은 SDK 경로 미설정 3개 suite와 Python/측정 timeout으로 231 pass / 4 fail / 24 skipped였다. SDK 경로를 설정하고 직렬 실행한 후속 결과는 **258 pass / 1 fail**이며 기존 Java 리터럴 사례의 30초 timeout이 남았다. 테스트나 제품의 제한을 늘리지 않았다. 개발/설치·빌드 결과는 [검증 기록](evidence/local-ai/focused-explanation-verification.json)에 실행별로 분리한다.
+- **설치본:** 새 VSIX `5e087b7a…`의 production 모드·실제 파일 11개 해시와 같은 **55개 흐름 통과**를 확인했다. [설치 원자료](evidence/local-ai/focused-explanation-installed-integration.json). 웹·확장 빌드와 VSIX 패키징 성공. 개발/설치 검사를 별개 110개 기능으로 세지 않으며 수동 설치 UI·실제 모델 결과는 별도다.
+- **패키지 검사:** 체크섬·소스 manifest·라이선스와 저장소 밖의 분석/Rust WASM·Python 측정·Python/Go/Java/C# 원문 도구 실행을 통과했다. 로컬 개발 패키지 검증이며 stable/Pages 게시가 아니다. 이번 전체 테스트가 다시 기록한 합성 benchmark 파일은 로컬에 보존하고 이전 공개 파일을 복원해 성능 개선 자료로 사용하지 않았다.
+- **판정:** 원문 위치 검증 기능이 추가됐지만 실제 사용자 코드 설명의 의미 정확성은 미확인이다. 앞선 모델 없는 서식 적용·8→8→8 검사·복구를 모델 성공으로 바꾸지 않는다. 일반 수정 품질·실측 최적화·환경별 사용성은 계속 남아 있으며 안정 릴리스/Pages는 교체하지 않는다.
+
 ## 2026-10-20 · Rust 실제 프로젝트 검사·복구와 교차 OS CI
 
 - **실제 코드:** [humantime 2.3.0 고정 커밋](evidence/local-ai/rust-source-project.md)의 원래 소스·단위/문서 테스트를 사용했다. Windows VS Code 개발 호스트에서 시간 상수 `3600 → 3601` 한 범위만 native diff·적용·저장하고, task로 원래 Cargo 검사를 실행했다. **42 pass → 34 pass / 8 fail → native undo·저장 후 42 pass**, 미저장 실행 차단·원본 바이트 해시·clean checkout을 확인했다. 고정 오류 검출 검사이며 실제 upstream 결함 발견·모델 품질·최적화 성공은 아니다.

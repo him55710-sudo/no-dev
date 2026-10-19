@@ -4,8 +4,13 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Worker } from "node:worker_threads";
 const rust = process.argv.includes("--rust");
+const focus = process.argv.includes("--focus");
 const folder = resolve(
-  rust ? "test-results/rust-source-ui" : "test-results/function-format-ui",
+  focus
+    ? "test-results/focused-explanation-ui"
+    : rust
+      ? "test-results/rust-source-ui"
+      : "test-results/function-format-ui",
 );
 const path = rust ? "sample.rs" : "sample.ts";
 await mkdir(folder, { recursive: true });
@@ -67,7 +72,50 @@ async function rpc(r) {
     JSON.stringify(calls, null, 2),
   );
   if (r.action === "ready") return { state: await state() };
+  if (r.action === "localModels" && focus)
+    return {
+      result: {
+        origin: "Controlled UI fixture; no model inference",
+        models: [{ name: "fixture:local", digest: "a".repeat(64), size: 0 }],
+      },
+    };
   if (r.contextId !== String(version)) throw Error("Stale fixture context");
+  if (r.action === "localGenerate" && focus) {
+    const a = (await state()).analysis;
+    const fn = a.functions.find((f) => f.id === r.payload.focusFunctionId);
+    if (!fn || r.payload.task !== "explain")
+      throw Error("Select a function for this UI fixture");
+    const ko = r.payload.lang === "ko",
+      quoted = source.slice(fn.start, fn.end);
+    return {
+      result: {
+        id: "focus-fixture",
+        model: "fixture:local",
+        digest: "a".repeat(64),
+        elapsedMs: 1,
+        summary: ko
+          ? "선택한 함수의 설명을 표시하는 화면 검증용 응답입니다. 실제 모델의 설명 품질 검증이 아닙니다."
+          : "Controlled response for verifying the selected-function display. This does not evaluate a real model.",
+        citations: [
+          {
+            quote: quoted,
+            explanation: ko
+              ? "선택한 함수의 원문입니다."
+              : "Source of the selected function.",
+            start: fn.start,
+            end: fn.end,
+            line: fn.line,
+          },
+        ],
+        edits: [],
+        risks: [],
+        checks: [],
+        focus: { name: fn.name, line: fn.line, endLine: fn.endLine },
+        validation: { status: "unavailable", detail: "No proposed change" },
+      },
+    };
+  }
+  if (r.action === "localSource" && focus) return { result: {} };
   if (r.action === "prepare" && rust) {
     proposal = await call("rust", {
       file: { path, content: source },
@@ -119,7 +167,12 @@ async function rpc(r) {
   if (r.action === "source") return { result: {} };
   throw Error("Unsupported fixture action: " + r.action);
 }
-const page = `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${rust ? "Rust source" : "Function layout"} UI verification</title><link rel="stylesheet" href="/view.css"><link rel="stylesheet" href="/theme.css"><body><p style="padding:12px;margin:0;background:#fff4d4;color:#433716">UI verification fixture — actual extension UI and worker; simulated editor, public sample code.</p><div id="root"></div><script>window.acquireVsCodeApi=()=>({getState:()=>({}),setState:()=>{},postMessage:async m=>{const r=await(await fetch('/rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(m)})).json();if(r.state)window.postMessage({type:'state',state:r.state},location.origin);window.postMessage({type:'response',id:m.id,result:r.result,error:r.error},location.origin)}});</script><script src="/view.js"></script></body></html>`;
+const fixtureTitle = focus
+  ? "Focused explanation"
+  : rust
+    ? "Rust source"
+    : "Function layout";
+const page = `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${fixtureTitle} UI verification</title><link rel="stylesheet" href="/view.css"><link rel="stylesheet" href="/theme.css"><body><p style="padding:12px;margin:0;background:#fff4d4;color:#433716">UI verification fixture — actual extension UI and worker; simulated editor, public sample code.${focus ? " Controlled model replies; no model inference." : ""}</p><div id="root"></div><script>window.acquireVsCodeApi=()=>({getState:()=>({}),setState:()=>{},postMessage:async m=>{const r=await(await fetch('/rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(m)})).json();if(r.state)window.postMessage({type:'state',state:r.state},location.origin);window.postMessage({type:'response',id:m.id,result:r.result,error:r.error},location.origin)}});</script><script src="/view.js"></script></body></html>`;
 const server = createServer(async (req, res) => {
   try {
     if (req.url === "/rpc" && req.method === "POST") {
@@ -167,6 +220,6 @@ server.on("error", async (error) => {
 });
 server.listen(0, "127.0.0.1", () =>
   console.log(
-    `${rust ? "Rust source" : "Function format"} UI fixture: http://127.0.0.1:${server.address().port}`,
+    `${fixtureTitle} UI fixture: http://127.0.0.1:${server.address().port}`,
   ),
 );

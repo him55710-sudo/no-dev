@@ -1,0 +1,151 @@
+{
+  "recordedAt": "2026-10-19T18:35:18.434Z",
+  "sourceVersion": "0.7.0 development; stable/Pages remain 0.6.0",
+  "implementationBaseCommit": "ed5c22e",
+  "sourceFilesSha256": {
+    "src/core/localAssistant.ts": "7c68afce990159de8a69288905fb636e1926d824f77f7333661ae16ddcb0b53b",
+    "src/core/labels.ts": "ec0a3bda77d1a3ae3b9984fb04401101db7b8e6faeecb6ce1692f725b5a06abc",
+    "extension/src/localAssistantController.ts": "06947fa76e7bf40dbd807f19073177437c7f8517b5b0bf9ed4d9253a45c19508",
+    "extension/src/controller.ts": "7f8bda79d2f8fc5d27c8176dcdc504bfa029980ae1708a59afa90529b7b0eea8",
+    "extension/ui/LocalAssistant.tsx": "1371f57a1c8b2184ade59d337721edc86eb076552f2bbf14f54f4c5aeae0ebf0",
+    "extension/ui/main.tsx": "455488b4d443f5b36b0bc9c468747c0ea3f4a1432784c16bd431ac001d23f3a0",
+    "extension/ui/ReadingView.tsx": "21067846a90ffcb8618c91145872435df5b955b966c9ee63ca60fb90a0ac29f7",
+    "extension/test/localAssistant.ts": "ab869867f0a2b1f2cf2731a04ba4e1d7d354b90f73dc1c48172d45720f96f77e",
+    "tests/local-assistant.test.ts": "588256f847f7c880aeb3f465ee2c92c2e0a7de74f6b750b83ccc0dfd34519815",
+    "tests/core.test.ts": "f856d16c9358e75c0f51c97bd89d60741c2b3db8897902491d7a66d201410093"
+  },
+  "scope": "Function focus routing and exact-source checks; not semantic model accuracy or all-language certification.",
+  "coreAttempts": [
+    {
+      "command": "pnpm test --maxWorkers=2",
+      "result": "failed",
+      "passed": 231,
+      "failed": 4,
+      "skipped": 24,
+      "total": 259,
+      "filesPassed": 22,
+      "filesFailed": 5,
+      "causesObserved": [
+        "Java, Go and C# beforeAll failed with missing SDK paths; their 24 tests did not run",
+        "Three Python tests reached 5000ms test timeouts",
+        "One benchmark runner test reached its 20000ms timeout"
+      ],
+      "durationSeconds": 90.7
+    },
+    {
+      "command": "pnpm test --maxWorkers=1",
+      "configuredTools": {
+        "dotnetSdk": "10.0.402",
+        "java": "25.0.4.1+1",
+        "go": "1.27.2"
+      },
+      "result": "failed",
+      "passed": 258,
+      "failed": 1,
+      "skipped": 0,
+      "total": 259,
+      "filesPassed": 26,
+      "filesFailed": 1,
+      "causesObserved": [
+        "Java: changes one supported literal while rejecting expressions, comments, text blocks, chars and token escapes; 30000ms test timeout"
+      ],
+      "durationSeconds": 141.74,
+      "limitations": "Cause of delay not established. Test/product timeouts and assertions unchanged; no claim all tests passed."
+    }
+  ],
+  "focusedCore": {
+    "file": "tests/local-assistant.test.ts",
+    "passed": 14,
+    "result": "passed in standalone and configured whole-suite runs"
+  },
+  "developmentIntegration": {
+    "platform": "Windows",
+    "vscode": "1.96.4",
+    "passed": 55,
+    "result": "passed",
+    "source": "focused-explanation-development-integration.json",
+    "models": "controlled HTTP responses, no real inference"
+  },
+  "builds": {
+    "extension": "passed",
+    "web": "passed",
+    "vsixPackage": "passed"
+  },
+  "installedIntegration": {
+    "result": "passed",
+    "platform": "Windows",
+    "vscode": "1.96.4",
+    "passed": 55,
+    "source": "focused-explanation-installed-integration.json",
+    "packageSha256": "5e087b7a1fca2b74c0c2b634854a42fd2e77334724f1188eb43b3d12621bded1",
+    "limitations": "Same 55 flows as development, not 110 distinct checks. Controlled model replies; manual installed UI not verified."
+  },
+  "ui": {
+    "uiAndWorker": "actual extension build",
+    "source": "public sample",
+    "editor": "simulated",
+    "models": "controlled replies",
+    "languages": [
+      "ko",
+      "en"
+    ],
+    "observations": [
+      "Reading view opens the selected function in AI help",
+      "Selecting another function clears the previous result",
+      "Returned function name, line range and exact source shown in both languages",
+      "Selector accessible name separated from full-file-context help",
+      "Generic total shown as 합계 rather than payment-specific wording"
+    ],
+    "screenshots": [
+      "focused-explanation-ko.jpg",
+      "focused-explanation-en.jpg"
+    ]
+  },
+  "privateProjectAttempts": [
+    {
+      "order": 1,
+      "model": "qwen2.5-coder:3b",
+      "outcome": "model unavailable on selected server; stopped before code submission"
+    },
+    {
+      "order": 2,
+      "model": "qwen3.5:4b",
+      "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+      "focusField": false,
+      "cloudDisabled": true,
+      "outcome": "180s product request timeout; no completed answer"
+    },
+    {
+      "order": 3,
+      "outcome": "Evaluator preparation failed resolving a dependency after separately bundling the analyzer; no inference. Evaluator changed to use actual built product worker."
+    },
+    {
+      "order": 4,
+      "model": "qwen2.5-coder:3b",
+      "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+      "focusField": true,
+      "cloudDisabled": true,
+      "outcome": "180s product request timeout; no completed answer"
+    }
+  ],
+  "privateProjectVerdict": {
+    "completedModelAnswers": 0,
+    "semanticQuality": "not evaluated without a completed answer",
+    "sourceChanged": false,
+    "boundaryObservations": "Seven evaluator-chosen inputs on unchanged actual source; separate from original eight project tests; detailed private results not published",
+    "comparison": "Different model/server/product state; not a comparative performance experiment",
+    "publicPrivacy": "No private source, project identifiers, paths, function names, raw requests/responses or detailed boundary outputs"
+  },
+  "packageValidation": {
+    "releasePackage": "passed",
+    "releaseCheck": "passed",
+    "checks": [
+      "Checksums, source manifest, demo assets, licenses and VSIX contents",
+      "Packaged analysis worker and Rust WASM outside the workspace",
+      "Packaged Python measurement worker",
+      "Packaged Python, Go, Java and C# source readers and exact literal edits"
+    ],
+    "scope": "Local development artifacts; documentation added after packaging is not retroactively part of that source archive. VSIX matches installed evidence."
+  },
+  "packageRelease": "No stable release or Pages deployment"
+}
