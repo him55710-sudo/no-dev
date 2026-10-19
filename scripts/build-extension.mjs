@@ -10,6 +10,14 @@ const common = {
 const results = await Promise.all([
   build({
     ...common,
+    entryPoints: ["extension/src/agentHost.ts"],
+    outfile: "extension/out/agent-host.cjs",
+    platform: "node",
+    format: "cjs",
+    target: "node20",
+  }),
+  build({
+    ...common,
     entryPoints: ["extension/ui/design.tsx"],
     outfile: "extension/media/design.js",
     platform: "browser",

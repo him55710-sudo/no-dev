@@ -256,6 +256,7 @@ textarea {
 .design-center {
   display: flex;
   flex-direction: column;
+  overflow: auto;
   min-width: 0;
   min-height: 0;
 }
@@ -968,4 +969,17 @@ textarea {
   background: var(--design-bg);
   border: 1px solid var(--design-line);
   border-radius: 6px;
+}
+.implementation-connection {
+  flex: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.implementation-connection-error {
+  flex: none;
+  padding: 12px 20px;
+  border-top: 2px solid var(--vscode-editorWarning-foreground, #b87c18);
+  background: var(--design-panel);
 }

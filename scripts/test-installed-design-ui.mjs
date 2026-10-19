@@ -7,7 +7,14 @@ import { createHash, randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { tmpdir } from "node:os";
-import { appendFile, cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import {
+  appendFile,
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  writeFile,
+} from "node:fs/promises";
 import { resolve } from "node:path";
 
 assert.equal(
@@ -108,6 +115,7 @@ const files = {};
 for (const path of [
   "out/extension.cjs",
   "out/worker.cjs",
+  "out/agent-host.cjs",
   "media/design.js",
   "media/design.css",
 ])
@@ -164,4 +172,6 @@ await runTests({
 const report = await readFile(resolve(directory, "report.json"), "utf8");
 await mkdir("test-results", { recursive: true });
 await writeFile("test-results/installed-design-ui.json", report);
-console.log(`INSTALLED UI HOST CHECKS PASSED ${resolve(directory, "report.json")}`);
+console.log(
+  `INSTALLED UI HOST CHECKS PASSED ${resolve(directory, "report.json")}`,
+);

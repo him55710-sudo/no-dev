@@ -60,7 +60,9 @@ export function JobTray({
           </button>
         ) : null}
         {jobIsActive(job) && !["applying", "cancelling"].includes(job.phase) ? (
-          <button onClick={() => action("cancelJob")}>작업 취소</button>
+          <button onClick={() => action("cancelJob", { jobId: job.id })}>
+            작업 취소
+          </button>
         ) : null}
         {job.phase === "applied" ? (
           <button onClick={() => action("undoJob", { reviewId: job.reviewId })}>
@@ -76,6 +78,12 @@ export function JobTray({
           </button>
         ) : null}
       </header>
+      {jobIsActive(job) ? (
+        <p>
+          창을 닫아도 작업은 계속됩니다. 같은 프로젝트를 다시 열면 연결됩니다.
+          중지하려면 작업 취소를 선택하세요.
+        </p>
+      ) : null}
       {job.approvals.map((approval) => (
         <div className="job-approval" key={approval.id}>
           <strong>

@@ -1021,7 +1021,6 @@ export function DesignWorkspaceView({
         <details className="implementation-history">
           <summary>이전 구현 작업 {state.jobHistory?.length ?? 0}개</summary>
           <button
-            disabled={jobIsActive(state.job)}
             onClick={() => perform(() => actions.jobAction!("jobHistory"))}
           >
             작업 기록 새로고침
@@ -1054,12 +1053,28 @@ export function DesignWorkspaceView({
           ) : null}
         </details>
       ) : null}
+      {state.jobConnectionError && actions.jobAction ? (
+        <div role="alert" className="implementation-connection-error">
+          <p>{state.jobConnectionError}</p>
+          <button
+            onClick={() => perform(() => actions.jobAction!("jobHistory"))}
+          >
+            실행 상태 다시 연결
+          </button>
+        </div>
+      ) : null}
       {state.job && actions.jobAction ? (
-        <JobTray
-          key={state.job.id}
-          job={state.job}
-          action={(action, payload) => actions.jobAction!(action, payload)}
-        />
+        <fieldset
+          className="implementation-connection"
+          disabled={!!state.jobConnectionError}
+          aria-label="구현 작업 연결"
+        >
+          <JobTray
+            key={state.job.id}
+            job={state.job}
+            action={(action, payload) => actions.jobAction!(action, payload)}
+          />
+        </fieldset>
       ) : null}
       <footer className="design-statusbar">
         <span className="status-dot" />

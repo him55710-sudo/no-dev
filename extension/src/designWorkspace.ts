@@ -58,7 +58,7 @@ import {
   removeFeatureSchema,
   type Feature,
 } from "../../src/workspace/features";
-import { ImplementationJobs } from "./agent/jobs";
+import { ManagedImplementationJobs } from "./agent/managedJobs";
 import { availableChecks } from "./agent/verify";
 
 const requestSchema = z
@@ -126,7 +126,7 @@ export class DesignWorkspace implements vscode.Disposable {
   private panel?: vscode.WebviewPanel;
   private folder?: vscode.WorkspaceFolder;
   private worker: AnalysisClient;
-  private jobs: ImplementationJobs;
+  private jobs: ManagedImplementationJobs;
   private diffContents = new Map<string, string>();
   private serial = 0;
   private timer?: ReturnType<typeof setTimeout>;
@@ -142,10 +142,12 @@ export class DesignWorkspace implements vscode.Disposable {
   private disposables: vscode.Disposable[] = [];
   constructor(private context: vscode.ExtensionContext) {
     this.worker = new AnalysisClient(context.asAbsolutePath("out/worker.cjs"));
-    this.jobs = new ImplementationJobs(
+    this.jobs = new ManagedImplementationJobs(
       resolve(context.globalStorageUri.fsPath, "implementation-jobs"),
-      (job) => {
+      context.asAbsolutePath("out/agent-host.cjs"),
+      (job, connectionError) => {
         this.state.job = job;
+        this.state.jobConnectionError = connectionError;
         this.emit();
       },
     );
@@ -251,10 +253,12 @@ export class DesignWorkspace implements vscode.Disposable {
       this.connectionSerial++;
       void this.connectionServer?.close();
       this.connectionServer = undefined;
-      this.jobs = new ImplementationJobs(
+      this.jobs = new ManagedImplementationJobs(
         resolve(this.context.globalStorageUri.fsPath, "implementation-jobs"),
-        (job) => {
+        this.context.asAbsolutePath("out/agent-host.cjs"),
+        (job, connectionError) => {
           this.state.job = job;
+          this.state.jobConnectionError = connectionError;
           this.emit();
         },
       );
@@ -385,8 +389,13 @@ export class DesignWorkspace implements vscode.Disposable {
         .parse(request.payload);
       if (!this.folder) throw Error("프로젝트가 없습니다.");
       await this.jobs.restore(this.folder.uri.fsPath, payload.workspaceId);
-    } else if (request.action === "cancelJob") this.jobs.cancel();
-    else if (request.action === "decideJob") {
+    } else if (request.action === "cancelJob") {
+      const payload = z
+        .object({ jobId: z.string().uuid() })
+        .strict()
+        .parse(request.payload);
+      await this.jobs.cancel(payload.jobId);
+    } else if (request.action === "decideJob") {
       const payload = z
         .object({
           jobId: z.string(),
@@ -397,7 +406,9 @@ export class DesignWorkspace implements vscode.Disposable {
         .parse(request.payload);
       if (payload.jobId !== this.state.job?.id)
         throw Error("현재 작업의 승인 요청이 아닙니다.");
-      this.jobs.decide(payload.id, payload.decision);
+      if (!vscode.workspace.isTrusted)
+        throw Error("신뢰한 프로젝트에서 실행 요청을 허용해 주세요.");
+      await this.jobs.decide(payload.id, payload.decision, payload.jobId);
     } else if (request.action === "jobDiff") {
       const payload = z
         .object({
@@ -408,7 +419,7 @@ export class DesignWorkspace implements vscode.Disposable {
         .parse(request.payload);
       if (payload.reviewId !== this.state.job?.reviewId)
         throw Error("현재 검토 중인 작업이 아닙니다.");
-      const file = this.jobs.file(payload.index);
+      const file = await this.jobs.file(payload.index, payload.reviewId);
       const uri = (side: "before" | "after") =>
         vscode.Uri.from({
           scheme: "pureobom-design-diff",
@@ -1131,9 +1142,16 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   async loadJobHistory() {
     if (!this.folder) return;
-    const history = await this.jobs.history(this.folder.uri.fsPath);
-    this.state.jobHistory = history.entries;
-    this.state.jobHistoryErrors = history.errors;
+    const jobs = this.jobs;
+    try {
+      const history = await jobs.history(this.folder.uri.fsPath);
+      if (this.jobs !== jobs || this.disposed) return;
+      this.state.jobHistory = history.entries;
+      this.state.jobHistoryErrors = history.errors;
+    } catch (error) {
+      if (this.jobs !== jobs || this.disposed) return;
+      this.state.jobHistoryErrors = [String(error)];
+    }
     this.emit();
   }
   private html(webview: vscode.Webview) {

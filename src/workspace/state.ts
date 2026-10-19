@@ -29,6 +29,7 @@ export type DesignWorkspaceState = {
   executionError?: string;
   connection?: AgentConnection;
   job?: ImplementationJob;
+  jobConnectionError?: string;
   jobHistory?: JobHistoryEntry[];
   jobHistoryErrors?: string[];
 };

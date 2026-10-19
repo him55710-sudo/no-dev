@@ -325,6 +325,7 @@ export class ImplementationJobs {
       this.server = undefined;
       await this.pending;
       this.executing = false;
+      this.emit(false);
     }
   }
   decide(id: string, decision: "accept" | "decline" | "cancel") {

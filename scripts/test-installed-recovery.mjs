@@ -106,6 +106,7 @@ const files = {};
 for (const path of [
   "out/extension.cjs",
   "out/worker.cjs",
+  "out/agent-host.cjs",
   "media/design.js",
   "media/design.css",
   "THIRD_PARTY_NOTICES.txt",
@@ -133,10 +134,11 @@ const expected = {
 };
 const phases = [
   "prepare-review",
+  "resume-review",
   "review-and-apply",
   "undo-after-restart",
   "crash-during-apply",
-  "recover-after-crash",
+  "continue-after-crash",
 ];
 for (const phase of phases) {
   console.log(`Starting installed VS Code phase: ${phase}`);
@@ -201,7 +203,7 @@ const report = {
   node: process.version,
   artifact: { version, vsixSha256: expected.vsixSha256, files },
   scope:
-    "Installed VSIX in Production extension mode across five separate VS Code launches. Calls use the same validated request dispatcher as the Webview; this is not pointer/keyboard UI automation or model-quality evidence.",
+    "Installed VSIX in Production extension mode across six separate VS Code launches. A pending approval survives the first window exit; a managed file transaction continues after the extension host is killed. Calls use the same validated request dispatcher as the Webview; this is not pointer/keyboard UI automation, managed-worker crash recovery, or model-quality evidence.",
   provider:
     "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
   dependencyEnvironment:

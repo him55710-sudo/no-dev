@@ -30,6 +30,7 @@ type Checkpoint = {
     verification?: unknown;
   }[];
   firstJob?: { id: string; reviewId: string; worktree: string };
+  pendingApproval?: { jobId: string; approvalId: string };
   crashJob?: { id: string; reviewId: string; worktree: string };
   crash?: {
     journalState: string;
@@ -218,37 +219,39 @@ export async function run() {
       "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
     );
   }
-  async function startImplementation() {
-    await stableAnalysis();
-    const previous = workspace.state.specs.specs.find(
-      (spec) => spec.id === `feature:${checkpoint.featureId}`,
-    );
-    const content: SpecContent = {
-      title: "공유 권한 복구 검증",
-      purpose: "설치본의 작업 저장·복구 확인",
-      desired: "viewer는 조회만 가능. owner와 editor는 편집을 유지한다.",
-      policies: "수정 API는 viewer와 다른 프로젝트 멤버에게 403을 반환한다.",
-      inputsOutputs: "project, userId, title",
-      failures: "거절 시 원본 데이터 유지",
-      invariants: ["owner/editor 편집 유지", "viewer 조회 허용"],
-      acceptance: [
-        "viewer 수정 요청 403 및 데이터 보존",
-        "읽기 전용 UI 표시",
-        "다른 프로젝트의 역할로 수정 불가",
-      ],
-    };
-    await dispatch("implement", {
-      targetIds: [`feature:${checkpoint.featureId}`],
-      content,
-      expectedRevision: previous?.revision ?? 0,
-      execution: {
-        context: workspace.state.execution!.context,
-        checks: ["test"],
-        allowExternal: true,
-        profileRevision: workspace.state.execution!.profile.revision,
-        useSaved: true,
-      },
-    });
+  async function startImplementation(resume = false, leavePending = false) {
+    if (!resume) {
+      await stableAnalysis();
+      const previous = workspace.state.specs.specs.find(
+        (spec) => spec.id === `feature:${checkpoint.featureId}`,
+      );
+      const content: SpecContent = {
+        title: "공유 권한 복구 검증",
+        purpose: "설치본의 작업 저장·복구 확인",
+        desired: "viewer는 조회만 가능. owner와 editor는 편집을 유지한다.",
+        policies: "수정 API는 viewer와 다른 프로젝트 멤버에게 403을 반환한다.",
+        inputsOutputs: "project, userId, title",
+        failures: "거절 시 원본 데이터 유지",
+        invariants: ["owner/editor 편집 유지", "viewer 조회 허용"],
+        acceptance: [
+          "viewer 수정 요청 403 및 데이터 보존",
+          "읽기 전용 UI 표시",
+          "다른 프로젝트의 역할로 수정 불가",
+        ],
+      };
+      await dispatch("implement", {
+        targetIds: [`feature:${checkpoint.featureId}`],
+        content,
+        expectedRevision: previous?.revision ?? 0,
+        execution: {
+          context: workspace.state.execution!.context,
+          checks: ["test"],
+          allowExternal: true,
+          profileRevision: workspace.state.execution!.profile.revision,
+          useSaved: true,
+        },
+      });
+    }
     await waitFor(
       () =>
         workspace.state.job?.phase === "approval" ||
@@ -264,6 +267,14 @@ export async function run() {
     assert.equal(approval.id, "fixture-file-approval");
     assert.equal(approval.kind, "file");
     assert.match(approval.reason!, /CONTROLLED TEST/);
+    if (leavePending) {
+      const job = workspace.state.job!;
+      checkpoint.pendingApproval = { jobId: job.id, approvalId: approval.id };
+      checks.push(
+        "window exits with a live unapproved request; no approval is synthesized",
+      );
+      return { id: job.id, reviewId: "", worktree: job.worktree! };
+    }
     await dispatch("decideJob", {
       jobId: workspace.state.job!.id,
       id: approval.id,
@@ -369,7 +380,7 @@ export async function run() {
     checks.push(
       "implementation begins from a saved cross-file business feature",
     );
-    checkpoint.firstJob = await startImplementation();
+    checkpoint.firstJob = await startImplementation(false, true);
     const base = workspace.state.specs.specs.find(
       (spec) => spec.id === `feature:${feature.id}`,
     )!;
@@ -393,6 +404,19 @@ export async function run() {
     );
     await assertOriginal();
     checks.push("implementation does not modify the original source or index");
+  } else if (phase === "resume-review") {
+    assert.equal(workspace.state.job?.id, checkpoint.pendingApproval!.jobId);
+    assert.equal(workspace.state.job?.phase, "approval");
+    assert.equal(
+      workspace.state.job?.approvals[0].id,
+      checkpoint.pendingApproval!.approvalId,
+    );
+    assert.equal(workspace.state.jobHistory?.length, 1);
+    checkpoint.firstJob = await startImplementation(true);
+    await assertOriginal();
+    checks.push(
+      "fresh installed extension attaches to the same live job and original approval without starting another turn",
+    );
   } else if (phase === "review-and-apply") {
     const restoredDraft = workspace.state.drafts?.find(
       (draft) => draft.base.id === `feature:${checkpoint.featureId}`,
@@ -401,11 +425,10 @@ export async function run() {
     assert.equal(restoredDraft.content.title, "");
     assert.deepEqual(restoredDraft.content.acceptance, [""]);
     assert.equal(restoredDraft.content.desired, "재시작 후 검토할 다음 목표");
-    assert.equal(
-      Boolean(workspace.state.job),
-      false,
-      "restoring drafts cannot resume an agent",
-    );
+    if (workspace.state.job) {
+      assert.equal(workspace.state.job.id, checkpoint.firstJob!.id);
+      assert.equal(workspace.state.job.phase, "review");
+    }
     checks.push(
       "unfinished draft restores after a fresh VS Code launch without auto-confirmation or execution",
     );
@@ -625,18 +648,21 @@ export async function run() {
     throw Error(
       "Application finished before the intended interruption; this run does not prove crash recovery.",
     );
-  } else if (phase === "recover-after-crash") {
+  } else if (phase === "continue-after-crash") {
     const job = checkpoint.crashJob!;
     assert.ok(checkpoint.crash);
     await dispatch("restoreJob", { workspaceId: job.id });
-    assert.equal(workspace.state.job?.phase, "recovery");
+    await waitFor(
+      () => workspace.state.job?.phase === "applied",
+      "managed transaction finishes after UI host exit",
+    );
     assert.ok(
       workspace.state.job?.recovery?.some((file) => file.state === "after"),
     );
     assert.ok(
       workspace.state.job?.recovery?.every((file) => file.state !== "conflict"),
     );
-    await dispatch("recoverJob", { reviewId: job.reviewId });
+    await dispatch("undoJob", { reviewId: job.reviewId });
     assert.equal(workspace.state.job?.phase, "undone");
     assert.ok(
       workspace.state.job?.recovery?.every((file) => file.state === "before"),
@@ -644,9 +670,9 @@ export async function run() {
     await assertOriginal();
     checkpoint.recovered = true;
     checks.push(
-      "interrupted apply is detected after a fresh VS Code launch",
-      "recovery reconciles actual file bytes",
-      "recovery restores the original source and preserves the Git index",
+      "managed apply completes despite the extension-host exit",
+      "newly attached window reconciles actual file bytes",
+      "explicit undo restores the original source and preserves the Git index",
     );
   } else throw Error(`Unknown installed test phase: ${phase}`);
   checkpoint.phases.push({

@@ -30,6 +30,6 @@ VS Code 확장 메뉴에서 **VSIX에서 설치**를 선택하고 `release/pureo
 
 기본 분석은 로컬에서 처리한다. Codex 구현을 선택하면 설계와 필요한 프로젝트 코드가 연결된 모델에 전달되고, 선택한 명령이 실행된다. worktree는 파일 변경을 분리하며 보안 샌드박스를 대신하지 않는다. 운영 배포와 push는 이 흐름의 자동 단계가 아니다.
 
-일반 자동 초안 저장은 구현을 시작하지 않는다. 초안은 [초안 복원 안내](DESIGN_DRAFTS.md), 실행 설정은 [연결·명령 선택](EXECUTION_SETTINGS.md), 기준별 검토는 [구현 검토](IMPLEMENTATION_REVIEW.md), 중단·충돌은 [복구 안내](AGENT_IMPLEMENTATION.md)를 확인한다. 특히 실행 중인 에이전트와 재연결하는 기능은 아직 제공되지 않으며, 기록이 중단 상태여도 기존 프로세스가 종료됐다는 증거는 아니다.
+일반 자동 초안 저장은 구현을 시작하지 않는다. 초안은 [초안 복원 안내](DESIGN_DRAFTS.md), 실행 설정은 [연결·명령 선택](EXECUTION_SETTINGS.md), 기준별 검토는 [구현 검토](IMPLEMENTATION_REVIEW.md), 중단·충돌은 [복구 안내](AGENT_IMPLEMENTATION.md)를 확인한다. **창을 닫아도 구현은 계속된다.** 같은 프로젝트를 같은 편집기 프로필에서 열면 관리 프로세스의 작업·승인에 다시 연결한다. 중지하려면 `작업 취소`를 선택한다. 연결 오류에서는 `실행 상태 다시 연결`로 현재 상태를 확인한다. 관리 프로세스 자체가 사라진 경우 이전 승인을 재사용하거나 같은 구현을 자동으로 반복하지 않는다. [재연결 범위와 제한](MANAGED_AGENT_HOST.md).
 
 재현 가능한 첫 외부 사례는 [Next.js SaaS Starter 팀 권한 변경](../validation/next-saas-starter/README.md)이다. 설치 UI, 실제 모델, 앱 브라우저, SQL 결과, 원본 복원은 각각의 증거 범위를 구분한다. [현재 상태](SYSTEM_WORKSPACE_STATUS.md)에 남은 검증을 전체 제품 완료로 바꾸지 않는다.

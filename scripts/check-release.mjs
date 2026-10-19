@@ -26,6 +26,11 @@ for (const file of [
   "pnpm-lock.yaml",
   "src/core/scenarios.ts",
   "src/components/ScenarioLab.tsx",
+  "extension/src/agentHost.ts",
+  "extension/src/agent/host.ts",
+  "extension/src/agent/hostProtocol.ts",
+  "extension/src/agent/managedJobs.ts",
+  "tests/agent-host.test.ts",
   "extension/package.nls.json",
   "extension/.vscodeignore",
   ".github/workflows/ci.yml",
@@ -68,6 +73,7 @@ assert.equal(manifest.version, version);
 for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",
+  "extension/out/agent-host.cjs",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/media/design.js",
@@ -84,7 +90,11 @@ for (const name of Object.keys(vsix.files).filter((name) =>
   /^extension\/out\/.*\.cjs$/.test(name),
 ))
   assert.ok(
-    ["extension/out/extension.cjs", "extension/out/worker.cjs"].includes(name),
+    [
+      "extension/out/extension.cjs",
+      "extension/out/worker.cjs",
+      "extension/out/agent-host.cjs",
+    ].includes(name),
     `Unexpected runtime bundle: ${name}`,
   );
 // Execute the shipped analysis worker, so an accidentally unbundled dependency
