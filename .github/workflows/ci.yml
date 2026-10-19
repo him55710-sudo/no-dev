@@ -22,7 +22,9 @@ jobs:
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm test --reporter=default --reporter=json --outputFile=test-results/unit-tests.json
+      - run: pnpm demo:record
       - run: pnpm build
+      - run: pnpm pages:package
       - run: pnpm extension:build
       - run: xvfb-run -a pnpm extension:test
         if: runner.os == 'Linux'
@@ -43,6 +45,13 @@ jobs:
         with:
           name: pureobom-${{ runner.os }}
           path: release/*.vsix
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: system-design-site
+          path: |
+            release/*-site.zip
+            release/site-evidence.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

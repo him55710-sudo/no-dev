@@ -1,0 +1,103 @@
+Browser tab: 23, Title: "풀어봄 · 코드가 말이 되다", URL: "http://127.0.0.1:4177/no-dev/reader.html?demo=shipping&lang=ko".
+1 AXWebArea 풀어봄 · 코드가 말이 되다, URL: 127.0.0.1:4177/no-dev/reader.html?demo=shipping&lang=ko
+	2 container 입력으로 확인하기
+		3 container
+			4 heading 입력으로 확인하기, Value: 2, ID: modal-title
+				5 text 입력으로 확인하기
+			6 button 닫기 / Close
+		7 container
+			8 text 확인할 기능
+			9 pop up button (collapsed, settable) 확인할 기능, Value: 배송비 계산 · calculateShipping, ID: function-select, Secondary Actions: Expand
+				10 menu
+					11 (selected) 배송비 계산 · calculateShipping
+			12 container 어떤 경우에 결과가 달라질까요?
+				13 text WHAT CHANGES?
+				14 heading 어떤 경우에 결과가 달라질까요?, Value: 3
+					15 text 어떤 경우에 결과가 달라질까요?
+				16 text 기기 안에서 계산
+				17 text 무료 배송 기준: 50000 → 70000
+				18 text 추천 입력은 시작점입니다. 실제로 중요한 사례를 더해 보세요.
+				89 button (collapsed) 입력 사례 7개 편집, Secondary Actions: Expand
+					90 text 입력 사례 7개 편집
+				91 container
+					92 text 3 개 달라짐 ·  0 개 확인 불가  ·  7 개 사례
+				93 table
+					94 row
+						95 cell
+							96 text 입력
+						97 cell
+							98 text 변경 전
+						99 cell
+							100 text 변경 후
+						101 cell
+							102 text 비교
+					103 row
+						104 cell
+							105 text [0]
+						106 cell
+							107 text 3000
+						108 cell
+							109 text 3000
+						110 cell
+							111 text 같음
+					112 row
+						113 cell
+							114 text [49999]
+						115 cell
+							116 text 3000
+						117 cell
+							118 text 3000
+						119 cell
+							120 text 같음
+					121 row
+						122 cell
+							123 text [50000]
+						124 cell
+							125 text 0
+						126 cell
+							127 text 3000
+						128 cell
+							129 text 달라짐
+					130 row
+						131 cell
+							132 text [50001]
+						133 cell
+							134 text 0
+						135 cell
+							136 text 3000
+						137 cell
+							138 text 달라짐
+					139 row
+						140 cell
+							141 text [69999]
+						142 cell
+							143 text 0
+						144 cell
+							145 text 3000
+						146 cell
+							147 text 달라짐
+					148 row
+						149 cell
+							150 text [70000]
+						151 cell
+							152 text 0
+						153 cell
+							154 text 0
+						155 cell
+							156 text 같음
+					157 row
+						158 cell
+							159 text [70001]
+						160 cell
+							161 text 0
+						162 cell
+							163 text 0
+						164 cell
+							165 text 같음
+				166 button 비교 설명서 만들기 (.md)
+				167 text 위에 보이는 파일명·입력·출력만 담습니다. 공유 전에 확인하세요. 자동 공개하지 않습니다.
+				86 text 제한된 계산 미리보기입니다. 표시된 입력만 확인하며 실제 앱 실행·전체 테스트를 대신하지 않습니다.
+			87 button (collapsed) 입력 하나의 판단 과정 자세히 보기, Secondary Actions: Expand
+				88 text 입력 하나의 판단 과정 자세히 보기
+
+The focused UI element is 1 AXWebArea 풀어봄 · 코드가 말이 되다, URL: 127.0.0.1:4177/no-dev/reader.html?demo=shipping&lang=ko

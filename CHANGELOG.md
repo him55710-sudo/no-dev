@@ -2,6 +2,8 @@
 
 ## 0.7.0 — system design development preview (unreleased)
 
+- Package a separate public site with the recorded system-design success/failure walkthrough at its entry point, retain the earlier interactive reader at a working subpath, and provide a return link. Verify local links and archive hashes, fix narrow-screen branding, and connect the package to CI artifacts and the manual Pages workflow. See [scope and publication status](docs/PUBLIC_DEMO.md).
+
 - Add a bundled system-design walkthrough to the VS Code sidebar and Command Palette. Explain exploration, design, implementation setup and review/recovery separately; keep guide progress distinct from actual verification. Point development installation, source and feedback to no-dev, and distinguish the system workspace from the older single-file tools in the extension README.
 
 - Preserve verification attempts across automatic repair, including earlier failures, and mark omitted log output. Let failed or unresolved criteria link current failure, timeout and missing-command records while keeping confirmed criteria and apply guards strict. See [verification evidence](docs/VERIFICATION_EVIDENCE.md).

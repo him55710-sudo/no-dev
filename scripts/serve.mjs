@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../dist",
+  process.argv.includes("--site") ? "../release/site" : "../dist",
 );
 const port = Number(process.env.PORT || 4173);
 const types = {
@@ -19,7 +19,9 @@ const types = {
 try {
   await stat(path.join(root, "index.html"));
 } catch {
-  console.error("Build missing. Run pnpm install and pnpm build first.");
+  console.error(process.argv.includes("--site")
+    ? "Site package missing. Run pnpm build and pnpm pages:package first."
+    : "Build missing. Run pnpm install and pnpm build first.");
   process.exit(1);
 }
 const server = http.createServer(async (req, res) => {

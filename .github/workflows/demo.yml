@@ -22,11 +22,13 @@ jobs:
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+      - run: pnpm demo:record
       - run: pnpm build
+      - run: pnpm pages:package
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: release/site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
