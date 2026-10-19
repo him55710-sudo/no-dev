@@ -57,6 +57,7 @@ export class CodexAppServer {
   private closing?: Promise<void>;
   private stderr = "";
   private runActive = false;
+  private syncRunTimeout?: () => void;
   private approvalHandler?: (request: ApprovalRequest) => void;
   constructor(
     private options: {
@@ -203,6 +204,7 @@ export class CodexAppServer {
       }
       const id = String(message.id);
       this.approvals.set(id, message.id);
+      this.syncRunTimeout?.();
       this.approvalHandler({
         id,
         kind,
@@ -212,8 +214,13 @@ export class CodexAppServer {
       });
       return;
     }
-    if (message.method === "serverRequest/resolved" && params.requestId != null)
+    if (
+      message.method === "serverRequest/resolved" &&
+      params.requestId != null
+    ) {
       this.approvals.delete(String(params.requestId));
+      this.syncRunTimeout?.();
+    }
     for (const listener of this.listeners)
       listener({ method: message.method, params });
   }
@@ -223,6 +230,7 @@ export class CodexAppServer {
       throw Error("이미 끝났거나 취소된 승인 요청입니다.");
     this.send({ id: wireId, result: { decision } });
     this.approvals.delete(id);
+    this.syncRunTimeout?.();
   }
   async run(options: {
     prompt: string;
@@ -279,13 +287,28 @@ export class CodexAppServer {
     });
     this.failures.add(rejectTurn);
     options.signal.addEventListener("abort", cancel, { once: true });
-    const timeout = setTimeout(
-      () => {
-        rejectTurn(Error("구현 작업의 제한 시간이 초과됐습니다."));
-        void this.close();
-      },
-      options.timeoutMs ?? 15 * 60 * 1000,
-    );
+    // Reviewing an approval is user time, not agent execution time. Preserve the
+    // remaining budget across all approvals; do not reset it after each decision.
+    let remainingMs = options.timeoutMs ?? 15 * 60 * 1000;
+    let activeSince: number | undefined;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const expire = () => {
+      rejectTurn(Error("구현 작업의 제한 시간이 초과됐습니다."));
+      void this.close();
+    };
+    this.syncRunTimeout = () => {
+      clearTimeout(timeout);
+      const now = performance.now();
+      if (activeSince !== undefined) remainingMs -= now - activeSince;
+      activeSince = undefined;
+      if (remainingMs <= 0) {
+        expire();
+      } else if (!this.approvals.size) {
+        activeSince = now;
+        timeout = setTimeout(expire, remainingMs);
+      }
+    };
+    this.syncRunTimeout();
     try {
       const started = object.parse(
         await this.request("thread/start", {
@@ -335,6 +358,7 @@ export class CodexAppServer {
       return turn;
     } finally {
       clearTimeout(timeout);
+      this.syncRunTimeout = undefined;
       remove();
       this.failures.delete(rejectTurn);
       options.signal.removeEventListener("abort", cancel);

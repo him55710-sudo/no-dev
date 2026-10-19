@@ -2,21 +2,37 @@
 
 # Pureobom · 풀어봄
 
-### Read it. Change it. Check it.
+### Explore the system. Edit the design. Review the implementation.
 
-Understand the code AI wrote. Change a rule. See which cases change.
+Explore an existing codebase, edit the behavior you want, and connect that design to changes in code and tests.
 
-**Product-first development:** [Detailed plan](docs/PRODUCT_COMPLETION.md) · [Language support and evidence](docs/LANGUAGE_SUPPORT.md) · [Agent work log](docs/AGENT_WORKLOG.md). The 0.7 development source adds optional [local Ollama explanations and edits](docs/LOCAL_AI.md). Actual Python project evidence includes a rejected, slower optimization. The published 0.6.0 and browser demo do not include local AI.
+**System design workspace · 0.7 development:** [Product requirements](docs/SYSTEM_WORKSPACE_PLAN.md) · [Verified scope and remaining work](docs/SYSTEM_WORKSPACE_STATUS.md) · [Start here](docs/SYSTEM_WORKSPACE_START.md). The published 0.6.0 extension and hosted browser demo are the earlier single-file preview; they do not include this workspace.
 
-**VS Code extension · Korean / English · Local processing · MIT**
+**Desktop VS Code extension · Local structure analysis · Optional Codex implementation · MIT**
 
-The development source also connects [project test/build commands](docs/PROJECT_CHECKS.md). Review the command, save changes, and see its actual exit code and whether files changed after the check started.
+Structure exploration works without a model. Implementation requires an explicitly selected Codex connection and project checks. The current system design interface is in Korean; the earlier reading interface supports Korean and English.
 
 [한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
 [![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
 
 </div>
+
+## Start with the system design workspace
+
+Build the development VSIX from this branch and run **풀어봄: 시스템 설계 워크스페이스 열기** (`pureobom.openWorkspace`) in a local TypeScript/React Git project. Select a structure or create a business feature linked to several files. Read its code evidence, then describe the desired behavior, invariants and acceptance criteria.
+
+**Explore → edit the design → save and implement → inspect changes and checks → apply → refresh the structure.**
+
+`설계만 저장` saves the specification. `저장하고 구현` starts Codex in a separate Git worktree. Review the actual diff and command results before applying; undo restores the code while preserving the design goal. A changed source baseline or failed check prevents applying an old result. A worktree separates changes; it is not an operating-system security boundary.
+
+The first target is an existing feature spanning a React interface, server actions/API and a shared policy. [The external Next.js team-permission case](validation/next-saas-starter/README.md) records both successful checks and failed attempts. [The status table](docs/SYSTEM_WORKSPACE_STATUS.md) identifies unverified parts, including native Webview interaction and interrupted-agent reconnection. This is a development preview, not a completed release.
+
+[Install and first task](docs/SYSTEM_WORKSPACE_START.md) · [Execution settings](docs/EXECUTION_SETTINGS.md) · [Review and apply](docs/IMPLEMENTATION_REVIEW.md) · [Recovery](docs/AGENT_IMPLEMENTATION.md)
+
+## Earlier single-file preview — published 0.6.0
+
+The video, hosted demo and single-file capabilities below describe the earlier release. They do not demonstrate the system design workflow above.
 
 [![Watch a real rule change in Pureobom](public/media/demo-poster.png)](https://him55710-sudo.github.io/pureobom/demo.html)
 
@@ -65,7 +81,7 @@ Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Mar
 
 **After your first change:** open **Install & feedback** in the demo or **Help & feedback** in VS Code. Try one task with your own code, then optionally review and copy a feedback summary. Nothing is submitted automatically. [Feedback guide](docs/FEEDBACK.md) · [Planned user study](docs/USER_STUDY.md).
 
-## What works today
+## Earlier preview capabilities
 
 - **Read:** Korean/English explanations anchored to the exact source lines, including unsaved VS Code edits.
 - **Follow cleanup:** read try, catch and finally as separate paths, including pending returns through cleanup. [Corrected in 0.5.2](docs/CONTROL_FLOW.md).
@@ -77,9 +93,9 @@ Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Mar
 - **Explain to someone else:** a local Markdown report containing the displayed comparison. Nothing is automatically published.
 - **Stay in control:** native diff, explicit apply, normal save/undo, stale-document checks and local workers.
 
-## Know the boundary
+## Published 0.6 preview boundaries
 
-This is an **early preview**, not an AI coding agent or a replacement for a developer's review.
+The published **0.6 single-file preview** has the boundaries below. The development system workspace has a separate [support and evidence table](docs/SYSTEM_WORKSPACE_STATUS.md).
 
 | Area | Current boundary |
 | --- | --- |

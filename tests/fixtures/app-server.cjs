@@ -60,22 +60,49 @@ readline
       } else {
         send({ id: message.id, result: { turn: { id: "turn" } } });
         if (scenario === "failure") done("failed");
-        else if (scenario === "approval")
-          send({
-            id: 10,
-            method: "item/commandExecution/requestApproval",
-            params: {
-              threadId: "thread",
-              turnId: "turn",
-              itemId: "item",
-              command: "node --test",
-            },
-          });
-        else if (scenario === "unsupported")
+        else if (
+          [
+            "approval",
+            "approvals-pending",
+            "approval-hang",
+            "approval-resolved",
+            "approval-budget",
+          ].includes(scenario)
+        ) {
+          const ask = () =>
+            send({
+              id: 10,
+              method: "item/commandExecution/requestApproval",
+              params: {
+                threadId: "thread",
+                turnId: "turn",
+                itemId: "item",
+                command: "node --test",
+              },
+            });
+          if (scenario === "approval-budget") setTimeout(ask, 600);
+          else ask();
+          if (scenario === "approvals-pending")
+            send({
+              id: 12,
+              method: "item/fileChange/requestApproval",
+              params: { threadId: "thread", turnId: "turn", itemId: "file" },
+            });
+        } else if (scenario === "unsupported")
           send({ id: 11, method: "item/tool/requestUserInput", params: {} });
         else if (scenario !== "hang") done();
       }
+    } else if (message.method === "fixture/resolve") {
+      send({ id: message.id, result: {} });
+      send({ method: "serverRequest/resolved", params: { requestId: 10 } });
     } else if (message.id === 10) {
+      send({ method: "fixture/decision", params: message.result });
+      if (scenario === "approval-resolved")
+        send({ method: "serverRequest/resolved", params: { requestId: 10 } });
+      if (scenario === "approval-budget") setTimeout(() => done(), 700);
+      else if (!["approvals-pending", "approval-hang"].includes(scenario))
+        done();
+    } else if (message.id === 12) {
       send({ method: "fixture/decision", params: message.result });
       done();
     } else if (message.id === 11) {

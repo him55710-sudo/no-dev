@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T15:22:46.442Z",
+  "jobId": "acc7e12c-ca3f-4f88-a486-c5b6c8ea9db2",
+  "artifact": {
+    "vsixSha256": "96d666d55e1050211dae86c484973951fb6136bdff3d42513d9ce65d7f76dc08",
+    "files": {
+      "out/extension.cjs": "d515a004dd381a83292765a05e4da325d69891d0c079fbf5a6f0c05fbea7b12d",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "647eba9729b00db3191b413de169a308a094b0bc3303e19b143f170717a52859",
+      "media/design.css": "c5891ad9ad1b3795732ab5d8e082ec730b7f7792ce0df6cf1d21bf51aca3b5c5"
+    }
+  },
+  "provider": "Codex Desktop/0.163.0-alpha.10.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)",
+  "phase": "failed",
+  "startedAt": "2026-10-19T15:05:48.022Z",
+  "message": "구현 작업의 제한 시간이 초과됐습니다.",
+  "independentProductChecks": [],
+  "lockedFilesUnchanged": {
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8"
+  },
+  "candidateFiles": {
+    "app/(dashboard)/dashboard/page.tsx": "9ccc200075ecf1f0a3b40ee421d67ac487a43e6b5ec23699174fb9514929685d",
+    "app/(login)/actions.ts": "d1703279ea19b9ff9fa8f5f83fe54b870f995e05a6831c595398dd80e5e6f8a8",
+    "lib/db/queries.ts": "a050a4b403b10bb9d84c1990848ce984a751a41849b72d7ac28d88d4cc5ff89f",
+    "lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "lib/auth/team-permissions.ts": "18b9597bdcce566e09dce6ee78e1ed05d1a2b14dc6291d55c2c0d849ffe1aa6e",
+    "tests/team-permissions.test.tsx": "c101655c865b4a0d61be713c138883fa2a55615ac0d683be475c3ee70eb54864",
+    "tests/vitest.config.mts": "0292863412bf0f92d2455e78b0db4052b0fc88425872cc7e4c95c3656372f7ba"
+  },
+  "originalTrackedFilesHeadIndexAndStatusUnchanged": true,
+  "scope": "Actual installed JS/CSS operated in browser against the Production VS Code host and real Codex CLI. The turn timed out; no successful review, apply or undo. Model-reported test results are not independent product verification. Windows worktree reads/writes required individual command approvals despite workspace-write. No sandbox mode or ACLs changed by this capture."
+}

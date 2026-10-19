@@ -1,6 +1,22 @@
-# 풀어봄 — 코드가, 말이 되다
+# 풀어봄 — 코드를 시스템으로 이해하고, 설계를 바꾸면 구현이 바뀝니다
 
-**제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). 0.7 개발 소스에 선택형 [Ollama 로컬 설명·수정](docs/LOCAL_AI.md)을 추가했습니다. 실제 Python 프로젝트 검증과, 성능이 느려져 채택하지 않은 제안도 공개합니다. 공개 0.6.0 설치본과 브라우저 데모에는 로컬 AI가 없습니다.
+**시스템 설계 워크스페이스 · 0.7 개발판:** [제품 요구사항](docs/SYSTEM_WORKSPACE_PLAN.md) · [검증 범위와 남은 작업](docs/SYSTEM_WORKSPACE_STATUS.md) · [설치하고 시작하기](docs/SYSTEM_WORKSPACE_START.md). 기존 코드의 구조를 탐색하고, 선택한 기능의 설계를 바꿔 관련 코드와 테스트의 구현·검토·반영으로 연결합니다. 공개 0.6.0 설치본과 브라우저 데모는 이전의 단일 파일 시제품이며 이 워크스페이스를 포함하지 않습니다.
+
+## 시스템 설계로 시작하기
+
+이 브랜치에서 개발판 VSIX를 빌드해 설치하고, 로컬 TypeScript·React Git 프로젝트에서 **풀어봄: 시스템 설계 워크스페이스 열기**를 실행하세요. 구조를 선택하거나 여러 파일을 하나의 업무 기능으로 연결한 뒤, 코드 근거와 현재 구현을 읽고 원하는 동작·유지 조건·완료 기준을 작성합니다.
+
+**구조 탐색 → 설계 수정 → 저장하고 구현 → 변경과 검사 검토 → 반영 → 구조 갱신**으로 이어집니다. `설계만 저장`은 명세를 저장하고, `저장하고 구현`은 선택한 Codex와 검사 명령을 별도 Git 작업 공간에서 실행합니다. 실제 diff와 검사 결과를 확인한 뒤 반영하며, 되돌리기는 코드를 복원하고 설계 목표는 보존합니다.
+
+구조 분석은 모델 없이 로컬에서 동작합니다. 구현에는 외부 코드 전달 선택과 Codex 연결이 필요합니다. Git 작업 복사본은 변경을 분리하는 장치이며 운영체제 보안 격리를 뜻하지 않습니다. 현재 시스템 설계 화면은 한국어로 제공하며 이전 읽기 화면은 한국어·영어를 지원합니다.
+
+첫 검증 과제는 React 화면·서버 액션/API·공통 정책을 함께 바꾸는 권한 변경입니다. [외부 Next.js 팀 권한 검증](validation/next-saas-starter/README.md)에 성공한 검사와 실패한 실행을 함께 남깁니다. 네이티브 Webview 전체 조작, 중단된 에이전트 재연결 등 남은 항목은 [상태 표](docs/SYSTEM_WORKSPACE_STATUS.md)에서 확인하세요. 아직 개발판입니다.
+
+[설치와 첫 작업](docs/SYSTEM_WORKSPACE_START.md) · [실행 설정](docs/EXECUTION_SETTINGS.md) · [변경 검토·반영](docs/IMPLEMENTATION_REVIEW.md) · [복구](docs/AGENT_IMPLEMENTATION.md)
+
+## 이전 단일 파일 시제품 — 공개 0.6.0
+
+아래 영상·브라우저 체험·기능 안내는 이전 공개판에 해당합니다. 위의 시스템 설계 흐름을 시연한 자료는 아닙니다.
 
 [English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
 
