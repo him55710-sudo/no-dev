@@ -16,6 +16,8 @@ export async function localAssistantChecks(
       | "invalid"
       | "go-valid"
       | "go-invalid"
+      | "csharp-valid"
+      | "csharp-invalid"
       | "java-valid"
       | "java-invalid"
       | "sql-valid"
@@ -68,7 +70,9 @@ export async function localAssistantChecks(
             reason: "SQLite 문법 검증용 변경",
           },
         ]
-      : mode.startsWith("go-") || mode.startsWith("java-")
+      : mode.startsWith("go-") ||
+          mode.startsWith("java-") ||
+          mode.startsWith("csharp-")
         ? [
             {
               before: quote,
@@ -316,6 +320,58 @@ export async function localAssistantChecks(
     reports.push(
       "local AI controlled fixture: actual Java parser accepts valid syntax, rejects a malformed proposal, preserves native Java diff and blocks invalid apply without claiming type or dependency checks",
     );
+    const previousDotnet =
+      config.inspect<string>("analysisDotnet")?.globalValue;
+    await config.update(
+      "analysisDotnet",
+      process.env.PUREOBOM_TEST_DOTNET || "",
+      vscode.ConfigurationTarget.Global,
+    );
+    try {
+      const csharpDoc = await vscode.workspace.openTextDocument({
+        language: "csharp",
+        content: "class Sample { int fee = 3000; }\n",
+      });
+      await vscode.window.showTextDocument(csharpDoc, vscode.ViewColumn.One);
+      await c.setDocument(csharpDoc);
+      await ready();
+      assert.ok(c.state.analysis!.csharp);
+      mode = "csharp-valid";
+      const validCSharp = await c.assistant.generate(
+        c.state.contextId,
+        payload,
+      );
+      assert.equal(validCSharp.validation.status, "syntax-passed");
+      assert.match(
+        validCSharp.validation.detail,
+        /types, dependencies, behavior and performance unchecked/,
+      );
+      mode = "csharp-invalid";
+      const invalidCSharp = await c.assistant.generate(
+        c.state.contextId,
+        payload,
+      );
+      assert.equal(invalidCSharp.validation.status, "syntax-failed");
+      const csharpPreview = await c.assistant.preview(
+        invalidCSharp.id,
+        c.state.contextId,
+      );
+      assert.ok(csharpPreview.after.endsWith(".cs"));
+      await assert.rejects(
+        () => c.assistant.apply(invalidCSharp.id, c.state.contextId, true),
+        /syntax-invalid/,
+      );
+      assert.equal(csharpDoc.getText(), "class Sample { int fee = 3000; }\n");
+      reports.push(
+        "local AI controlled fixture: actual C# parser accepts valid syntax, rejects a malformed proposal, preserves native C# diff and blocks invalid apply without claiming type or dependency checks",
+      );
+    } finally {
+      await config.update(
+        "analysisDotnet",
+        previousDotnet,
+        vscode.ConfigurationTarget.Global,
+      );
+    }
     const sqlDoc = await vscode.workspace.openTextDocument({
       language: "sql",
       content: "SELECT 3000 AS fee;",

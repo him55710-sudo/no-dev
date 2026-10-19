@@ -53,6 +53,10 @@ export class LocalAssistantController implements vscode.Disposable {
       signal: AbortSignal,
     ) => Promise<AssistantValidation>,
     private sqlDialect?: (doc: vscode.TextDocument) => "sqlite" | undefined,
+    private validateCSharp?: (
+      source: string,
+      signal: AbortSignal,
+    ) => Promise<AssistantValidation>,
   ) {}
   private client() {
     if (vscode.env.remoteName)
@@ -112,24 +116,29 @@ export class LocalAssistantController implements vscode.Disposable {
       const validation = response.proposal.edits.length
         ? doc.languageId === "python"
           ? await validatePython(response.proposal.updated)
-          : doc.languageId === "java" && this.validateJava
-            ? await this.validateJava(
+          : doc.languageId === "csharp" && this.validateCSharp
+            ? await this.validateCSharp(
                 response.proposal.updated,
                 controller.signal,
               )
-            : doc.languageId === "go" && this.validateGo
-              ? await this.validateGo(
+            : doc.languageId === "java" && this.validateJava
+              ? await this.validateJava(
                   response.proposal.updated,
                   controller.signal,
                 )
-              : await this.analyzer.call<AssistantValidation>(
-                  "validateAssistant",
-                  {
-                    language: doc.languageId,
-                    source: response.proposal.updated,
-                    sqlDialect: input.sqlDialect,
-                  },
-                )
+              : doc.languageId === "go" && this.validateGo
+                ? await this.validateGo(
+                    response.proposal.updated,
+                    controller.signal,
+                  )
+                : await this.analyzer.call<AssistantValidation>(
+                    "validateAssistant",
+                    {
+                      language: doc.languageId,
+                      source: response.proposal.updated,
+                      sqlDialect: input.sqlDialect,
+                    },
+                  )
         : {
             status: "unavailable" as const,
             detail: "변경안 없음 / No proposed change",

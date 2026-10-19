@@ -14,6 +14,8 @@ import { Worker } from "node:worker_threads";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import JSZip from "jszip";
+import { build } from "esbuild";
+import { pathToFileURL } from "node:url";
 
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const prefix = `release/pureobom-${version}`;
@@ -85,6 +87,7 @@ for (const file of [
   "extension/runtime/python_source.py",
   "extension/runtime/go_source.go",
   "extension/runtime/PureobomJavaSource.java",
+  "extension/runtime/PureobomCSharpSource.cs",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -482,3 +485,36 @@ try {
 console.log(
   "Packaged Java AST reader and exact literal edit verified outside the workspace.",
 );
+
+// Run the extracted fixed C# helper through the same host wrapper used by the
+// extension. Installed-extension tests separately verify the production bundle.
+const csharpDirectory = await mkdtemp(join(tmpdir(), "pureobom-csharp-package-"));
+try {
+  const helper = join(csharpDirectory, "PureobomCSharpSource.cs");
+  await writeFile(helper, await vsix.file("extension/runtime/PureobomCSharpSource.cs").async("nodebuffer"));
+  const host = join(csharpDirectory, "host.mjs");
+  await build({ entryPoints: ["extension/src/csharpSource.ts"], outfile: host,
+    bundle: true, platform: "node", format: "esm", target: "node24", logLevel: "silent" });
+  const { csharpSource } = await import(pathToFileURL(host).href);
+  const content = '// 😀 한글\r\nclass Sample { ulong limit=9007199254740993UL; string name=@"a""b"; int Check(int x)=>x<0?0:1; }';
+  const file = { path: "Sample.cs", content };
+  const invoke = (action) => csharpSource(file, helper, join(csharpDirectory, "cache"), action, { dotnet: process.env.PUREOBOM_TEST_DOTNET });
+  const analysis = await invoke({ action: "analyze" });
+  assert.ok(analysis.csharp.version);
+  assert.equal(analysis.syntaxValid, true);
+  const rule = analysis.rules.find((r) => r.raw === "9007199254740993UL");
+  assert.ok(rule);
+  assert.equal(content.slice(rule.start, rule.end), rule.raw);
+  const patch = await invoke({ action: "patch", ruleId: rule.id, value: "9007199254740995UL" });
+  assert.equal(patch.updated, content.replace(rule.raw, "9007199254740995UL"));
+  assert.equal(patch.semanticChecked, false);
+  const textRule = analysis.rules.find((r) => r.value === 'a"b');
+  assert.ok(textRule);
+  const stringPatch = await invoke({ action: "patch", ruleId: textRule.id, value: '한글 "quote" 😀' });
+  assert.equal(stringPatch.updated, content.slice(0, textRule.start) + stringPatch.newText + content.slice(textRule.end));
+} finally {
+  if (!resolve(csharpDirectory).startsWith(resolve(tmpdir()) + sep) || !csharpDirectory.split(sep).at(-1).startsWith("pureobom-csharp-package-"))
+    throw Error("Unexpected C# package cleanup directory");
+  await rm(csharpDirectory, { recursive: true, force: true });
+}
+console.log("Packaged C# Roslyn reader and exact literal edits verified outside the workspace.");

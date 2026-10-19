@@ -131,7 +131,7 @@ export async function pythonSource(
 export function validateAnalysis(
   value: unknown,
   file: SourceFile,
-  syntax: "python" | "go" | "java" = "python",
+  syntax: "python" | "go" | "java" | "csharp" = "python",
 ): FileAnalysis {
   const a = value as FileAnalysis;
   const fail = () => {
@@ -147,6 +147,7 @@ export function validateAnalysis(
     !a[syntax] ||
     typeof a[syntax].version !== "string" ||
     typeof a[syntax].truncated !== "boolean" ||
+    (syntax === "csharp" && typeof a.csharp?.languageVersion !== "string") ||
     !Array.isArray(a.rules) ||
     a.rules.length > 300 ||
     !Array.isArray(a.functions) ||

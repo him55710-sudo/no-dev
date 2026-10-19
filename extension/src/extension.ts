@@ -21,6 +21,11 @@ export function activate(context: vscode.ExtensionContext) {
       cache: vscode.Uri.joinPath(context.globalStorageUri, "java-reader")
         .fsPath,
     },
+    {
+      script: context.asAbsolutePath("runtime/PureobomCSharpSource.cs"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "csharp-reader")
+        .fsPath,
+    },
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {

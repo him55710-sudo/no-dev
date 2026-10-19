@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Story } from "../../src/components/Story";
+import { ReadingView } from "./ReadingView";
+import { RuleWorkbench } from "./RuleWorkbench";
 import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
@@ -13,6 +14,7 @@ import type { Lang, Rule, Simulation, Words } from "../../src/core/types";
 import type { PatchSummary, ViewState } from "../src/protocol";
 import { host, request } from "./bridge";
 import "./style.css";
+import "./journey.css";
 
 type Tab = "story" | "rules" | "checks" | "map" | "local";
 function App() {
@@ -207,11 +209,9 @@ function App() {
         </p>
       )}
       {notice && (
-        <p className="banner success" role="status">
-          {notice[lang]}
-        </p>
+        <div className="banner success" role="status"><p>{notice[lang]}</p><button onClick={() => setTab("checks")}>{t("확인하기로 이동 →", "Go to Check →")}</button></div>
       )}
-      {state.path && state.diagnostics && (
+      {state.path && state.diagnostics && (state.diagnostics.errors > 0 || state.diagnostics.warnings > 0 || state.diagnostics.status === "edited") && (
         <button className="diagnostic-summary" onClick={() => setTab("checks")}>
           <span>{t("편집기 알림", "Editor reports")}</span>
           <strong>
@@ -235,8 +235,8 @@ function App() {
           </h2>
           <p>
             {t(
-              "JavaScript 또는 TypeScript 파일을 열면 기능, 조건, 바꿀 수 있는 값을 보여 드립니다. JSON 파일도 읽을 수 있습니다.",
-              "Open a JavaScript, TypeScript or JSON file to explore its logic and editable values.",
+              "프로젝트의 파일을 열면 설명이 나타나요. 처음이라면 작은 예제로 이해하기 → 바꾸기 → 확인하기를 따라가 보세요.",
+              "Open a project file to read it. New here? Try a small example and follow Understand → Change → Check.",
             )}
           </p>
           <button
@@ -247,8 +247,8 @@ function App() {
           </button>
           <p className="muted">
             {t(
-              "외부 AI 서비스와 API 키 없이 작동합니다.",
-              "No external AI service or API key required.",
+              "기본 설명에는 API 키가 필요 없어요. AI 도움은 원할 때 따로 사용할 수 있습니다.",
+              "Built-in explanations need no API key. AI help is an optional separate tool.",
             )}
           </p>
         </section>
@@ -257,19 +257,20 @@ function App() {
           <nav className="tabs" aria-label={t("설명 보기 방식", "Views")}>
             {(
               [
-                ["story", "문장으로 읽기", "Story"],
-                ["rules", "규칙 바꾸기", "Rules"],
-                ["checks", "검토할 부분", "Review"],
-                ["map", "연결 지도", "Map"],
-                ["local", "로컬 AI", "Local AI"],
+                ["story", "이해하기", "Understand"],
+                ["rules", "바꾸기", "Change"],
+                ["checks", "확인하기", "Check"],
+                ["map", "연결 지도", "Connections"],
+                ["local", "AI 도움", "AI help"],
               ] as const
-            ).map(([key, korean, english]) => (
+            ).map(([key, korean, english], index) => (
               <button
                 key={key}
                 aria-pressed={tab === key}
-                className={tab === key ? "selected" : ""}
+                className={`${tab === key ? "selected" : ""} ${index > 2 ? "tool-nav" : "journey-nav"}`}
                 onClick={() => setTab(key)}
               >
+                {index < 3 && <span className="nav-number" aria-hidden="true">{index + 1}</span>}
                 {t(korean, english)}
                 {key === "checks" && !!a?.issues.length && (
                   <span className="count">{a.issues.length}</span>
@@ -294,11 +295,33 @@ function App() {
                 )}
               </p>
             ) : null}
-            {state.pythonNotice || state.goNotice || state.javaNotice ? (
+            {state.language === "csharp" && state.busy ? (
+              <p role="status">
+                {t(
+                  "C# 구문을 읽고 있습니다. 처음 사용할 때는 설치된 .NET SDK로 읽기 도구를 준비합니다.",
+                  "Reading C# syntax. The first use prepares the reader with the installed .NET SDK.",
+                )}
+              </p>
+            ) : null}
+            {state.pythonNotice ||
+            state.goNotice ||
+            state.javaNotice ||
+            state.csharpNotice ? (
               <section className="card" role="status">
                 <p>
-                  {state.pythonNotice || state.goNotice || state.javaNotice}
+                  {state.pythonNotice ||
+                    state.goNotice ||
+                    state.javaNotice ||
+                    state.csharpNotice}
                 </p>
+                {state.csharpNotice ? (
+                  <p>
+                    {t(
+                      ".NET SDK 8 이상을 설치하세요. 런타임만으로는 부족합니다. 필요하면 pureobom.analysisDotnet에 dotnet 실행 파일의 절대 경로를 지정하고 새로 읽기를 누르세요. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install .NET SDK 8 or later; a runtime alone is insufficient. Optionally set the absolute dotnet executable in pureobom.analysisDotnet and refresh. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
                 {state.javaNotice ? (
                   <p>
                     {t(
@@ -326,7 +349,9 @@ function App() {
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
                 <p>
-                  {state.language === "python" || state.language === "go"
+                  {["python", "go", "java", "csharp"].includes(
+                    state.language || "",
+                  )
                     ? t(
                         "구문 읽기 도구를 사용할 수 없습니다. 위 안내를 확인하거나 로컬 AI에서 설명을 요청할 수 있습니다.",
                         "The syntax reader is unavailable. Check the notice above or request a local AI explanation.",
@@ -342,8 +367,13 @@ function App() {
               </section>
             )}
             {a && tab === "story" && (
-              <>
-                <Terminology
+              <ReadingView
+                key={a.path}
+                analysis={a} lang={lang} disabled={disabled}
+                editDisabled={disabled || !state.trusted}
+                onSource={source} onEdit={selectRule}
+                onRules={() => setTab("rules")} onChecks={() => setTab("checks")} onMap={() => setTab("map")}
+                terminology={<Terminology
                   key={a.path}
                   terms={a.terms || []}
                   lang={lang}
@@ -360,343 +390,45 @@ function App() {
                       en: "Your term is now used in explanations. Source names are unchanged.",
                     });
                   }}
-                />
-                <Story
-                  analysis={a}
-                  disabled={disabled}
-                  editDisabled={disabled || !state.trusted}
-                  lang={lang}
-                  onSource={source}
-                  onEdit={selectRule}
-                  onSqlDialect={(dialect) =>
-                    void action(() =>
-                      request(
-                        "sqlDialect",
-                        { dialect: dialect || "" },
-                        state.contextId,
-                      ),
-                    )
-                  }
-                  onSimulate={(name) => {
-                    setFn(name);
-                    setSimulation(undefined);
-                    setArgs("[]");
-                    requestAnimationFrame(() =>
-                      simulationRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      }),
-                    );
-                  }}
-                />
-              </>
+                />}
+                onSqlDialect={(dialect) => void action(() => request("sqlDialect", { dialect: dialect || "" }, state.contextId))}
+                onSimulate={(name) => { setFn(name); setTab("checks"); setSimulation(undefined); setArgs("[]"); }}
+              />
             )}
             {a && tab === "rules" && (
-              <>
-                <div className="section-heading">
-                  <div>
-                    <span className="eyebrow">
-                      {t("규칙 바꾸기", "EDIT THE RULES")}
-                    </span>
-                    <h2>
-                      {a.kind === "json"
-                        ? t(
-                            "원문에 저장된 값을 바꾸세요",
-                            "Change a stored value",
-                          )
-                        : t(
-                            "원하는 동작에 맞게 값을 바꾸세요",
-                            "Adjust the rules",
-                          )}
-                    </h2>
-                  </div>
-                </div>
-                <p className="muted">
-                  {a.sql
-                    ? t(
-                        "SQLite 방언을 선택한 파일의 숫자·작은따옴표 문자열을 수정합니다. 아래 표에 표시된 규칙 이름 전체(@위치 포함)를 쓰세요. 데이터베이스 결과·제약·성능은 프로젝트 검사에서 확인해야 합니다.",
-                        "Edit numeric and single-quoted string literals after selecting SQLite. Use the full rule name shown in the list below, including @position. Check database results, constraints and performance with project checks.",
-                      )
-                    : a.web
-                      ? t(
-                          "일반 HTML 문구·일부 텍스트 속성·CSS 선언 값 하나를 수정합니다. CSS는 단위까지 입력하세요. 화면·접근성·스타일 우선순위는 실제 페이지에서 확인해야 합니다.",
-                          "Edit one ordinary HTML text, selected text attribute or CSS declaration value. Include CSS units. Check rendering, accessibility and cascade in the actual page.",
-                        )
-                      : a.kind === "json"
-                        ? t(
-                            "문자열·숫자·참거짓 값 하나를 바꿉니다. 주석과 나머지 원문은 유지하며, 실제 적용 방식은 데이터를 읽는 코드에서 확인해야 합니다.",
-                            "Change one string, number or boolean. Comments and the rest of the source are preserved; its effect depends on the code that reads the data.",
-                          )
-                        : a.go
-                          ? t(
-                              "이름 하나에 대입한 문자열·숫자 리터럴 하나를 수정합니다. 참거짓 이름·룬·식은 대상이 아닙니다. 타입·범위·실제 동작은 프로젝트 검사에서 확인하세요.",
-                              "Edit one string or numeric literal assigned to a name. Boolean identifiers, runes and expressions are excluded. Check types, ranges and behavior with project checks.",
-                            )
-                          : a.python
-                            ? t(
-                                "이름 하나에 대입한 문자열·숫자·참거짓 값을 수정합니다. 사용처·타입·실제 동작은 별도 검사해야 합니다.",
-                                "Edit one string, number or boolean assigned to a name. Its uses, types and actual behavior need separate checks.",
-                              )
-                            : t(
-                                "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                                "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                              )}
-                </p>
-                <form
-                  className="sentence"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    void action(() => prepare({ request: sentence }));
-                  }}
-                >
-                  <label htmlFor="sentence">
-                    {t("문장으로 변경 요청", "Request a change")}
-                  </label>
-                  <div className="input-row">
-                    <input
-                      id="sentence"
-                      value={sentence}
-                      onChange={(e) => setSentence(e.target.value)}
-                      placeholder={
-                        a.web
-                          ? t(
-                              "표의 이름 전체와 큰따옴표로 감싼 새 값",
-                              "Full table name and a new value in double quotes",
-                            )
-                          : a.kind === "json"
-                            ? t(
-                                '예: $["enabled"]를 false로 변경',
-                                'Example: change $["enabled"] to false',
-                              )
-                            : a.python || a.go || a.java || a.sql
-                              ? t(
-                                  "표의 원문 이름과 새 값을 적어 주세요",
-                                  "Use a source name from the table and one new value",
-                                )
-                              : t(
-                                  "무료 배송 기준을 70000으로 변경",
-                                  "Change freeShippingThreshold to 70000",
-                                )
-                      }
-                    />
-                    <button
-                      disabled={
-                        disabled ||
-                        !state.trusted ||
-                        !sentence.trim() ||
-                        !a.syntaxValid
-                      }
-                    >
-                      {t("변경안 만들기", "Preview change")}
-                    </button>
-                  </div>
-                  <small>
-                    {a.web
-                      ? t(
-                          '이름 전체(@위치 포함)와 새 값 하나를 적어 주세요. 예: "24px"',
-                          'Use the full name including @position and one quoted value, e.g. "24px".',
-                        )
-                      : a.kind === "json"
-                        ? t(
-                            "아래 표의 키 경로 전체와 새 값 하나를 적어 주세요.",
-                            "Use the full key path from the table and one new value.",
-                          )
-                        : t(
-                            "아래 표의 규칙 이름과 새 값 하나를 적어 주세요. 7만 → 70000, 15% → 0.15",
-                            "Use one rule name and one new value. Write 70000 or 0.15 without units.",
-                          )}
-                  </small>
-                </form>
-                <div className="table-scroll card">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>{t("규칙", "Rule")}</th>
-                        <th>{t("현재 값", "Value")}</th>
-                        <th>{t("위치", "Location")}</th>
-                        <th>{t("수정", "Edit")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {a.rules.map((rule) => (
-                        <tr key={rule.id}>
-                          <td>
-                            <strong>{rule.label[lang]}</strong>
-                            <small className="mono">{rule.name}</small>
-                          </td>
-                          <td className="mono">
-                            {rule.syntax === "python" || rule.syntax === "go"
-                              ? rule.raw
-                              : String(rule.value)}
-                          </td>
-                          <td>
-                            <button
-                              className="line-link"
-                              onClick={() => source(rule.line)}
-                            >
-                              L{rule.line}
-                            </button>
-                          </td>
-                          <td>
-                            <button
-                              disabled={
-                                disabled || !state.trusted || !a.syntaxValid
-                              }
-                              onClick={() => selectRule(rule)}
-                            >
-                              {t("바꾸기", "Edit")}
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {a.rules.length === 0 && (
-                    <p className="empty">
-                      {t(
-                        "이 파일에서 지원되는 편집 규칙을 찾지 못했습니다.",
-                        "No supported editable rules in this file.",
-                      )}
-                    </p>
-                  )}
-                </div>
-                {edit && (
-                  <div className="card rule-editor" ref={editorRef}>
-                    <h3>{edit.label[lang]}</h3>
-                    {edit.note ? <p>{edit.note[lang]}</p> : null}
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void action(() => prepare({ ruleId: edit.id, value }));
-                      }}
-                    >
-                      <label htmlFor="rule-value">
-                        {t("새 값", "New value")}
-                      </label>
-                      <div className="input-row">
-                        {edit.type === "boolean" || edit.type === "operator" ? (
-                          <select
-                            id="rule-value"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                          >
-                            {(edit.type === "boolean"
-                              ? ["true", "false"]
-                              : [">=", ">", "<=", "<", "===", "!==", "==", "!="]
-                            ).map((v) => (
-                              <option key={v} value={v}>
-                                {edit.syntax === "python" &&
-                                edit.type === "boolean"
-                                  ? v === "true"
-                                    ? "True"
-                                    : "False"
-                                  : v}
-                              </option>
-                            ))}
-                          </select>
-                        ) : edit.type === "string" ? (
-                          <textarea
-                            id="rule-value"
-                            value={value}
-                            rows={3}
-                            onChange={(e) => setValue(e.target.value)}
-                          />
-                        ) : (
-                          <input
-                            id="rule-value"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                          />
-                        )}
-                        <button
-                          className="primary"
-                          disabled={disabled || !state.trusted}
-                        >
-                          {t("변경안 만들기", "Preview change")}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEdit(undefined);
-                            setPatch(undefined);
-                          }}
-                        >
-                          {t("닫기", "Close")}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-                {patch && (
-                  <section
-                    className="card patch"
-                    ref={patchRef}
-                    aria-label={t("변경 미리보기", "Change preview")}
-                  >
-                    <span className="eyebrow">
-                      {t("적용 전 확인", "REVIEW BEFORE APPLYING")}
-                    </span>
-                    <h3>{patch.description[lang]}</h3>
-                    <div className="diff">
-                      <div>
-                        <small>{t("현재", "Before")}</small>
-                        <code>{patch.oldText}</code>
-                      </div>
-                      <span>→</span>
-                      <div>
-                        <small>{t("변경 후", "After")}</small>
-                        <code>{patch.newText}</code>
-                      </div>
-                    </div>
-                    <p>
-                      {t(
-                        "문법 검사를 통과했습니다. 이 변경안의 타입과 실제 동작은 아직 확인하지 않았습니다. 적용 뒤 편집기 알림도 살펴보세요.",
-                        "Syntax checked. Types and runtime behavior of this proposal are not verified. Review editor reports after applying it.",
-                      )}
-                    </p>
-                    <div className="actions">
-                      <button
-                        disabled={disabled}
-                        onClick={() =>
-                          void action(() =>
-                            request(
-                              "preview",
-                              { id: patch.id, lang },
-                              state.contextId,
-                            ),
-                          )
-                        }
-                      >
-                        {t("VS Code에서 차이 비교", "Compare in VS Code")}
-                      </button>
-                      <button
-                        className="primary"
-                        disabled={disabled || !state.trusted}
-                        onClick={() =>
-                          void action(async () => {
-                            await request(
-                              "apply",
-                              { id: patch.id },
-                              state.contextId,
-                            );
-                            setPatch(undefined);
-                            setNotice({
-                              ko: "편집기에 적용했습니다. Ctrl+Z로 취소하고, Ctrl+S로 저장하세요.",
-                              en: "Applied to the editor. Undo with Ctrl+Z; save with Ctrl+S.",
-                            });
-                          })
-                        }
-                      >
-                        {t("편집기에 적용", "Apply to editor")}
-                      </button>
-                    </div>
-                  </section>
-                )}
-              </>
+              <RuleWorkbench
+                key={a.path}
+                analysis={a} lang={lang} disabled={disabled} trusted={state.trusted}
+                edit={edit} value={value} patch={patch} sentence={sentence}
+                onSelect={selectRule} onValue={(next) => { setValue(next); setPatch(undefined); }}
+                onSentence={(next) => { setSentence(next); setPatch(undefined); }}
+                onPrepare={(payload) => void action(() => prepare(payload))}
+                onClose={() => { setEdit(undefined); setPatch(undefined); }}
+                onSource={source} editorRef={editorRef} patchRef={patchRef}
+                onPreview={() => void action(() => request("preview", { id: patch!.id, lang }, state.contextId))}
+                onApply={() => void action(async () => {
+                  await request("apply", { id: patch!.id }, state.contextId);
+                  setPatch(undefined);
+                  setNotice({ ko: "편집기에 적용했어요. Ctrl+Z로 되돌릴 수 있습니다. 확인하기에서 결과를 살펴보세요.", en: "Applied to the editor. Undo with Ctrl+Z. Review the result in Check." });
+                })}
+                comparison={patch && scenarioFn ? <ScenarioLab
+                  key={`${state.contextId}:${patch.id}:${scenarioFn.name}`}
+                  fn={scenarioFn} rules={a.rules} lang={lang}
+                  revision={`${state.contextId}:${patch.id}`} change={patch} disabled={disabled}
+                  run={(scenarios) => request<ScenarioReport>("compare", { name: scenarioFn.name, scenarios, patchId: patch.id }, state.contextId)}
+                  exportReport={(content) => request<void>("report", { content }, state.contextId)}
+                /> : undefined}
+              />
             )}
             {a && tab === "checks" && (
               <>
-                <ProjectChecks state={state} lang={lang} />
+                <div className="journey-heading"><span className="eyebrow">{t("의도한 대로 바뀌었는지", "CHECK YOUR INTENT")}</span><h2>{t("결과와 근거를 함께 확인하세요", "Check results alongside the evidence")}</h2><p>{t("편집기가 알려준 문제부터 읽고, 예시 입력과 프로젝트 검사로 동작을 확인해 보세요.", "Start with editor reports, then try sample inputs and project checks.")}</p></div>
+                {fn && scenarioFn && <section ref={simulationRef} className="example-check"><ScenarioLab
+                  key={`${state.contextId}:${scenarioFn.name}`}
+                  fn={scenarioFn} rules={a.rules} lang={lang} revision={state.contextId} disabled={disabled}
+                  run={(scenarios) => request<ScenarioReport>("compare", { name: scenarioFn.name, scenarios }, state.contextId)}
+                  exportReport={(content) => request<void>("report", { content }, state.contextId)}
+                /></section>}
                 {state.diagnostics && (
                   <EditorProblems
                     snapshot={state.diagnostics}
@@ -746,6 +478,7 @@ function App() {
                     )}
                   </p>
                 )}
+                <details className="disclosure"><summary>{t("프로젝트 검사와 성능 측정", "Project checks and performance")}</summary><ProjectChecks state={state} lang={lang} /></details>
               </>
             )}
             {tab === "map" && (
@@ -781,29 +514,9 @@ function App() {
           </main>
         </>
       )}
-      {a && scenarioFn && (patch || fn) && (
-        <ScenarioLab
-          key={`${state.contextId}:${patch?.id}:${scenarioFn.name}`}
-          fn={scenarioFn}
-          rules={a.rules}
-          lang={lang}
-          revision={`${state.contextId}:${patch?.id}`}
-          change={patch}
-          disabled={disabled}
-          run={(scenarios) =>
-            request<ScenarioReport>(
-              "compare",
-              { name: scenarioFn.name, scenarios, patchId: patch?.id },
-              state.contextId,
-            )
-          }
-          exportReport={(content) =>
-            request<void>("report", { content }, state.contextId)
-          }
-        />
-      )}
-      {fn && (
-        <section ref={simulationRef} className="card simulation">
+      {fn && tab === "checks" && (
+        <details className="disclosure simulation">
+          <summary>{t("고급: JSON 인자로 직접 확인", "Advanced: enter JSON arguments")}</summary>
           <div className="section-heading">
             <h2>
               {t("값을 넣어 확인", "Try inputs")} · <code>{fn}</code>
@@ -874,7 +587,7 @@ function App() {
               </ol>
             </>
           )}
-        </section>
+        </details>
       )}
       <footer className="app-footer">
         {t(

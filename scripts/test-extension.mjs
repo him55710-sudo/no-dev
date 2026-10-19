@@ -93,6 +93,7 @@ if (installed) {
     "runtime/python_source.py",
     "runtime/go_source.go",
     "runtime/PureobomJavaSource.java",
+    "runtime/PureobomCSharpSource.cs",
     "media/view.js",
     "media/view.css",
   ])

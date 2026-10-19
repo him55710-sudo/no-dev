@@ -91,6 +91,12 @@
           "maximum": 65535,
           "scope": "application",
           "description": "Local Ollama port on 127.0.0.1. Start Ollama with OLLAMA_NO_CLOUD=1. No external hosts or paid API fallback."
+        },
+        "pureobom.analysisDotnet": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Absolute dotnet executable for model-free C# reading, literal edits and proposal parsing. Empty uses dotnet on PATH. Requires a stable .NET SDK 8+ with its reference pack/runtime. Compiles only the bundled helper with SDK Roslyn; no restore, MSBuild, project loading, source generators or user-code execution. Project defines, language version, types and dependencies are not checked."
         }
       }
     },

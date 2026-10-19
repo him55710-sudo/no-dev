@@ -130,8 +130,15 @@ export function Story({
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
-  const native = analysis.python || analysis.go || analysis.java;
-  const nativeName = analysis.python ? "Python" : analysis.go ? "Go" : "Java";
+  const native =
+    analysis.python || analysis.go || analysis.java || analysis.csharp;
+  const nativeName = analysis.python
+    ? "Python"
+    : analysis.go
+      ? "Go"
+      : analysis.java
+        ? "Java"
+        : `C# ${analysis.csharp?.languageVersion} (Roslyn)`;
   if (analysis.sql)
     return (
       <SqlStory
@@ -219,17 +226,21 @@ export function Story({
             : `Read from ${nativeName} ${native.version} syntax without executing or importing user code. Describes supported structure and written values; types, uses, runtime outcomes and performance need separate checks.`}
           {native.truncated
             ? ko
-              ? " 표시 한도(약 400개 구문·12단계·100개 함수·300개 수정 값)에 도달해 일부가 생략됐습니다."
-              : " Some content is omitted at the display limit (about 400 statements, 12 levels, 100 functions, 300 editable values)."
+              ? " 표시 한도에 도달해 일부가 생략됐습니다. 아래 안내와 원문을 확인하세요."
+              : " Some content is omitted at the display limit. Review the notes and source."
             : null}
         </p>
       ) : null}
-      {native && !analysis.syntaxValid ? (
+      {native && analysis.issues.length > 0 ? (
         <section className="card" role="status">
           <h3>
-            {ko
-              ? `${nativeName} 문법을 확인해 주세요`
-              : `Check ${nativeName} syntax`}
+            {analysis.syntaxValid
+              ? ko
+                ? "원문 읽기에서 확인할 부분"
+                : "Source reading notes"
+              : ko
+                ? `${nativeName} 문법을 확인해 주세요`
+                : `Check ${nativeName} syntax`}
           </h3>
           {analysis.issues.map((issue) => (
             <p key={issue.id}>
@@ -266,11 +277,15 @@ export function Story({
         </button>
       </div>
       {analysis.rules.some(
-        (r) => r.scope === "file" && r.type !== "operator",
+        (r) => (analysis.csharp || r.scope === "file") && r.type !== "operator",
       ) && (
         <div className="story-rules">
           {analysis.rules
-            .filter((r) => r.scope === "file" && r.type !== "operator")
+            .filter(
+              (r) =>
+                (analysis.csharp || r.scope === "file") &&
+                r.type !== "operator",
+            )
             .map((r) => (
               <button
                 key={r.id}
@@ -280,7 +295,7 @@ export function Story({
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {["python", "go", "java"].includes(r.syntax || "")
+                  {["python", "go", "java", "csharp"].includes(r.syntax || "")
                     ? r.raw
                     : typeof r.value === "number"
                       ? r.value.toLocaleString("en-US")
@@ -295,7 +310,15 @@ export function Story({
       )}
       {detail && (
         <section className="card setup-card">
-          <h3>{ko ? "파일을 불러올 때 준비하는 것" : "Module setup"}</h3>
+          <h3>
+            {native
+              ? ko
+                ? "최상위 선언과 코드"
+                : "Top-level declarations and code"
+              : ko
+                ? "파일을 불러올 때 준비하는 것"
+                : "Module setup"}
+          </h3>
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
         </section>
       )}

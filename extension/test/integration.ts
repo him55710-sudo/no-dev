@@ -9,6 +9,7 @@ import { benchmarkChecks } from "./benchmarks";
 import { pythonSourceChecks } from "./pythonSource";
 import { goSourceChecks } from "./goSource";
 import { javaSourceChecks } from "./javaSource";
+import { csharpSourceChecks } from "./csharpSource";
 import { webSourceChecks } from "./webSource";
 import { sqlSourceChecks } from "./sqlSource";
 const reports: string[] = [];
@@ -566,7 +567,14 @@ export async function run() {
     typedDoc.getText(vscode.window.activeTextEditor!.selection),
     "shippingFee",
   );
+  // Diagnostic navigation deliberately preserves panel focus. Undo is an
+  // editor command, so focus the source before exercising its undo stack.
+  await vscode.window.showTextDocument(typedDoc, {
+    viewColumn: vscode.ViewColumn.One,
+    preserveFocus: false,
+  });
   await vscode.commands.executeCommand("undo");
+  assert.equal(typedDoc.getText(), "export const shippingFee: 3000 | 5000 = 3000;\n");
   await until(
     () =>
       c.state.diagnostics?.items.every(
@@ -581,6 +589,7 @@ export async function run() {
   await pythonSourceChecks(c, ready, reports);
   await goSourceChecks(c, ready, reports);
   await javaSourceChecks(c, ready, reports);
+  await csharpSourceChecks(c, ready, reports);
   await localAssistantChecks(c, ready, reports);
   const jsoncSource =
     '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';
