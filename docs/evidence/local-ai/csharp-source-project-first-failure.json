@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-19T16:57:32.061Z",
+  "project": "https://github.com/ardalis/GuardClauses",
+  "commit": "f96b823e4228252b2927cce3effa550c16b558a5",
+  "file": "src/GuardClauses/GuardAgainstNegativeExtensions.cs",
+  "sourceSha256": "9d2c589c1992461bdff48d258cb0ea2fe4cb57c72032f2c7928a96f90a9fcfc4",
+  "vscode": "1.96.4",
+  "kind": "Known negative-boundary regression through actual VS Code source reading, literal edit, native diff, task execution and undo. Original upstream GuardClauses net8.0 test project; no model or optimization claim.",
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(rule)\n",
+  "sourceCommit": "0a95520c2b23b548349601e04efe86cc54099910",
+  "diagnosis": "The evaluation harness used BOM-containing disk text to locate an editor rule. VS Code omitted the one-character BOM from its text model. Corrected to use doc.getText() for offsets while preserving disk bytes for restoration. This failed run ended before project tests or edits.",
+  "confirmedUtf8Bom": true
+}

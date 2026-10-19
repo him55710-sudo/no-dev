@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+2026-10-20 C# 후속: [GuardClauses 실제 편집기·기존 테스트 연결](csharp-source-project.md)에서 959 pass → 검증용 경계값 변경으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 오류와 수정도 공개한다. 이는 회귀 검출 연동 검사이며 AI 품질이나 실제 사용자 과제의 성공은 별도다.
+
 2026-10-20 후속: [모델 없는 JS/TS 함수 서식 정리](function-format.md). 사용자 지정 실제 프로젝트의 기존 테스트 **8→8→8 통과**, native 적용·undo·원본 복구를 확인했다. 전체 핵심 242개·개발 호스트 51개, 한국어/영어 실제 UI 검증을 별도 기록한다. 이전 AI 요청 실패나 설명 품질·성능 최적화 성공으로 재분류하지 않는다.
 
 [SQLite 원문 읽기·값 수정](../../SQL_SOURCE.md), [개발 43개](sql-source-development-integration.json), [설치 43개](sql-source-installed-integration.json), [외부 sqlc 예제](sql-source-project.md)를 추가했다. 명시적 방언·정확한 수정·diff·undo와 실제 재생성/Go 테스트 1 pass → 고정 오류 1 fail → 복구 1 pass를 확인한다. 개발 기록은 마지막 SQL 위치 보정 전이며 설치/CI는 별도 버전 근거를 따른다. 모델 의미 정확도·쿼리 최적화·전체 sqlc 테스트 성공으로 합산하지 않는다.

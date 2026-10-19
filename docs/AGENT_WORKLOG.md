@@ -2,6 +2,15 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-20 · C# 외부 프로젝트 전후 테스트와 BOM 복구
+
+- **실행:** 기존 GuardClauses 고정 checkout을 실제 VS Code 개발 호스트에서 읽고 원문 숫자 선택→native diff→명시적 적용→저장→원래 테스트→native undo→저장→재검사를 수행했다. **959 pass → 952 pass / 7 fail → 959 pass**, 미저장 실행 차단, 원본 바이트 해시·checkout clean을 확인했다. SDK 10.0.402/runtime 10.0.13에서 upstream net8.0 테스트를 Major roll-forward로 실행했다. [근거와 재현](evidence/local-ai/csharp-source-project.md).
+- **첫 실패:** 평가 스크립트가 BOM을 포함한 디스크 문자열로 숫자 위치를 계산해 편집기 규칙과 한 글자 어긋났다. 테스트나 코드 적용 전에 `assert.ok(rule)`로 중단됐다. `extension/test/csharpSourceProject.ts`에서 문서 위치·후보 비교는 `doc.getText()`, 디스크 복구는 원본 Buffer로 분리했다. 후속 성공에서 14,045 디스크 문자/14,044 편집기 문자와 BOM 보존을 확인했다. 제품 파서 버그로 오인하지 않고 [첫 실패](evidence/local-ai/csharp-source-project-first-failure.json)를 보존했다.
+- **변경·검증:** 검증 스크립트와 fixture 안내, 언어 지원 표, C# 문서, 공개 계획·이력·MIT 고지·원자료를 갱신했다. 확장 TypeScript 검사 통과. 일반 핵심/설치 suite의 이전 결과를 이번 스크립트 수정 후 재실행한 것으로 표시하지 않는다.
+- **제품 CI:** 앞선 제품 커밋 `0a95520`의 Windows/Ubuntu 작업 로그에서 각각 핵심 242개, 개발/설치 각 51개, production 모드·파일 9개 해시와 추출된 C# helper를 포함한 도구 실행 성공을 확인했다. [원자료](evidence/local-ai/function-format-ci.json). 이 CI는 새 외부 harness의 BOM 수정을 포함하지 않는다. Linux D-Bus/SIGPIPE 및 인증 대기 진단을 기록하고 runner 성공과 구분했다.
+- **한계:** 오류를 주입한 검출 검사이며 실제 upstream 결함이나 모델 의미 정확성·최적화·사용자 실험이 아니다. Rust 전용 읽기/수정과 실제 프로젝트, C# 다른 SDK·수동 UI 등은 남아 있다.
+- **다음 Rust 구현의 사전 확인:** 공식 tree-sitter-rust 0.24.2 WASM의 공개 digest와 다운로드 파일을 대조하고 web-tree-sitter 0.27.1에서 6개 단독 입력을 파싱했다. Unicode/CRLF 원문 위치·BOM·raw string·오류 구문을 확인했고 매크로·타입은 의미 검증되지 않음을 확인했다. 별도 시험 설치가 작업 공간 lockfile에 넣은 임시 항목은 복원했다. 제품 dependency와 Rust 지원 상태는 유지하며 [구현 계획](RUST_SOURCE_PLAN.md)에 범위·검증 기준을 기록했다.
+
 ## 2026-10-20 · 실제 사용자 함수의 로컬 서식 정리·기존 테스트·복구
 
 - **문제와 구현:** 실제 모델이 반복해서 요청 밖 중괄호를 추가한 서식 과제를 별도 로컬 경로로 다뤘다. `src/core/formatFunction.ts`가 구문 위치에 줄바꿈을 넣고 포함된 TypeScript 5.9.3 언어 서비스로 2칸 들여쓰기를 정리한다. 전체 문법·토큰·구문 구조·주석·범위 밖 원문을 비교하고, 128 KiB·깊이 200 제한을 둔다. 프로젝트 설정/플러그인·모델·사용자 코드를 실행하지 않는다. 함수 ID를 서버에서 원문과 대조하고 worker 안에서 처리한다.

@@ -37,6 +37,10 @@
 
 2026-10-20 후속: [별도 프로필의 0.7.0 설치 VSIX 검사](evidence/local-ai/function-format-installed-integration.json)에서 C# 읽기·편집·undo·SDK 실패/복구·모델 제안 문법 검사를 포함한 전체 51개 흐름이 통과했다. SDK 10.0.402 환경이며 SDK 8/9, GuardClauses의 편집 후 전체 검사, 설치본 수동 UI 조작을 검증한 것으로 확대하지 않는다.
 
+[GuardClauses 외부 연동](evidence/local-ai/csharp-source-project.md)도 완료했다. 원래 net8.0 테스트 959개 통과, 검증용 값 변경 후 7개 실패, native undo 후 959개 통과와 BOM을 포함한 원문 바이트 복원을 확인했다. SDK 10의 Major roll-forward 환경이며 검증용 변경을 실제 upstream 버그 발견이나 최적화로 세지 않는다. 첫 BOM 위치 오류와 검증 스크립트 수정도 기록했다.
+
+제품 커밋 `0a95520`의 [Windows/Ubuntu CI](evidence/local-ai/function-format-ci.json)에서는 C#을 포함한 핵심 242개·개발/설치 각 51개와 VSIX에서 추출한 C# helper의 읽기/수정이 통과했다. 외부 GuardClauses 실행과 새 harness의 BOM 수정은 이 CI 이후의 별도 로컬 기록이다.
+
 ## English scope
 
 The development desktop extension uses an installed stable .NET SDK 8+ and Roslyn to read supported C# syntax and exact literal values. It provides Korean/English source links, native C# diffs, explicit edits and undo without implicit saving. Only a fixed helper is compiled; user source is parsed and never executed during analysis. No model or paid API is required. Types, project defines/language settings, dependencies, behavior and performance require separate project checks. Support is partial; the published 0.6.0 extension and browser demo do not include this feature.

@@ -9,7 +9,8 @@ import { storyLines } from "../../src/core/storyReport";
 export async function run() {
   const root = vscode.workspace.workspaceFolders![0].uri.fsPath;
   const path = join(root, "src/GuardClauses/GuardAgainstNegativeExtensions.cs");
-  const original = await readFile(path, "utf8");
+  const originalBytes = await readFile(path);
+  const diskOriginal = originalBytes.toString("utf8");
   const hash = (value: string) =>
     createHash("sha256").update(value).digest("hex");
   const api = await vscode.extensions
@@ -24,7 +25,7 @@ export async function run() {
     project: "https://github.com/ardalis/GuardClauses",
     commit: "f96b823e4228252b2927cce3effa550c16b558a5",
     file: "src/GuardClauses/GuardAgainstNegativeExtensions.cs",
-    sourceSha256: hash(original),
+    sourceSha256: hash(diskOriginal),
     vscode: vscode.version,
     kind: "Known negative-boundary regression through actual VS Code source reading, literal edit, native diff, task execution and undo. Original upstream GuardClauses net8.0 test project; no model or optimization claim.",
   };
@@ -45,6 +46,16 @@ export async function run() {
   );
   try {
     const doc = await vscode.workspace.openTextDocument(path);
+    // VS Code strips the UTF-8 BOM from its text model and retains it on save.
+    // Rule offsets and patches refer to the editor text, not the encoded bytes.
+    const original = doc.getText();
+    report.encoding = {
+      utf8Bom: originalBytes.subarray(0, 3).toString("hex") === "efbbbf",
+      editorTextSha256: hash(original),
+      diskCharacters: diskOriginal.length,
+      editorCharacters: original.length,
+    };
+    assert.equal(original, diskOriginal.replace(/^\uFEFF/, ""));
     await vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
     await api.openPanel();
     await c.setDocument(doc);
@@ -126,7 +137,7 @@ export async function run() {
     await c.apply(patch.id, context);
     await ready();
     assert.equal(doc.getText(), after.getText());
-    assert.equal(await readFile(path, "utf8"), original);
+    assert.deepEqual(await readFile(path), originalBytes);
     const choice = (await c.checks.list(c.state.contextId)).find(
       (t) => t.name === "GuardClauses C# regression",
     )!;
@@ -153,9 +164,10 @@ export async function run() {
     report.restored = restored;
     assert.equal(restored.result.status, "passed");
     assert.equal(restored.counts.passed, 959);
-    assert.equal(await readFile(path, "utf8"), original);
+    assert.deepEqual(await readFile(path), originalBytes);
     report.originalRestored = true;
-    report.restoredSha256 = hash(doc.getText());
+    report.restoredSha256 = hash((await readFile(path)).toString("utf8"));
+    report.restoredEditorSha256 = hash(doc.getText());
     console.log(
       "PUREOBOM CSHARP SOURCE PROJECT PASSED",
       JSON.stringify({
@@ -168,8 +180,8 @@ export async function run() {
     report.error = String(error);
     throw error;
   } finally {
-    if ((await readFile(path, "utf8")) !== original)
-      await writeFile(path, original);
+    if (!(await readFile(path)).equals(originalBytes))
+      await writeFile(path, originalBytes);
     await writeFile(
       process.env.PUREOBOM_CSHARP_SOURCE_REPORT!,
       JSON.stringify(report, null, 2),

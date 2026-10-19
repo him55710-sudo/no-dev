@@ -35,6 +35,8 @@
 
 ## 재현
 
+후속으로 제품 소스 `0a95520`의 [Windows·Ubuntu CI](function-format-ci.json)에서 각 핵심 242개·개발/설치 각 51개와 패키지에서 추출한 분석·Python 측정·Python/Go/Java/C# 원문 도구를 확인했다. 실제 사용자 프로젝트의 결과는 이 CI에 포함되지 않는다. headless Linux의 D-Bus/SIGPIPE 및 인증 provider 대기 진단이 로그에 있었지만 테스트 runner와 작업은 성공했다. 이를 모든 환경의 무오류 로그로 표시하지 않는다.
+
 `pnpm exec vitest run tests/formatFunction.test.ts`, `pnpm extension:build`, `pnpm extension:test`로 공개 검사를 실행한다. 전체 native suite의 Python/Go/Java/C# 검사는 각 문서의 로컬 도구가 필요하다.
 
 같은 설치본 검사는 빌드 후 `pnpm extension:package`, `pnpm extension:test:installed`로 실행한다. 검증한 VSIX SHA-256은 `ed7b0436dac9a49a58fa57dd14e1203126867bbbd5df9c51face73e867b13f38`이다. 이는 로컬 개발 패키지이며 Marketplace 또는 GitHub 안정 릴리스 게시가 아니다.
