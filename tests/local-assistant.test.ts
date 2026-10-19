@@ -47,7 +47,12 @@ describe("grounded local assistant proposals", () => {
     };
     const messages = assistantMessages(selected),
       data = JSON.parse(messages[1].content);
-    expect(data.source).toBe(source);
+    expect(data.source.selectedFunction).toBe(
+      source.slice(focus.start, focus.end),
+    );
+    expect(
+      data.source.before + data.source.selectedFunction + data.source.after,
+    ).toBe(source);
     expect(data.explanationFocus).toEqual({
       name: "double",
       startLine: 3,

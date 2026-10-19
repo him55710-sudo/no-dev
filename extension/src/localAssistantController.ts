@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { randomUUID } from "node:crypto";
-import { OllamaClient } from "./ollama";
+import { OllamaClient, type InferenceProcessor } from "./ollama";
 import { inputString } from "./protocol";
 import type { AnalysisClient } from "./analysisClient";
 import type {
@@ -22,6 +22,7 @@ export type AssistantResult = Omit<AssistantProposal, "updated"> & {
   model: string;
   digest: string;
   elapsedMs: number;
+  processor: InferenceProcessor;
   validation: AssistantValidation;
   constraint?: AssistantConstraintCheck;
   focus?: { name: string; line: number; endLine: number };
@@ -68,7 +69,7 @@ export class LocalAssistantController implements vscode.Disposable {
       id: string,
     ) => AssistantInput["focus"],
   ) {}
-  private client() {
+  private client(processor: InferenceProcessor = "auto") {
     if (vscode.env.remoteName)
       throw Error(
         "로컬 AI는 데스크톱의 로컬 작업 공간에서 사용하세요. / Local AI requires a local desktop workspace.",
@@ -77,6 +78,8 @@ export class LocalAssistantController implements vscode.Disposable {
       vscode.workspace
         .getConfiguration("pureobom")
         .get<number>("ollamaPort", 11434),
+      undefined,
+      processor,
     );
   }
   async models() {
@@ -137,11 +140,11 @@ export class LocalAssistantController implements vscode.Disposable {
     this.running = controller;
     this.pending = undefined;
     try {
-      const response = await this.client().generate(
-        inputString(payload.model, 200),
-        input,
-        controller.signal,
-      );
+      const response = await this.client(
+        (payload.processor === undefined
+          ? "auto"
+          : payload.processor) as InferenceProcessor,
+      ).generate(inputString(payload.model, 200), input, controller.signal);
       const validation: AssistantValidation = response.proposal.edits.length
         ? doc.languageId === "python"
           ? await validatePython(response.proposal.updated)
@@ -189,6 +192,7 @@ export class LocalAssistantController implements vscode.Disposable {
         model: response.model.name,
         digest: response.model.digest,
         elapsedMs: response.elapsedMs,
+        processor: response.processor,
         validation,
         ...(input.focus
           ? {

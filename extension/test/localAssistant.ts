@@ -30,6 +30,7 @@ export async function localAssistantChecks(
       | "sql-invalid" = "normal",
     chatSeen = false;
   let focusRequest: Record<string, any> | undefined;
+  let focusProcessor: number | undefined;
   const model = {
     name: "fixture:local",
     size: 1900000000,
@@ -65,6 +66,9 @@ export async function localAssistantChecks(
     const input = JSON.parse(body.messages[1].content);
     if (mode.startsWith("explain-")) {
       focusRequest = input;
+      focusProcessor = body.options.num_gpu;
+      assert.equal(body.truncate, false);
+      assert.equal(body.shift, false);
       res.end(
         JSON.stringify({
           done: true,
@@ -202,6 +206,7 @@ export async function localAssistantChecks(
         lang: "ko",
         instruction: "",
         focusFunctionId: selected.id,
+        processor: "cpu",
       };
       mode = "explain-focus";
       chatSeen = false;
@@ -220,13 +225,32 @@ export async function localAssistantChecks(
         /requires an explanation/,
       );
       assert.equal(chatSeen, false);
+      await assert.rejects(
+        c.assistant.generate(c.state.contextId, {
+          ...focusedPayload,
+          processor: "unrecognized",
+        }),
+        /inference processor/,
+      );
+      assert.equal(chatSeen, false);
       const focused = await c.assistant.generate(
         c.state.contextId,
         focusedPayload,
       );
-      assert.equal(focusRequest!.source, focusSource);
+      assert.equal(
+        focusRequest!.source.before +
+          focusRequest!.source.selectedFunction +
+          focusRequest!.source.after,
+        focusSource,
+      );
+      assert.equal(
+        focusRequest!.source.selectedFunction,
+        focusSource.slice(selected.start, selected.end),
+      );
       assert.equal(focusRequest!.explanationFocus.name, "double");
       assert.equal(focusRequest!.explanationFocus.startLine, 2);
+      assert.equal(focusProcessor, 0);
+      assert.equal(focused.processor, "cpu");
       assert.deepEqual(focused.focus, { name: "double", line: 2, endLine: 2 });
       assert.equal(focused.edits.length, 0);
       assert.equal(focusDoc.getText(), focusSource);
@@ -256,7 +280,7 @@ export async function localAssistantChecks(
       await vscode.commands.executeCommand("undo");
       assert.equal(focusDoc.getText(), focusSource);
       reports.push(
-        "Focused local explanation: host resolves the selected function, keeps full-file context, rejects unknown/stale/edit focus before sending, requires an in-function citation and navigates exact source without edits; controlled model response",
+        "Focused local explanation: host resolves the selected function, separates its source while preserving every full-file character, rejects unknown/stale/edit focus and invalid processor before sending, forwards explicit CPU selection and no-truncation flags, requires an in-function citation and navigates exact source without edits; controlled model response",
       );
     } finally {
       for (const group of vscode.window.tabGroups.all)

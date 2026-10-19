@@ -1,0 +1,97 @@
+{
+  "checkedAt": "2026-10-19T19:04:51.756Z",
+  "kind": "Anonymized actual-project follow-up and separate software integration evidence",
+  "version": "0.7.0 development",
+  "stableVersion": "0.6.0",
+  "attempts": [
+    {
+      "attempt": 1,
+      "model": "qwen2.5-coder:3b",
+      "sourceRepresentation": "full-source-string",
+      "environment": "separate cloud-disabled CPU-only Ollama 0.40.5 server",
+      "productCpuOption": false,
+      "promptTokens": 1484,
+      "generatedTokens": 332,
+      "serverTotalSeconds": 99.0003557,
+      "productCitationValidation": "rejected",
+      "semanticTaskAccepted": false,
+      "sourcePreserved": true,
+      "codeApplied": false
+    },
+    {
+      "attempt": 2,
+      "model": "qwen2.5-coder:3b",
+      "sourceRepresentation": "selected-function-and-surrounding-source",
+      "environment": "separate cloud-disabled CPU-only Ollama 0.40.5 server",
+      "productCpuOption": false,
+      "promptTokens": 1539,
+      "generatedTokens": 544,
+      "serverTotalSeconds": 81.1173949,
+      "clientChatElapsedMs": 81123,
+      "productCitationValidation": "passed",
+      "semanticTaskAccepted": false,
+      "sourcePreserved": true,
+      "codeApplied": false
+    },
+    {
+      "attempt": 3,
+      "model": "qwen3.5:4b",
+      "sourceRepresentation": "selected-function-and-surrounding-source",
+      "environment": "separate cloud-disabled CPU-only Ollama 0.40.5 server",
+      "productCpuOption": true,
+      "promptTokens": 1525,
+      "generatedTokens": 717,
+      "serverTotalSeconds": 156.2539306,
+      "productCitationValidation": "rejected",
+      "semanticTaskAccepted": false,
+      "sourcePreserved": true,
+      "codeApplied": false,
+      "requestFlags": {
+        "numGpu": 0,
+        "truncate": false,
+        "shift": false,
+        "think": false
+      }
+    }
+  ],
+  "verification": {
+    "core": {
+      "passed": 260,
+      "logSha256": "0b0369f927f19f7ae33e6ad310af4fb2e06b133984cc5f7a9aa2a8d9c11dad93"
+    },
+    "development": {
+      "passed": 55,
+      "logSha256": "284752d08f2435c75ac6f4d9a276793ca9916542ea3329d5c54d18047c239e9f"
+    },
+    "installed": {
+      "passed": 55,
+      "logSha256": "fe59dc39617e20a0cb11031b16b93cd6730309b4dc639f7db8395b2559623100",
+      "vsixSha256": "b096896ade95f4c2966707f9ed20316604941354d3a6917a7d05475ac196372c"
+    },
+    "ui": {
+      "languages": [
+        "ko",
+        "en"
+      ],
+      "controlledModel": true,
+      "actualInference": false,
+      "source": "Built extension UI and worker with a simulated editor and public sample",
+      "checks": [
+        "CPU option and result label",
+        "Changing processor clears result",
+        "Language switch hides previous-language result; new English request succeeds"
+      ]
+    },
+    "package": {
+      "passed": true,
+      "logSha256": "bd6e6979ddd5e0783ce9839265164ab22f49f54ffe7e7fbddb6c245c69ea3a97",
+      "scope": "Checksums, source manifest, licenses, VSIX and extracted worker/Rust/Python/Go/Java/C# tools"
+    }
+  },
+  "limitations": [
+    "All three actual explanation attempts fail the semantic task; citation validity is not correctness.",
+    "No controlled CPU/GPU speed comparison.",
+    "No private source, request, raw response or project identifiers in public evidence.",
+    "No stable release or Pages deployment."
+  ]
+}

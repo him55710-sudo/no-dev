@@ -2,6 +2,14 @@
 
 공개 개발 기록의 시작일: 2026-10-16. 완료된 작업과 예정 작업을 구별한다. 이 기록은 재현할 수 있는 작업 사실이며 에이전트의 비공개 내부 추론 기록이 아니다. 모델 출력·도구 로그에 개인정보나 비밀이 있으면 공개하지 않는다.
 
+## 2026-10-20 · 선택 원문 구분·CPU 옵션·실제 설명 오류 보존
+
+- **문제와 변경:** 이전 실제 설명 timeout과 인접 함수 혼동을 조사했다. `src/core/localAssistant.ts`에서 선택 함수와 앞뒤 원문을 구분하되 모든 문자를 보존한다. `extension/src/ollama.ts`, 호스트와 `LocalAssistant.tsx`에 요청별 CPU 옵션을 연결하고 잘못된 옵션을 거절한다. 기본은 Ollama 자동 선택이다. `truncate:false`, `shift:false`를 명시하며 기존 문맥·출력·시간 한도는 유지한다. [설계·공식 자료·실패 기록](evidence/local-ai/focused-context-cpu.md).
+- **실제 과제:** 같은 변경하지 않은 비공개 사용자 파일과 같은 질문으로 CPU 전용 서버에서 세 번 생성했다. 3B 기존 입력은 선택 함수 인용이 없어 거절, 3B 선택 원문 구분은 인용 4개를 통과했으나 의미 검토 실패, 4B 명시적 CPU 요청은 인용 불일치와 의미 오류였다. 성공한 사용자 설명 과제로 세지 않는다. 공개 자료는 익명 요약이며 원문·원시 응답·상세 입력 결과는 로컬에 보존한다. 별도 평가 서버는 종료하고 다른 서버를 변경하지 않았다.
+- **성능 해석:** 이전 GPU 부분 적재와 이번 CPU 완료를 관찰했지만 실행 시점·다른 작업·캐시가 달라 속도 향상률이나 timeout의 단일 원인을 주장하지 않는다. 문맥 예산을 줄여 성능을 높였다는 변경도 아니다. 4B의 실제 요청 플래그와 VRAM 0을 확인했다.
+- **화면:** 실제 빌드 UI/worker와 공개 예제·제어된 모델 응답으로 한국어 CPU 선택·결과 표시→자동 선택 시 결과 제거→영어 전환과 새 결과를 확인했다. [한국어](evidence/local-ai/cpu-explanation-ko.jpg), [영어](evidence/local-ai/cpu-explanation-en.jpg). React 스킬 기준으로 레이블·요청 상태·결과 초기화·type-only import를 검토했다. CPU 표시를 실제 측정값으로 오인하지 않도록 요청값이라고 썼다.
+- **검증:** 관련 단위 검사 22개, 전체 핵심 260개, 웹/확장 빌드, 실제 VS Code 개발/production 설치 각 55개, 설치 파일 11개 해시·추출 도구·패키지 검사를 통과했다. [원자료](evidence/local-ai/focused-context-cpu.json). 인증 제공자 대기와 종료 N-API 경고는 있었으며 suite 종료는 0이었다. 전체 검사에서 재측정한 합성 파서 기록은 로컬에 따로 보존하고 공개 benchmark 파일은 이전 값으로 복원했다. 교차 OS CI는 별도 확인한다. 제품 검사 성공을 실제 모델 정확성으로 합산하지 않는다. 안정판/Pages 0.6.0은 교체하지 않는다.
+
 ## 2026-10-20 · 선택한 함수 설명과 실제 사용자 코드 후속 평가
 
 - **구현:** `localAssistant.ts`의 설명 범위·프롬프트·인용 조건, 호스트의 함수 ID 해석, `ReadingView.tsx` → `LocalAssistant.tsx` 진입과 한국어/영어 선택기를 연결했다. 코드에 존재하는 검사와 호출자 전제를 구별하도록 요청한다. 선택 함수 안의 실제 인용이 최소 하나 있어야 하지만 설명 의미의 참·거짓을 판정하지 않는다. 전체 현재 파일과 기존 크기/시간 제한을 유지한다. [사용법](FOCUSED_EXPLANATIONS.md).
@@ -306,7 +314,7 @@
 ## 2026-10-16 · Python AST로 읽고 정확한 원문 값을 수정
 
 - **문제와 범위:** Python 설명에서 모델이 음수 예외·배송 기준·기본 반환을 누락했던 결과에 대응해 P2/P3를 보강했다. 설치된 Python의 고정 AST helper를 사용하며 모델·Ollama·API 호출을 추가하지 않았다. VS Code 로컬 데스크톱의 현재 Python 문서만 분석하며 전체 계획 완료가 아니다.
-- **구현:** `extension/runtime/python_source.py`, `extension/src/pythonSource.ts`, controller/activation/protocol. `-I -S`로 고정 도구를 실행하고 ast.parse 후 compile로 범위 오류를 확인하되 사용자 소스·import·데코레이터·기본값을 실행하지 않는다. 함수·클래스·분기·반복문 else·except/except*·try else·finally·with·return·raise·yield 등을 부분적으로 읽는다. 호출의 의미·단위·성능을 추측하지 않는다. 버전, 미지원 구문, 생략·오류·없는 실행기·기한/취소를 표시한다.
+- **구현:** `extension/runtime/python_source.py`, `extension/src/pythonSource.ts`, controller/activation/protocol. `-I -S`로 고정 도구를 실행하고 ast.parse 후 compile로 범위 오류를 확인하되 사용자 소스·import·데코레이터·기본값을 실행하지 않는다. 함수·클래스·분기·반복문 else·except/except\*·try else·finally·with·return·raise·yield 등을 부분적으로 읽는다. 호출의 의미·단위·성능을 추측하지 않는다. 버전, 미지원 구문, 생략·오류·없는 실행기·기한/취소를 표시한다.
 - **위치와 수정:** AST의 UTF-8 열을 편집기의 UTF-16 위치로 변환한다. emoji·한글·LF/CRLF/CR와 정확한 큰 정수를 확인했다. 단일 이름 대입의 문자열·숫자·참거짓만 원문 한 범위에서 수정한다. 숫자는 JS Number로 변환하지 않으며 문자열은 inert Python 리터럴로 인코딩한다. 주석을 지울 수 있는 implicit string concatenation은 제외한다. 128KiB·5초·2MiB 응답, 400구문·12단계·100함수·300값·4096자 한도를 문서화했다.
 - **화면·공유 코드:** `Story.tsx`, `storyReport.ts`에서 분기/예외/정리 순서를 공유하고 Python 버전·정적 분석 한계와 문법 오류를 표시한다. Python 함수 시뮬레이션은 비활성화한다. 문장 입력 파싱을 parser-free `ruleRequest.ts`로 옮겨 호스트에 TypeScript 파서를 새로 번들하지 않았다. React 스킬로 파생 상태·접근성·안정된 키·UI 파서 분리를 검토했다.
 - **검사:** 새 `tests/python-source.test.ts` 9개를 포함한 핵심 **178개/19파일 통과**, 웹/확장 빌드 성공. 실제 VS Code `pythonSource.ts` 검사에서 숫자 수정→native diff→적용→재분석→undo, 파일 변경 후 제안 무효, 없는 실행기와 복구를 확인했다. 처음 전체 통합에서 기존 AI fixture가 Python 분석을 반드시 text로 기대해 실패했다. 실제 Python 버전과 원문 값/파서 식별자를 검증하도록 기대값을 갱신한 뒤 개발 통합 **33개 통과**. [개발 기록](evidence/local-ai/python-source-development-integration.json).

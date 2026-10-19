@@ -93,6 +93,7 @@ async function rpc(r) {
         model: "fixture:local",
         digest: "a".repeat(64),
         elapsedMs: 1,
+        processor: r.payload.processor || "auto",
         summary: ko
           ? "선택한 함수의 설명을 표시하는 화면 검증용 응답입니다. 실제 모델의 설명 품질 검증이 아닙니다."
           : "Controlled response for verifying the selected-function display. This does not evaluate a real model.",

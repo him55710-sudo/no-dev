@@ -1,5 +1,7 @@
 # Changelog
 
+0.7 development: preserve the full current file as selected-function/before/after source parts for focused explanation. Add a per-request CPU option with automatic Ollama selection as the default, reject invalid options and request no input truncation/context shifting. [Actual-project follow-up](docs/evidence/local-ai/focused-context-cpu.md): three completed CPU responses still fail citation or semantic review; this is not a model-quality or speedup claim. Stable/Pages remain 0.6.0.
+
 Go addition in the 0.7 development source: [model-free syntax reading and exact literal edits](docs/GO_SOURCE.md) through an installed Go SDK and fixed standard-library helper. Preserve multiple returns, defer/concurrency distinctions and source positions; validate proposed Go syntax without building user code. A deliberate Google UUID initializer regression fails upstream tests and undo restores them. Types, scope, dependencies and optimization remain unchecked.
 
 ## 0.7.0 — local AI development preview (unreleased)

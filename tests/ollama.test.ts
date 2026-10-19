@@ -90,8 +90,29 @@ describe("Ollama loopback protocol (controlled HTTP fixture, not real inference)
     expect(chat).not.toHaveProperty("tools");
     expect(chat).not.toHaveProperty("api_key");
     expect(chat.stream).toBe(false);
+    expect(chat.truncate).toBe(false);
+    expect(chat.shift).toBe(false);
+    expect(chat.options).not.toHaveProperty("num_gpu");
+    expect(result.processor).toBe("auto");
     expect(chat.options.num_ctx).toBeLessThan(32768);
     expect(result.contextSize).toBe(chat.options.num_ctx);
+  });
+  it("requests CPU only when explicitly selected and rejects invalid hardware choices", async () => {
+    let chat: any;
+    const port = await server((req, res, body) => {
+      if (req.url === "/api/chat") chat = body;
+      reply(res, fixture(req.url));
+    });
+    const result = await new OllamaClient(port, undefined, "cpu").generate(
+      model.name,
+      input,
+    );
+    expect(chat.options.num_gpu).toBe(0);
+    expect(result.processor).toBe("cpu");
+    for (const bad of ["gpu", "", 1, null])
+      expect(() => new OllamaClient(port, undefined, bad as "cpu")).toThrow(
+        /inference processor/,
+      );
   });
   it("rejects enabled cloud before source transmission", async () => {
     const seen: string[] = [];

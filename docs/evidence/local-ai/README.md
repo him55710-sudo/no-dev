@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+2026-10-20 CPU 후속: [같은 실제 과제의 원문 구분·CPU 요청](focused-context-cpu.md). 세 번 완성 응답을 받았으나 인용 또는 의미 검토에서 모두 실패했다. 인용 통과와 설명 정확성을 분리한다. 한국어/영어 CPU 선택과 이전 결과 해제를 확인했으며, 기존 timeout과 포매터 성공은 그대로 보존한다.
+
 2026-10-20 함수 설명 후속: [함수 선택·원문 인용·실제 프로젝트 시도](focused-explanation.md). 실제 사용자 코드의 두 생성 요청은 각각 180초 시간 초과로, 설명 품질은 미확인이다. [개발 호스트 55개](focused-explanation-development-integration.json), [설치본 55개](focused-explanation-installed-integration.json), [핵심 검사 실패를 포함한 실행 기록](focused-explanation-verification.json), [한국어](focused-explanation-ko.jpg)/[영어](focused-explanation-en.jpg) 화면은 서로 다른 증거다. [사용 방법과 전달 범위](../../FOCUSED_EXPLANATIONS.md). 비공개 원문·응답은 공개하지 않는다.
 
 함수 선택 제품 소스 `9758dac`의 [Windows·Ubuntu CI](focused-explanation-ci.json)는 각 핵심 **259개**, 개발/production 설치 각 **55개**, 설치 파일 11개 해시와 추출 도구 검사를 통과했다. 같은 흐름을 실행 환경 수만큼 새 기능으로 합산하지 않는다. 로컬 timeout 기록과 실제 모델 실패는 유지한다.

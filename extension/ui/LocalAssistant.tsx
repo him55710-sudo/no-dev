@@ -7,7 +7,7 @@ import {
   type AssistantTask,
 } from "../../src/core/localAssistant";
 import type { AssistantResult } from "../src/localAssistantController";
-import type { LocalModel } from "../src/ollama";
+import type { InferenceProcessor, LocalModel } from "../src/ollama";
 import type { ViewState } from "../src/protocol";
 import { request } from "./bridge";
 import "./local-assistant.css";
@@ -23,6 +23,7 @@ export function LocalAssistant({
 }) {
   const [models, setModels] = useState<LocalModel[]>([]);
   const [model, setModel] = useState("");
+  const [processor, setProcessor] = useState<InferenceProcessor>("auto");
   const [origin, setOrigin] = useState("");
   const [task, setTask] = useState<AssistantTask>("explain");
   const [focusChoice, setFocusChoice] = useState(initialFocus);
@@ -219,6 +220,30 @@ export function LocalAssistant({
           </label>
         ) : null}
         <label>
+          {t("연산 장치", "Processor")}
+          <select
+            value={processor}
+            aria-label={t("연산 장치", "Processor")}
+            aria-describedby="local-processor-description"
+            disabled={busy}
+            onChange={(event) => {
+              setProcessor(event.target.value as InferenceProcessor);
+              clearProposal();
+            }}
+          >
+            <option value="auto">
+              {t("Ollama 자동 선택", "Ollama automatic")}
+            </option>
+            <option value="cpu">{t("CPU 사용 요청", "Request CPU")}</option>
+          </select>
+          <span className="muted" id="local-processor-description">
+            {t(
+              "응답이 느리면 CPU 요청과 비교해 보세요. 이 요청의 실행 옵션이며, 속도는 PC와 모델에 따라 다릅니다.",
+              "If responses are slow, compare a CPU request. This is an option for this request; speed depends on your PC and model.",
+            )}
+          </span>
+        </label>
+        <label>
           {t("하고 싶은 작업", "Task")}
           <select
             value={task}
@@ -349,6 +374,7 @@ export function LocalAssistant({
                   "localGenerate",
                   {
                     model,
+                    processor,
                     task,
                     instruction,
                     lang,
@@ -442,7 +468,10 @@ export function LocalAssistant({
           )}
           <p className="muted">
             {result.model} · {(result.elapsedMs / 1000).toFixed(1)}s ·{" "}
-            {t("추론 결과 · 검토 필요", "Model inference · review required")}
+            {result.processor === "cpu"
+              ? t("CPU 요청", "CPU requested")
+              : t("Ollama 자동 설정", "Ollama automatic")}{" "}
+            · {t("추론 결과 · 검토 필요", "Model inference · review required")}
           </p>
           <p className="local-summary">{result.summary}</p>
           <h3>{t("원문에서 확인", "Check against the source")}</h3>
