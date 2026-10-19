@@ -52,4 +52,6 @@ Remove-Item Env:PUREOBOM_TEST_AGENT_HOST
 
 시작 시간 측정 명령은 현재 `ownedProcess.ts`의 임시 계측본만 사용하며 제품 코드를 수정하지 않는다. 소스 해시와 실행 구간을 `test-results/startup-timing.json`에 남긴다. 느린 환경의 모든 시작 실패, 다른 OS의 프로세스 수명 보장 또는 전체 제품 완성을 입증하는 검사는 아니다.
 
+후속 확인: 이 수정 커밋 `46fa01d`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/no-dev/actions/runs/39334461432)는 모두 성공했다. 과거 시간 초과의 공통 원인을 증명한 것으로 일반화하지 않는다.
+
 [Windows 실행 수명 관리](WINDOWS_PROCESS_SCOPE.md) · [관리 호스트](MANAGED_AGENT_HOST.md) · [전체 구현 기준](SYSTEM_WORKSPACE_STATUS.md)

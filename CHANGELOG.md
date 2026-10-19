@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Verify factory-created action and returned authentication-function descriptions in the installed external-app UI. Preserve three exact source selections, saved goals after reload, original files and Git state; record screenshots and the matching VSIX hash. See [installed function verification](docs/FUNCTION_DESCRIPTIONS.md#2026-10-20-후속-설치-화면-검증).
 - Cancel stalled agent initialization and account discovery, and publish cancellation completion only after process termination is confirmed. Preserve failed shutdowns and add host-state diagnostics to CI artifacts. See [reproduction and verification](docs/STARTUP_CANCELLATION.md).
 - Read arrow functions and factory-created actions through their actual function bodies. Keep creation, passed callbacks and returned functions distinct, retain branch/error order, bound summaries and preserve stored goals and source identities. See [function description evidence and limits](docs/FUNCTION_DESCRIPTIONS.md).
 - Explain each connection occurrence with passed expressions, resolved parameter names, JSX props and enclosing branch/error syntax, preserving exact source navigation. Compare all occurrence evidence even when counts stay equal; retain uncertainty for older snapshots without fingerprints. See [connection evidence and limits](docs/CONNECTION_EVIDENCE.md).

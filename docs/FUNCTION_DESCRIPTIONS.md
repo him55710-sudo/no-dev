@@ -36,14 +36,36 @@ node scripts/check-function-summaries.mjs '<준비한 Next baseline Git 폴더>'
 
 초기 전체 회귀는 **259개 중 251개 통과·8개 실패**했다. [전체 결과](evidence/function-regression-initial.json)를 보존한다. 관리 호스트 4개, 프로토콜 초기화 2개, 복구 2개 검사에서 프로세스·상태 대기 시간 초과 또는 제한 시간 내 종료되지 않는 실패가 발생했다. 원인을 확인하지 않은 채 환경 문제로 단정하거나 전체 통과로 표시하지 않는다. 이 실행에서 함수 본문 5개, 관측 7개, 함수 전달 3개, 구조 12개와 제어 흐름 9개 검사는 통과했다.
 
-별도 [설계 호스트 검사 39개](evidence/function-design-host.json)는 통과했다. 이 기록은 마지막 `unknown` 타입 단언 분류 보완 전 실행이다. 설치 화면의 선언·요약·원문을 기록하는 계측도 추가했으나, 이번 함수 설명 변경의 새 설치 화면 검증은 아직 수행하지 않았다.
+별도 [설계 호스트 검사 39개](evidence/function-design-host.json)는 통과했다. 이 기록은 마지막 `unknown` 타입 단언 분류 보완 전 실행이다. 이 시점에는 설치 화면의 선언·요약·원문 기록 계측만 추가했으며, 아래 후속 설치 검증 전까지 새 화면 검증은 미수행이었다.
 
 최종 보완에서는 함수 본문이 명시돼 있으면 `as unknown`으로 타입을 감춰도 함수로 분류하고, 별칭의 본문 안내가 원래 선언을 가리키도록 했다. 이 변경을 포함한 [관련 검사 36개](evidence/function-targeted-final.json)는 모두 통과했다. 이 제한된 재검증이 위 전체 회귀의 실패를 해결했다는 의미는 아니다.
 
-최종 소스의 `pnpm build`, `pnpm extension:build`, `pnpm extension:package`도 통과했다. 새 VSIX를 생성했지만 이 패키지로 설치 화면을 다시 조작한 결과는 아직 없다.
+최종 소스의 `pnpm build`, `pnpm extension:build`, `pnpm extension:package`도 통과했다. 당시 생성한 VSIX의 화면 검증은 이후 초기 연결 취소 수정까지 포함한 설치본으로 아래에서 수행했다.
 
 직전 커밋 `377fea7`의 [CI 실행](https://github.com/him55710-sudo/no-dev/actions/runs/39328562690)은 Ubuntu 성공·Windows 실패다. Windows는 `agent-host.test.ts`의 중단 작업 이어하기 검사에서 첫 승인 상태 대기가 초과됐으며, 그 뒤 빌드와 설치 검사는 실행되지 않았다. 이번 로컬 실패와 이전 CI 실패를 각각 미해결 상태로 남긴다.
 
 2026-10-20 후속 확인: 함수 설명 커밋 `0a5140c`의 [CI](https://github.com/him55710-sudo/no-dev/actions/runs/39331664538)는 Windows·Ubuntu 모두 성공했다. Windows 전체 회귀 259개, 빌드·설치 복구·패키지 검사까지 통과했다. 이전 로컬 실패 기록은 유지하며, 후속 조사에서 별도로 재현한 [초기 연결 취소 결함](STARTUP_CANCELLATION.md)과 구분한다.
+
+## 2026-10-20 후속 설치 화면 검증
+
+`46fa01d`의 Windows 설치본으로 외부 Next 앱의 구조 52개 파일을 열어 직접 조작했다. [설치 호스트 기록](evidence/function-installed-ui.json)에는 **요청 24개 모두 성공, 원문 이동 3개, 모델 작업 0개, 화면 오류 0개**가 남아 있다. 기능 생성·설계 저장·함수 탐색·집중 보기·화면 재로딩을 수행했다.
+
+| 확인한 대상 | 실제 확인 결과 |
+|---|---|
+| `removeTeamMember` | 함수 생성 호출과 두 번째 인수의 처리 본문을 구분한다. 팀 소속 검사, 삭제 조건, 활동 기록을 표시하며 래퍼의 인증 오류를 액션 자체의 설명으로 합치지 않는다. |
+| `validatedActionWithUser` | 바깥 함수가 함수를 반환하는 단계와 반환 함수 내부의 로그인·입력 검사, 액션 호출을 구분한다. |
+| 원문 이동 | 액션 선언 전체(`actions.ts:365`), 반환 함수를 포함한 래퍼 선언 전체(`middleware.ts:37`), 화면에서 전달한 `removeTeamMember` 이름만(`page.tsx:101`)을 실제 편집기에서 선택했다. |
+| 업무 기능과 설계 | 두 구현을 ‘팀 구성원 관리’로 묶어 저장하고, 소유자만 제거하도록 하는 목표를 별도로 저장했다. 관측의 함수 전달 근거 해시와 원문 이동의 근거 해시가 일치한다. |
+| 재로딩 | 저장된 설계 v1, 목표 문장, 검색과 집중 보기 상태가 복원됐다. 이 검증에서는 목표를 구현하거나 충족으로 표시하지 않았다. |
+
+[추가 대조 기록](evidence/function-installed-ui-audit.json)은 원문 선택을 실제 파일의 전체 범위와 대조하고, 주석을 제외한 TypeScript 출력으로 계산하는 내용 해시도 별도로 확인한다. 원본 추적 파일 **57개**, HEAD, 스테이징 내용, Git 상태가 그대로이며, 설치 기록의 VSIX 해시가 현재 패키지와 일치한다. 수기 요청 합계와 원문/정규화 해시를 혼동한 초기 대조식을 바로잡은 내역도 기록했다.
+
+![생성 호출과 전달 함수 본문](evidence/function-ui-action.jpg)
+
+![인증 래퍼가 반환하는 함수 본문](evidence/function-ui-wrapper.jpg)
+
+[재로딩 후 목표 화면](evidence/function-ui-goal-reloaded.jpg). 검증한 VSIX SHA-256: `f063c7dfa073649b4e86635b24eb44dfed0d8f210430f9c0c18b577597c8f419`.
+
+설치된 JS/CSS를 브라우저에서 조작하고 시험용 로컬 전송 경로로 실제 Production 확장 호스트에 요청했다. **네이티브 VS Code Webview의 포인터 전달, 새로운 모델 구현, 사람의 사용성 검증을 입증하지 않는다.** `46fa01d`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/no-dev/actions/runs/39334461432)는 모두 성공했다. 이전 실패 기록과 전체 제품의 남은 요구사항은 유지한다.
 
 [연결선의 전달값과 주변 구문](CONNECTION_EVIDENCE.md) · [관측과 목표의 분리](WORKSPACE_OBSERVATIONS.md) · [전체 구현 기준](SYSTEM_WORKSPACE_STATUS.md)
