@@ -39,6 +39,7 @@ export type Rule = Anchor & {
     | "go"
     | "java"
     | "csharp"
+    | "rust"
     | "sql"
     | "htmlText"
     | "htmlAttribute"
@@ -97,6 +98,7 @@ export type FileAnalysis = {
   go?: { version: string; truncated: boolean };
   java?: { version: string; truncated: boolean };
   csharp?: { version: string; languageVersion: string; truncated: boolean };
+  rust?: { version: string; truncated: boolean };
   data?: import("./jsonData").JsonDataFacts;
   interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];

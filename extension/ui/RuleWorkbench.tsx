@@ -246,7 +246,7 @@ export function RuleWorkbench(p: Props) {
                 ) : (
                   <input
                     id="rule-value"
-                    inputMode="decimal"
+                    inputMode={edit.syntax === "rust" ? "text" : "decimal"}
                     value={p.value}
                     onChange={(e) => p.onValue(e.target.value)}
                   />
@@ -257,20 +257,25 @@ export function RuleWorkbench(p: Props) {
                         "단위까지 입력하세요. 예: 24px",
                         "Include the unit, e.g. 24px.",
                       )
-                    : edit.type === "number"
+                    : edit.syntax === "rust" && edit.type === "number"
                       ? t(
-                          "단위 없이 숫자를 써 주세요. 7만 → 70000",
-                          "Use a plain number, e.g. 70000.",
+                          "Rust 숫자 하나를 입력하세요. 예: 70000u64, 1.5f64. 접미사도 포함해 주세요.",
+                          "Enter one Rust number, e.g. 70000u64 or 1.5f64. Include its suffix.",
                         )
-                      : edit.type === "string"
+                      : edit.type === "number"
                         ? t(
-                            "표시할 문구를 그대로 쓰세요. 따옴표를 더하지 않아도 돼요.",
-                            "Enter the text as-is. No extra quotes needed.",
+                            "단위 없이 숫자를 써 주세요. 7만 → 70000",
+                            "Use a plain number, e.g. 70000.",
                           )
-                        : t(
-                            "변경 전후는 다음 단계에서 비교해요.",
-                            "Compare before and after in the next step.",
-                          )}
+                        : edit.type === "string"
+                          ? t(
+                              "표시할 문구를 그대로 쓰세요. 따옴표를 더하지 않아도 돼요.",
+                              "Enter the text as-is. No extra quotes needed.",
+                            )
+                          : t(
+                              "변경 전후는 다음 단계에서 비교해요.",
+                              "Compare before and after in the next step.",
+                            )}
                 </small>
                 <button
                   className="primary full-width"

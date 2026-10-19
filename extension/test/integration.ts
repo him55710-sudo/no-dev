@@ -10,6 +10,7 @@ import { pythonSourceChecks } from "./pythonSource";
 import { goSourceChecks } from "./goSource";
 import { javaSourceChecks } from "./javaSource";
 import { csharpSourceChecks } from "./csharpSource";
+import { rustSourceChecks } from "./rustSource";
 import { webSourceChecks } from "./webSource";
 import { sqlSourceChecks } from "./sqlSource";
 import { functionFormatChecks } from "./formatFunction";
@@ -594,6 +595,7 @@ export async function run() {
   await goSourceChecks(c, ready, reports);
   await javaSourceChecks(c, ready, reports);
   await csharpSourceChecks(c, ready, reports);
+  await rustSourceChecks(c, ready, reports);
   await localAssistantChecks(c, ready, reports);
   const jsoncSource =
     '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';

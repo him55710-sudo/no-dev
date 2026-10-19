@@ -4,6 +4,8 @@ Go addition in the 0.7 development source: [model-free syntax reading and exact 
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Add [bundled Rust source reading and exact literal edits](docs/RUST_SOURCE.md) in desktop VS Code, without an API, model or Rust SDK. Preserve source positions, numeric suffixes and raw strings; show match arms and parser limits. Validate Rust AI proposals syntactically. Windows development/installed flows are verified; actual upstream Rust tests, compilation, types, ownership and optimization are still unverified.
+
 - Read supported Python statement structure in Korean/English through an isolated local AST helper; no model or user-code execution. Preserve loop else, ordered exception branches and finally. Edit assigned literals with exact numeric spelling, Unicode source positions, native diff/apply/undo and stale checks. Publish limits, interpreter setup and an actual itsdangerous regression/restore in [Python source](docs/PYTHON_SOURCE.md).
 
 - Read JSON/JSONC literal facts in Korean and English without a model. Search key paths and values, jump to source, and preview/apply/undo one string, number or boolean. Preserve numeric spelling and surrounding source; block duplicate-key ranges and stale edits. Document display limits and unverified consumer behavior in [JSON data](docs/JSON_DATA.md).
@@ -13,7 +15,7 @@ Go addition in the 0.7 development source: [model-free syntax reading and exact 
 
 - Add optional Ollama explanations and multiple exact-range edits in desktop VS Code. Require cloud-disabled loopback service and installed local text models; no paid API or API key fallback.
 - Ground citations and edits in unique original source ranges, require changed-source evidence, bound requests, and cancel stale work. Review the native diff and unchecked behavior before explicit apply; use normal editor undo.
-- Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Other language checks remain unavailable.
+- Check proposed JS/TS/JSX/TSX and JSON syntax; parse Python with an isolated local interpreter without executing user code. Added language-specific parser paths and their limits are tracked in [language support](docs/LANGUAGE_SUPPORT.md).
 - Publish the implementation plan, agent work log, actual Python/model/editor evidence and a failed optimization: itsdangerous tests passed before and after, but the proposed function was slower and was not adopted.
 - Add explicitly reviewed project test/build commands through VS Code tasks, with saved-file checks, real exit codes, cancellation and stale-result notices. Validate itsdangerous tests passing, a known regression failing and undo restoring 297 passing tests. See [project checks](docs/PROJECT_CHECKS.md).
 - Preserve TSX/JSX source extensions in native rule diffs instead of labeling every preview as TypeScript.

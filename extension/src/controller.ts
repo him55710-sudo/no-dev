@@ -238,7 +238,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", csharp: "cs", html: "html", css: "css", sql: "sql" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", csharp: "cs", rust: "rs", html: "html", css: "css", sql: "sql" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {
@@ -323,6 +323,7 @@ export class Controller implements vscode.Disposable {
       goNotice: undefined,
       javaNotice: undefined,
       csharpNotice: undefined,
+      rustNotice: undefined,
       diagnostics: changedDocument
         ? undefined
         : this.state.diagnostics &&
@@ -345,6 +346,7 @@ export class Controller implements vscode.Disposable {
       goNotice: undefined,
       javaNotice: undefined,
       csharpNotice: undefined,
+      rustNotice: undefined,
       diagnostics: undefined,
       busy: false,
       dirty: false,
@@ -424,6 +426,7 @@ export class Controller implements vscode.Disposable {
       let goNotice: string | undefined;
       let javaNotice: string | undefined;
       let csharpNotice: string | undefined;
+      let rustNotice: string | undefined;
       if (doc.languageId === "python") {
         try {
           const analysis = (await this.readPython(
@@ -476,6 +479,19 @@ export class Controller implements vscode.Disposable {
           csharpNotice = message(error);
         }
       }
+      if (doc.languageId === "rust") {
+        try {
+          const analysis = await this.client.call<FileAnalysis>("rust", {
+            file: { path, content },
+            action: "analyze",
+          });
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          rustNotice = message(error);
+        }
+      }
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       this.publish({
         project,
@@ -489,6 +505,7 @@ export class Controller implements vscode.Disposable {
         goNotice,
         javaNotice,
         csharpNotice,
+        rustNotice,
       });
     } catch (e) {
       if (epoch === this.epoch)
@@ -718,7 +735,7 @@ export class Controller implements vscode.Disposable {
       },
       version = doc.version;
     let patch: Patch;
-    if (["python", "go", "java", "csharp"].includes(doc.languageId)) {
+    if (["python", "go", "java", "csharp", "rust"].includes(doc.languageId)) {
       const selected =
         payload.request !== undefined
           ? parseRequest(
@@ -729,19 +746,27 @@ export class Controller implements vscode.Disposable {
               rule: { id: inputString(payload.ruleId) },
               value: inputString(payload.value),
             };
-      patch = (await (
-        doc.languageId === "csharp"
-          ? this.readCSharp.bind(this)
-          : doc.languageId === "java"
-            ? this.readJava.bind(this)
-            : doc.languageId === "go"
-              ? this.readGo.bind(this)
-              : this.readPython.bind(this)
-      )(file, {
-        action: "patch",
-        ruleId: selected.rule.id,
-        value: selected.value,
-      })) as Patch;
+      patch =
+        doc.languageId === "rust"
+          ? await this.client.call<Patch>("rust", {
+              file,
+              action: "patch",
+              ruleId: selected.rule.id,
+              value: selected.value,
+            })
+          : ((await (
+              doc.languageId === "csharp"
+                ? this.readCSharp.bind(this)
+                : doc.languageId === "java"
+                  ? this.readJava.bind(this)
+                  : doc.languageId === "go"
+                    ? this.readGo.bind(this)
+                    : this.readPython.bind(this)
+            )(file, {
+              action: "patch",
+              ruleId: selected.rule.id,
+              value: selected.value,
+            })) as Patch);
     } else
       patch =
         payload.request !== undefined

@@ -360,13 +360,15 @@ function App() {
             {state.pythonNotice ||
             state.goNotice ||
             state.javaNotice ||
-            state.csharpNotice ? (
+            state.csharpNotice ||
+            state.rustNotice ? (
               <section className="card" role="status">
                 <p>
                   {state.pythonNotice ||
                     state.goNotice ||
                     state.javaNotice ||
-                    state.csharpNotice}
+                    state.csharpNotice ||
+                    state.rustNotice}
                 </p>
                 {state.csharpNotice ? (
                   <p>
@@ -403,7 +405,7 @@ function App() {
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
                 <p>
-                  {["python", "go", "java", "csharp"].includes(
+                  {["python", "go", "java", "csharp", "rust"].includes(
                     state.language || "",
                   )
                     ? t(

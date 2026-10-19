@@ -20,6 +20,8 @@ export async function localAssistantChecks(
       | "go-invalid"
       | "csharp-valid"
       | "csharp-invalid"
+      | "rust-valid"
+      | "rust-invalid"
       | "java-valid"
       | "java-invalid"
       | "sql-valid"
@@ -87,7 +89,8 @@ export async function localAssistantChecks(
           ]
         : mode.startsWith("go-") ||
             mode.startsWith("java-") ||
-            mode.startsWith("csharp-")
+            mode.startsWith("csharp-") ||
+            mode.startsWith("rust-")
           ? [
               {
                 before: quote,
@@ -464,6 +467,39 @@ export async function localAssistantChecks(
         vscode.ConfigurationTarget.Global,
       );
     }
+    const rustDoc = await vscode.workspace.openTextDocument({
+      language: "rust",
+      content: "fn value()->bool { let fee = 3000; fee }\n",
+    });
+    await vscode.window.showTextDocument(rustDoc, vscode.ViewColumn.One);
+    await c.setDocument(rustDoc);
+    await ready();
+    mode = "rust-valid";
+    const validRust = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(validRust.validation.status, "syntax-passed");
+    assert.match(
+      validRust.validation.detail,
+      /compilation, types, ownership, macros, cfg, behavior and performance unchecked/,
+    );
+    mode = "rust-invalid";
+    const invalidRust = await c.assistant.generate(c.state.contextId, payload);
+    assert.equal(invalidRust.validation.status, "syntax-failed");
+    const rustPreview = await c.assistant.preview(
+      invalidRust.id,
+      c.state.contextId,
+    );
+    assert.ok(rustPreview.after.endsWith(".rs"));
+    await assert.rejects(
+      c.assistant.apply(invalidRust.id, c.state.contextId, true),
+      /syntax-invalid/,
+    );
+    assert.equal(
+      rustDoc.getText(),
+      "fn value()->bool { let fee = 3000; fee }\n",
+    );
+    reports.push(
+      "local AI controlled fixture: bundled Rust syntax check accepts syntactically valid but type-invalid code, rejects malformed proposal, preserves native Rust diff and blocks invalid apply",
+    );
     const sqlDoc = await vscode.workspace.openTextDocument({
       language: "sql",
       content: "SELECT 3000 AS fee;",

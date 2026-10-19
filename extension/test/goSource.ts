@@ -24,7 +24,16 @@ export async function goSourceChecks(
     await c.setDocument(doc);
     await ready();
     const source = doc.getText();
-    assert.ok(c.state.analysis?.go?.version);
+    assert.ok(
+      c.state.analysis?.go?.version,
+      JSON.stringify({
+        goNotice: c.state.goNotice,
+        error: c.state.error,
+        kind: c.state.analysis?.kind,
+        language: c.state.language,
+        busy: c.state.busy,
+      }),
+    );
     assert.equal(c.state.analysis!.functions[0].name, "calculate");
     assert.equal(c.state.analysis!.functions[0].simulatable, false);
     const rule = c.state.analysis!.rules.find((r) => r.name === "limit")!;

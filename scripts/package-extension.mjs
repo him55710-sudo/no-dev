@@ -6,6 +6,14 @@ const manifest = JSON.parse(await readFile("extension/package.json", "utf8"));
 const licenses = await Promise.all(
   [
     [
+      "web-tree-sitter 0.27.1 — Tree-sitter contributors",
+      "node_modules/web-tree-sitter/LICENSE",
+    ],
+    [
+      "tree-sitter-rust 0.24.2 — Max Brunsfeld",
+      "extension/runtime/rust/LICENSE",
+    ],
+    [
       "sqlite3-parser 0.7.1 — Jake Teton-Landis",
       "node_modules/sqlite3-parser/LICENSE",
     ],

@@ -131,14 +131,20 @@ export function Story({
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
   const native =
-    analysis.python || analysis.go || analysis.java || analysis.csharp;
+    analysis.python ||
+    analysis.go ||
+    analysis.java ||
+    analysis.csharp ||
+    analysis.rust;
   const nativeName = analysis.python
     ? "Python"
     : analysis.go
       ? "Go"
       : analysis.java
         ? "Java"
-        : `C# ${analysis.csharp?.languageVersion} (Roslyn)`;
+        : analysis.rust
+          ? "Rust"
+          : `C# ${analysis.csharp?.languageVersion} (Roslyn)`;
   if (analysis.sql)
     return (
       <SqlStory
@@ -277,13 +283,15 @@ export function Story({
         </button>
       </div>
       {analysis.rules.some(
-        (r) => (analysis.csharp || r.scope === "file") && r.type !== "operator",
+        (r) =>
+          (analysis.csharp || analysis.rust || r.scope === "file") &&
+          r.type !== "operator",
       ) && (
         <div className="story-rules">
           {analysis.rules
             .filter(
               (r) =>
-                (analysis.csharp || r.scope === "file") &&
+                (analysis.csharp || analysis.rust || r.scope === "file") &&
                 r.type !== "operator",
             )
             .map((r) => (
@@ -295,7 +303,9 @@ export function Story({
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {["python", "go", "java", "csharp"].includes(r.syntax || "")
+                  {["python", "go", "java", "csharp", "rust"].includes(
+                    r.syntax || "",
+                  )
                     ? r.raw
                     : typeof r.value === "number"
                       ? r.value.toLocaleString("en-US")

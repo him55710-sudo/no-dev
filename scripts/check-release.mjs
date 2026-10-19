@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import {
   readFile,
   mkdtemp,
+  mkdir,
   writeFile,
   unlink,
   rmdir,
@@ -88,6 +89,9 @@ for (const file of [
   "extension/runtime/go_source.go",
   "extension/runtime/PureobomJavaSource.java",
   "extension/runtime/PureobomCSharpSource.cs",
+  "extension/runtime/rust/tree-sitter-rust.wasm",
+  "extension/runtime/rust/web-tree-sitter.wasm",
+  "extension/runtime/rust/LICENSE",
   "extension/media/view.js",
   "extension/media/view.css",
   "extension/LICENSE.txt",
@@ -108,7 +112,14 @@ for (const name of Object.keys(vsix.files).filter((name) =>
 // Execute the shipped analysis worker, so an accidentally unbundled dependency
 // cannot pass merely because the archive contains a file called worker.cjs.
 const workerDirectory = await mkdtemp(join(tmpdir(), "pureobom-package-"));
-const workerFile = join(workerDirectory, "worker.cjs");
+await mkdir(join(workerDirectory, "out"));
+await mkdir(join(workerDirectory, "runtime/rust"), { recursive: true });
+for (const asset of ["tree-sitter-rust.wasm", "web-tree-sitter.wasm"])
+  await writeFile(
+    join(workerDirectory, "runtime/rust", asset),
+    await vsix.file(`extension/runtime/rust/${asset}`).async("nodebuffer"),
+  );
+const workerFile = join(workerDirectory, "out/worker.cjs");
 await writeFile(
   workerFile,
   await vsix.file("extension/out/worker.cjs").async("string"),
@@ -119,6 +130,7 @@ const shippedWorker = new Worker(workerFile, {
 try {
   for (const [language, source] of [
     ["jsonc", '{ // shipping\n "fee": 3000,\n}'],
+    ["rust", "fn value()->bool { 123 } fn opaque(){ m!(???); }"],
     ["html", '<p title="한글 &amp; 😀">Hello</p>'],
     ["sql", "SELECT 9_007_199_254_740_993, 'O''Brien';"],
     [
@@ -155,9 +167,88 @@ try {
       `Packaged ${language} parser runs without node_modules`,
     );
   }
+  let rustId = 10;
+  const rustCall = (type, payload) =>
+    new Promise((resolve, reject) => {
+      const id = ++rustId;
+      const cleanup = () => {
+        clearTimeout(timer);
+        shippedWorker.off("message", onMessage);
+        shippedWorker.off("error", onError);
+      };
+      const onError = (error) => {
+        cleanup();
+        reject(error);
+      };
+      const onMessage = (message) => {
+        if (message.id !== id) return;
+        cleanup();
+        message.error ? reject(Error(message.error)) : resolve(message.result);
+      };
+      const timer = setTimeout(
+        () => onError(Error("Packaged Rust worker timed out")),
+        20000,
+      );
+      shippedWorker.on("message", onMessage);
+      shippedWorker.once("error", onError);
+      shippedWorker.postMessage({ id, type, payload });
+    });
+  const rustFile = {
+    path: "sample.rs",
+    content:
+      "\uFEFF// 😀\r\nconst LIMIT:u64=9007199254740993u64;\r\nfn f()->bool { true }",
+  };
+  const rustAnalysis = await rustCall("rust", {
+    file: rustFile,
+    action: "analyze",
+  });
+  assert.ok(rustAnalysis.rust);
+  const rustRule = rustAnalysis.rules.find(
+    (r) => r.raw === "9007199254740993u64",
+  );
+  assert.equal(rustRule.line, 2);
+  assert.equal(
+    rustFile.content.slice(rustRule.start, rustRule.end),
+    rustRule.raw,
+  );
+  const rustPatch = await rustCall("rust", {
+    file: rustFile,
+    action: "patch",
+    ruleId: rustRule.id,
+    value: "9007199254740995u64",
+  });
+  assert.equal(
+    rustPatch.updated,
+    rustFile.content.replace("9007199254740993u64", "9007199254740995u64"),
+  );
+  assert.equal(
+    (
+      await rustCall("validateAssistant", {
+        language: "rust",
+        source: "fn bad( {",
+      })
+    ).status,
+    "syntax-failed",
+  );
+  await assert.rejects(
+    rustCall("rust", {
+      file: rustFile,
+      action: "patch",
+      ruleId: rustRule.id,
+      value: "1; run(); const X:()=1",
+    }),
+  );
+  console.log(
+    "Packaged Rust WASM: parsing, Unicode/CRLF offsets, exact literal editing, malformed syntax and injection rejection verified outside the workspace.",
+  );
 } finally {
   await shippedWorker.terminate();
   await unlink(workerFile);
+  for (const asset of ["tree-sitter-rust.wasm", "web-tree-sitter.wasm"])
+    await unlink(join(workerDirectory, "runtime/rust", asset));
+  await rmdir(join(workerDirectory, "runtime/rust"));
+  await rmdir(join(workerDirectory, "runtime"));
+  await rmdir(join(workerDirectory, "out"));
   await rmdir(workerDirectory);
 }
 console.log(
@@ -488,33 +579,69 @@ console.log(
 
 // Run the extracted fixed C# helper through the same host wrapper used by the
 // extension. Installed-extension tests separately verify the production bundle.
-const csharpDirectory = await mkdtemp(join(tmpdir(), "pureobom-csharp-package-"));
+const csharpDirectory = await mkdtemp(
+  join(tmpdir(), "pureobom-csharp-package-"),
+);
 try {
   const helper = join(csharpDirectory, "PureobomCSharpSource.cs");
-  await writeFile(helper, await vsix.file("extension/runtime/PureobomCSharpSource.cs").async("nodebuffer"));
+  await writeFile(
+    helper,
+    await vsix
+      .file("extension/runtime/PureobomCSharpSource.cs")
+      .async("nodebuffer"),
+  );
   const host = join(csharpDirectory, "host.mjs");
-  await build({ entryPoints: ["extension/src/csharpSource.ts"], outfile: host,
-    bundle: true, platform: "node", format: "esm", target: "node24", logLevel: "silent" });
+  await build({
+    entryPoints: ["extension/src/csharpSource.ts"],
+    outfile: host,
+    bundle: true,
+    platform: "node",
+    format: "esm",
+    target: "node24",
+    logLevel: "silent",
+  });
   const { csharpSource } = await import(pathToFileURL(host).href);
-  const content = '// 😀 한글\r\nclass Sample { ulong limit=9007199254740993UL; string name=@"a""b"; int Check(int x)=>x<0?0:1; }';
+  const content =
+    '// 😀 한글\r\nclass Sample { ulong limit=9007199254740993UL; string name=@"a""b"; int Check(int x)=>x<0?0:1; }';
   const file = { path: "Sample.cs", content };
-  const invoke = (action) => csharpSource(file, helper, join(csharpDirectory, "cache"), action, { dotnet: process.env.PUREOBOM_TEST_DOTNET });
+  const invoke = (action) =>
+    csharpSource(file, helper, join(csharpDirectory, "cache"), action, {
+      dotnet: process.env.PUREOBOM_TEST_DOTNET,
+    });
   const analysis = await invoke({ action: "analyze" });
   assert.ok(analysis.csharp.version);
   assert.equal(analysis.syntaxValid, true);
   const rule = analysis.rules.find((r) => r.raw === "9007199254740993UL");
   assert.ok(rule);
   assert.equal(content.slice(rule.start, rule.end), rule.raw);
-  const patch = await invoke({ action: "patch", ruleId: rule.id, value: "9007199254740995UL" });
+  const patch = await invoke({
+    action: "patch",
+    ruleId: rule.id,
+    value: "9007199254740995UL",
+  });
   assert.equal(patch.updated, content.replace(rule.raw, "9007199254740995UL"));
   assert.equal(patch.semanticChecked, false);
   const textRule = analysis.rules.find((r) => r.value === 'a"b');
   assert.ok(textRule);
-  const stringPatch = await invoke({ action: "patch", ruleId: textRule.id, value: '한글 "quote" 😀' });
-  assert.equal(stringPatch.updated, content.slice(0, textRule.start) + stringPatch.newText + content.slice(textRule.end));
+  const stringPatch = await invoke({
+    action: "patch",
+    ruleId: textRule.id,
+    value: '한글 "quote" 😀',
+  });
+  assert.equal(
+    stringPatch.updated,
+    content.slice(0, textRule.start) +
+      stringPatch.newText +
+      content.slice(textRule.end),
+  );
 } finally {
-  if (!resolve(csharpDirectory).startsWith(resolve(tmpdir()) + sep) || !csharpDirectory.split(sep).at(-1).startsWith("pureobom-csharp-package-"))
+  if (
+    !resolve(csharpDirectory).startsWith(resolve(tmpdir()) + sep) ||
+    !csharpDirectory.split(sep).at(-1).startsWith("pureobom-csharp-package-")
+  )
     throw Error("Unexpected C# package cleanup directory");
   await rm(csharpDirectory, { recursive: true, force: true });
 }
-console.log("Packaged C# Roslyn reader and exact literal edits verified outside the workspace.");
+console.log(
+  "Packaged C# Roslyn reader and exact literal edits verified outside the workspace.",
+);

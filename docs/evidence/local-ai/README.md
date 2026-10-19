@@ -1,5 +1,7 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+2026-10-20 Rust 개발 증분: [포함된 파서·값 수정·검사 범위](../../RUST_SOURCE.md), [개발 54개](rust-source-development-integration.json), [설치 54개](rust-source-installed-integration.json), [한국어 화면](rust-source-reading-ko.jpg), [영어 변경안](rust-source-review-en.jpg). 핵심 258개 중 Rust 16개, 설치본 파일 11개 해시·저장소 밖 WASM 실행을 확인했다. 실제 Rust 프로젝트의 upstream 테스트나 모델 의미 정확도·최적화 성과는 아직 미검증이다.
+
 2026-10-20 C# 후속: [GuardClauses 실제 편집기·기존 테스트 연결](csharp-source-project.md)에서 959 pass → 검증용 경계값 변경으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 오류와 수정도 공개한다. 이는 회귀 검출 연동 검사이며 AI 품질이나 실제 사용자 과제의 성공은 별도다.
 
 2026-10-20 후속: [모델 없는 JS/TS 함수 서식 정리](function-format.md). 사용자 지정 실제 프로젝트의 기존 테스트 **8→8→8 통과**, native 적용·undo·원본 복구를 확인했다. 전체 핵심 242개·개발 호스트 51개, 한국어/영어 실제 UI 검증을 별도 기록한다. 이전 AI 요청 실패나 설명 품질·성능 최적화 성공으로 재분류하지 않는다.

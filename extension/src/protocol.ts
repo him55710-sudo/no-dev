@@ -23,6 +23,7 @@ export type ViewState = {
   goNotice?: string;
   javaNotice?: string;
   csharpNotice?: string;
+  rustNotice?: string;
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {

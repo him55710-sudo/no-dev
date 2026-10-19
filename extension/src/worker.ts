@@ -6,11 +6,18 @@ import { simulate } from "../../src/core/simulate";
 import { compareScenarios } from "../../src/core/scenarios";
 import { validateAssistantChange } from "../../src/core/assistantValidation";
 import { formatFunction } from "../../src/core/formatFunction";
+import { rustSource } from "./rustParser";
 const analyzer = new ProjectAnalyzer();
-parentPort!.on("message", ({ id, type, payload }) => {
+parentPort!.on("message", async ({ id, type, payload }) => {
   try {
     let result: unknown;
-    if (type === "analyze")
+    if (type === "rust") result = await rustSource(payload.file, payload);
+    else if (type === "validateAssistant" && payload.language === "rust")
+      result = await rustSource(
+        { path: "proposal.rs", content: payload.source },
+        { action: "validate" },
+      );
+    else if (type === "analyze")
       result = analyzer.analyze(payload.files, payload.glossary);
     else if (type === "validateAssistant")
       result = validateAssistantChange(

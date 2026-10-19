@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-10-19T17:37:26.516Z",
+  "kind": "Failed installed-VSIX test attempt, before Rust checks",
+  "exitCode": 1,
+  "phase": "Existing real TypeScript assignment diagnostic integration check",
+  "error": "Timed out: real TypeScript assignment error after applying rule edit",
+  "source": "export const shippingFee: 3000 | 5000 = 4000;",
+  "expected": "Real built-in TypeScript diagnostic 2322",
+  "observed": "VS Code raw diagnostics empty; product correctly retained edited/stale diagnostic status",
+  "logEvidence": [
+    "TypeScript 5.7.2 semantic server created an AutoImportProviderProject with eight root dependencies from the ancestor repository package.json.",
+    "At 02:37:25.836 local time, the semantic server was still processing an earlier untitled fixture updateOpen request 57; the diagnostic wait expired at 02:37:26.",
+    "The syntax server had already received typed-fee.ts at 02:36:25, but the semantic server had not reached that source before the timeout."
+  ],
+  "remediation": "Disable package.json auto-import suggestions and automatic type acquisition in the isolated test profile. Keep the actual TypeScript server, diagnostic code/message/source assertions and original 60-second deadline.",
+  "caveat": "This evidence identifies unrelated queued language-server work. It does not establish the cause of the earlier Go availability failure or guarantee diagnostics on every machine."
+}

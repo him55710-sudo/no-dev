@@ -29,16 +29,18 @@ export function ReadingView(props: Props) {
   const matches = a.functions.filter((f) =>
     `${f.label[lang]} ${f.name}`.toLowerCase().includes(query.toLowerCase()),
   );
-  const language = a.csharp
-    ? "C#"
-    : a.java
-      ? "Java"
-      : a.go
-        ? "Go"
-        : a.python
-          ? "Python"
-          : a.web?.language.toUpperCase() ||
-            (a.sql ? "SQL" : a.kind === "json" ? "JSON" : "JS / TS");
+  const language = a.rust
+    ? "Rust"
+    : a.csharp
+      ? "C#"
+      : a.java
+        ? "Java"
+        : a.go
+          ? "Go"
+          : a.python
+            ? "Python"
+            : a.web?.language.toUpperCase() ||
+              (a.sql ? "SQL" : a.kind === "json" ? "JSON" : "JS / TS");
   const script = a.kind === "script" && !a.web && !a.sql;
   const featured = a.rules
     .filter((r) => r.scope === "file" && r.type !== "operator")
@@ -84,13 +86,28 @@ export function ReadingView(props: Props) {
             <span>{t("원문 검토 항목", "source review notes")}</span>
             <span aria-hidden="true">↗</span>
           </button>
-          <button onClick={onMap}>
-            <strong>{a.imports.length}</strong>
-            <span>{t("가져오는 연결", "imports")}</span>
-            <span aria-hidden="true">↗</span>
-          </button>
+          {!a.rust && (
+            <button onClick={onMap}>
+              <strong>{a.imports.length}</strong>
+              <span>{t("가져오는 연결", "imports")}</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+          )}
         </div>
       </section>
+      {a.rust && (
+        <p className="reading-note" role="status">
+          {t(
+            "포함된 파서로 Rust 원문을 읽습니다. API·모델·Rust SDK가 필요하지 않습니다. 컴파일·타입·소유권·매크로 확장·cfg·모듈 연결·실제 동작은 별도 확인해야 합니다.",
+            "Reads Rust source with the bundled parser; no API, model or Rust SDK required. Compilation, types, ownership, macro expansion, cfg, module links and runtime behavior need separate checks.",
+          )}
+          {a.rust.truncated &&
+            t(
+              " 표시 한도에 도달해 일부 구조와 값이 생략됐습니다. 원문도 확인하세요.",
+              " Some structure and values were omitted at display limits. Also review the source.",
+            )}
+        </p>
+      )}
       {!a.syntaxValid && (
         <p className="banner error" role="status">
           {t(
@@ -204,9 +221,7 @@ export function ReadingView(props: Props) {
                   : t("따로 받는 정보가 없어요", "No parameters")}
               </p>
               {fn.async && (
-                <small>
-                  {t("기다림이 있는 기능", "Asynchronous function")}
-                </small>
+                <small>{t("비동기 함수", "Asynchronous function")}</small>
               )}
             </div>
             {fn.note && <p className="reading-note">{fn.note[lang]}</p>}

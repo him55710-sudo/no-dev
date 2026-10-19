@@ -3,15 +3,20 @@ import { createServer } from "node:http";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Worker } from "node:worker_threads";
-const folder = resolve("test-results/function-format-ui");
+const rust = process.argv.includes("--rust");
+const folder = resolve(
+  rust ? "test-results/rust-source-ui" : "test-results/function-format-ui",
+);
+const path = rust ? "sample.rs" : "sample.ts";
 await mkdir(folder, { recursive: true });
 const worker = new Worker(resolve("extension/out/worker.cjs"));
 let seq = 0,
   version = 1,
   proposal,
   reviewed = false;
-let source =
-  "export function total(rows: number[]) { let amount=0, index=0; while(index<rows.length) { amount+=rows[index]; index++; } return amount; }\nconst untouched=()=>2;\n";
+let source = rust
+  ? '// 😀 Unicode anchors\nconst LIMIT: u64 = 9007199254740993u64;\npub fn label(count: u32) -> &\'static str {\n    match count {\n        0 => r#"아직 없음"#,\n        n if n < 10 => "a few",\n        _ => "many",\n    }\n}\n'
+  : "export function total(rows: number[]) { let amount=0, index=0; while(index<rows.length) { amount+=rows[index]; index++; } return amount; }\nconst untouched=()=>2;\n";
 const calls = [],
   pending = new Map();
 worker.on("message", (response) => {
@@ -40,19 +45,19 @@ function call(type, payload) {
   });
 }
 async function state() {
-  const project = await call("analyze", {
-    files: [{ path: "sample.ts", content: source }],
-  });
+  const analysis = rust
+    ? await call("rust", { file: { path, content: source }, action: "analyze" })
+    : (await call("analyze", { files: [{ path, content: source }] })).files[0];
   return {
     contextId: String(version),
     version,
-    path: "sample.ts",
-    language: "typescript",
+    path,
+    language: rust ? "rust" : "typescript",
     sourceBytes: Buffer.byteLength(source),
     dirty: version > 1,
     trusted: true,
     busy: false,
-    analysis: project.files[0],
+    analysis,
   };
 }
 async function rpc(r) {
@@ -63,6 +68,23 @@ async function rpc(r) {
   );
   if (r.action === "ready") return { state: await state() };
   if (r.contextId !== String(version)) throw Error("Stale fixture context");
+  if (r.action === "prepare" && rust) {
+    proposal = await call("rust", {
+      file: { path, content: source },
+      action: "patch",
+      ruleId: r.payload.ruleId,
+      value: r.payload.value,
+    });
+    reviewed = false;
+    return {
+      result: {
+        id: "rust-fixture",
+        description: proposal.description,
+        oldText: proposal.oldText,
+        newText: proposal.newText,
+      },
+    };
+  }
   if (r.action === "formatFunction") {
     const result = await call("formatFunction", {
       file: { path: "sample.ts", content: source },
@@ -97,7 +119,7 @@ async function rpc(r) {
   if (r.action === "source") return { result: {} };
   throw Error("Unsupported fixture action: " + r.action);
 }
-const page = `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Function layout UI verification</title><link rel="stylesheet" href="/view.css"><link rel="stylesheet" href="/theme.css"><body><p style="padding:12px;margin:0;background:#fff4d4;color:#433716">UI verification fixture — actual extension UI and formatter; simulated editor, public sample code.</p><div id="root"></div><script>window.acquireVsCodeApi=()=>({getState:()=>({}),setState:()=>{},postMessage:async m=>{const r=await(await fetch('/rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(m)})).json();if(r.state)window.postMessage({type:'state',state:r.state},location.origin);window.postMessage({type:'response',id:m.id,result:r.result,error:r.error},location.origin)}});</script><script src="/view.js"></script></body></html>`;
+const page = `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${rust ? "Rust source" : "Function layout"} UI verification</title><link rel="stylesheet" href="/view.css"><link rel="stylesheet" href="/theme.css"><body><p style="padding:12px;margin:0;background:#fff4d4;color:#433716">UI verification fixture — actual extension UI and worker; simulated editor, public sample code.</p><div id="root"></div><script>window.acquireVsCodeApi=()=>({getState:()=>({}),setState:()=>{},postMessage:async m=>{const r=await(await fetch('/rpc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(m)})).json();if(r.state)window.postMessage({type:'state',state:r.state},location.origin);window.postMessage({type:'response',id:m.id,result:r.result,error:r.error},location.origin)}});</script><script src="/view.js"></script></body></html>`;
 const server = createServer(async (req, res) => {
   try {
     if (req.url === "/rpc" && req.method === "POST") {
@@ -145,6 +167,6 @@ server.on("error", async (error) => {
 });
 server.listen(0, "127.0.0.1", () =>
   console.log(
-    `Function format UI fixture: http://127.0.0.1:${server.address().port}`,
+    `${rust ? "Rust source" : "Function format"} UI fixture: http://127.0.0.1:${server.address().port}`,
   ),
 );

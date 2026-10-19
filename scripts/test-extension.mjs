@@ -71,6 +71,11 @@ await writeFile(
   resolve(profile, "User/settings.json"),
   JSON.stringify({
     "typescript.tsserver.log": "verbose",
+    // Virtual/untitled fixtures must not scan this repository's package.json
+    // for auto-import suggestions before processing the real diagnostic check.
+    "typescript.preferences.includePackageJsonAutoImports": "off",
+    "javascript.preferences.includePackageJsonAutoImports": "off",
+    "typescript.disableAutomaticTypeAcquisition": true,
     "extensions.autoUpdate": false,
     "extensions.autoCheckUpdates": false,
   }),
@@ -94,6 +99,8 @@ if (installed) {
     "runtime/go_source.go",
     "runtime/PureobomJavaSource.java",
     "runtime/PureobomCSharpSource.cs",
+    "runtime/rust/tree-sitter-rust.wasm",
+    "runtime/rust/web-tree-sitter.wasm",
     "media/view.js",
     "media/view.css",
   ])
