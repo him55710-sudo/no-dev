@@ -29,6 +29,10 @@ function App() {
     busy: false,
   });
   const [tab, setTab] = useState<Tab>("story");
+  const [assistantFocus, setAssistantFocus] = useState<{
+    context: string;
+    id: string;
+  }>();
   const [error, setError] = useState("");
   const [notice, setNotice] = useState<Words>();
   const [help, setHelp] = useState(false);
@@ -398,7 +402,11 @@ function App() {
             ) : null}
             {a && tab === "local" && (
               <>
-                <LocalAssistant state={state} lang={lang} />
+                <LocalAssistant
+                  state={state}
+                  lang={lang}
+                  initialFocus={assistantFocus}
+                />
                 <ProjectChecks state={state} lang={lang} />
               </>
             )}
@@ -434,6 +442,10 @@ function App() {
                 onRules={() => setTab("rules")}
                 onChecks={() => setTab("checks")}
                 onMap={() => setTab("map")}
+                onExplain={(id) => {
+                  setAssistantFocus({ context: state.contextId, id });
+                  setTab("local");
+                }}
                 onFormat={
                   state.language &&
                   [

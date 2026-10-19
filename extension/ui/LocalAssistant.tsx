@@ -15,14 +15,21 @@ import "./local-assistant.css";
 export function LocalAssistant({
   state,
   lang,
+  initialFocus,
 }: {
   state: ViewState;
   lang: Lang;
+  initialFocus?: { context: string; id: string };
 }) {
   const [models, setModels] = useState<LocalModel[]>([]);
   const [model, setModel] = useState("");
   const [origin, setOrigin] = useState("");
   const [task, setTask] = useState<AssistantTask>("explain");
+  const [focusChoice, setFocusChoice] = useState(initialFocus);
+  const focusedFunction =
+    task === "explain" && focusChoice?.context === state.contextId
+      ? state.analysis?.functions.find((f) => f.id === focusChoice.id)
+      : undefined;
   const [whitespaceOnly, setWhitespaceOnly] = useState(false);
   const [instruction, setInstruction] = useState("");
   const [busy, setBusy] = useState(false);
@@ -232,6 +239,37 @@ export function LocalAssistant({
             </option>
           </select>
         </label>
+        {task === "explain" && !!state.analysis?.functions.length && (
+          <label>
+            {t("설명할 범위", "Explanation focus")}
+            <select
+              value={focusedFunction?.id || ""}
+              disabled={busy || state.busy}
+              onChange={(event) => {
+                setFocusChoice({
+                  context: state.contextId,
+                  id: event.target.value,
+                });
+                clearProposal();
+              }}
+            >
+              <option value="">{t("현재 파일", "Current file")}</option>
+              {state.analysis.functions.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.name} · L{f.line}
+                </option>
+              ))}
+            </select>
+            {focusedFunction && (
+              <span className="muted">
+                {t(
+                  "이 기능의 역할·입력·실제 검사와 호출자가 지킬 조건을 설명합니다. 같은 파일의 관련 코드를 참고하도록 현재 파일 전체를 보냅니다.",
+                  "Explain its purpose, inputs, actual checks and caller preconditions. The entire current file is sent as context for related code.",
+                )}
+              </span>
+            )}
+          </label>
+        )}
         <label>
           {t(
             "요청 (설명은 비워도 됩니다)",
@@ -246,10 +284,17 @@ export function LocalAssistant({
               setInstruction(e.target.value);
               clearProposal();
             }}
-            placeholder={t(
-              "예: 배송비 기준을 바꾸고 영향을 설명해 줘",
-              "Example: change the shipping threshold and explain the effect",
-            )}
+            placeholder={
+              task === "explain"
+                ? t(
+                    "예: 하는 일과 입력 조건을 설명해 줘. 실제 검사와 호출자가 지킬 전제를 구분해 줘.",
+                    "Example: explain its purpose and inputs. Distinguish actual checks from caller preconditions.",
+                  )
+                : t(
+                    "예: 배송비 기준을 바꾸고 영향을 설명해 줘",
+                    "Example: change the shipping threshold and explain the effect",
+                  )
+            }
           />
         </label>
         {canConstrainWhitespace ? (
@@ -303,6 +348,9 @@ export function LocalAssistant({
                     task,
                     instruction,
                     lang,
+                    ...(focusedFunction
+                      ? { focusFunctionId: focusedFunction.id }
+                      : {}),
                     ...(canConstrainWhitespace && whitespaceOnly
                       ? { editConstraint: "whitespace-only" }
                       : {}),
@@ -381,6 +429,13 @@ export function LocalAssistant({
           aria-label={t("로컬 AI 결과", "Local AI result")}
         >
           <h2>{t("모델의 설명과 제안", "Model explanation and proposal")}</h2>
+          {result.focus && (
+            <p>
+              {t("설명 대상", "Explanation focus")}:{" "}
+              <code>{result.focus.name}</code> · L{result.focus.line}–
+              {result.focus.endLine}
+            </p>
+          )}
           <p className="muted">
             {result.model} · {(result.elapsedMs / 1000).toFixed(1)}s ·{" "}
             {t("추론 결과 · 검토 필요", "Model inference · review required")}

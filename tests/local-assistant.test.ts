@@ -29,6 +29,72 @@ const parse = (r: unknown, i = input) =>
   parseAssistantProposal(JSON.stringify(r), i);
 
 describe("grounded local assistant proposals", () => {
+  it("grounds a selected function in the full file and requires evidence inside it", () => {
+    const source =
+      "// 😀\r\nconst scale = 2;\r\nfunction double(x) { return x * scale; }\r\nfunction other() { return 9; }";
+    const focus = {
+      name: "double",
+      start: source.indexOf("function double"),
+      end: source.indexOf("\r\nfunction other"),
+    };
+    const selected: AssistantInput = {
+      ...input,
+      source,
+      language: "javascript",
+      task: "explain",
+      instruction: "",
+      focus,
+    };
+    const messages = assistantMessages(selected),
+      data = JSON.parse(messages[1].content);
+    expect(data.source).toBe(source);
+    expect(data.explanationFocus).toEqual({
+      name: "double",
+      startLine: 3,
+      endLine: 3,
+      declaration: source.slice(focus.start, focus.end),
+    });
+    const report = {
+      summary: "입력에 두 배를 곱합니다. 입력 검사는 없습니다.",
+      citations: [{ quote: "const scale = 2;", explanation: "배율 값입니다." }],
+      edits: [],
+      risks: [],
+      checks: [],
+    };
+    expect(() => parse(report, selected)).toThrow(
+      /inside the selected function/,
+    );
+    report.citations.push({
+      quote: "return x * scale;",
+      explanation: "입력에 배율을 곱해 반환합니다.",
+    });
+    expect(parse(report, selected).updated).toBe(source);
+    expect(messages[0].content).toContain(
+      "preconditions the caller must supply",
+    );
+    for (const invalid of [
+      { ...focus, start: -1 },
+      { ...focus, end: source.length + 1 },
+      { ...focus, end: focus.start },
+      { ...focus, name: "" },
+      { ...focus, start: 0.5 },
+      null,
+    ]) {
+      expect(() =>
+        validateAssistantInput({
+          ...selected,
+          focus: invalid,
+        } as AssistantInput),
+      ).toThrow(/explanation focus/);
+    }
+    expect(() =>
+      validateAssistantInput({
+        ...selected,
+        task: "edit",
+        instruction: "change it",
+      }),
+    ).toThrow(/explanation focus/);
+  });
   it("accepts an explicit whitespace restriction only for supported editing requests", () => {
     const constrained = {
       ...input,

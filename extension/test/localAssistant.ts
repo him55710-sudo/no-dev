@@ -12,6 +12,8 @@ export async function localAssistantChecks(
 ) {
   let mode:
       | "normal"
+      | "explain-focus"
+      | "explain-wrong"
       | "hold"
       | "invalid"
       | "format-with-braces"
@@ -27,6 +29,7 @@ export async function localAssistantChecks(
       | "sql-valid"
       | "sql-invalid" = "normal",
     chatSeen = false;
+  let focusRequest: Record<string, any> | undefined;
   const model = {
     name: "fixture:local",
     size: 1900000000,
@@ -60,6 +63,34 @@ export async function localAssistantChecks(
     chatSeen = true;
     if (mode === "hold") return;
     const input = JSON.parse(body.messages[1].content);
+    if (mode.startsWith("explain-")) {
+      focusRequest = input;
+      res.end(
+        JSON.stringify({
+          done: true,
+          done_reason: "stop",
+          message: {
+            content: JSON.stringify({
+              summary:
+                "입력과 배율을 곱해 반환합니다. 입력을 검사하지 않습니다.",
+              citations: [
+                {
+                  quote:
+                    mode === "explain-wrong"
+                      ? "return 9;"
+                      : "return x * scale;",
+                  explanation: "선택한 함수의 반환 원문입니다.",
+                },
+              ],
+              edits: [],
+              risks: [],
+              checks: [],
+            }),
+          },
+        }),
+      );
+      return;
+    }
     const quote = mode.startsWith("format-")
       ? "if (ready) run(); else wait();"
       : mode.startsWith("sql-")
@@ -152,6 +183,92 @@ export async function localAssistantChecks(
   const uri = vscode.Uri.joinPath(root, "local-assistant-fixture.py");
   await vscode.workspace.fs.writeFile(uri, Buffer.from(source));
   try {
+    const focusSource =
+      "const scale = 2;\nfunction double(x) { return x * scale; }\nfunction other() { return 9; }\n";
+    const focusDoc = await vscode.workspace.openTextDocument({
+      language: "javascript",
+      content: focusSource,
+    });
+    try {
+      await vscode.window.showTextDocument(focusDoc, vscode.ViewColumn.One);
+      await c.setDocument(focusDoc);
+      await ready();
+      const selected = c.state.analysis!.functions.find(
+        (f) => f.name === "double",
+      )!;
+      const focusedPayload = {
+        model: model.name,
+        task: "explain",
+        lang: "ko",
+        instruction: "",
+        focusFunctionId: selected.id,
+      };
+      mode = "explain-focus";
+      chatSeen = false;
+      await assert.rejects(
+        c.assistant.generate(c.state.contextId, {
+          ...focusedPayload,
+          focusFunctionId: "missing",
+        }),
+        /Select a function/,
+      );
+      await assert.rejects(
+        c.assistant.generate(c.state.contextId, {
+          ...focusedPayload,
+          task: "edit",
+        }),
+        /requires an explanation/,
+      );
+      assert.equal(chatSeen, false);
+      const focused = await c.assistant.generate(
+        c.state.contextId,
+        focusedPayload,
+      );
+      assert.equal(focusRequest!.source, focusSource);
+      assert.equal(focusRequest!.explanationFocus.name, "double");
+      assert.equal(focusRequest!.explanationFocus.startLine, 2);
+      assert.deepEqual(focused.focus, { name: "double", line: 2, endLine: 2 });
+      assert.equal(focused.edits.length, 0);
+      assert.equal(focusDoc.getText(), focusSource);
+      await c.assistant.source(focused.id, c.state.contextId, 0);
+      assert.equal(
+        focusDoc.getText(vscode.window.activeTextEditor!.selection),
+        "return x * scale;",
+      );
+      mode = "explain-wrong";
+      await assert.rejects(
+        c.assistant.generate(c.state.contextId, focusedPayload),
+        /inside the selected function/,
+      );
+      const staleContext = c.state.contextId;
+      const editor = await vscode.window.showTextDocument(
+        focusDoc,
+        vscode.ViewColumn.One,
+      );
+      await editor.edit((b) =>
+        b.insert(new vscode.Position(0, 0), "// changed\n"),
+      );
+      await c.refresh();
+      await ready();
+      chatSeen = false;
+      await assert.rejects(c.assistant.generate(staleContext, focusedPayload));
+      assert.equal(chatSeen, false);
+      await vscode.commands.executeCommand("undo");
+      assert.equal(focusDoc.getText(), focusSource);
+      reports.push(
+        "Focused local explanation: host resolves the selected function, keeps full-file context, rejects unknown/stale/edit focus before sending, requires an in-function citation and navigates exact source without edits; controlled model response",
+      );
+    } finally {
+      for (const group of vscode.window.tabGroups.all)
+        for (const tab of group.tabs) {
+          if (
+            tab.input instanceof vscode.TabInputText &&
+            tab.input.uri.toString() === focusDoc.uri.toString()
+          )
+            await vscode.window.tabGroups.close(tab);
+        }
+      mode = "normal";
+    }
     const doc = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(doc, vscode.ViewColumn.One);
     await c.setDocument(doc);

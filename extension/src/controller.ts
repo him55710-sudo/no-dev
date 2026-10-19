@@ -130,6 +130,12 @@ export class Controller implements vscode.Disposable {
           return { status: "unavailable", detail: message(error) };
         }
       },
+      (context, id) => {
+        this.current(context);
+        const fn = this.state.analysis!.functions.find((f) => f.id === id);
+        if (!fn) return undefined;
+        return { name: fn.name.slice(0, 400), start: fn.start, end: fn.end };
+      },
     );
     this.checks = new ProjectChecks((context) => this.current(context));
     this.checks.changes.event((projectCheck) => this.publish({ projectCheck }));

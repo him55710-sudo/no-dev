@@ -8,6 +8,7 @@ type Props = ComponentProps<typeof Story> & {
   onChecks: () => void;
   onMap: () => void;
   onFormat?: (functionId: string) => void;
+  onExplain?: (functionId: string) => void;
   terminology: ReactNode;
 };
 export function ReadingView(props: Props) {
@@ -274,6 +275,17 @@ export function ReadingView(props: Props) {
                   "Syntax-based · runtime behavior needs checking",
                 )}
               </span>
+              {props.onExplain && (
+                <button
+                  disabled={props.editDisabled}
+                  onClick={() => props.onExplain!(fn.id)}
+                >
+                  {t(
+                    "이 기능을 로컬 AI로 설명",
+                    "Explain this function with local AI",
+                  )}
+                </button>
+              )}
               {props.onFormat && (
                 <button
                   disabled={props.editDisabled || !a.syntaxValid}

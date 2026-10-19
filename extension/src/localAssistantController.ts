@@ -24,6 +24,7 @@ export type AssistantResult = Omit<AssistantProposal, "updated"> & {
   elapsedMs: number;
   validation: AssistantValidation;
   constraint?: AssistantConstraintCheck;
+  focus?: { name: string; line: number; endLine: number };
 };
 type Pending = {
   result: AssistantResult;
@@ -62,6 +63,10 @@ export class LocalAssistantController implements vscode.Disposable {
       source: string,
       signal: AbortSignal,
     ) => Promise<AssistantValidation>,
+    private resolveFocus?: (
+      context: string | undefined,
+      id: string,
+    ) => AssistantInput["focus"],
   ) {}
   private client() {
     if (vscode.env.remoteName)
@@ -87,6 +92,18 @@ export class LocalAssistantController implements vscode.Disposable {
     this.cancel();
     this.pending = undefined;
   }
+  private focus(context: string | undefined, id: unknown, task: unknown) {
+    if (task !== "explain" || !this.resolveFocus)
+      throw Error(
+        "기능 선택은 설명 요청에서만 사용할 수 있습니다. / Function focus requires an explanation request.",
+      );
+    const focus = this.resolveFocus(context, inputString(id, 1000));
+    if (!focus)
+      throw Error(
+        "최신 원문에서 설명할 기능을 다시 선택하세요. / Select a function from the current source.",
+      );
+    return focus;
+  }
   async generate(
     context: string | undefined,
     payload: Record<string, unknown>,
@@ -109,6 +126,11 @@ export class LocalAssistantController implements vscode.Disposable {
       lang: payload.lang as AssistantInput["lang"],
       editConstraint:
         payload.editConstraint as AssistantInput["editConstraint"],
+      ...(payload.focusFunctionId !== undefined
+        ? {
+            focus: this.focus(context, payload.focusFunctionId, payload.task),
+          }
+        : {}),
     };
     const version = doc.version;
     const controller = new AbortController();
@@ -168,6 +190,15 @@ export class LocalAssistantController implements vscode.Disposable {
         digest: response.model.digest,
         elapsedMs: response.elapsedMs,
         validation,
+        ...(input.focus
+          ? {
+              focus: {
+                name: input.focus.name,
+                line: doc.positionAt(input.focus.start).line + 1,
+                endLine: doc.positionAt(input.focus.end).line + 1,
+              },
+            }
+          : {}),
         constraint: checkAssistantConstraint(
           input.editConstraint,
           validation.changeFacts,
