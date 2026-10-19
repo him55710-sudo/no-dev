@@ -27,6 +27,7 @@ import {
 } from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
+import { ObservationComparison } from "./ObservationComparison";
 import { enterScope, type WorkspaceNavigation } from "./navigation";
 import {
   useWorkspaceNavigation,
@@ -181,7 +182,7 @@ function SpecEditor({
   acceptBaseline?: (request: BaselineRequest) => Promise<unknown>;
 }) {
   const [reviewing, setReviewing] = useState(false);
-  const observation = observeSpec(spec, graph);
+  const observation = useMemo(() => observeSpec(spec, graph), [spec, graph]);
   const fields: [
     keyof Pick<
       SpecContent,
@@ -225,7 +226,7 @@ function SpecEditor({
       <section
         className={`observed-block ${observation.status !== "unchanged" ? "needs-review" : ""}`}
       >
-        <span className="eyebrow">현재 구현의 기준선</span>
+        <span className="eyebrow">저장한 구현 기준</span>
         <p>{spec.baseline.observed || "아직 구현 근거가 없습니다."}</p>
         {observation.status !== "unchanged" ? (
           <div role="status">
@@ -300,6 +301,13 @@ function SpecEditor({
           </details>
         ) : null}
       </section>
+      <ObservationComparison
+        spec={spec}
+        graph={graph}
+        content={content}
+        source={onSource}
+        disabled={readOnly || saving}
+      />
       {fields.map(([key, label, placeholder]) => (
         <label
           className={`spec-field ${key === "desired" ? "desired-field" : ""}`}

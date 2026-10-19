@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-19T18:30:56.899Z",
+  "artifact": {
+    "vsixSha256": "bac5352723fe0d57802efa9d94ab02a9c4346824b6053d85189e9bf0c72daecc",
+    "files": {
+      "out/extension.cjs": "17ca8950ca62f414244996f118149a3a931f7411840cb68b77ee851c6d162d58",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "ec9bce9b757fa896e2382a2ca3e0fae802bd4d92f01bdacdb62fb2845c1fdb85",
+      "media/design.js": "03a6d7f875843a19a205d4b84702d38f0a61088a128e399f764d13437ea69b70",
+      "media/design.css": "e09a7b37d8a461a015a9b5ab90796617670f7a476f80dabd837546cc35fd33d1"
+    }
+  },
+  "requests": 13,
+  "successfulRequests": 13,
+  "sourceSelections": [
+    {
+      "path": "policy.js",
+      "text": "export function canEdit(role) {\n  return role === \"owner\" || role === \"editor\";\n}"
+    },
+    {
+      "path": "service.js",
+      "text": "audit()"
+    }
+  ],
+  "hostProcesses": [
+    30112,
+    21040
+  ],
+  "hostChecks": 33,
+  "originalFiles": 8,
+  "sourceAndGitRestored": true,
+  "agentJobs": 0,
+  "clientErrors": 0,
+  "regression": {
+    "files": 27,
+    "passed": 227,
+    "failed": 0
+  },
+  "rendered": {
+    "checkedAt": "2026-10-19T18:30:47.681Z",
+    "reloadedAfterSourceRestore": false,
+    "missingFactVisible": true,
+    "factCards": 15,
+    "missingRelationVisible": true,
+    "missingRelationText": "현재 관측되지 않은 연결\n저장할 때\n\nupdateProject → audit · 호출 1곳\n\nservice.js:4\n\n정적 연결을 찾지 못했습니다. 실제 실행 경로가 제거됐다는 판정은 아닙니다."
+  },
+  "limitations": [
+    "Static observations do not prove free-form intent or runtime behavior.",
+    "Installed production host and bundles with a browser replacement transport; native VS Code Webview pointer delivery is not covered."
+  ],
+  "discoveredAndFixed": [
+    "Relation counts now include every compiler-backed source location.",
+    "An incomplete snapshot cannot establish uniqueness of a moved fact.",
+    "A stable child around keyed cards in native details prevents a moved unresolved card from disappearing until reload."
+  ]
+}

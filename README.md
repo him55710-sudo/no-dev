@@ -22,6 +22,8 @@ Structure exploration works without a model. Implementation requires an explicit
 
 Build the development VSIX from this branch and run **풀어봄: 시스템 설계 워크스페이스 열기** (`pureobom.openWorkspace`) in a local TypeScript/React Git project. Select a structure or create a business feature linked to several files. Read its code evidence, then describe the desired behavior, invariants and acceptance criteria.
 
+[Compare stored and current observations](docs/WORKSPACE_OBSERVATIONS.md) to inspect changed conditions, declarations and static connections. Code changes preserve the desired behavior; meeting that goal still requires separate checks and review.
+
 **Explore → edit the design → save and implement → inspect changes and checks → apply → refresh the structure.**
 
 `설계만 저장` saves the specification. `저장하고 구현` starts Codex in a separate Git worktree. Review the actual diff and command results before applying; undo restores the code while preserving the design goal. A changed source baseline or failed check prevents applying an old result. A worktree separates changes; it is not an operating-system security boundary.

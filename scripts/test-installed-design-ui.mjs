@@ -25,13 +25,16 @@ assert.equal(
 const realProvider = !!process.argv[2];
 const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
 const navigationValidation = process.env.PUREOBOM_NAVIGATION_UI === "1";
+const observationValidation = process.env.PUREOBOM_OBSERVATION_UI === "1";
 assert.ok(
-  !(navigationValidation && reconnectValidation),
+  [navigationValidation, reconnectValidation, observationValidation].filter(
+    Boolean,
+  ).length <= 1,
   "Choose one restart validation mode.",
 );
 assert.ok(
-  !(navigationValidation && realProvider),
-  "Navigation-only validation does not need a provider.",
+  !((navigationValidation || observationValidation) && realProvider),
+  "Navigation and observation validation do not need a provider.",
 );
 if (reconnectValidation) {
   assert.ok(
@@ -163,6 +166,7 @@ const configuration = {
   realProvider,
   reconnectValidation,
   navigationValidation,
+  observationValidation,
   runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),
@@ -196,7 +200,11 @@ async function launch() {
   });
 }
 await launch();
-if (configuration.reconnectValidation || configuration.navigationValidation) {
+if (
+  configuration.reconnectValidation ||
+  configuration.navigationValidation ||
+  configuration.observationValidation
+) {
   const partial = JSON.parse(
     await readFile(resolve(directory, "reconnect-partial.json"), "utf8"),
   );
@@ -205,7 +213,9 @@ if (configuration.reconnectValidation || configuration.navigationValidation) {
       partial.before.job.approvals.length,
       "Restart must interrupt a real pending approval.",
     );
-  else assert.notEqual(partial.before.navigation.selection, "system");
+  else if (configuration.navigationValidation)
+    assert.notEqual(partial.before.navigation.selection, "system");
+  else assert.ok(partial.observationWitness.accepted.baseline.observations);
   configuration.runIndex = 1;
   await writeFile(
     resolve(directory, "configuration.json"),

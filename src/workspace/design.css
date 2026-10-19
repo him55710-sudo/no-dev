@@ -466,6 +466,84 @@ textarea {
   flex-wrap: wrap;
   gap: 5px;
 }
+.observation-comparison {
+  margin: 18px 0 24px;
+  font-size: 12px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.observation-comparison h3 {
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+.observation-comparison p {
+  white-space: pre-line;
+  margin: 6px 0;
+}
+.observation-comparison details {
+  border-top: 1px solid var(--design-line);
+  padding: 10px 0;
+}
+.observation-comparison summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.observation-intent {
+  padding: 12px;
+  border-left: 3px solid var(--design-accent);
+  background: var(--design-input);
+}
+.observation-intent span,
+.observation-coverage,
+.observation-comparison small {
+  font-size: 10px;
+  color: var(--design-muted);
+}
+.observation-item {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--design-line);
+  border-radius: 8px;
+}
+.observation-item h4 {
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+.observation-item h4 span {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.observation-before {
+  border-left: 2px solid var(--design-line);
+  padding-left: 9px;
+  margin: 8px 0 12px;
+}
+.observation-current {
+  margin-top: 8px;
+}
+.observation-changed,
+.observation-unresolved {
+  border-color: #c99738;
+}
+.observation-anchor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+.observation-anchor button {
+  font-size: 10px;
+  padding: 4px 7px;
+}
+.observation-comparison code {
+  font-size: 10px;
+}
+.observation-limitation {
+  color: var(--design-muted);
+}
 .source-pills button {
   font-size: 9px;
   padding: 4px 6px;

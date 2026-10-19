@@ -7,6 +7,7 @@ import {
   type StructureGraph,
 } from "./model";
 import { featureListSchema } from "./features";
+import { captureObservations, observationSnapshotSchema } from "./observations";
 
 const text = z.string().max(12000);
 const lines = z.array(z.string().min(1).max(2000)).max(100);
@@ -28,6 +29,7 @@ const baselineSchema = z
     graphRevision: z.string().regex(/^[a-f0-9]{64}$/),
     observed: text,
     sources: z.array(sourceRefSchema).max(1000),
+    observations: observationSnapshotSchema.optional(),
   })
   .strict();
 export const baselineRequestSchema = z
@@ -136,6 +138,7 @@ export function draftSpec(
         .join("\n\n")
         .slice(0, 12000),
       sources: refs,
+      observations: captureObservations(graph, targetIds),
     },
     updatedAt: now,
   });
@@ -239,11 +242,15 @@ export function observeSpec(
     status !== "reconnect" &&
     spec.targetIds.every((id) => graph.nodes.some((n) => n.id === id))
   ) {
-    const current = draftSpec(graph, spec.targetIds);
+    const current = outerSources(
+      graph.nodes
+        .filter((node) => included.has(node.id))
+        .flatMap((node) => node.sources),
+    );
     const known = new Set(sources.map(sourceKey));
-    const selected = new Set(current.baseline.sources.map(sourceKey));
+    const selected = new Set(current.map(sourceKey));
     if (
-      current.baseline.sources.some((ref) => !known.has(sourceKey(ref))) ||
+      current.some((ref) => !known.has(sourceKey(ref))) ||
       sources.some((ref) => !selected.has(sourceKey(ref)))
     ) {
       status = "changed";
@@ -253,6 +260,51 @@ export function observeSpec(
     }
   }
   return { status, sources, details };
+}
+
+/** Keep uniquely unchanged moved targets visible without rewriting their saved identity. */
+export function currentObservations(spec: LivingSpec, graph: StructureGraph) {
+  const roots: string[] = [];
+  let missing = false;
+  for (const id of spec.targetIds) {
+    const existing = graph.nodes.find((node) => node.id === id);
+    const old = spec.baseline.observations?.facts.find(
+      (fact) => fact.id === id,
+    );
+    const matches = old
+      ? graph.nodes.filter(
+          (node) =>
+            node.kind === old.kind &&
+            node.label === old.label &&
+            node.sources.some(
+              (ref) => ref.contentHash === old.source.contentHash,
+            ),
+        )
+      : [];
+    // A numbered rule can retain its ID after a preceding rule was inserted.
+    // Prefer the uniquely unchanged evidence before treating the ID as the same rule.
+    const resolved =
+      matches.find((node) => node.id === id) ??
+      (matches.length === 1 ? matches[0] : existing);
+    if (resolved) roots.push(resolved.id);
+    else missing = true;
+  }
+  if (missing && !spec.targetIds.some((id) => id.startsWith("feature:"))) {
+    const refs = observeSpec(spec, graph).sources;
+    for (const ref of refs) {
+      const node = graph.nodes.find((node) =>
+        node.sources.some(
+          (current) =>
+            current.path === ref.path &&
+            current.start === ref.start &&
+            current.end === ref.end &&
+            current.contentHash === ref.contentHash,
+        ),
+      );
+      if (node) roots.push(node.id);
+    }
+  }
+  return captureObservations(graph, [...new Set(roots)]);
 }
 
 export function saveSpec(

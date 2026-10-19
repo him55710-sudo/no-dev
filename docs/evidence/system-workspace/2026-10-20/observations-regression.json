@@ -1,0 +1,1062 @@
+{
+  "checkedAt": "2026-10-19T18:31:13.381Z",
+  "files": 27,
+  "passed": 227,
+  "failed": 0,
+  "tests": [
+    {
+      "file": "tests/agent-host.test.ts",
+      "cases": [
+        {
+          "name": "managed implementation host outlives its original client process and reconnects to the same approval, checks, review, apply and undo",
+          "status": "passed"
+        },
+        {
+          "name": "managed implementation host serializes concurrent windows, rejects stale approval/cancel requests, and cancels through a new connection",
+          "status": "passed"
+        },
+        {
+          "name": "managed implementation host refuses unauthenticated clients and restores a dead host as interrupted without repeating inference",
+          "status": "passed"
+        },
+        {
+          "name": "managed implementation host does not launch a replacement when an occupied endpoint fails to answer authentication",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/agent-protocol.test.ts",
+      "cases": [
+        {
+          "name": "Codex App Server protocol decodes split UTF-8, redacts identity, and handles terminal events before the response",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol never converts a failed turn or widened sandbox into success",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol declines unhandled approvals and only accepts the exact requested decision",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol rejects unsupported server calls explicitly",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol keeps a live turn open while multiple approvals are being reviewed",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol resumes the remaining execution budget after a decision",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol cancels while an approval is paused and rejects a late decision",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol does not reset the elapsed execution budget when approval finishes",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol resumes after the server resolves an approval without a client decision",
+          "status": "passed"
+        },
+        {
+          "name": "Codex App Server protocol cancels a live turn and closes its process; a late success cannot revive it",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/agent-recovery.test.ts",
+      "cases": [
+        {
+          "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery persists explicit scope and test review, rejects stale proposals and preserves uncertainty",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery excludes a second writer until its lease is released",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery excludes another process and releases the lease after its owner is killed",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery can acquire an IPC lease while an unrelated service holds the former TCP port",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/agent-verification.test.ts",
+      "cases": [
+        {
+          "name": "independent implementation verification records real exits, refuses missing or replaced scripts, and terminates timed-out commands",
+          "status": "passed"
+        },
+        {
+          "name": "independent implementation verification cancels a running check only after its actual child and descendant stop",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/agent-workspace.test.ts",
+      "cases": [
+        {
+          "name": "isolated implementation and review keeps native tools runnable outside a deep profile and restores the exact compact worktree",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review preserves staged/unstaged work, raw CRLF and assets without copying excluded secrets",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review refuses changes when any original input or the reviewed proposal changes",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review rolls back a partial multi-file application and records the actual result",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review does not overwrite subsequent user edits during undo",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review rejects new source files added while implementation was running",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/control-flow.test.ts",
+      "cases": [
+        {
+          "name": "source-grounded cleanup flow keeps the finalizer separate from both the try and catch bodies",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow shows try, error handling and finalizer in that order in ko UI and export",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow shows try, error handling and finalizer in that order in en UI and export",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow does not invent catch behavior for try/finally or cleanup for try/catch",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow marks pending finally for returns in try and catch but does not cross a function boundary",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow preserves nested finalizers and outer cleanup for a return inside an inner finalizer",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow describes finalizer precedence consistently with an executed, authored reference function",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow bounds a real long else-if chain while retaining a source-review notice",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded cleanup flow also bounds nested finalizers in the rendered story",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/core.test.ts",
+      "cases": [
+        {
+          "name": "source-grounded analysis extracts exact editable source ranges and nested control flow",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis keeps unknown statements explicit instead of inventing behavior",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis does not confuse comments and strings with active code",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis handles JSX without pretending to render it",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis reports parse errors",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis does not claim Python analysis",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis keeps valid and invalid JSON separate",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis links relative imports, index modules and js-to-ts specifiers",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis uses review candidates instead of asserting fetch is broken",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded analysis preserves unicode and CRLF positions",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits changes only the selected source range and leaves all other bytes intact",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects stale patches, including edits outside the target",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input NaN",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input Infinity",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input 1; alert(1)",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input 0x10",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input 1,000",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input 1e999",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects unsafe or ambiguous numeric input ",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits escapes strings rather than inserting code",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits supports explicit comparison edits",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits maps Korean and English sentences to the same edit",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits asks for a single unambiguous target and value",
+          "status": "passed"
+        },
+        {
+          "name": "bounded edits rejects invalid source before editing",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview calculates shipping 0 → 3000",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview calculates shipping 49999 → 3000",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview calculates shipping 50000 → 0",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview calculates shipping 60000 → 0",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview compares a real before/after change at the boundary",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview resolves explicitly imported pure functions",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview reports thrown input errors and keeps trace",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview refuses network and unknown runtime functions",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: globalThis",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: window",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: process",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: ({}).constructor",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: ({}).__proto__",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: eval(\"1+1\")",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview never exposes host capabilities: Function(\"return 1\")()",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview bounds recursion and refuses loops",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview short-circuits branches without calling unavailable code",
+          "status": "passed"
+        },
+        {
+          "name": "restricted calculation preview handles default parameters and object outputs",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips .env",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips secrets/.env.local",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips node_modules/a.ts",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips .git/config",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips dist/bundle.js",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips foo.exe",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries skips package-lock.json",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries preserves src/app.tsx",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries preserves a.py",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries preserves README.md",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries preserves package.json",
+          "status": "passed"
+        },
+        {
+          "name": "local import boundaries imports text, skips binary and preserves relative paths",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/design-drafts.test.ts",
+      "cases": [
+        {
+          "name": "durable design drafts restores unfinished text and the original context without writing a project or design",
+          "status": "passed"
+        },
+        {
+          "name": "durable design drafts isolates projects and refuses stale writers or silent context replacement",
+          "status": "passed"
+        },
+        {
+          "name": "durable design drafts keeps input on failed confirmation and consumes only the reviewed draft revision",
+          "status": "passed"
+        },
+        {
+          "name": "durable design drafts detects same-revision manual edits and corrupt records without overwriting them",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/edge-cases.test.ts",
+      "cases": [
+        {
+          "name": "no invented preview results uses module scope for constant initializers",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results rejects temporal dead zone reads instead of using outer values",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results rejects mutable module state and top-level effects",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results rejects var scope it cannot faithfully simulate",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results does not use a global function when a parameter shadows it",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results does not use native Math when shadowed",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results does not reach inherited Math properties",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results rejects imports of non-exported values",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results refuses unsupported initialization in imported modules",
+          "status": "passed"
+        },
+        {
+          "name": "no invented preview results retains Infinity as a number, not null",
+          "status": "passed"
+        },
+        {
+          "name": "Korean editing and readability handles disabling without confusing the affirmative word",
+          "status": "passed"
+        },
+        {
+          "name": "Korean editing and readability matches >= as one operator",
+          "status": "passed"
+        },
+        {
+          "name": "Korean editing and readability uses correct Korean particles for common labels and numbers",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/editor-diagnostics.test.ts",
+      "cases": [
+        {
+          "name": "editor report evidence preserves provider, message, severity and exact source range independently of syntax findings",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence explains only recognized TypeScript codes and does not reinterpret other providers",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence bounds report count and text without hiding omitted report counts",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence shows an empty report as unverified in ko",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence shows an empty report as unverified in en",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence marks an edited report and disables its old source link",
+          "status": "passed"
+        },
+        {
+          "name": "editor report evidence renders provider text inertly and excludes diagnostic links and related data",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/examples.test.ts",
+      "cases": [
+        {
+          "name": "published examples shipping matches the documented walkthrough",
+          "status": "passed"
+        },
+        {
+          "name": "published examples trial matches the documented walkthrough",
+          "status": "passed"
+        },
+        {
+          "name": "published examples discount matches the documented walkthrough",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/execution-profiles.test.ts",
+      "cases": [
+        {
+          "name": "project execution settings restores the exact reviewed choices locally and isolates another project",
+          "status": "passed"
+        },
+        {
+          "name": "project execution settings revocation survives reopen and cannot be undone by a stale open window",
+          "status": "passed"
+        },
+        {
+          "name": "project execution settings rejects changed launcher, model, manager, scripts, project, and check selections before starting",
+          "status": "passed"
+        },
+        {
+          "name": "project execution settings serializes approval use against another process store without silently restoring a revoked record",
+          "status": "passed"
+        },
+        {
+          "name": "project execution settings preserves malformed records instead of replacing them with a new approval",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/extension-protocol.test.ts",
+      "cases": [
+        {
+          "name": "webview message boundary rejects malformed envelopes and oversized user inputs",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/feedback.test.ts",
+      "cases": [
+        {
+          "name": "voluntary feedback summary contains the user's account and minimal context, without attached project data",
+          "status": "passed"
+        },
+        {
+          "name": "voluntary feedback summary preserves multiline text inside a fence that cannot be closed by the answer",
+          "status": "passed"
+        },
+        {
+          "name": "voluntary feedback summary makes unsupported and failed experiences distinct from completed tasks",
+          "status": "passed"
+        },
+        {
+          "name": "voluntary feedback summary requires an actual task and rejects invalid selections and hidden control characters",
+          "status": "passed"
+        },
+        {
+          "name": "fixed product links opens only known project destinations and never embeds feedback or source",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/glossary.test.ts",
+      "cases": [
+        {
+          "name": "project terminology binds labels to declarations and their references, keeping shadowed names separate",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology does not relabel object properties or nested block declarations",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology uses the custom term for a bounded sentence edit without renaming code",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology does not transfer a label to another file or a renamed declaration",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology omits duplicate declarations from editable terms",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology only invalidates cached files whose terms changed",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology preserves the other language when updating and resetting a term",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology rejects misleading or overlong labels",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology rejects misleading or overlong labels",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology rejects misleading or overlong labels",
+          "status": "passed"
+        },
+        {
+          "name": "project terminology validates persisted data and caps its size",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/implementation-review.test.ts",
+      "cases": [
+        {
+          "name": "implementation review evidence compares real paths and marks test/configuration candidates without semantic claims",
+          "status": "passed"
+        },
+        {
+          "name": "implementation review evidence never turns passing commands into confirmed criteria or implicit scope permission",
+          "status": "passed"
+        },
+        {
+          "name": "implementation review evidence requires actual observations and only links available successful check records",
+          "status": "passed"
+        },
+        {
+          "name": "implementation review evidence binds records to the exact job, proposal, criteria and files and never applies known failures",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/json-data.test.ts",
+      "cases": [
+        {
+          "name": "JSON and JSONC boundaries allows comments and trailing commas only for JSONC",
+          "status": "passed"
+        },
+        {
+          "name": "JSON and JSONC boundaries accepts scalar and array roots without requiring a tsconfig object",
+          "status": "passed"
+        },
+        {
+          "name": "JSON and JSONC boundaries rejects fault-tolerant partial parse results and executable expressions",
+          "status": "passed"
+        },
+        {
+          "name": "JSON and JSONC boundaries reads property names without assigning user data to object prototypes",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/jsx.test.ts",
+      "cases": [
+        {
+          "name": "source-grounded JSX reading explains a real example, conditional branches and map callback without executing it",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading preserves outer conditional structure instead of showing two unconditional roots",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading explains falsy values, including a visible 0, and nullish fallback",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading distinguishes a render-time call, function value, and callback",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading does not claim custom props are native events or infer spread values",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading marks a truncated structure and bounds output for a large file",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading does not add an interface to ordinary TypeScript",
+          "status": "passed"
+        },
+        {
+          "name": "source-grounded JSX reading keeps complex map bodies explicit and recognizes wrapped render-time calls",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing decodes entities and multiline JSX whitespace using compiler semantics",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing replaces the entire JSX text including significant leading spaces",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing treats markup, expressions, quotes and newlines as inert string data",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing edits quoted attributes and allows editing them a second time",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing rejects unchanged values without rewriting JSX entities",
+          "status": "passed"
+        },
+        {
+          "name": "JSX literal editing preserves CRLF outside the precise text range and keeps stale-patch protection",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/local-assistant.test.ts",
+      "cases": [
+        {
+          "name": "grounded local assistant proposals reserves input, output and template space without allocating the maximum for every file",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals distinguishes syntax validation from unavailable language checks",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals binds citations and edits to exact original Unicode/CRLF ranges",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals applies separated edits against original offsets, preserving unrelated text",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects fabricated and ambiguous quotes",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects a real but unrelated citation for an edit",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects missing, overlapping and no-op edit ranges",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects edits for explanation-only requests and accepts a grounded no-edit answer",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects extra fields, wrong types, excessive lists and missing evidence",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals retains hostile strings as inert data; never extracts commands or links",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals rejects English-only prose for a Korean request without translating code",
+          "status": "passed"
+        },
+        {
+          "name": "grounded local assistant proposals bounds actual bytes, rejects unsupported languages and never truncates code",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/ollama.test.ts",
+      "cases": [
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) checks local-only mode and model metadata before sending only the explicit file",
+          "status": "passed"
+        },
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) rejects enabled cloud before source transmission",
+          "status": "passed"
+        },
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) filters cloud aliases and rejects remote metadata before chat",
+          "status": "passed"
+        },
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) does not follow redirects",
+          "status": "passed"
+        },
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) handles cancellation, timeout and oversized responses",
+          "status": "passed"
+        },
+        {
+          "name": "Ollama loopback protocol (controlled HTTP fixture, not real inference) rejects partial or tool-bearing completions",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/performance.test.ts",
+      "cases": [
+        {
+          "name": "incremental project analysis only reparses changed files and drops deleted files",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/python-validation.test.ts",
+      "cases": [
+        {
+          "name": "isolated Python syntax validation reports an unavailable interpreter without treating it as a pass",
+          "status": "passed"
+        },
+        {
+          "name": "isolated Python syntax validation parses supported Python without executing a top-level exception",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/scenarios.test.ts",
+      "cases": [
+        {
+          "name": "scenario comparison finds a change that a single happy-path input misses",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison never calls an unsupported or throwing case a pass",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison rejects stale sources and unbounded inputs",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison compares \"NaN\" and 0 / 0 without JSON coercion",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison compares { a: 1, b: undefined } and { b: undefined, a: 1 } without JSON coercion",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison compares { a: undefined } and {} without JSON coercion",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison compares -0 and 0 without JSON coercion",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison displays special values distinctly from strings",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison suggests both old and new numeric boundaries",
+          "status": "passed"
+        },
+        {
+          "name": "scenario comparison exports only displayed evidence and escapes Markdown/HTML",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/system-workspace.test.ts",
+      "cases": [
+        {
+          "name": "source-backed system structure resolves aliases and re-exports to the real policy shared by API and UI",
+          "status": "passed"
+        },
+        {
+          "name": "source-backed system structure keeps same-named but unrelated functions separate, and reports dynamic gaps",
+          "status": "passed"
+        },
+        {
+          "name": "source-backed system structure keeps symbol identities after line shifts and records syntax errors",
+          "status": "passed"
+        },
+        {
+          "name": "source-backed system structure rejects paths outside the snapshot and duplicate files",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation accepts reviewed evidence without rewriting intent, and permits the next change",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation reconnects a renamed declaration by explicit selection, preserving identity and history",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation rejects stale code/design previews and unavailable targets without changing saved evidence",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation preserves confirmed intent while code drifts and rejects a stale implementation request",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation reconnects unchanged moved code, without guessing ambiguous duplicates",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation retains the baseline and enforces revisions on concurrent design edits",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation creates a multi-file change contract only from an explicit behavioral action",
+          "status": "passed"
+        },
+        {
+          "name": "living design and observed implementation expands a single policy to its API and UI callers without unrelated modules",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/workspace-features.test.ts",
+      "cases": [
+        {
+          "name": "user-defined business features keeps many-to-many membership and canonical compiler evidence across folders",
+          "status": "passed"
+        },
+        {
+          "name": "user-defined business features surfaces removed membership as drift and preserves target intent on explicit rebaseline",
+          "status": "passed"
+        },
+        {
+          "name": "user-defined business features reattaches unique moves, retains missing references, and refuses ambiguous implementation",
+          "status": "passed"
+        },
+        {
+          "name": "user-defined business features rejects stale updates, nested feature cycles, forged targets and duplicate identities",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/workspace-navigation.test.ts",
+      "cases": [
+        {
+          "name": "workspace navigation restores a feature's alias path, selected rule, saved design and per-scope layout without canonicalizing away the user's context",
+          "status": "passed"
+        },
+        {
+          "name": "workspace navigation keeps only valid path prefixes after deletion and never rebinds a missing symbol by matching its label",
+          "status": "passed"
+        },
+        {
+          "name": "workspace navigation preserves a saved draft's identity and an edge inspector, but truncates forged or cyclic breadcrumb chains",
+          "status": "passed"
+        },
+        {
+          "name": "workspace navigation rejects executable fields and invalid viewport values in browser input",
+          "status": "passed"
+        },
+        {
+          "name": "local navigation storage survives a new store instance, isolates projects and persists the latest queued interaction",
+          "status": "passed"
+        },
+        {
+          "name": "local navigation storage rejects corrupt, oversized and cross-project records and preserves valid data on invalid writes",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "tests/workspace-observations.test.ts",
+      "cases": [
+        {
+          "name": "stored observations and current evidence captures real shared policy behavior and compiler-backed UI/API relations, preserving goal text across external edits",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence tracks added declarations and changed call targets/counts without calling a missing static edge a removed runtime path",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence restores uniquely moved facts, ignores comment/line shifts and refuses ambiguous same-content candidates",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence aligns unchanged conditions before matching numbered positions after an inserted rule",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence retains observations for a moved file when other selected files still exist",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence round-trips old designs without fabricating historic facts and keeps snapshots through explicit baseline acceptance",
+          "status": "passed"
+        },
+        {
+          "name": "stored observations and current evidence bounds snapshots and reports omitted facts, unsupported files and syntax errors honestly",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "initialRun": {
+    "passed": 226,
+    "failed": 1,
+    "failures": [
+      {
+        "file": "tests/workspace-observations.test.ts",
+        "name": "stored observations and current evidence restores uniquely moved facts, ignores comment/line shifts and refuses ambiguous same-content candidates",
+        "message": "AssertionError: expected 'moved' to be 'unresolved' // Object.is equality\n    at C:/Users/user/.codex/worktrees/system-design-workspace/비개발자/tests/workspace-observations.test.ts:157:89\n    at file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      }
+    ]
+  }
+}

@@ -3,7 +3,12 @@ import * as vscode from "vscode";
 import { createHash } from "node:crypto";
 import type { DesignWorkspace } from "../src/designWorkspace";
 import type { Feature } from "../../src/workspace/features";
-import { observeSpec, draftSpec } from "../../src/workspace/spec";
+import {
+  observeSpec,
+  draftSpec,
+  currentObservations,
+} from "../../src/workspace/spec";
+import { compareObservations } from "../../src/workspace/observations";
 import type { DesignDraft } from "../../src/workspace/drafts";
 import { approvalMatches } from "../../src/workspace/execution";
 import { initialNavigation } from "../../src/workspace/navigation";
@@ -216,6 +221,13 @@ export async function run() {
     Buffer.from(await vscode.workspace.fs.readFile(designUri)).toString("utf8"),
   );
   assert.equal(disk.specs[0].content.desired, content.desired);
+  assert.deepEqual(
+    disk.specs[0].baseline.observations,
+    saved.baseline.observations,
+  );
+  assert.ok(
+    saved.baseline.observations!.facts.some((fact) => fact.label === "canEdit"),
+  );
   await assert.rejects(
     workspace.save({
       targetIds: targets,
@@ -262,6 +274,14 @@ export async function run() {
   await workspace.refresh();
   assert.equal(observeSpec(saved, workspace.state.graph!).status, "changed");
   assert.equal(workspace.state.specs.specs[0].content.desired, content.desired);
+  const changedPolicy = compareObservations(
+    saved.baseline.observations,
+    currentObservations(saved, workspace.state.graph!),
+  ).facts.find((item) => item.current?.label === "canEdit")!;
+  assert.equal(changedPolicy.status, "changed");
+  assert.ok(changedPolicy.before!.summary.includes("undefined"));
+  assert.ok(changedPolicy.current!.summary.includes("owner"));
+  assert.deepEqual(workspace.state.specs.specs[0].baseline, saved.baseline);
   const restore = new vscode.WorkspaceEdit();
   restore.replace(
     file.uri,
@@ -370,6 +390,15 @@ export async function run() {
     .specs[0];
   assert.equal(persisted.id, saved.id);
   assert.deepEqual(persisted.baselineHistory, reconnected.baselineHistory);
+  assert.deepEqual(
+    persisted.baseline.observations,
+    reconnected.baseline.observations,
+  );
+  assert.ok(
+    persisted.baseline.observations.facts.some(
+      (fact: { label: string }) => fact.label === "mayEdit",
+    ),
+  );
   const editing = (await workspace.handleRequest({
     id: "draft-conflict",
     action: "saveDraft",
@@ -545,6 +574,7 @@ export async function run() {
       "stale design rejected",
       "unsaved source invalidation",
       "observed drift preserves intent",
+      "saved detailed observations persist, compare changed policy evidence and survive explicit baseline history updates",
       "restored source reconnects",
       "project verification script discovery",
       "changed package script invalidates saved execution settings and blocks implementation before design save",

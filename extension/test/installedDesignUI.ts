@@ -7,7 +7,12 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { isAbsolute, relative, resolve } from "node:path";
 import type { DesignWorkspace } from "../src/designWorkspace";
-import { observeSpec } from "../../src/workspace/spec";
+import {
+  observeSpec,
+  currentObservations,
+  type LivingSpec,
+} from "../../src/workspace/spec";
+import { compareObservations } from "../../src/workspace/observations";
 
 /** Test-only loopback transport for the unmodified installed Webview bundle.
  * This is browser UI + installed host evidence, not native VS Code pointer evidence. */
@@ -69,7 +74,19 @@ $provider = $providers[0];
   }
   let reconnection: unknown;
   let navigationRestoration: unknown;
-  if (previous && configuration.navigationValidation) {
+  let observationWitness:
+    | {
+        saved: LivingSpec;
+        originals: Record<string, string>;
+        changed: ReturnType<typeof compareObservations>;
+        accepted?: LivingSpec;
+        restored?: ReturnType<typeof compareObservations>;
+      }
+    | undefined = previous?.observationWitness;
+  if (
+    previous &&
+    (configuration.navigationValidation || configuration.observationValidation)
+  ) {
     assert.equal(workspace.state.job, undefined);
     assert.notEqual(process.pid, previous.before.extensionHostPid);
     assert.deepEqual(
@@ -144,11 +161,16 @@ $provider = $providers[0];
     resolve(extension.extensionPath, "media/design.css"),
   );
   const restartControl =
-    (configuration.reconnectValidation || configuration.navigationValidation) &&
+    (configuration.reconnectValidation ||
+      configuration.navigationValidation ||
+      configuration.observationValidation) &&
     !configuration.runIndex
-      ? `<button id="restart">${configuration.navigationValidation ? "탐색 위치 보관 후 창 재시작 검증" : "승인 대기 중 창 재시작 검증"}</button>`
+      ? `<button id="restart">${configuration.observationValidation ? "관측 기준 보관 후 창 재시작 검증" : configuration.navigationValidation ? "탐색 위치 보관 후 창 재시작 검증" : "승인 대기 중 창 재시작 검증"}</button>`
       : "";
-  const html = `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>설치본 설계 화면 검증</title><link rel="stylesheet" href="${prefix}/design.css"></head><body><aside style="position:fixed;bottom:0;right:0;z-index:10000;padding:6px;background:#fff;border:1px solid #555;color:#222;font:12px sans-serif">설치 번들 + 실제 호스트 · 테스트 전송 경로 ${restartControl}<button id="finish">검증 종료·기록 저장</button><span id="driver-result"></span></aside><div id="root"></div><script src="${prefix}/transport.js"></script><script src="${prefix}/design.js"></script></body></html>`;
+  const observationControl = configuration.observationValidation
+    ? `<button id="observation-change">${configuration.runIndex ? "검증용 원본 복원" : "검증용 외부 코드 변경"}</button>`
+    : "";
+  const html = `<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>설치본 설계 화면 검증</title><link rel="stylesheet" href="${prefix}/design.css"></head><body><aside style="position:fixed;bottom:0;right:0;z-index:10000;padding:6px;background:#fff;border:1px solid #555;color:#222;font:12px sans-serif">설치 번들 + 실제 호스트 · 테스트 전송 경로 ${observationControl}${restartControl}<button id="finish">검증 종료·기록 저장</button><span id="driver-result"></span></aside><div id="root"></div><script src="${prefix}/transport.js"></script><script src="${prefix}/design.js"></script></body></html>`;
   const transport = `
 let revision=0, polling=false;
 function deliver(value){window.dispatchEvent(new MessageEvent('message',{data:value}));}
@@ -159,6 +181,7 @@ window.addEventListener('error',event=>fetch('${prefix}/client-error',{method:'P
 window.addEventListener('unhandledrejection',event=>fetch('${prefix}/client-error',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:String(event.reason)})}));
 document.getElementById('finish').onclick=async()=>{const response=await fetch('${prefix}/finish',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const value=await response.json();document.getElementById('driver-result').textContent=value.error||'기록 저장 완료';};
 const restart=document.getElementById('restart');if(restart)restart.onclick=async()=>{restart.disabled=true;try{const response=await fetch('${prefix}/restart',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const value=await response.json();document.getElementById('driver-result').textContent=value.error||'창을 닫고 같은 작업에 다시 연결합니다.';if(value.error)restart.disabled=false;}catch(error){document.getElementById('driver-result').textContent=String(error);}};
+const observationChange=document.getElementById('observation-change');if(observationChange)observationChange.onclick=async()=>{observationChange.disabled=true;const response=await fetch('${prefix}/observation-change',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const value=await response.json();document.getElementById('driver-result').textContent=value.error||'검증용 코드 변경과 재분석 완료';if(value.error)observationChange.disabled=false;};
 `;
   const server = createServer(async (request, response) => {
     response.setHeader("Cache-Control", "no-store");
@@ -218,14 +241,121 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
         clientErrors.push(payload);
         return send(200, {});
       }
+      if (url.pathname === prefix + "/observation-change") {
+        assert.ok(
+          configuration.observationValidation && !configuration.realProvider,
+        );
+        assert.equal(workspace.state.job, undefined);
+        const saved = workspace.state.specs.specs[0];
+        assert.equal(workspace.state.specs.specs.length, 1);
+        assert.ok(
+          saved.content.desired.includes("viewer") &&
+            saved.content.acceptance.length,
+        );
+        if (!configuration.runIndex) {
+          assert.equal(observationWitness, undefined);
+          const originals: Record<string, string> = Object.fromEntries(
+            await Promise.all(
+              ["policy.js", "service.js"].map(async (path) => [
+                path,
+                await readFile(resolve(source, path), "utf8"),
+              ]),
+            ),
+          );
+          for (const [path, text] of Object.entries(originals))
+            assert.equal(digest(Buffer.from(text)), originalHashes[path]);
+          assert.ok(originals["policy.js"].includes(' || role === "viewer"'));
+          assert.ok(
+            originals["service.js"].includes("  project.title = title;"),
+          );
+          await writeFile(
+            resolve(source, "policy.js"),
+            originals["policy.js"].replace(' || role === "viewer"', ""),
+          );
+          await writeFile(
+            resolve(source, "service.js"),
+            originals["service.js"].replace(
+              "  project.title = title;",
+              "  audit();\n  project.title = title;",
+            ) + '\nexport function audit() { return "recorded"; }\n',
+          );
+          await workspace.refresh();
+          const changed = compareObservations(
+            saved.baseline.observations,
+            currentObservations(saved, workspace.state.graph!),
+          );
+          const policy = changed.facts.find(
+            (item) => item.current?.label === "canEdit",
+          )!;
+          assert.equal(policy.status, "changed");
+          assert.ok(policy.before!.summary.includes("viewer"));
+          assert.ok(!policy.current!.summary.includes("viewer"));
+          assert.ok(
+            changed.relations.some(
+              (item) =>
+                item.status === "added" && item.current?.to.label === "audit",
+            ),
+          );
+          assert.deepEqual(workspace.state.specs.specs[0], saved);
+          observationWitness = {
+            saved: structuredClone(saved),
+            originals,
+            changed,
+          };
+        } else {
+          assert.ok(observationWitness?.accepted);
+          for (const [path, text] of Object.entries(
+            observationWitness.originals,
+          ))
+            await writeFile(resolve(source, path), text);
+          await workspace.refresh();
+          observationWitness.restored = compareObservations(
+            saved.baseline.observations,
+            currentObservations(saved, workspace.state.graph!),
+          );
+          const policy = observationWitness.restored.facts.find(
+            (item) => item.current?.label === "canEdit",
+          )!;
+          assert.equal(policy.status, "changed");
+          assert.ok(policy.current!.summary.includes("viewer"));
+          assert.deepEqual(
+            workspace.state.specs.specs[0],
+            observationWitness.accepted,
+          );
+        }
+        return send(200, { changed: true });
+      }
       if (url.pathname === prefix + "/restart") {
         assert.ok(
           (configuration.reconnectValidation ||
-            configuration.navigationValidation) &&
+            configuration.navigationValidation ||
+            configuration.observationValidation) &&
             !configuration.runIndex,
         );
         assert.deepEqual(clientErrors, []);
-        if (configuration.navigationValidation) {
+        if (configuration.observationValidation) {
+          assert.ok(observationWitness);
+          const accepted = workspace.state.specs.specs[0];
+          assert.equal(
+            accepted.revision,
+            observationWitness.saved.revision + 1,
+          );
+          assert.deepEqual(accepted.content, observationWitness.saved.content);
+          assert.deepEqual(
+            accepted.baselineHistory![0].baseline,
+            observationWitness.saved.baseline,
+          );
+          assert.ok(
+            !accepted.baseline
+              .observations!.facts.find((fact) => fact.label === "canEdit")!
+              .summary.includes("viewer"),
+          );
+          observationWitness.accepted = structuredClone(accepted);
+          assert.equal(workspace.state.job, undefined);
+          assert.ok(
+            requests.some((entry) => entry.action === "source" && entry.ok),
+          );
+        } else if (configuration.navigationValidation) {
           assert.equal(workspace.state.job, undefined);
           assert.ok(workspace.state.navigation);
           assert.notEqual(workspace.state.navigation.view.selection, "system");
@@ -246,22 +376,28 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
           assert.equal(workspace.state.job?.phase, "approval");
           assert.ok(workspace.state.job?.approvals.length);
         }
-        const before = configuration.navigationValidation
-          ? {
-              at: new Date().toISOString(),
-              extensionHostPid: process.pid,
-              navigation: structuredClone(workspace.state.navigation!.view),
-              specs: structuredClone(workspace.state.specs),
-            }
-          : {
-              at: new Date().toISOString(),
-              extensionHostPid: process.pid,
-              job: structuredClone(workspace.state.job),
-              processes: await processWitness(),
-            };
+        const before =
+          configuration.navigationValidation ||
+          configuration.observationValidation
+            ? {
+                at: new Date().toISOString(),
+                extensionHostPid: process.pid,
+                navigation: structuredClone(workspace.state.navigation!.view),
+                specs: structuredClone(workspace.state.specs),
+              }
+            : {
+                at: new Date().toISOString(),
+                extensionHostPid: process.pid,
+                job: structuredClone(workspace.state.job),
+                processes: await processWitness(),
+              };
         await writeFile(
           partialPath,
-          JSON.stringify({ before, requests, jobs, clientErrors }, null, 2),
+          JSON.stringify(
+            { before, requests, jobs, clientErrors, observationWitness },
+            null,
+            2,
+          ),
         );
         send(200, { restarting: true });
         finish();
@@ -285,6 +421,16 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
             await new Promise((done) => setTimeout(done, 800));
           }
           entry.ok = true;
+          if (
+            configuration.observationValidation &&
+            payload.action === "source"
+          ) {
+            const editor = vscode.window.activeTextEditor!;
+            entry.sourceSelection = {
+              path: vscode.workspace.asRelativePath(editor.document.uri),
+              text: editor.document.getText(editor.selection),
+            };
+          }
           if (["implement", "applyJob", "undoJob"].includes(payload.action)) {
             entry.job = JSON.parse(JSON.stringify(workspace.state.job));
             entry.specs = workspace.state.specs;
@@ -315,7 +461,12 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
               reconnection,
               "Reconnect the live approval before finishing.",
             );
-          if (configuration.navigationValidation) {
+          if (configuration.observationValidation) {
+            assert.ok(navigationRestoration && observationWitness?.restored);
+            assert.equal(workspace.state.job, undefined);
+            assert.deepEqual(jobs, []);
+            assert.ok(requests.every((entry) => entry.ok === true));
+          } else if (configuration.navigationValidation) {
             assert.ok(navigationRestoration);
             assert.equal(workspace.state.job, undefined);
             assert.deepEqual(
@@ -329,16 +480,18 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
               "undone",
               "Complete implementation, review, apply and undo in the UI first.",
             );
-          for (const action of configuration.navigationValidation
-            ? ["saveFeature", "saveSpec", "saveNavigation"]
-            : [
-                "checkConnection",
-                "saveExecution",
-                "implement",
-                "reviewJob",
-                "applyJob",
-                "undoJob",
-              ])
+          for (const action of configuration.observationValidation
+            ? ["saveSpec", "source", "acceptBaseline"]
+            : configuration.navigationValidation
+              ? ["saveFeature", "saveSpec", "saveNavigation"]
+              : [
+                  "checkConnection",
+                  "saveExecution",
+                  "implement",
+                  "reviewJob",
+                  "applyJob",
+                  "undoJob",
+                ])
             assert.ok(
               requests.some((entry) => entry.action === action && entry.ok),
               `Missing successful UI action: ${action}`,
@@ -376,13 +529,16 @@ const restart=document.getElementById('restart');if(restart)restart.onclick=asyn
               "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
             provider: configuration.realProvider
               ? "Installed real Codex CLI; review recorded by validation agent, not a usability participant."
-              : configuration.navigationValidation
-                ? "No provider invoked; navigation-only validation."
-                : "Explicit deterministic stdio fixture; no external inference.",
+              : configuration.observationValidation
+                ? "No provider invoked; stored/current observation comparison and baseline restoration validation."
+                : configuration.navigationValidation
+                  ? "No provider invoked; navigation-only validation."
+                  : "Explicit deterministic stdio fixture; no external inference.",
             requests,
             jobs,
             reconnection,
             navigationRestoration,
+            observationWitness,
             clientErrors,
             finalSpecs: workspace.state.specs,
             originalRestored: true,
