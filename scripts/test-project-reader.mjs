@@ -55,6 +55,7 @@ await runTests({
   extensionDevelopmentPath: driver,
   extensionTestsPath: resolve("extension/out/project-reader-integration.cjs"),
   extensionTestsEnv: {
+    PUREOBOM_REVIEW_SCREENSHOTS: process.env.PUREOBOM_REVIEW_SCREENSHOTS || "0",
     PUREOBOM_PROJECT_READER_REPORT: resolve(base, "installed-live.json"),
     PUREOBOM_TEST_NODE: resolve(base, "node-v22.21.1-win-x64/node.exe"),
   },

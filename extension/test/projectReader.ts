@@ -165,6 +165,10 @@ export async function run() {
       await request("explainChanges", { reviewId: job.reviewId });
     const changes = workspace.state.changeStory!;
     assert.equal(changes.changes.length, job.files.length);
+    if (process.env.PUREOBOM_REVIEW_SCREENSHOTS === "1") {
+      console.log("REVIEW_SCREENSHOT_READY");
+      await delay(45000);
+    }
     await assert.rejects(
       request("applyJob", { reviewId: job.reviewId }),
       /검토/,
@@ -216,6 +220,10 @@ export async function run() {
         2,
       ),
     );
+    if (process.env.PUREOBOM_REVIEW_SCREENSHOTS === "1") {
+      console.log("APPLIED_SCREENSHOT_READY");
+      await delay(30000);
+    }
     await request("undoJob", { reviewId: job.reviewId });
     assert.equal(await readFile(resolve(root, "index.js"), "utf8"), before);
     await writeFile(

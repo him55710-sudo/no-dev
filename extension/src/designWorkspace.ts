@@ -1261,7 +1261,7 @@ export class DesignWorkspace implements vscode.Disposable {
       if (cached?.reviewId === payload.reviewId) {
         try {
           const checked = {
-            ...validateChangeStory({changes:cached.changes}, files),
+            ...validateChangeStory({ changes: cached.changes }, files),
             reviewId: payload.reviewId,
           };
           this.state.changeStory = checked;
