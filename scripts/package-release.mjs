@@ -78,7 +78,7 @@ web.file(
 );
 web.file(
   "README.txt",
-  `Pureobom ${version}\n\nRequires Node.js 24+. No npm install is needed for this prebuilt demo.\nWindows: double-click START.cmd.\nmacOS/Linux: node scripts/serve.mjs\nOpen http://127.0.0.1:4173/?demo=shipping&lang=en\nKorean: http://127.0.0.1:4173/?demo=shipping&lang=ko\nKeep the server running. Ctrl+C stops it.\nAll analysis runs locally; demo mode does not read or save your workspace.\nThis is a preview with limited JS/TS syntax and edits, not a full application test.\n`,
+  `Pureobom ${version}\n\nRequires Node.js 24+. No npm install is needed for this prebuilt demo.\nWindows: double-click START.cmd.\nmacOS/Linux: node scripts/serve.mjs\nSystem design walkthrough: http://127.0.0.1:4173/workspace-demo.html\nThe walkthrough contains recorded screenshots and evidence, including a separate deliberate failure; it does not run a model or change code. Native VS Code Webview interaction remains unverified.\nEarlier single-file interactive preview: http://127.0.0.1:4173/?demo=shipping&lang=en\nKorean: http://127.0.0.1:4173/?demo=shipping&lang=ko\nKeep the server running. Ctrl+C stops it.\nAll analysis runs locally; demo mode does not read or save your workspace.\nThe single-file preview has limited JS/TS syntax and edits, not a full application test.\n`,
 );
 await writeFile(`${output}-demo.zip`, await web.generateAsync(options));
 const artifacts = [

@@ -1,5 +1,7 @@
 # 시스템 설계 워크스페이스 시작하기
 
+[실제 성공·실패 기록 따라 보기](SYSTEM_WORKSPACE_DEMO.md) · [지원 환경과 범위](SYSTEM_WORKSPACE_SUPPORT.md)
+
 이 안내는 `codex/system-design-workspace` 브랜치의 0.7 개발판을 대상으로 한다. 공개 0.6.0 VSIX와 hosted browser demo에는 시스템 설계 화면이 없다. 전체 요구사항과 검증 여부는 [기획](SYSTEM_WORKSPACE_PLAN.md)과 [상태 표](SYSTEM_WORKSPACE_STATUS.md)에 별도로 유지한다.
 
 ## 설치

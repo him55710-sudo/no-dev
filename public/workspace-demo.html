@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#244dc1" />
+    <title>설계를 바꾸면 구현이 바뀝니다 · 풀어봄</title>
+    <meta
+      name="description"
+      content="실제 Next 앱의 팀 권한을 바꾼 기록. 구조 선택, 설계 수정, 7개 파일 구현, 검사, 반영과 되돌리기를 확인하세요."
+    />
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./workspace-demo.css" />
+  </head>
+  <body>
+    <a class="skip" href="#story">실행 기록으로 건너뛰기</a>
+    <header class="masthead wrap">
+      <a class="brand" href="./workspace-demo.html"
+        ><span aria-hidden="true">P</span> 풀어봄</a
+      >
+      <nav aria-label="안내">
+        <a href="#failure">실패하면 어떻게 되나요?</a
+        ><a
+          href="https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/SYSTEM_WORKSPACE_START.md"
+          >설치와 첫 작업 ↗</a
+        >
+      </nav>
+    </header>
+    <main>
+      <section class="hero wrap" aria-labelledby="title">
+        <p class="eyebrow">시스템 설계 워크스페이스 · 0.7 개발판</p>
+        <h1 id="title">설계 한 곳을 바꾸고,<br />관련 코드를 함께 고칩니다.</h1>
+        <p class="lead">
+          팀 명단은 모두 볼 수 있지만, 초대와 제거는 소유자만 할 수 있게.<br
+            class="wide"
+          />
+          기존 Next 앱에서 이 요구사항을 구현하고 검토한 실제 기록입니다.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#story"
+            >설계부터 복원까지 살펴보기 <span aria-hidden="true">↓</span></a
+          ><a
+            href="https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/INSTALLED_NEXT_FLOW.md"
+            >전체 실행 근거 ↗</a
+          >
+        </div>
+        <p class="context">
+          2026년 10월 20일의 검증 기록을 읽는 페이지입니다. 아래 화면은 당시
+          캡처이며, 검토와 조작은 검증 에이전트가 수행했습니다.
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>한 설계에서 변경한 파일</dt>
+            <dd>7<span>개</span></dd>
+          </div>
+          <div>
+            <dt>독립 인수 검사</dt>
+            <dd>9<span>/ 9 통과</span></dd>
+          </div>
+          <div>
+            <dt>반영 후 새 파일까지 분석</dt>
+            <dd>52 → 55<span>개</span></dd>
+          </div>
+        </dl>
+      </section>
+      <div class="wrap story" id="story">
+        <aside class="index">
+          <p>한 번의 변경</p>
+          <nav aria-label="작업 단계">
+            <a href="#scope">01 · 구조와 범위</a
+            ><a href="#design">02 · 원하는 동작</a
+            ><a href="#implementation">03 · 구현과 검사</a
+            ><a href="#apply">04 · 반영과 복원</a
+            ><a href="#failure">05 · 실패의 처리</a
+            ><a href="#limits">확인 범위</a>
+          </nav>
+        </aside>
+        <div class="chapters">
+          <section class="chapter" id="scope" aria-labelledby="scope-title">
+            <p class="step">01 / 구조와 범위</p>
+            <h2 id="scope-title">팀 관리의 여러 구현을 한 기능으로 봅니다.</h2>
+            <p>
+              이 실행에서는 사용자가 <strong>팀 구성원 관리 권한</strong>이라는
+              업무 기능에 네 곳의 실제 코드를 연결했습니다. 기능 이름과 범위는
+              사용자 정의이며, 폴더 이름만으로 의미를 확정하지 않습니다.
+            </p>
+            <ol class="scope-grid">
+              <li>
+                <strong>대시보드</strong><span>명단과 초대·제거 화면</span>
+              </li>
+              <li>
+                <strong>서버 액션</strong><span>요청을 검사하고 처리</span>
+              </li>
+              <li>
+                <strong>팀 조회</strong><span>현재 팀과 구성원 역할</span>
+              </li>
+              <li><strong>팀 API</strong><span>화면에 명단을 전달</span></li>
+            </ol>
+            <details>
+              <summary>연결한 실제 파일 보기</summary>
+              <ul class="paths">
+                <li>app/(dashboard)/dashboard/page.tsx</li>
+                <li>app/(login)/actions.ts</li>
+                <li>lib/db/queries.ts</li>
+                <li>app/api/team/route.ts</li>
+              </ul>
+            </details>
+          </section>
+          <section class="chapter" id="design" aria-labelledby="design-title">
+            <p class="step">02 / 원하는 동작</p>
+            <h2 id="design-title">
+              기존 관측을 남기고, 구현할 목표를 저장합니다.
+            </h2>
+            <blockquote>
+              현재 팀의 owner만 구성원 초대와 제거를 할 수 있다. 일반 member는
+              팀 정보와 명단을 조회만 할 수 있다.
+            </blockquote>
+            <p>
+              화면과 직접 서버 요청에 같은 팀별 권한을 적용하고, 다른 팀의
+              권한을 가져다 쓰지 못하도록 정책과 완료 기준을 함께 작성했습니다.
+            </p>
+            <div class="choice">
+              <strong>설계만 저장</strong><span>명세를 확정합니다.</span
+              ><strong>저장하고 구현</strong
+              ><span
+                >선택한 연결과 검사 설정으로 별도 Git 작업 복사본에서 구현을
+                시작합니다.</span
+              >
+            </div>
+            <p class="note">
+              자동 초안 저장은 구현을 시작하지 않습니다. 모델 연결 전에도 구조와
+              코드 근거를 탐색할 수 있습니다.
+            </p>
+          </section>
+          <section
+            class="chapter"
+            id="implementation"
+            aria-labelledby="implementation-title"
+          >
+            <p class="step">03 / 구현과 검사</p>
+            <h2 id="implementation-title">
+              실제 Codex가 7개 파일을 바꿨습니다.
+            </h2>
+            <p>
+              대시보드, 서버 액션, 팀 조회, 타입, 공통 권한 함수와 추가 검사 두
+              파일이 바뀌었습니다. 원래 연결한 네 파일을 출발점으로 삼고, 새
+              파일과 범위 밖 변경도 검토했습니다.
+            </p>
+            <div class="checks">
+              <div><strong>9 / 9</strong><span>독립 인수 검사</span></div>
+              <div><strong>21 / 21</strong><span>추가 권한 회귀</span></div>
+              <div>
+                <strong>18 / 18</strong><span>기존 계정 코드 회귀</span>
+              </div>
+              <div><strong>통과</strong><span>타입 검사</span></div>
+            </div>
+            <p>
+              제품이 직접 실행한 명령의 종료 상태와 로그를 확인했습니다. 추가
+              검사는 후보 파일의 해시가 같은 독립 복제본에서 실행했습니다.
+              모델이 말한 “완료”를 검사 결과로 쓰지 않습니다.
+            </p>
+            <details>
+              <summary>바뀐 파일과 검토한 범위</summary>
+              <ul class="paths">
+                <li>app/(dashboard)/dashboard/page.tsx</li>
+                <li>app/(login)/actions.ts</li>
+                <li>lib/db/queries.ts</li>
+                <li>lib/db/schema.ts</li>
+                <li>lib/auth/team-permissions.ts <span>추가</span></li>
+                <li>tests/team-permissions.test.tsx <span>추가</span></li>
+                <li>tests/vitest.config.mts <span>추가</span></li>
+              </ul>
+              <p>
+                보호한 인수 검사·설정·package.json·잠금 파일은 바뀌지
+                않았습니다. 범위 밖 네 파일과 추가 검사 두 파일을 따로
+                확인했습니다.
+              </p>
+            </details>
+            <details>
+              <summary>앱에서 확인한 member와 owner 화면</summary>
+              <p>
+                별도 PostgreSQL 시험 데이터에서 실제 로그인과 역할별 제어를
+                확인했습니다. 직접 서버 요청 거절은 화면이 아니라 독립 인수
+                검사로 확인했습니다.
+              </p>
+              <figure>
+                <a href="./media/system-workspace/installed-next-member.jpg"
+                  ><img
+                    loading="lazy"
+                    src="./media/system-workspace/installed-next-member.jpg"
+                    width="1280"
+                    height="720"
+                    alt="실제 앱의 member 대시보드. 초대·제거 제어가 비활성화되어 있고 소유자 권한이 필요하다는 안내가 표시됨."
+                /></a>
+                <figcaption>
+                  member의 제한과 안내. 클릭하면 원본 크기로 볼 수 있습니다.
+                </figcaption>
+              </figure>
+              <figure>
+                <a href="./media/system-workspace/installed-next-owner.jpg"
+                  ><img
+                    loading="lazy"
+                    src="./media/system-workspace/installed-next-owner.jpg"
+                    width="1280"
+                    height="720"
+                    alt="실제 앱의 owner 대시보드에서 초대와 구성원 제거를 수행한 결과 화면."
+                /></a>
+                <figcaption>
+                  owner의 초대·제거 결과는 SQL 기록과 함께 대조했습니다.
+                </figcaption>
+              </figure>
+            </details>
+          </section>
+          <section class="chapter" id="apply" aria-labelledby="apply-title">
+            <p class="step">04 / 반영과 복원</p>
+            <h2 id="apply-title">
+              새 파일까지 다시 읽고, 원본으로 되돌렸습니다.
+            </h2>
+            <p>
+              변경 내용과 기준별 검토를 저장한 뒤 시험용 원본에 반영했습니다. 새
+              파일 세 개를 포함해 분석 대상이 <strong>52 → 55개</strong>로
+              늘었고, 각 분석 해시는 실제 후보 파일과 일치했습니다.
+            </p>
+            <figure class="main-shot">
+              <a href="./media/system-workspace/installed-next-applied.jpg"
+                ><img
+                  src="./media/system-workspace/installed-next-applied.jpg"
+                  width="1280"
+                  height="720"
+                  alt="풀어봄 시스템 설계 화면. 팀 구성원 관리 권한 기능이 선택되어 있고 55개 파일 연결, 원본 반영됨, 검사 2개 통과, 변경 파일 7개가 표시됨."
+              /></a>
+              <figcaption>
+                당시 설치 번들과 실제 확장 호스트의 반영 결과. 테스트용 브라우저
+                전송으로 연결한 화면입니다.
+              </figcaption>
+            </figure>
+            <details>
+              <summary>되돌린 뒤에도 설계 목표는 남습니다</summary>
+              <p>
+                이번 변경 되돌리기를 실행하자 분석 대상은
+                <strong>55 → 52개</strong>, 관측은 <strong>unchanged</strong>로
+                돌아왔습니다. 원본 파일·Git HEAD·index·상태를 복원하고 설계 v1과
+                목표를 유지했습니다.
+              </p>
+              <figure>
+                <a href="./media/system-workspace/installed-next-undone.jpg"
+                  ><img
+                    loading="lazy"
+                    src="./media/system-workspace/installed-next-undone.jpg"
+                    width="1280"
+                    height="720"
+                    alt="되돌리기 후 52개 파일로 복원된 풀어봄 화면. 팀 권한 설계 목표와 기록이 유지됨."
+                /></a>
+                <figcaption>
+                  원본 코드와 설계 목표는 별도로 보존됩니다.
+                </figcaption>
+              </figure>
+            </details>
+          </section>
+          <section
+            class="chapter failure"
+            id="failure"
+            aria-labelledby="failure-title"
+          >
+            <p class="step">05 / 별도 실패 재현</p>
+            <h2 id="failure-title">화면만 막았으면, 서버 검사가 잡아냅니다.</h2>
+            <p>
+              성공한 후보를 별도 복사본에 옮긴 뒤 서버 권한 검사 두 곳을
+              <strong>의도적으로</strong> 뺐습니다. 화면과 고정 인수 검사는
+              그대로 뒀습니다. 이 단계는 오류를 주입한 시험 프로그램이며, AI가
+              새로 만든 응답이 아닙니다.
+            </p>
+            <div class="failure-flow">
+              <div>
+                <strong>화면 제어 검사</strong
+                ><span>member 제한·owner 제어 통과</span>
+              </div>
+              <div>
+                <strong>직접 서버 요청 검사</strong
+                ><span>초대·제거 거절 2개 실패</span>
+              </div>
+              <div>
+                <strong>원본 반영</strong><span>실제 변경 관리자가 거절</span>
+              </div>
+            </div>
+            <blockquote class="error">
+              검사가 통과한 뒤 반영할 수 있습니다.
+            </blockquote>
+            <p>
+              같은 인수 검사에서 <strong>7개 통과·2개 실패</strong>가
+              나왔습니다. 타입 검사는 통과해도 반영은 허용되지 않았습니다.
+              누락한 서버 검사만 복구하자 <strong>9개 모두 통과</strong>했고,
+              원본 앱 파일과 Git 상태는 보존됐습니다.
+            </p>
+            <p>
+              <a
+                href="https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/evidence/system-workspace/2026-10-20/missing-server-guards.json"
+                >실제 실패·반영 거절·복구 검사 기록 ↗</a
+              >
+            </p>
+          </section>
+          <section
+            class="chapter limits"
+            id="limits"
+            aria-labelledby="limits-title"
+          >
+            <p class="step">확인 범위</p>
+            <h2 id="limits-title">무엇을 확인했는지 함께 보여줍니다.</h2>
+            <ul>
+              <li>
+                성공 사례는 실제 모델·설치 번들·실제 확장 호스트를 사용했습니다.
+                네이티브 VS Code Webview의 전체 포인터 전달은 별도 미검증입니다.
+              </li>
+              <li>
+                인증·계정·결제 코드 회귀에는 시험용 요청 context와 Stripe 응답이
+                포함됩니다. 운영 인증·실제 결제 전체 및 설치 전체 감사는
+                미확인으로 남겼습니다.
+              </li>
+              <li>
+                미확인 유지 조건 두 개를 기록하고 이를 인지하는 선택을 한 시험용
+                원본에 반영했습니다. 실제 고객의 승인이나 사용성·속도 개선을
+                입증하지 않습니다.
+              </li>
+              <li>
+                첫 지원 범위는 데스크톱 VS Code·로컬 Git·TypeScript/React·검증한
+                Next 구성입니다. 기본 탐색은 로컬이며, Codex 구현을 선택하면
+                설계와 코드가 모델에 전달됩니다.
+              </li>
+            </ul>
+            <div class="actions">
+              <a
+                class="button primary"
+                href="https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/SYSTEM_WORKSPACE_START.md"
+                >설치와 첫 설계 변경 ↗</a
+              ><a href="./media/system-workspace/evidence.json"
+                >이 페이지의 근거·해시 JSON</a
+              >
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="wrap">
+      <p>풀어봄 · MIT 오픈소스 · 개발판의 검증 기록</p>
+      <nav aria-label="더 보기">
+        <a
+          href="https://github.com/him55710-sudo/no-dev/blob/codex/system-design-workspace/docs/SYSTEM_WORKSPACE_STATUS.md"
+          >현재 구현과 남은 검증</a
+        ><a href="./demo.html?lang=ko">이전 단일 파일 영상</a
+        ><a href="./?demo=shipping&amp;lang=ko">이전 배송 규칙 체험</a>
+      </nav>
+    </footer>
+  </body>
+</html>

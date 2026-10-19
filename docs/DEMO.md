@@ -1,5 +1,9 @@
 # Share the actual workflow
 
+The current **0.7 system design walkthrough** follows an actual external-app permission change, its checks, apply and undo, with a separate deliberate missing-server-guard failure. [Open the guide](SYSTEM_WORKSPACE_DEMO.md) for the local page and source evidence. It is included in source/demo archives; hosted deployment is separate.
+
+## Earlier single-file video
+
 [Watch with English captions](https://him55710-sudo.github.io/pureobom/demo.html) · [한국어 자막](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko) · [MP4](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4)
 
 The 30-second video is an edited sequence of real browser screenshots from the public **0.5.1** build, captured on 2026-10-16. It is not continuous screen recording, a completion-time benchmark, a customer recording or an animation of functionality that has not been implemented. Pauses allow viewers to read. There is no audio; both WebVTT caption tracks and a full text walkthrough are available.

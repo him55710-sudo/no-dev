@@ -4,6 +4,8 @@
 
 ## 시스템 설계로 시작하기
 
+**[실제 설계 변경 따라 보기](docs/SYSTEM_WORKSPACE_DEMO.md)** — 외부 앱의 7개 파일 변경·검사·반영·복원과, 서버 권한 검사가 빠지면 반영이 차단되는 별도 실패 재현을 확인하세요. `pnpm build`와 `node scripts/serve.mjs` 실행 후 `/workspace-demo.html`에서 볼 수 있습니다. 소스·데모 ZIP에 포함하며 hosted 배포는 별도입니다. [지원 환경](docs/SYSTEM_WORKSPACE_SUPPORT.md).
+
 이 브랜치에서 개발판 VSIX를 빌드해 설치하고, 로컬 TypeScript·React Git 프로젝트에서 **풀어봄: 시스템 설계 워크스페이스 열기**를 실행하세요. 구조를 선택하거나 여러 파일을 하나의 업무 기능으로 연결한 뒤, 코드 근거와 현재 구현을 읽고 원하는 동작·유지 조건·완료 기준을 작성합니다.
 
 [저장한 구현과 현재 코드 비교](docs/WORKSPACE_OBSERVATIONS.md)에서 바뀐 조건·선언·호출 위치를 확인할 수 있습니다. 코드가 바뀌어도 설계 목표를 덮어쓰지 않으며, 실제 목표 충족은 별도 검사와 검토로 확인합니다.

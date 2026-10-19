@@ -12,13 +12,15 @@ Explore an existing codebase, edit the behavior you want, and connect that desig
 
 Structure exploration works without a model. Implementation requires an explicitly selected Codex connection and project checks. The current system design interface is in Korean; the earlier reading interface supports Korean and English.
 
-[한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+[한국어](README.ko.md) · [Follow a real design change](docs/SYSTEM_WORKSPACE_DEMO.md) · [Install the development workspace](docs/SYSTEM_WORKSPACE_START.md) · [Supported environments](docs/SYSTEM_WORKSPACE_SUPPORT.md) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
 [![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
 
 </div>
 
 ## Start with the system design workspace
+
+[Follow the recorded workflow](docs/SYSTEM_WORKSPACE_DEMO.md): inspect the actual seven-file permission change, checks, apply and undo, plus a separate deliberate server-guard failure that prevents applying. Run `pnpm build` and `node scripts/serve.mjs`, then open `/workspace-demo.html`. The walkthrough and original screenshots are included in the source and demo archives; hosted deployment is separate.
 
 Build the development VSIX from this branch and run **풀어봄: 시스템 설계 워크스페이스 열기** (`pureobom.openWorkspace`) in a local TypeScript/React Git project. Select a structure or create a business feature linked to several files. Read its code evidence, then describe the desired behavior, invariants and acceptance criteria.
 

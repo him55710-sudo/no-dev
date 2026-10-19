@@ -35,6 +35,11 @@ for (const file of [
   "scripts/test-live-continuation.mjs",
   "scripts/recover-live-continuation.mjs",
   "docs/LIVE_CONTINUATION.md",
+  "docs/SYSTEM_WORKSPACE_DEMO.md",
+  "docs/SYSTEM_WORKSPACE_SUPPORT.md",
+  "scripts/build-system-demo.mjs",
+  "scripts/test-permission-failure.mjs",
+  "validation/next-saas-starter/failure-peer.mjs",
   "validation/next-saas-starter/README.md",
   "validation/next-saas-starter/build.mjs",
   "validation/next-saas-starter/build-stripe-preload.cjs",
@@ -79,6 +84,21 @@ assert.equal(
   version,
 );
 const demo = await JSZip.loadAsync(await readFile(`${prefix}-demo.zip`));
+for (const file of [
+  "workspace-demo.html",
+  "workspace-demo.css",
+  "media/system-workspace/evidence.json",
+  "media/system-workspace/installed-next-applied.jpg",
+  "media/system-workspace/installed-next-undone.jpg",
+  "media/system-workspace/installed-next-member.jpg",
+  "media/system-workspace/installed-next-owner.jpg",
+]) {
+  assert.deepEqual(
+    await demo.file(`dist/${file}`)?.async("nodebuffer"),
+    await readFile(`public/${file}`),
+    `System walkthrough asset: ${file}`,
+  );
+}
 const html = await demo.file("dist/index.html").async("string");
 assert.ok(
   !/(?:src|href)="\/(?!\/)/.test(html),
