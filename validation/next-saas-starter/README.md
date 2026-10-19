@@ -70,3 +70,20 @@ Node 24, pnpm 11.25.0, Git을 사용한다. `<external>`은 다른 프로젝트�
 - Stripe를 호출하거나 실계정·실데이터를 사용하지 않는다. 전체 Next production build, 결제, 운영 인증, 네트워크 경계는 이 검사의 통과 범위에 포함하지 않는다.
 - `test`와 `typecheck`를 선택한다. 제품의 다른 검사 실패·미실행 상태를 자동 통과시키지 않는다. 테스트 구성·기대값 해시를 고정하고 구현 뒤 동일함을 확인한다.
 - 작업 복사본은 실행 샌드박스와 다르다. 분리 Git 작업 공간의 생성·검토·반영 경로를 시험하는 것이며, 운영 권한 보안 감사로 주장하지 않는다.
+
+## 실제 이어하기와 로컬 가격 fixture를 사용한 전체 빌드
+
+[실제 Codex 이어하기 기록](../../docs/LIVE_CONTINUATION.md)은 시간 초과로 남은 일곱 파일을 새 작업에서 이어 구현하고 고정 9개·추가 33개·기존 기능 18개와 타입 검사, 같은 작업의 반영/복원을 확인한다. 최초 검증 드라이버 실패와 수정 후 복구를 분리해 보존한다. 이 후보의 브라우저 조작은 미확인이다.
+
+`build.mjs`는 OS 임시 폴더 아래 `pureobom-production-<식별자>/project`라는 독립 Git 복제본만 받는다. 필요한 의존성을 이 복제본에서 설치하고, 진행 중인 구현의 원본이나 작업 복사본과 분리한다. Git clone 뒤에는 검토한 후보의 추가·수정 파일을 복사하고 각 파일의 SHA-256을 검토 기록과 비교해야 한다. clone만으로 미커밋 후보 변경이 복사되지는 않는다. 변경 전후 결과를 비교할 때는 원본과 후보를 구분한 보고서 이름을 사용한다.
+
+```powershell
+$env:PUREOBOM_TEST_POSTGRES_BIN='C:\path\to\pgsql\bin'
+node validation/next-saas-starter/build.mjs '<임시 pureobom-production-식별자/project>' candidate-controlled-build
+node validation/next-saas-starter/serve.mjs '<같은 빌드 복제본>' --production
+# 실제 브라우저를 함께 조작하려면 --interactive를 추가한다.
+```
+
+빌드는 실제 PostgreSQL과 Next production 컴파일러·페이지 생성을 사용한다. `/pricing`에 필요한 실제 Stripe SDK의 GET 가격·상품 응답만 로컬 HTTP fixture로 제공하고, 예상하지 않은 Stripe 쓰기는 전송 전에 거절한다. 시험용 값만 사용하며 실제 Stripe 연결·결제·운영 인증은 검증하지 않는다. 일반 글꼴 다운로드 등은 기존 Next 경로를 사용할 수 있어 전체 네트워크 격리로 설명하지 않는다. 보고서와 로그는 복제본 상위 폴더에 저장된다. 공개할 때는 임시 Next preview 토큰을 제외한다.
+
+`serve.mjs --production`은 기존 `.next/BUILD_ID`를 읽고 `next start`를 실행한다. 그 ID를 빌드 보고서와 비교해 같은 결과물임을 확인한다. HTTP 시작 검사는 실제 member JWT로 팀 API를 호출한다. `--interactive` SQL 스냅샷만으로 브라우저 클릭·화면 표시까지 확인했다고 주장하지 않는다.

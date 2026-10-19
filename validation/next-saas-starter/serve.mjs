@@ -11,6 +11,8 @@ import { createFixtureDatabase } from './database.mjs';
 const source = resolve(process.argv[2] ?? '');
 assert.ok(process.argv[2], 'Pass the prepared external source directory.');
 const interactive = process.argv.includes('--interactive');
+const production = process.argv.includes('--production');
+const buildId = production ? (await readFile(resolve(source, '.next/BUILD_ID'), 'utf8')).trim() : undefined;
 const snapshots = [];
 let stopWaiting;
 const fromSource = createRequire(resolve(source, 'package.json'));
@@ -28,7 +30,7 @@ await new Promise(done => probe.listen(0, '127.0.0.1', done));
 const port = probe.address().port;
 await new Promise(done => probe.close(done));
 const secret = 'pureobom-local-http-fixture-not-a-production-secret';
-const child = spawn(process.execPath, [fromSource.resolve('next/dist/bin/next'), 'dev', '--hostname', '127.0.0.1', '--port', String(port)], {
+const child = spawn(process.execPath, [fromSource.resolve('next/dist/bin/next'), production ? 'start' : 'dev', '--hostname', '127.0.0.1', '--port', String(port)], {
   cwd: source, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'],
   env: { ...process.env, POSTGRES_URL: sql.connectionString, AUTH_SECRET: secret, STRIPE_SECRET_KEY: 'sk_test_pureobom_fixture_no_payment_requests', NEXT_TELEMETRY_DISABLED: '1' },
 });
@@ -59,13 +61,13 @@ try {
       const token = await new SignJWT({ user: { id: 2 }, expires: new Date(Date.now() + 60000).toISOString() }).setProtectedHeader({ alg: 'HS256' }).setExpirationTime('1m').sign(new TextEncoder().encode(secret));
       const response = await fetch(`http://127.0.0.1:${port}/api/team`, { headers: { cookie: `session=${token}` }, signal: AbortSignal.timeout(30000) });
       if (response.ok) { result = { status: response.status, body: await response.json() }; break; }
-    } catch { /* Allow the actual dev server to become ready. */ }
+    } catch { /* Allow the actual Next server to become ready. */ }
     await new Promise(done => setTimeout(done, 1000));
   }
   assert.equal(result?.status, 200, 'Actual Next HTTP route did not become ready');
   assert.equal(result.body.id, 1);
   assert.deepEqual(result.body.teamMembers.map(member => member.userId).sort(), [1, 2]);
-  console.log(JSON.stringify({ checkedAt: new Date().toISOString(), kind: 'actual-next-dev-http', url: `http://127.0.0.1:${port}`, teamStatus: result.status, teamId: result.body.id, members: result.body.teamMembers.map(member => ({ userId: member.userId, role: member.role })), note: 'Synthetic SQL data and JWT; real Next HTTP cookies, middleware, query and serialization. No payment call or production build.' }));
+  console.log(JSON.stringify({ checkedAt: new Date().toISOString(), kind: production ? 'actual-next-production-http' : 'actual-next-dev-http', buildId, url: `http://127.0.0.1:${port}`, teamStatus: result.status, teamId: result.body.id, members: result.body.teamMembers.map(member => ({ userId: member.userId, role: member.role })), note: 'Synthetic SQL data and JWT; real Next HTTP cookies, middleware, query and serialization. Build evidence is separate; no payment call.' }));
   if (interactive) {
     const snapshot = async () => {
       const value = {
@@ -103,11 +105,12 @@ try {
       await writeFile(reportPath, JSON.stringify({
         checkedAt: new Date().toISOString(),
         source,
-        kind: 'actual-next-dev-browser-fixture',
+        kind: production ? 'actual-next-production-browser-fixture' : 'actual-next-dev-browser-fixture',
+        buildId,
         database: sql.description,
         teamProbe: { status: result.status, teamId: result.body.id },
         snapshots,
-        scope: 'SQL snapshots and HTTP startup probe only. Browser UI observations must be recorded separately. Synthetic accounts/database; production build and payments are not verified.',
+        scope: 'SQL snapshots and HTTP startup probe only. Browser UI observations and build provenance must be recorded separately. Synthetic accounts/database; payments and production credentials are not verified.',
       }, null, 2) + '\n');
       console.log(`BROWSER FIXTURE REPORT ${reportPath}`);
     } finally {

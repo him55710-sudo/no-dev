@@ -1,0 +1,44 @@
+$ next build
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 15.6.0-canary.59 (Turbopack)
+   - Experiments (use with caution):
+     ✓ ppr
+     ✓ rdcForNavigations (enabled by `experimental.ppr`)
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully in 4.7s
+   Running TypeScript ...
+
+   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+   The following mandatory changes were made to your tsconfig.json:
+
+   	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+
+   Collecting page data ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Error: Failed to collect configuration for /pricing
+    at ignore-listed frames {
+  [cause]: Error: Neither apiKey nor config.authenticator provided
+      at instantiateModule (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+      at __TURBOPACK__module__evaluation__ (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[root-of-the-server]__058cee2a._.js:1:319)
+      at instantiateModule (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:715:9)
+      at getOrInstantiateModuleFromParent (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:738:12)
+      at Context.esmImport [as i] (C:\Users\user\AppData\Local\Temp\pureobom-production-b18e6beac6\project\.next\server\chunks\ssr\[turbopack]_runtime.js:228:20)
+}
+
+> Build error occurred
+Error: Failed to collect page data for /pricing
+    at ignore-listed frames {
+  type: 'Error'
+}
+[ELIFECYCLE] Command failed with exit code 1.

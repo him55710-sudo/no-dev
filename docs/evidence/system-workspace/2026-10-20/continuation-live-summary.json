@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-19T20:09:58.065Z",
+  "status": "model continuation and same-job recovery verified; initial validation driver failed after apply",
+  "previousJob": "acc7e12c-ca3f-4f88-a486-c5b6c8ea9db2",
+  "resumedJob": "f7fe4327-8044-44bd-9ffa-0213c103aee4",
+  "previousPhase": "failed",
+  "artifact": {
+    "vsixSha256": "3361845dccb2c09c6dc004ba64c5b477bba345ce3dac8df9ba3d9867b82c85b4",
+    "hostSha256": "1fc847b9803cd0a6c2153035e1da0558bd89b49e197ad305af845c5f59f48ee5"
+  },
+  "seedFiles": 7,
+  "seedHashesPreserved": true,
+  "candidateFiles": [
+    "app/(dashboard)/dashboard/page.tsx",
+    "app/(login)/actions.ts",
+    "lib/auth/team-permissions.ts",
+    "lib/db/queries.ts",
+    "lib/db/schema.ts",
+    "tests/team-permissions.test.tsx",
+    "tests/vitest.config.mts"
+  ],
+  "changedSinceInterruption": [
+    "app/(dashboard)/dashboard/page.tsx",
+    "tests/team-permissions.test.tsx"
+  ],
+  "copyHashes": {
+    "app/(dashboard)/dashboard/page.tsx": "4468d31ccc3b9b41de8cfd31466234788db3f215fb8e93ad3ed132f265deef2e",
+    "app/(login)/actions.ts": "d1703279ea19b9ff9fa8f5f83fe54b870f995e05a6831c595398dd80e5e6f8a8",
+    "lib/auth/team-permissions.ts": "18b9597bdcce566e09dce6ee78e1ed05d1a2b14dc6291d55c2c0d849ffe1aa6e",
+    "lib/db/queries.ts": "a050a4b403b10bb9d84c1990848ce984a751a41849b72d7ac28d88d4cc5ff89f",
+    "lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "tests/team-permissions.test.tsx": "3cf67d0510613bd2953815b102c29b99aba7f904b129f2f0438d13f623716e99",
+    "tests/vitest.config.mts": "0292863412bf0f92d2455e78b0db4052b0fc88425872cc7e4c95c3656372f7ba"
+  },
+  "protected": {
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8"
+  },
+  "checks": [
+    {
+      "name": "test",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "exitCode": 0
+    }
+  ],
+  "extraTests": {
+    "passed": 33,
+    "skipped": 0,
+    "setupHookTimeoutMs": 120000,
+    "initialRun": "30s beforeAll timeout, 33 not executed; preserved separately"
+  },
+  "accountTests": {
+    "passed": 18,
+    "skipped": 0,
+    "scope": "Actual actions/bcrypt/JWT/native PostgreSQL; request context and Stripe remote responses use fixtures"
+  },
+  "productionBuild": {
+    "baseline": "HXnWfOH76pYk6UkgVi1Wi",
+    "candidate": "qUEeJF9isF-3Dq2JL1y4T",
+    "exitCode": 0,
+    "scope": "Unmodified app code and actual Next production compiler/prerenderer. Real disposable PostgreSQL. Only Stripe GET prices/products responses use a local fixture; no live payment integration or production deployment. Google font downloads may use the normal Next build path."
+  },
+  "productionHttp": {
+    "buildId": "qUEeJF9isF-3Dq2JL1y4T",
+    "status": 200,
+    "teamId": 1
+  },
+  "browser": {
+    "recordedAt": "2026-10-19T20:09:58.042Z",
+    "status": "unverified",
+    "attempts": [
+      {
+        "action": "create background tab at production sign-in URL",
+        "result": "Browser webview attachment timed out",
+        "count": 2
+      },
+      {
+        "action": "bind existing validation tab",
+        "result": "Browser security policy denied page observation authority; URL protocol policy did not grant access"
+      }
+    ],
+    "scope": "No browser login, invitation, removal, DOM verification or screenshot succeeded for this candidate. Existing older browser evidence is not reused as proof. No alternate browser or protocol workaround was attempted."
+  },
+  "analysis": {
+    "afterApply": 55,
+    "afterUndo": 52,
+    "appliedObservation": "changed",
+    "undoneObservation": "unchanged"
+  },
+  "originalFiles": 57,
+  "originalRestored": true,
+  "previousPartialPreserved": true,
+  "savedDesignPreserved": true,
+  "unverifiedCriteria": [
+    "acceptance:4",
+    "invariant:0",
+    "invariant:2"
+  ],
+  "reviewer": "Validation agent; not a human usability study",
+  "driverFailure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'reconnect'\n- 'changed'\n",
+  "recovery": "Same job restored from applied state, saved business features included in analysis, seven applied hashes verified, managed undo completed; no new model run."
+}
