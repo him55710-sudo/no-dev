@@ -1,0 +1,338 @@
+.beginner-workspace {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 28px 56px;
+  font-family: var(--vscode-font-family);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--vscode-foreground);
+  overflow-wrap: anywhere;
+}
+.beginner-workspace * {
+  box-sizing: border-box;
+}
+.beginner-workspace h1 {
+  font-size: clamp(23px, 3vw, 30px);
+  line-height: 1.45;
+  letter-spacing: -0.025em;
+  margin: 12px 0 18px;
+}
+.beginner-workspace h2 {
+  font-size: 21px;
+  line-height: 1.5;
+  margin: 8px 0 16px;
+}
+.beginner-workspace h3 {
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.beginner-workspace p {
+  margin: 8px 0 16px;
+}
+.beginner-workspace button,
+.beginner-workspace input,
+.beginner-workspace select,
+.beginner-workspace textarea {
+  font: inherit;
+}
+.beginner-workspace button {
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 9px;
+  white-space: normal;
+  line-height: 1.5;
+}
+.beginner-workspace button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.beginner-workspace :focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 4px;
+}
+.beginner-header,
+.beginner-context,
+.beginner-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.beginner-header {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+.beginner-brand {
+  gap: 10px;
+  font-size: 17px;
+}
+.beginner-brand > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+.beginner-workspace .beginner-link {
+  background: transparent;
+  border: 0;
+  color: var(--vscode-textLink-foreground);
+  padding: 4px 0;
+  font-size: 13px;
+}
+.beginner-context {
+  margin: 22px 0 32px;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  flex-wrap: wrap;
+}
+.beginner-kicker {
+  color: var(--vscode-textLink-foreground);
+  font-size: 12px;
+  font-weight: 600;
+}
+.beginner-summary {
+  font-size: 18px;
+  line-height: 1.95;
+  white-space: pre-wrap;
+}
+.beginner-caption {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+}
+.beginner-overview {
+  padding-bottom: 20px;
+  outline: none;
+}
+.beginner-details {
+  margin: 24px 0;
+  border-top: 1px solid var(--vscode-panel-border);
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+.beginner-workspace summary {
+  cursor: pointer;
+  padding: 15px 0;
+  font-weight: 600;
+}
+.beginner-workspace details details {
+  font-size: 13px;
+}
+.beginner-workspace details details summary {
+  color: var(--vscode-textLink-foreground);
+  padding: 8px 0;
+  font-weight: 400;
+}
+.beginner-steps {
+  list-style: none;
+  margin: 10px 0 22px;
+  padding: 0;
+  display: grid;
+  gap: 22px;
+}
+.beginner-steps > li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+}
+.beginner-steps > li > span {
+  display: grid;
+  place-items: center;
+  align-self: start;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 50%;
+  font-size: 12px;
+  color: var(--vscode-textLink-foreground);
+}
+.beginner-steps p {
+  margin-top: 0;
+}
+.beginner-change {
+  margin: 26px 0;
+  padding: 26px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 14px;
+  background: var(--vscode-sideBar-background);
+}
+.beginner-change label,
+.beginner-value-editor label {
+  display: block;
+  font-size: 13px;
+  margin: 10px 0;
+}
+.beginner-workspace textarea,
+.beginner-workspace input:not([type="checkbox"]),
+.beginner-workspace select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--vscode-input-border, var(--vscode-panel-border));
+  border-radius: 8px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+}
+.beginner-workspace textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.7;
+}
+.beginner-workspace .beginner-primary {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: 1px solid transparent;
+  padding: 11px 18px;
+}
+.beginner-workspace .beginner-primary:hover:not(:disabled) {
+  background: var(--vscode-button-hoverBackground);
+}
+.beginner-action-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.beginner-action-row small {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+}
+.beginner-before-after {
+  display: grid;
+  grid-template-columns: 1fr 20px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.beginner-before-after > div {
+  align-self: stretch;
+  background: var(--vscode-sideBar-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 9px;
+  padding: 14px 16px;
+}
+.beginner-before-after > span {
+  color: var(--vscode-descriptionForeground);
+  text-align: center;
+}
+.beginner-before-after small {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+.beginner-before-after p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+.beginner-change-row {
+  padding: 14px 0;
+}
+.beginner-change-row h3 {
+  font-size: 14px;
+}
+.beginner-note {
+  padding: 22px 0;
+  margin-top: 24px;
+  border-top: 1px solid var(--vscode-panel-border);
+  font-size: 13px;
+}
+.beginner-settings {
+  margin-top: 32px;
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+.beginner-settings button {
+  margin: 4px 8px 4px 0;
+}
+.beginner-message,
+.beginner-review {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid var(--vscode-focusBorder);
+  border-radius: 12px;
+}
+.beginner-message {
+  font-size: 13px;
+}
+.beginner-review > button {
+  margin-top: 18px;
+}
+.beginner-review ol,
+.beginner-review ul {
+  padding-left: 24px;
+}
+.beginner-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  margin-top: 16px;
+}
+.beginner-consent input {
+  flex: none;
+  margin-top: 7px;
+}
+.beginner-values {
+  display: grid;
+  gap: 8px;
+  padding: 8px 0;
+}
+.beginner-values button {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  background: var(--vscode-sideBar-background);
+  border: 1px solid var(--vscode-panel-border);
+  color: var(--vscode-foreground);
+}
+.beginner-values [aria-pressed="true"] {
+  border-color: var(--vscode-focusBorder);
+}
+.beginner-value-editor {
+  padding: 8px 0 22px;
+}
+.beginner-value-editor button {
+  margin-top: 12px;
+}
+.beginner-workspace pre {
+  white-space: pre-wrap;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 12px;
+  background: var(--vscode-sideBar-background);
+  border-radius: 8px;
+}
+.beginner-return {
+  display: block;
+  margin: 16px auto;
+  max-width: 1060px;
+}
+.beginner-workspace .scenario-lab {
+  font-size: 13px;
+}
+.beginner-workspace .scenario-lab h3 {
+  font-size: 17px;
+}
+@media (max-width: 480px) {
+  .beginner-workspace {
+    padding: 20px 18px 40px;
+  }
+  .beginner-change {
+    padding: 19px 16px;
+  }
+  .beginner-before-after {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .beginner-before-after > span {
+    transform: rotate(90deg);
+  }
+  .beginner-context {
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .beginner-summary {
+    font-size: 17px;
+  }
+}

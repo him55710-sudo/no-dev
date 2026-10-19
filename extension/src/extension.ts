@@ -39,15 +39,21 @@ export function activate(context: vscode.ExtensionContext) {
     else await controller.refresh();
   };
   const openPanel = async () => {
+    const sourceDocument = vscode.window.activeTextEditor?.document;
+    const readSelected = async () => {
+      if (sourceDocument && Controller.accepts(sourceDocument))
+        await controller.setDocument(sourceDocument);
+      else await refreshEditor();
+    };
     if (panel) {
-      panel.reveal(panel.viewColumn, true);
-      await refreshEditor();
+      panel.reveal(panel.viewColumn, false);
+      await readSelected();
       return;
     }
     panel = vscode.window.createWebviewPanel(
       "pureobom.reader",
-      "풀어봄 · 코드 설명",
-      { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
+      "풀어봄 · 쉬운 설명",
+      { viewColumn: vscode.ViewColumn.Active, preserveFocus: false },
       {
         enableScripts: true,
         retainContextWhenHidden: true,
@@ -127,6 +133,14 @@ export function activate(context: vscode.ExtensionContext) {
             result = await controller.assistant.preview(
               inputString(p.id, 100),
               r.contextId,
+            );
+            break;
+          case "localReviewSummary":
+            result = controller.assistant.reviewSummary(
+              inputString(p.id, 100),
+              r.contextId,
+              p.reviewed,
+              p.editCount,
             );
             break;
           case "localApply":
@@ -267,7 +281,7 @@ export function activate(context: vscode.ExtensionContext) {
       receiver.dispose();
       panel = undefined;
     });
-    await refreshEditor();
+    await readSelected();
   };
   const handle = (fn: () => Promise<unknown>) => async () => {
     try {

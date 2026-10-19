@@ -12,6 +12,7 @@ export type AssistantInput = {
   lang: Lang;
   editConstraint?: "whitespace-only";
   focus?: AssistantFocus;
+  presentation?: "beginner";
 };
 export type AssistantConstraintCheck = {
   kind: "whitespace-only";
@@ -141,6 +142,8 @@ export function validateAssistantInput(input: AssistantInput) {
     throw Error(
       "지원하는 언어와 작업을 선택하세요. / Select a supported language and task.",
     );
+  if (input.presentation !== undefined && input.presentation !== "beginner")
+    throw Error("Invalid explanation presentation");
   if (
     input.editConstraint !== undefined &&
     (input.editConstraint !== "whitespace-only" ||
@@ -239,7 +242,9 @@ export function assistantMessages(input: AssistantInput) {
         input.task === "explain"
           ? [
               "Explain current behavior only. Return edits:[], risks:[], checks:[]. Put factual uncertainty in the summary; do not generate a speculative bug list.",
-              "Use the summary to cover inputs, important conditions and their outcomes, including errors and the final/default result. For a small function, cover each path. For a larger file, say which parts the explanation covers rather than imply completeness.",
+              input.presentation === "beginner"
+                ? "Progressive explanation: summary is only one or two short, everyday-language sentences about the overall behavior and its scope. Put inputs, important conditions, outcomes, errors and final/default result in citation explanations, covering each path of a small function. Do not show source syntax, identifiers, file extensions or technical jargon in summary. Preserve consequential approval and failure conditions in the detailed explanations. Never imply a simulation is a real AI or production provider."
+                : "Use the summary to cover inputs, important conditions and their outcomes, including errors and the final/default result. For a small function, cover each path. For a larger file, say which parts the explanation covers rather than imply completeness.",
               "Use citations to explain the relevant guards, branches, returns, exceptions or declarations, in source order. Constants or introductory comments alone cannot explain a function's behavior. Include the actual decision/output code. Group related lines when needed to fit the citation limit.",
               "Distinguish input checks actually performed by the code from preconditions the caller must supply. Do not claim an unchecked input is validated. Explain relevant empty, boundary or invalid inputs only when derivable from the shown code; state when the outcome is unknown. Keep the explanation concise and avoid repeating code in prose.",
               ...(input.focus

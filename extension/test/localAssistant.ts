@@ -337,7 +337,7 @@ export async function localAssistantChecks(
     );
     await assert.rejects(
       () => c.assistant.apply(result.id, c.state.contextId, true),
-      /diff first/,
+      /proposed changes first/,
     );
     const preview = await c.assistant.preview(result.id, c.state.contextId);
     const after = await vscode.workspace.openTextDocument(
@@ -363,6 +363,52 @@ export async function localAssistantChecks(
       "local AI controlled fixture: actual Python document, source quote selection, native diff, explicit apply, two-range undo and no implicit save",
     );
 
+    const plainProposal = await c.assistant.generate(c.state.contextId, {
+      ...payload,
+      presentation: "beginner",
+    });
+    assert.throws(() =>
+      c.assistant.reviewSummary(
+        plainProposal.id,
+        c.state.contextId,
+        false,
+        plainProposal.edits.length,
+      ),
+    );
+    assert.throws(() =>
+      c.assistant.reviewSummary(plainProposal.id, c.state.contextId, true, 999),
+    );
+    await assert.rejects(() =>
+      c.assistant.apply(plainProposal.id, c.state.contextId, true),
+    );
+    assert.equal(
+      doc.getText(),
+      source,
+      "rejected review cannot change the document",
+    );
+    c.assistant.reviewSummary(
+      plainProposal.id,
+      c.state.contextId,
+      true,
+      plainProposal.edits.length,
+    );
+    await assert.rejects(() =>
+      c.assistant.apply(plainProposal.id, c.state.contextId, false),
+    );
+    await c.assistant.apply(plainProposal.id, c.state.contextId, true);
+    await ready();
+    assert.ok(doc.getText().includes("fee = 4000\nthreshold = 70000"));
+    assert.equal(
+      Buffer.from(await vscode.workspace.fs.readFile(uri)).toString(),
+      source,
+    );
+    await vscode.commands.executeCommand("undo");
+    await ready();
+    assert.equal(doc.getText(), source);
+    reports.push(
+      "beginner review: explicit Korean-summary review accepts only the current proposal and exact edit count, still requires acknowledgement, applies without native diff, preserves no implicit save and one-step undo",
+    );
+
     const staleContext = c.state.contextId;
     const stale = await c.assistant.generate(staleContext, payload);
     const editor = await vscode.window.showTextDocument(
@@ -374,6 +420,14 @@ export async function localAssistantChecks(
     );
     await ready();
     await assert.rejects(() => c.assistant.preview(stale.id, staleContext));
+    assert.throws(() =>
+      c.assistant.reviewSummary(
+        stale.id,
+        staleContext,
+        true,
+        stale.edits.length,
+      ),
+    );
     await vscode.commands.executeCommand("undo");
     await ready();
     mode = "hold";

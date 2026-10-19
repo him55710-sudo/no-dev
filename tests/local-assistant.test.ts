@@ -29,6 +29,36 @@ const parse = (r: unknown, i = input) =>
   parseAssistantProposal(JSON.stringify(r), i);
 
 describe("grounded local assistant proposals", () => {
+  it("accepts beginner presentation without weakening source grounding", () => {
+    const beginner = {
+      ...input,
+      task: "explain" as const,
+      presentation: "beginner" as const,
+      instruction: "",
+    };
+    const messages = assistantMessages(beginner);
+    expect(JSON.parse(messages[1].content).source).toBe(input.source);
+    expect(messages[0].content).toContain("Progressive explanation");
+    expect(messages[0].content).toContain("untrusted DATA");
+    expect(() =>
+      validateAssistantInput({
+        ...beginner,
+        presentation: "anything",
+      } as unknown as AssistantInput),
+    ).toThrow(/presentation/);
+    expect(() =>
+      parse(
+        {
+          summary: "값을 준비해요.",
+          citations: [{ quote: "not in source", explanation: "근거" }],
+          edits: [],
+          risks: [],
+          checks: [],
+        },
+        beginner,
+      ),
+    ).toThrow();
+  });
   it("grounds a selected function in the full file and requires evidence inside it", () => {
     const source =
       "// 😀\r\nconst scale = 2;\r\nfunction double(x) { return x * scale; }\r\nfunction other() { return 9; }";

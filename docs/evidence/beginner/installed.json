@@ -1,0 +1,10 @@
+{
+  "package": "pureobom-0.7.0-beginner.vsix",
+  "sha256": "ce49825b8e55ede0184713bcfdd892749a9009b1a905c73f2656d12290085d34",
+  "installedBuildMatches": {
+    "media/view.js": true,
+    "media/view.css": true,
+    "out/extension.cjs": true,
+    "out/worker.cjs": true
+  }
+}

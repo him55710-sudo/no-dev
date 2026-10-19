@@ -127,6 +127,7 @@ export class LocalAssistantController implements vscode.Disposable {
       instruction: inputString(payload.instruction, 2000),
       task: payload.task as AssistantInput["task"],
       lang: payload.lang as AssistantInput["lang"],
+      presentation: payload.presentation as AssistantInput["presentation"],
       editConstraint:
         payload.editConstraint as AssistantInput["editConstraint"],
       ...(payload.focusFunctionId !== undefined
@@ -307,6 +308,26 @@ export class LocalAssistantController implements vscode.Disposable {
     this.checked(id, context).reviewed = true;
     return { before: before.toString(), after: after.toString() };
   }
+  reviewSummary(
+    id: string,
+    context: string | undefined,
+    reviewed: unknown,
+    editCount: unknown,
+  ) {
+    const p = this.checked(id, context);
+    if (
+      reviewed !== true ||
+      !p.result.edits.length ||
+      editCount !== p.result.edits.length
+    )
+      throw Error(
+        "변경 내용을 읽고 확인해 주세요. / Review the proposed changes first.",
+      );
+    // The novice view presents the generated reasons, risks and optional exact
+    // before/after text. A native code editor is not required for that review.
+    p.reviewed = true;
+    return { reviewed: true };
+  }
   async apply(
     id: string,
     context: string | undefined,
@@ -318,7 +339,9 @@ export class LocalAssistantController implements vscode.Disposable {
       );
     const p = this.checked(id, context);
     if (!p.reviewed || !p.result.edits.length)
-      throw Error("먼저 코드 차이를 확인하세요. / Review the code diff first.");
+      throw Error(
+        "먼저 변경 내용을 확인하세요. / Review the proposed changes first.",
+      );
     if (p.result.validation.status === "syntax-failed")
       throw Error(
         "문법 오류가 있는 제안은 적용할 수 없습니다. / A syntax-invalid proposal cannot be applied.",

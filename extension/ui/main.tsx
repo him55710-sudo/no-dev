@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ReadingView } from "./ReadingView";
 import { RuleWorkbench } from "./RuleWorkbench";
+import { BeginnerWorkspace } from "./BeginnerWorkspace";
 import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
@@ -18,7 +19,10 @@ import "./journey.css";
 
 type Tab = "story" | "rules" | "checks" | "map" | "local";
 function App() {
-  const saved = host.getState() as { lang?: Lang } | undefined;
+  const saved = host.getState() as
+    | { lang?: Lang; beginner?: boolean }
+    | undefined;
+  const [beginner, setBeginner] = useState(saved?.beginner !== false);
   const [lang, setLang] = useState<Lang>(saved?.lang === "en" ? "en" : "ko");
   const [state, setState] = useState<ViewState>({
     contextId: "",
@@ -73,17 +77,23 @@ function App() {
         context.current = next.contextId;
       }
       setState(next);
-      if (next.tab === "map") setTab("map");
-      if (next.tab === "local") setTab("local");
+      if (next.tab === "map") {
+        setTab("map");
+        setBeginner(false);
+      }
+      if (next.tab === "local") {
+        setTab("local");
+        setBeginner(false);
+      }
     };
     window.addEventListener("message", receive);
     void request("ready").catch((e) => setError(e.message));
     return () => window.removeEventListener("message", receive);
   }, []);
   useEffect(() => {
-    host.setState({ lang });
-    document.documentElement.lang = lang;
-  }, [lang]);
+    host.setState({ lang, beginner });
+    document.documentElement.lang = beginner ? "ko" : lang;
+  }, [lang, beginner]);
   useEffect(() => {
     if (error || state.error) errorRef.current?.focus();
     else if (notice) noticeRef.current?.focus();
@@ -157,8 +167,21 @@ function App() {
   }
   const source = (line: number) =>
     void action(() => request("source", { line }, state.contextId));
+  if (beginner)
+    return (
+      <BeginnerWorkspace
+        state={state}
+        advanced={(next = "story") => {
+          setTab(next);
+          setBeginner(false);
+        }}
+      />
+    );
   return (
     <div className="app">
+      <button className="beginner-return" onClick={() => setBeginner(true)}>
+        ← 쉬운 화면으로 돌아가기
+      </button>
       <header className="app-header">
         <div className="brand">
           <span className="brand-icon">풀</span>
