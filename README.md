@@ -14,7 +14,7 @@ Structure exploration works without a model. Implementation requires an explicit
 
 [한국어](README.ko.md) · [Follow a real design change](docs/SYSTEM_WORKSPACE_DEMO.md) · [Install the development workspace](docs/SYSTEM_WORKSPACE_START.md) · [Supported environments](docs/SYSTEM_WORKSPACE_SUPPORT.md) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
-[![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
+[![Verify](https://github.com/him55710-sudo/no-dev/actions/workflows/ci.yml/badge.svg?branch=codex%2Fsystem-design-workspace)](https://github.com/him55710-sudo/no-dev/actions/workflows/ci.yml?query=branch%3Acodex%2Fsystem-design-workspace)
 
 </div>
 
@@ -85,7 +85,7 @@ Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). 
 
 The prebuilt `pureobom-0.6.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
-Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
+Current development source: [him55710-sudo/no-dev](https://github.com/him55710-sudo/no-dev/tree/codex/system-design-workspace). Marketplace publication is not yet available; use the locally built VSIX. Its **Pureobom: Get started with system design** command opens the bundled Korean walkthrough. The 0.6 release links above remain historical.
 
 **After your first change:** open **Install & feedback** in the demo or **Help & feedback** in VS Code. Try one task with your own code, then optionally review and copy a feedback summary. Nothing is submitted automatically. [Feedback guide](docs/FEEDBACK.md) · [Planned user study](docs/USER_STUDY.md).
 

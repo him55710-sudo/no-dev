@@ -67,6 +67,12 @@ export async function run() {
     "product loads from the isolated installed extensions directory",
   );
   assert.equal(extension.packageJSON.version, expected.version);
+  // VS Code appends installation metadata; the shipped manifest must remain intact.
+  const { __metadata: installationMetadata, ...installedManifest } = JSON.parse(
+    await readFile(resolve(extension.extensionPath, "package.json"), "utf8"),
+  );
+  assert.equal(installationMetadata.source, "vsix");
+  assert.deepEqual(installedManifest, expected.manifest);
   for (const [path, hash] of Object.entries(expected.files))
     assert.equal(
       digest(await readFile(resolve(extension.extensionPath, path))),
@@ -102,6 +108,21 @@ export async function run() {
   const dispatch = (action: string, payload?: unknown) =>
     workspace.handleRequest({ id: `test-${phase}`, action, payload });
   if (phase === "prepare-review") {
+    const beforeGuide = JSON.stringify(workspace.state.specs);
+    await vscode.commands.executeCommand("pureobom.getStarted");
+    await waitFor(
+      () => !!vscode.window.tabGroups.activeTabGroup.activeTab &&
+        vscode.window.tabGroups.activeTabGroup.activeTab.label !== "풀어봄 · 시스템 설계",
+      "walkthrough editor tab",
+      10000,
+    );
+    const guideTab = vscode.window.tabGroups.activeTabGroup.activeTab;
+    assert.ok(guideTab, "walkthrough command opens an editor tab");
+    assert.notEqual(guideTab.label, "풀어봄 · 시스템 설계", "the command leaves the design tab for the walkthrough");
+    assert.equal(workspace.state.job, undefined);
+    assert.equal(JSON.stringify(workspace.state.specs), beforeGuide);
+    checks.push(`bundled walkthrough command opens editor (${guideTab.label}) without starting a job or changing designs`);
+    await vscode.commands.executeCommand("pureobom.openWorkspace");
     const context = workspace.state.execution!.context;
     const before = JSON.stringify(workspace.state.specs);
     const connections = await Promise.allSettled([

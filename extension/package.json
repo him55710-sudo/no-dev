@@ -7,11 +7,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/him55710-sudo/pureobom.git",
+    "url": "https://github.com/him55710-sudo/no-dev.git",
     "directory": "extension"
   },
   "bugs": {
-    "url": "https://github.com/him55710-sudo/pureobom/issues"
+    "url": "https://github.com/him55710-sudo/no-dev/issues"
   },
   "engines": {
     "vscode": "^1.96.0"
@@ -84,6 +84,11 @@
     },
     "commands": [
       {
+        "command": "pureobom.getStarted",
+        "title": "%command.getStarted%",
+        "icon": "$(lightbulb)"
+      },
+      {
         "command": "pureobom.openWorkspace",
         "title": "풀어봄: 시스템 설계 워크스페이스 열기",
         "icon": "$(type-hierarchy-sub)"
@@ -132,11 +137,62 @@
       "pureobom": [
         {
           "id": "pureobom.start",
-          "name": "코드를 문장으로 읽기"
+          "name": "시스템 설계와 코드 탐색"
         }
       ]
     },
+    "walkthroughs": [
+      {
+        "id": "systemDesign",
+        "title": "풀어봄 · 시스템 설계 시작하기",
+        "description": "프로젝트 구조를 읽고, 원하는 동작을 설계하고, 구현 결과를 검토하는 순서를 알아보세요. 체크 표시는 안내 열람·명령 실행 기록이며 구현 완료를 뜻하지 않습니다.",
+        "steps": [
+          {
+            "id": "explore",
+            "title": "1. 프로젝트와 구조 화면 열기",
+            "description": "작업할 JS/TS 프로젝트의 최상위 폴더를 여세요. 모델 연결 없이 구조와 원문 근거를 탐색할 수 있습니다.\n[프로젝트 폴더 열기](command:vscode.openFolder)\n[시스템 설계 열기](command:pureobom.openWorkspace)",
+            "media": {
+              "markdown": "media/start/explore.md"
+            },
+            "completionEvents": [
+              "onCommand:pureobom.openWorkspace"
+            ]
+          },
+          {
+            "id": "design",
+            "title": "2. 기능 선택과 설계 작성 방법 읽기",
+            "description": "현재 코드의 근거를 읽고 원하는 동작·유지 조건·완료 기준을 작성합니다. 설계만 저장해도 코드가 구현되지는 않습니다.",
+            "media": {
+              "markdown": "media/start/design.md"
+            }
+          },
+          {
+            "id": "implement",
+            "title": "3. 구현 준비 방법 읽기",
+            "description": "Git의 첫 커밋, Codex 로그인, 프로젝트 검사 명령을 준비합니다. 연결 확인 뒤 전달 동의와 실행할 검사를 선택하고 저장하고 구현을 누릅니다.\n[실행기 설정 열기](command:workbench.action.openSettings?%22%40ext%3Apureobom-local.pureobom%22)",
+            "media": {
+              "markdown": "media/start/implement.md"
+            }
+          },
+          {
+            "id": "review",
+            "title": "4. 검토·반영·복구 방법 읽기",
+            "description": "변경 파일과 검사 로그를 읽고 완료 기준별 근거를 기록합니다. 실패와 미확인을 구분한 뒤 반영하거나, 작업을 취소하고 필요하면 이어서 구현합니다.",
+            "media": {
+              "markdown": "media/start/review.md"
+            }
+          }
+        ]
+      }
+    ],
     "menus": {
+      "view/title": [
+        {
+          "command": "pureobom.getStarted",
+          "when": "view == pureobom.start",
+          "group": "navigation"
+        }
+      ],
       "editor/title": [
         {
           "command": "pureobom.explain",

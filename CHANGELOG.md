@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.7.0 — local AI development preview (unreleased)
+## 0.7.0 — system design development preview (unreleased)
+
+- Add a bundled system-design walkthrough to the VS Code sidebar and Command Palette. Explain exploration, design, implementation setup and review/recovery separately; keep guide progress distinct from actual verification. Point development installation, source and feedback to no-dev, and distinguish the system workspace from the older single-file tools in the extension README.
 
 - Preserve verification attempts across automatic repair, including earlier failures, and mark omitted log output. Let failed or unresolved criteria link current failure, timeout and missing-command records while keeping confirmed criteria and apply guards strict. See [verification evidence](docs/VERIFICATION_EVIDENCE.md).
 - Connect literal fetch addresses and imported SWR keys to Next.js App Router file candidates. Keep framework inference distinct from compiler calls and runtime evidence, include candidate files in reviewable scope, and preserve saved goals and existing source identities. Verify the installed external-app canvas, exact source navigation and restoration; see [route candidates and limits](docs/NEXT_ROUTE_CANDIDATES.md).

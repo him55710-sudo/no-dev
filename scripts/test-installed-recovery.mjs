@@ -110,6 +110,15 @@ for (const path of [
   "media/design.js",
   "media/design.css",
   "THIRD_PARTY_NOTICES.txt",
+  "media/view.js",
+  "media/view.css",
+  "package.nls.json",
+  "package.nls.ko.json",
+  "readme.md",
+  "media/start/explore.md",
+  "media/start/design.md",
+  "media/start/implement.md",
+  "media/start/review.md",
 ])
   files[path] = digest(await zip.file(`extension/${path}`).async("nodebuffer"));
 const installation = await runVSCodeCommand(
@@ -131,6 +140,7 @@ const expected = {
   vsixSha256: digest(vsix),
   extensionsPath: extensions,
   files,
+  manifest: JSON.parse(await zip.file("extension/package.json").async("string")),
 };
 const phases = [
   "prepare-review",

@@ -1,11 +1,11 @@
 {
   "name": "pureobom",
   "version": "0.7.0",
-  "description": "Read code in your language. Change a rule. Check what changes.",
+  "description": "Explore software structure, edit source-linked designs, and review implementation and verification.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/him55710-sudo/pureobom.git"
+    "url": "https://github.com/him55710-sudo/no-dev.git"
   },
   "engines": {
     "node": ">=24"

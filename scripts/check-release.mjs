@@ -117,6 +117,21 @@ const manifest = JSON.parse(
   await vsix.file("extension/package.json").async("string"),
 );
 assert.equal(manifest.version, version);
+for (const walkthrough of manifest.contributes.walkthroughs) {
+  for (const step of walkthrough.steps) {
+    const file = `extension/${step.media.markdown}`;
+    assert.deepEqual(
+      await vsix.file(file)?.async("nodebuffer"),
+      await readFile(file),
+      `Packaged walkthrough: ${file}`,
+    );
+    assert.deepEqual(
+      await source.file(file)?.async("nodebuffer"),
+      await readFile(file),
+      `Source walkthrough: ${file}`,
+    );
+  }
+}
 for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",

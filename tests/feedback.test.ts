@@ -77,7 +77,7 @@ describe("fixed product links", () => {
     for (const resource of ["install", "repository", "feedback"]) {
       const url = new URL(productResource(resource));
       expect(url.origin).toBe("https://github.com");
-      expect(url.pathname.startsWith("/him55710-sudo/pureobom")).toBe(true);
+      expect(url.pathname.startsWith("/him55710-sudo/no-dev/")).toBe(true);
       expect(url.searchParams.has("body")).toBe(false);
     }
     expect(

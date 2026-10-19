@@ -24,7 +24,7 @@
 
 아래 영상·브라우저 체험·기능 안내는 이전 공개판에 해당합니다. 위의 시스템 설계 흐름을 시연한 자료는 아닙니다.
 
-[English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
+[English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub 개발 브랜치](https://github.com/him55710-sudo/no-dev/tree/codex/system-design-workspace)
 
 **[30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko)** — 원문 → 설명 → 변경안 → 주문별 비교 → 적용 → 되돌리기를 실제 공개 화면으로 보여줍니다. 한국어·영어 자막과 텍스트 설명을 제공합니다. [MP4 받기](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
 
