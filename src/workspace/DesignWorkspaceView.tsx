@@ -817,10 +817,19 @@ export function DesignWorkspaceView({
                     ? "호출"
                     : edge.kind === "renders"
                       ? "화면 구성"
-                      : "모듈"}{" "}
+                      : edge.kind === "passes"
+                        ? "함수 전달"
+                        : "모듈"}{" "}
                   연결입니다. 런타임 실행·데이터 계약·실패 처리는 별도 확인이
                   필요합니다.
                 </p>
+                {edge.kind === "passes" ? (
+                  <p>
+                    함수 값을 인수나 화면 속성으로 넘긴 위치입니다. 이곳에서
+                    함수를 직접 호출했거나 전달받은 쪽이 실행한다고 단정하지
+                    않습니다.
+                  </p>
+                ) : null}
                 {edge.sources.map((ref, index) => (
                   <button key={index} onClick={() => source(edge.id, index)}>
                     {ref.path}:{ref.line} 원문 ↗
@@ -949,8 +958,8 @@ export function DesignWorkspaceView({
                     );
                   })}
                 <p>
-                  호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}
-                  개
+                  호출·화면·함수 전달로 함께 검토할 파일{" "}
+                  {related?.paths.length ?? 0}개
                 </p>
                 {related?.paths.map((path) => (
                   <small key={path}>{path}</small>

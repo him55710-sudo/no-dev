@@ -359,6 +359,47 @@ export async function analyzeStructure(
       });
   };
   for (const [path, sf] of sourceFiles) {
+    // A function value passed to a hook/form is a dependency, not a call at
+    // this location. Resolve its symbol and call signature through the same
+    // in-memory compiler; never match an unrelated declaration by name.
+    const passedFunction = (expression: ts.Expression) => {
+      let value = expression;
+      while (
+        ts.isParenthesizedExpression(value) ||
+        ts.isAsExpression(value) ||
+        ts.isTypeAssertionExpression(value) ||
+        ts.isNonNullExpression(value) ||
+        ts.isSatisfiesExpression(value)
+      )
+        value = value.expression;
+      if (
+        ts.isArrowFunction(value) ||
+        ts.isFunctionExpression(value) ||
+        ts.isCallExpression(value) ||
+        ts.isNewExpression(value)
+      )
+        return; // Inline bodies/calls are visited separately; returned values are unknown.
+      const type = checker.getNonNullableType(checker.getTypeAtLocation(value));
+      if (!checker.getSignaturesOfType(type, ts.SignatureKind.Call).length)
+        return;
+      const target = resolveSymbol(value),
+        owner = ownerFor(expression);
+      if (target && owner)
+        addEdge(
+          owner.id,
+          target.id,
+          "passes",
+          "함수 값을 인수 또는 화면 속성으로 전달",
+          expression,
+        );
+      else
+        notices.push({
+          path,
+          line:
+            sf.getLineAndCharacterOfPosition(expression.getStart()).line + 1,
+          message: `전달된 함수 값의 구현을 정적으로 확인하지 못했습니다: ${expression.getText(sf)}`,
+        });
+    };
     const visit = (node: ts.Node) => {
       if (
         (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
@@ -392,6 +433,7 @@ export async function analyzeStructure(
           });
       }
       if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
+        for (const argument of node.arguments ?? []) passedFunction(argument);
         const signature = checker.getResolvedSignature(node);
         const target =
           (signature?.declaration && declarations.get(signature.declaration)) ||
@@ -439,6 +481,13 @@ export async function analyzeStructure(
             node,
           );
       }
+      if (
+        ts.isJsxAttribute(node) &&
+        node.initializer &&
+        ts.isJsxExpression(node.initializer) &&
+        node.initializer.expression
+      )
+        passedFunction(node.initializer.expression);
       ts.forEachChild(node, visit);
     };
     visit(sf);
@@ -447,10 +496,11 @@ export async function analyzeStructure(
   return {
     schemaVersion: 1,
     revision: await sha256(
-      [...hashes.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([p, h]) => `${p}:${h}`)
-        .join("\n"),
+      "static-structure:2:function-passes\n" +
+        [...hashes.entries()]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([p, h]) => `${p}:${h}`)
+          .join("\n"),
     ),
     nodes,
     edges,

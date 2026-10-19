@@ -406,7 +406,7 @@ export const changeRequestSchema = z
   .strict();
 export type ChangeRequest = z.infer<typeof changeRequestSchema>;
 
-/** Follow compiler-backed calls/renders in both directions, including enclosing declarations.
+/** Follow compiler-backed calls/renders/function passes in both directions, including enclosing declarations.
  * This is a reviewable static scope, not a claim of complete runtime impact. */
 export function implementationScope(
   graph: StructureGraph,

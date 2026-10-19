@@ -411,6 +411,22 @@ const observationChange=document.getElementById('observation-change');if(observa
         };
         requests.push(entry);
         try {
+          if (configuration.structureValidation)
+            assert.ok(
+              [
+                "ready",
+                "refresh",
+                "source",
+                "saveNavigation",
+                "saveFeature",
+                "saveSpec",
+                "saveDraft",
+                "removeDraft",
+                "rebaseDraft",
+                "loadDrafts",
+              ].includes(payload.action),
+              "This structure validation must not invoke a provider or implementation.",
+            );
           const result = await workspace.handleRequest(payload);
           if (
             configuration.navigationValidation &&
@@ -423,7 +439,8 @@ const observationChange=document.getElementById('observation-change');if(observa
           }
           entry.ok = true;
           if (
-            configuration.observationValidation &&
+            (configuration.observationValidation ||
+              configuration.structureValidation) &&
             payload.action === "source"
           ) {
             const editor = vscode.window.activeTextEditor!;
@@ -466,7 +483,33 @@ const observationChange=document.getElementById('observation-change');if(observa
               reconnection,
               "Reconnect the live approval before finishing.",
             );
-          if (configuration.observationValidation) {
+          if (configuration.structureValidation) {
+            assert.equal(workspace.state.job, undefined);
+            assert.deepEqual(jobs, []);
+            assert.ok(requests.every((entry) => entry.ok === true));
+            assert.ok(
+              requests.some((entry) => {
+                const selection = entry.sourceSelection as
+                  | { path?: string; text?: string }
+                  | undefined;
+                return (
+                  selection?.path === "app/(dashboard)/dashboard/page.tsx" &&
+                  selection?.text === "removeTeamMember"
+                );
+              }),
+              "Open the exact passed-function source from the installed UI.",
+            );
+            assert.ok(
+              workspace.state.specs.specs.some((spec) =>
+                spec.baseline.observations?.relations.some(
+                  (relation) =>
+                    relation.kind === "passes" &&
+                    relation.to.label === "removeTeamMember",
+                ),
+              ),
+              "Save a design with the real callback relation in its observations.",
+            );
+          } else if (configuration.observationValidation) {
             assert.ok(navigationRestoration && observationWitness?.restored);
             assert.equal(workspace.state.job, undefined);
             assert.deepEqual(jobs, []);
@@ -485,18 +528,20 @@ const observationChange=document.getElementById('observation-change');if(observa
               "undone",
               "Complete implementation, review, apply and undo in the UI first.",
             );
-          for (const action of configuration.observationValidation
-            ? ["saveSpec", "source", "acceptBaseline"]
-            : configuration.navigationValidation
-              ? ["saveFeature", "saveSpec", "saveNavigation"]
-              : [
-                  "checkConnection",
-                  "saveExecution",
-                  "implement",
-                  "reviewJob",
-                  "applyJob",
-                  "undoJob",
-                ])
+          for (const action of configuration.structureValidation
+            ? ["saveFeature", "saveSpec", "source", "saveNavigation"]
+            : configuration.observationValidation
+              ? ["saveSpec", "source", "acceptBaseline"]
+              : configuration.navigationValidation
+                ? ["saveFeature", "saveSpec", "saveNavigation"]
+                : [
+                    "checkConnection",
+                    "saveExecution",
+                    "implement",
+                    "reviewJob",
+                    "applyJob",
+                    "undoJob",
+                  ])
             assert.ok(
               requests.some((entry) => entry.action === action && entry.ok),
               `Missing successful UI action: ${action}`,
@@ -569,13 +614,15 @@ const observationChange=document.getElementById('observation-change');if(observa
             artifact: configuration.artifact,
             scope:
               "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
-            provider: configuration.realProvider
-              ? "Installed real Codex CLI; review recorded by validation agent, not a usability participant."
-              : configuration.observationValidation
-                ? "No provider invoked; stored/current observation comparison and baseline restoration validation."
-                : configuration.navigationValidation
-                  ? "No provider invoked; navigation-only validation."
-                  : "Explicit deterministic stdio fixture; no external inference.",
+            provider: configuration.structureValidation
+              ? "No provider invoked; read-only external-app structure exploration, callback source navigation and design metadata save."
+              : configuration.realProvider
+                ? "Installed real Codex CLI; review recorded by validation agent, not a usability participant."
+                : configuration.observationValidation
+                  ? "No provider invoked; stored/current observation comparison and baseline restoration validation."
+                  : configuration.navigationValidation
+                    ? "No provider invoked; navigation-only validation."
+                    : "Explicit deterministic stdio fixture; no external inference.",
             requests,
             jobs,
             reconnection,

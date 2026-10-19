@@ -22,6 +22,7 @@ const relationLabels = {
   imports: "모듈 연결",
   calls: "호출",
   renders: "화면 구성",
+  passes: "함수 전달",
 };
 
 function EvidenceLink({

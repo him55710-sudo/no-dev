@@ -22,7 +22,8 @@ assert.equal(
   "1",
   "Explicitly enable the manual installed UI test.",
 );
-const realProvider = !!process.argv[2];
+const structureValidation = process.env.PUREOBOM_STRUCTURE_UI === "1";
+const realProvider = !!process.argv[2] && !structureValidation;
 const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
 const navigationValidation = process.env.PUREOBOM_NAVIGATION_UI === "1";
 const observationValidation = process.env.PUREOBOM_OBSERVATION_UI === "1";
@@ -33,9 +34,15 @@ assert.ok(
     reconnectValidation,
     observationValidation,
     continuationValidation,
+    structureValidation,
   ].filter(Boolean).length <= 1,
   "Choose one restart validation mode.",
 );
+if (structureValidation)
+  assert.ok(
+    process.argv[2],
+    "Structure UI validation requires the prepared external baseline.",
+  );
 assert.ok(
   !(continuationValidation && realProvider),
   "The continuation UI fixture uses a deterministic partial edit; real inference is a separate validation.",
@@ -79,7 +86,7 @@ const git = async (...args) =>
       maxBuffer: 16 * 1024 * 1024,
     })
   ).stdout;
-if (realProvider) {
+if (process.argv[2]) {
   // A disposable clone of a reviewed local baseline. Never run in the user's original.
   await exec(
     "git",
@@ -189,6 +196,7 @@ const configuration = {
   navigationValidation,
   observationValidation,
   continuationValidation,
+  structureValidation,
   runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),

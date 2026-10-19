@@ -47,7 +47,7 @@ export type StructureEdge = {
   id: string;
   source: string;
   target: string;
-  kind: "imports" | "calls" | "renders";
+  kind: "imports" | "calls" | "renders" | "passes";
   label: string;
   sources: SourceRef[];
   evidence: "compiler";
@@ -192,7 +192,9 @@ export function structureConnections(
                 ? "모듈 연결"
                 : edge.kind === "calls"
                   ? "호출"
-                  : "화면 구성",
+                  : edge.kind === "passes"
+                    ? "함수 전달"
+                    : "화면 구성",
             data: { originals: [edge.id] },
             count: 1,
           });
