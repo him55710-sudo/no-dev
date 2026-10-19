@@ -18,4 +18,6 @@
 
 구조 분석 한도는 최대 500개 파일, 파일당 512KB, 전체 8MB다. 근거 수집과 정적 분석으로 확인할 수 없는 범위는 안내한다. Git worktree는 변경 파일을 분리하며 OS 보안 격리를 대신하지 않는다.
 
+후속 [네이티브 Webview 시작·통신 검사](NATIVE_WEBVIEW_STARTUP.md)는 Windows 설치본의 실제 JavaScript 시작, 호스트 상태 수신 후 캔버스 위치 저장, 닫기·다시 열기와 설계 보존을 확인했다. HTML/CSP·전송 API를 대체하지 않았다. 네이티브 화면의 모양과 포인터·키보드 전체 조작은 여전히 별도 미검증이다.
+
 [설치·설정](SYSTEM_WORKSPACE_START.md) · [실제 성공·실패 안내](SYSTEM_WORKSPACE_DEMO.md) · [실제 모델 이어하기와 전체 빌드](LIVE_CONTINUATION.md) · [항목별 진행 상태](SYSTEM_WORKSPACE_STATUS.md)

@@ -1,5 +1,7 @@
 # 설치된 설계 화면 검증
 
+후속 [네이티브 Webview 시작 검사](NATIVE_WEBVIEW_STARTUP.md)는 별도의 실제 Webview에서 초기 JavaScript·상태 통신·탭 재생성을 확인한다. 아래의 브라우저 전송 검증 범위는 그대로이며, 어느 쪽도 네이티브 포인터·키보드 전체 흐름의 증거가 아니다.
+
 설치한 VSIX의 `design.js`와 `design.css`를 그대로 브라우저에 열고, 화면 요청을 실제 Production 확장 호스트의 `DesignWorkspace.handleRequest`에 전달한다. 설계와 작업 상태를 흉내 내는 화면 모의 연결을 사용하지 않는다. 브라우저에서 `acquireVsCodeApi`의 전송 부분만 테스트용 loopback HTTP 연결로 대체한다.
 
 이 경로는 설치 번들·실제 상태 저장·Git 작업 공간·검사·검토·반영·되돌리기를 함께 확인한다. **VS Code Webview 자체의 DOM, CSP, 포인터/키보드 전달은 증명하지 않는다.** 합성 실행기 검증과 실제 모델 검증을 구별한다. 2026-10-20에는 [실제 Codex와 외부 Next 앱의 전체 흐름](INSTALLED_NEXT_FLOW.md)을 완료했으며, 그 과제의 결과를 모델 품질 전반으로 일반화하지 않는다.

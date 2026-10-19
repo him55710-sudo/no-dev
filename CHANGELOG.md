@@ -2,6 +2,8 @@
 
 ## 0.7.0 — system design development preview (unreleased)
 
+- Observe the installed native VS Code Webview's own startup and graph/navigation messages, then close and reopen its actual tab while preserving design and navigation. Extend the existing installed recovery check without replacing the shipped HTML, CSP or JS. Pointer/keyboard and visual verification remain separate. See [scope and evidence](docs/NATIVE_WEBVIEW_STARTUP.md).
+
 - Replace the earlier single-file observation plan with the system-design permission task, separate builder/developer cohorts and agent-only/workspace conditions. Package a common review exercise from byte-verified historical candidates, preserving the deliberate missing-guard failure and unverified criteria. Keep participant decisions separate from apply blocking and actual reuse separate from intention. The protocol is prepared; no participant outcomes are claimed. See [the study plan](docs/USER_STUDY.md).
 
 - Package a separate public site with the recorded system-design success/failure walkthrough at its entry point, retain the earlier interactive reader at a working subpath, and provide a return link. Verify local links and archive hashes, fix narrow-screen branding, and connect the package to CI artifacts and the manual Pages workflow. See [scope and publication status](docs/PUBLIC_DEMO.md).

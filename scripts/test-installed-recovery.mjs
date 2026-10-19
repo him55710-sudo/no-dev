@@ -213,7 +213,7 @@ const report = {
   node: process.version,
   artifact: { version, vsixSha256: expected.vsixSha256, files },
   scope:
-    "Installed VSIX in Production extension mode across six separate VS Code launches. A pending approval survives the first window exit; a managed file transaction continues after the extension host is killed. Calls use the same validated request dispatcher as the Webview; this is not pointer/keyboard UI automation, managed-worker crash recovery, or model-quality evidence.",
+    "Installed VSIX in Production extension mode across six separate VS Code launches. The first phase observes actual native Webview boot, graph/navigation messages and close/reopen without replacing its HTML/CSP or JS. Remaining recovery operations call the validated host dispatcher directly. A pending approval survives the first window exit; a managed file transaction continues after the extension host is killed. This is not pointer/keyboard UI automation, visual verification, managed-worker crash recovery, or model-quality evidence.",
   provider:
     "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
   dependencyEnvironment:

@@ -11,6 +11,7 @@ import type { SpecContent } from "../../src/workspace/spec";
 import type { Feature } from "../../src/workspace/features";
 import { draftMatches, type DesignDraft } from "../../src/workspace/drafts";
 import { approvalMatches } from "../../src/workspace/execution";
+import { observeNativeDesignStartup } from "./nativeDesignStartup";
 const exec = promisify(execFile);
 const digest = (bytes: Buffer | string) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -28,6 +29,7 @@ type Checkpoint = {
     checkedAt: string;
     checks: string[];
     verification?: unknown;
+    nativeWebviewStartup?: Awaited<ReturnType<typeof observeNativeDesignStartup>>;
   }[];
   firstJob?: { id: string; reviewId: string; worktree: string };
   pendingApproval?: { jobId: string; approvalId: string };
@@ -82,7 +84,11 @@ export async function run() {
   const { designWorkspace: workspace, runtimeMode } =
     await extension.activate();
   assert.equal(runtimeMode, vscode.ExtensionMode.Production);
-  await vscode.commands.executeCommand("pureobom.openWorkspace");
+  const nativeWebviewStartup = phase === "prepare-review"
+    ? await observeNativeDesignStartup(workspace)
+    : undefined;
+  if (!nativeWebviewStartup)
+    await vscode.commands.executeCommand("pureobom.openWorkspace");
   assert.ok(workspace.state.graph);
   assert.equal(workspace.state.trusted, true);
   const source = vscode.workspace.workspaceFolders![0].uri.fsPath;
@@ -94,6 +100,8 @@ export async function run() {
     "Production extension mode",
     "real workspace command opens analyzed design panel",
   ];
+  if (nativeWebviewStartup)
+    checks.push("unmodified native Webview boots, exchanges graph/navigation state, and reopens without implementation");
   if (phase !== "prepare-review") {
     const feature = workspace.state.specs.features?.find(
       (item) => item.id === checkpoint.featureId,
@@ -701,6 +709,7 @@ export async function run() {
     extensionHostPid: process.pid,
     checkedAt: new Date().toISOString(),
     checks,
+    nativeWebviewStartup,
     verification: workspace.state.job?.checks.map((check) => ({
       name: check.name,
       status: check.status,
