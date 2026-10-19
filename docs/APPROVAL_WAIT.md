@@ -16,4 +16,6 @@
 
 해당 실제 모델 실행에서는 작업 복사본의 파일 읽기·수정에 명령별 승인이 반복해서 필요했다. 다만 종료 후 새 App Server 연결의 `command/exec`로 같은 cwd와 workspaceWrite 정책을 지정한 읽기 검사는 exit 0으로 성공했다. [직접 검사 기록](evidence/system-workspace/2026-10-20/compact-worktree-sandbox.json)을 보존한다. 보안 모드 변경이나 ACL 수동 변경은 하지 않았다. 이 결과만으로 모델 도구 경로의 접근 실패 원인이 해결됐다고 볼 수 없다.
 
-[공식 App Server 문서](https://learn.chatgpt.com/docs/app-server#sandbox-read-access)는 workspaceWrite의 쓰기 경로와 읽기 정책을 구분한다. [공식 Windows 안내](https://learn.chatgpt.com/docs/windows/windows-sandbox#check-sandbox-read-access)는 접근 실패 시 실제 권한 설정과 Windows 파일 권한을 확인하도록 안내한다. 구현 타이머 수정과 이 환경 문제를 같은 수정으로 주장하지 않는다. 다음 설치 검증에서 실제 모델의 접근과 최종 검사·검토·반영·되돌리기를 다시 확인해야 한다.
+[공식 App Server 문서](https://learn.chatgpt.com/docs/app-server#sandbox-read-access)는 workspaceWrite의 쓰기 경로와 읽기 정책을 구분한다. [공식 Windows 안내](https://learn.chatgpt.com/docs/windows/windows-sandbox#check-sandbox-read-access)는 접근 실패 시 실제 권한 설정과 Windows 파일 권한을 확인하도록 안내한다. 구현 타이머 수정과 이 환경 문제를 같은 수정으로 주장하지 않는다.
+
+수정 설치본의 [후속 실제 모델 검증](INSTALLED_NEXT_FLOW.md)은 검사 명령 승인 요청을 처리한 뒤 독립 검사·검토·반영·재분석·되돌리기까지 완료했다. 이 실행에서는 일반 파일 수정에 반복 승인이 발생하지 않았지만 esbuild의 상위 폴더 읽기 때문에 검사 명령에는 개별 승인이 필요했다. 실행 성공을 모든 Windows 환경의 읽기 권한 문제가 해결됐다는 증거로 사용하지 않는다.

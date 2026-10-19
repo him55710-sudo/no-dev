@@ -10,6 +10,10 @@
 
 고정 인수 검사 9개는 실제 팀 조회, member의 두 변경 거절과 데이터 보존, owner의 두 변경 허용, 다른 팀 대상 거절, 미인증 거절, 양쪽 역할의 React 화면을 확인한다. 일반 검사 통과를 새로운 제품의 모든 요구사항 충족으로 해석하지 않는다.
 
+## 2026-10-20 설치 UI 전체 흐름
+
+[실행 기록](../../docs/INSTALLED_NEXT_FLOW.md)은 실제 Codex가 설치 화면에서 시작한 설계에 따라 7개 파일을 변경하고, 제품 독립 검사·기준별 검토·반영·새 파일 재수집·되돌리기까지 완료한 사례다. 같은 후보를 독립 설치한 복제본에서 고정 검사 9개·추가 권한 21개·기존 기능 회귀 18개·타입 검사와 실제 브라우저/PostgreSQL로 확인했다. 분석 파일 수는 52→55→52로 변했고 설계 목표와 원본을 보존했다. 네이티브 Webview 전달, production build와 운영 인증/결제 전체는 별도 미검증이다.
+
 ## 2026-10-16 실행 결과
 
 [원본 기준](../../docs/evidence/system-workspace/2026-10-16/external-next-baseline.json)은 9개 중 5개 통과·4개 실패, skip 0개였다. [준비 patch](../../docs/evidence/system-workspace/2026-10-16/external-next-baseline.patch)는 검사 환경·잠금 파일만 추가하며 앱 코드는 그대로다.
@@ -49,6 +53,12 @@ Node 24, pnpm 11.25.0, Git을 사용한다. `<external>`은 다른 프로젝트�
 [설치 설계 화면 드라이버](../../docs/INSTALLED_DESIGN_UI.md)에 준비한 로컬 Git 저장소를 전달하면 실제 모델 변경을 설치 UI에서 시작할 수 있다. 원본 소스의 복제본을 만들고, 되돌리기 후에도 보존되는 `.pureobom/` 설계 메타데이터만 복제본의 `.git/info/exclude`에 추가한다. 앱의 추적 파일·잠금 파일·HEAD·index 보존 검사는 그대로 유지한다. 이 Git 제외 설정을 앱 원본의 변경이나 설계 삭제로 구현하지 않는다.
 
 2026-10-17에는 저장된 실제 모델의 변경 후보를 별도 복사본에서 실행했다. 고정 검사 9개·추가 검사 22개·타입 검사와 PostgreSQL 18.6에서 실제 로그인, member 화면 제한, owner의 초대·제거 및 SQL 상태를 확인했다. 설치 UI에서 시작한 해당 모델 작업은 Windows의 긴 실행 파일 경로 문제를 수정하다 시간 초과로 실패했다. 이 별도 앱 검증을 설치 UI의 검토·반영·undo 성공으로 합치지 않는다. [실패·브라우저 검증과 경로 수정 기록](../../docs/EXTERNAL_NEXT_BROWSER.md)을 참고한다.
+
+## 인증·계정·결제 코드의 독립 회귀 검사
+
+`PUREOBOM_TEST_POSTGRES_BIN`을 지정한 뒤 풀어봄 저장소에서 `node validation/next-saas-starter/run-account-regressions.mjs <external>`을 실행한다. `<external>`은 의존성을 독립 설치한 별도 Git 복제본이어야 한다. 진행 중인 에이전트 작업 복사본에서는 실행하지 않는다. 검사 파일과 설정은 그 복제본의 `pureobom-regression/`에 복사되며 앱 코드·고정 인수 검사·잠금 파일·기존 test 명령을 수정하지 않는다. 결과는 복제본 상위 폴더의 `account-regressions.json`에 저장하므로 변경 전후 결과를 따로 보관한다.
+
+18개 검사는 실제 앱 액션, bcrypt, JWT, PostgreSQL에서 로그인·가입·초대 가입·계정 정보·비밀번호·로그아웃·계정 삭제, checkout 요청 구성·반환 처리, 잘못된 webhook 서명 거절과 서명된 구독 취소 처리를 확인한다. Next의 요청 쿠키와 redirect는 테스트가 제공하고 Stripe의 원격 SDK 메서드는 명시적인 응답 fixture를 반환한다. 해당 결제 검사에서는 예상하지 않은 HTTPS 요청을 거절한다. 실제 Stripe 결제, 운영 인증 환경, 브라우저 인증 전체 흐름을 검증한 것으로 해석하지 않는다.
 
 ## 검증 경계
 

@@ -12,6 +12,8 @@
 
 첫 검증 과제는 React 화면·서버 액션/API·공통 정책을 함께 바꾸는 권한 변경입니다. [외부 Next.js 팀 권한 검증](validation/next-saas-starter/README.md)에 성공한 검사와 실패한 실행을 함께 남깁니다. 네이티브 Webview 전체 조작, 중단된 에이전트 재연결 등 남은 항목은 [상태 표](docs/SYSTEM_WORKSPACE_STATUS.md)에서 확인하세요. 아직 개발판입니다.
 
+[실제 모델과 설치 화면의 전체 실행 기록](docs/INSTALLED_NEXT_FLOW.md): 외부 앱의 7개 파일 변경, 독립 검사, 실제 앱 브라우저·SQL 확인, 검토·반영·새 파일 분석·되돌리기를 완료했습니다. 확인하지 못한 유지 조건은 기록에 남겼습니다.
+
 [설치와 첫 작업](docs/SYSTEM_WORKSPACE_START.md) · [실행 설정](docs/EXECUTION_SETTINGS.md) · [변경 검토·반영](docs/IMPLEMENTATION_REVIEW.md) · [복구](docs/AGENT_IMPLEMENTATION.md)
 
 ## 이전 단일 파일 시제품 — 공개 0.6.0

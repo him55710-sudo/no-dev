@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-19T15:58:33.579Z",
+  "jobId": "29da2265-df2a-4efc-b630-bc4f458f7d8a",
+  "artifact": {
+    "vsixSha256": "7e52db81873321c9cca6563b4521a9fdffb9ab7645806307be4c7588fc61c4f6",
+    "files": {
+      "out/extension.cjs": "5ed5724a5d15c07bfae0d5d1b551a93081c6fa8250eaa1ab4616ede8dbcb53e0",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "647eba9729b00db3191b413de169a308a094b0bc3303e19b143f170717a52859",
+      "media/design.css": "c5891ad9ad1b3795732ab5d8e082ec730b7f7792ce0df6cf1d21bf51aca3b5c5"
+    }
+  },
+  "originalRestored": true,
+  "designPreserved": true,
+  "analysisFileCounts": [
+    52,
+    55,
+    52
+  ],
+  "newlyCollectedFiles": [
+    "lib/auth/team-permissions.ts",
+    "tests/team-permissions.test.tsx",
+    "tests/vitest.config.mts"
+  ],
+  "allCandidateAnalysisHashesMatch": true,
+  "observationStates": [
+    "unchanged",
+    "changed",
+    "unchanged"
+  ],
+  "confirmedAcceptanceCriteria": 6,
+  "unverifiedInvariantsPreserved": [
+    "invariant:0",
+    "invariant:2"
+  ],
+  "browserDatabase": "PostgreSQL postgres (PostgreSQL) 18.6",
+  "memberWritesAbsent": true,
+  "ownerInvitationAndRemovalPersisted": true,
+  "scope": "Host requests, full file collection/hashes, saved design, review decisions and SQL snapshots. Actual browser interaction is evidenced separately by DOM records and screenshots. Native VS Code Webview delivery, production build and live Stripe remain unverified."
+}

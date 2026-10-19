@@ -28,6 +28,8 @@ Build the development VSIX from this branch and run **풀어봄: 시스템 설�
 
 The first target is an existing feature spanning a React interface, server actions/API and a shared policy. [The external Next.js team-permission case](validation/next-saas-starter/README.md) records both successful checks and failed attempts. [The status table](docs/SYSTEM_WORKSPACE_STATUS.md) identifies unverified parts, including native Webview interaction and interrupted-agent reconnection. This is a development preview, not a completed release.
 
+[Actual model and installed UI run](docs/INSTALLED_NEXT_FLOW.md): seven external-app files changed, independent checks and app browser/SQL validation passed, and the UI completed review, apply, collection of new files and undo. Unverified invariants remain recorded.
+
 [Install and first task](docs/SYSTEM_WORKSPACE_START.md) · [Execution settings](docs/EXECUTION_SETTINGS.md) · [Review and apply](docs/IMPLEMENTATION_REVIEW.md) · [Recovery](docs/AGENT_IMPLEMENTATION.md)
 
 ## Earlier single-file preview — published 0.6.0
