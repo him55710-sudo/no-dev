@@ -93,5 +93,11 @@
     "No controlled CPU/GPU speed comparison.",
     "No private source, request, raw response or project identifiers in public evidence.",
     "No stable release or Pages deployment."
-  ]
+  ],
+  "semanticReview": {
+    "reviewer": "Coding agent",
+    "method": "Compare actual unchanged source and separately recorded evaluator-selected input observations",
+    "independentThirdParty": false,
+    "userUsabilityStudy": false
+  }
 }
