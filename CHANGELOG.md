@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Read arrow functions and factory-created actions through their actual function bodies. Keep creation, passed callbacks and returned functions distinct, retain branch/error order, bound summaries and preserve stored goals and source identities. See [function description evidence and limits](docs/FUNCTION_DESCRIPTIONS.md).
 - Explain each connection occurrence with passed expressions, resolved parameter names, JSX props and enclosing branch/error syntax, preserving exact source navigation. Compare all occurrence evidence even when counts stay equal; retain uncertainty for older snapshots without fingerprints. See [connection evidence and limits](docs/CONNECTION_EVIDENCE.md).
 - Keep newly saved or edited business features selected after graph projection changes the navigation context. Commit the refreshed graph and selection in the host, reject delayed old navigation, and fit the changed root while preserving nested canvas locations. See [reproduction and installed validation](docs/WORKSPACE_NAVIGATION.md#2026-10-20-후속-기능-저장-뒤-선택-유지).
 - Trace compiler-resolved function values passed as call arguments or JSX props, including hooks and form actions. Preserve distinct source evidence, include these relationships in implementation scope and stored observations, and label them as function passing rather than execution. See [external-app evidence and limits](docs/CALLBACK_RELATIONS.md).

@@ -2,6 +2,7 @@ import ts from "typescript";
 import type { SourceFile } from "../core/types";
 import { analyzeFile } from "../core/analyze";
 import { connectionSite } from "./connectionSite";
+import { symbolDescription } from "./symbolDescription";
 import {
   relativePath,
   sha256,
@@ -269,6 +270,9 @@ export async function analyzeStructure(
         message: ts.flattenDiagnosticMessageText(error.messageText, " "),
       });
     const explained = analyzeFile(file);
+    const explainedFunctions = new Map(
+      explained.functions.map((fn) => [fn.start, fn]),
+    );
     const names = new Map<string, number>();
     const visit = (node: ts.Node, owner: StructureNode, qualified: string) => {
       let current = owner,
@@ -279,19 +283,20 @@ export async function analyzeStructure(
         const count = names.get(scope) ?? 0;
         names.set(scope, count + 1);
         const key = count ? `${scope}#${count}` : scope;
-        const fn = explained.functions.find(
-          (fn) => fn.start === node.getStart(sf),
+        const description = symbolDescription(
+          node,
+          explainedFunctions,
+          checker,
+          roleOf(node),
         );
         current = addNode({
           id: idFor("symbol", file.path, key),
           parentId: owner.id,
           kind: "symbol",
           origin: "syntax",
-          role: roleOf(node),
+          role: description.role,
           label: name,
-          summary: fn
-            ? fn.steps.map((step) => step.text.ko).join("\n")
-            : `${roleOf(node)} 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.`,
+          summary: description.summary,
           sources: [ref(node, key)],
           syntaxValid: fileNode.syntaxValid,
         });
@@ -529,7 +534,7 @@ export async function analyzeStructure(
   return {
     schemaVersion: 1,
     revision: await sha256(
-      "static-structure:3:connection-sites\n" +
+      "static-structure:4:function-bodies\n" +
         [...hashes.entries()]
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([p, h]) => `${p}:${h}`)

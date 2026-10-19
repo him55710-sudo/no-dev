@@ -491,6 +491,18 @@ const observationChange=document.getElementById('observation-change');if(observa
                   site,
                   evidenceHash: edge.evidenceHash,
                 };
+              } else {
+                const node = workspace.state.graph!.nodes.find(
+                  (node) => node.id === payload.payload.nodeId,
+                );
+                if (node)
+                  entry.declaration = {
+                    id: node.id,
+                    label: node.label,
+                    role: node.role,
+                    summary: node.summary,
+                    source: node.sources[payload.payload.sourceIndex ?? 0],
+                  };
               }
             }
           }

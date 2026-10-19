@@ -451,7 +451,7 @@ textarea {
 }
 .observed-block p {
   font-size: 11px;
-  white-space: pre-line;
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .observed-block.needs-review {
