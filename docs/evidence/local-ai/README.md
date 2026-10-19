@@ -2,6 +2,8 @@
 
 2026-10-20 함수 설명 후속: [함수 선택·원문 인용·실제 프로젝트 시도](focused-explanation.md). 실제 사용자 코드의 두 생성 요청은 각각 180초 시간 초과로, 설명 품질은 미확인이다. [개발 호스트 55개](focused-explanation-development-integration.json), [설치본 55개](focused-explanation-installed-integration.json), [핵심 검사 실패를 포함한 실행 기록](focused-explanation-verification.json), [한국어](focused-explanation-ko.jpg)/[영어](focused-explanation-en.jpg) 화면은 서로 다른 증거다. [사용 방법과 전달 범위](../../FOCUSED_EXPLANATIONS.md). 비공개 원문·응답은 공개하지 않는다.
 
+함수 선택 제품 소스 `9758dac`의 [Windows·Ubuntu CI](focused-explanation-ci.json)는 각 핵심 **259개**, 개발/production 설치 각 **55개**, 설치 파일 11개 해시와 추출 도구 검사를 통과했다. 같은 흐름을 실행 환경 수만큼 새 기능으로 합산하지 않는다. 로컬 timeout 기록과 실제 모델 실패는 유지한다.
+
 2026-10-20 Rust 후속: [humantime 실제 편집기·기존 테스트](rust-source-project.md)에서 42 pass → 상수 변경으로 8 fail → native undo 후 42 pass와 원본 복구를 확인했다. 환경 준비 실패도 별도로 보존한다. [최종 소스 Windows·Ubuntu CI](rust-source-ci.json)는 각 핵심 258개·개발/설치 각 54개·파일 11개 해시·추출 WASM 실행을 통과했다. [구현 범위](../../RUST_SOURCE.md), [이전 개발](rust-source-development-integration.json), [이전 설치](rust-source-installed-integration.json), [한국어 화면](rust-source-reading-ko.jpg), [영어 변경안](rust-source-review-en.jpg). 실제 모델 의미 정확도·최적화 성과는 미검증이다.
 
 2026-10-20 C# 후속: [GuardClauses 실제 편집기·기존 테스트 연결](csharp-source-project.md)에서 959 pass → 검증용 경계값 변경으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 오류와 수정도 공개한다. 이는 회귀 검출 연동 검사이며 AI 품질이나 실제 사용자 과제의 성공은 별도다.

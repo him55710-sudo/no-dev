@@ -11,6 +11,7 @@
 - **검사 실패도 보존:** 로컬 AI 핵심 14개는 통과했다. 첫 전체 실행은 SDK 경로 미설정 3개 suite와 Python/측정 timeout으로 231 pass / 4 fail / 24 skipped였다. SDK 경로를 설정하고 직렬 실행한 후속 결과는 **258 pass / 1 fail**이며 기존 Java 리터럴 사례의 30초 timeout이 남았다. 테스트나 제품의 제한을 늘리지 않았다. 개발/설치·빌드 결과는 [검증 기록](evidence/local-ai/focused-explanation-verification.json)에 실행별로 분리한다.
 - **설치본:** 새 VSIX `5e087b7a…`의 production 모드·실제 파일 11개 해시와 같은 **55개 흐름 통과**를 확인했다. [설치 원자료](evidence/local-ai/focused-explanation-installed-integration.json). 웹·확장 빌드와 VSIX 패키징 성공. 개발/설치 검사를 별개 110개 기능으로 세지 않으며 수동 설치 UI·실제 모델 결과는 별도다.
 - **패키지 검사:** 체크섬·소스 manifest·라이선스와 저장소 밖의 분석/Rust WASM·Python 측정·Python/Go/Java/C# 원문 도구 실행을 통과했다. 로컬 개발 패키지 검증이며 stable/Pages 게시가 아니다. 이번 전체 테스트가 다시 기록한 합성 benchmark 파일은 로컬에 보존하고 이전 공개 파일을 복원해 성능 개선 자료로 사용하지 않았다.
+- **교차 OS CI:** 제품 커밋 `9758dac`를 명시적으로 `origin main`에 push했다. [Windows·Ubuntu Verify](https://github.com/him55710-sudo/pureobom/actions/runs/39304019563)의 각 로그에서 핵심 **259개**, 개발/production 설치 각 **55개**, 설치 파일 11개 해시와 추출 도구 실행 성공을 대조해 [원자료](evidence/local-ai/focused-explanation-ci.json)를 공개했다. 로컬 Java timeout의 원인을 확정하거나 실패를 소급 변경하지 않는다. 실제 모델 추론·외부 프로젝트 결과는 이 CI에 포함되지 않는다.
 - **판정:** 원문 위치 검증 기능이 추가됐지만 실제 사용자 코드 설명의 의미 정확성은 미확인이다. 앞선 모델 없는 서식 적용·8→8→8 검사·복구를 모델 성공으로 바꾸지 않는다. 일반 수정 품질·실측 최적화·환경별 사용성은 계속 남아 있으며 안정 릴리스/Pages는 교체하지 않는다.
 
 ## 2026-10-20 · Rust 실제 프로젝트 검사·복구와 교차 OS CI
