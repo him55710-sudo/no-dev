@@ -39,7 +39,7 @@ node scripts/check-callback-structure.mjs '<준비한 Next baseline Git 폴더>'
 - 설치한 VSIX SHA-256: `a9c9fdcfa17c73a801a8c607aa2bf23acee9ae7798906f4b9483070966fcbff2`. 수정하지 않은 설치 JS/CSS와 실제 Production 확장 호스트를 사용했다. 브라우저 전송 경로를 연결한 검증이며 네이티브 VS Code Webview의 포인터 전달은 검증하지 않았다.
 - 전체 회귀 첫 실행은 [219개 통과·29개 실패](evidence/system-workspace/2026-10-20/callback-regressions-initial-failed.json)였다. 확장 빌드와 겹친 실행에서 초기화·종료·시간 초과 실패가 발생했다. 빌드 종료 후 테스트 코드와 제한 시간을 바꾸지 않고 `pnpm exec vitest run --maxWorkers=2`로 재실행해 [248개 모두 통과](evidence/system-workspace/2026-10-20/callback-regressions-two-workers.json)했다. 첫 실패의 원인이 전부 자원 경합이었다고 단정하지 않는다.
 
-업무 기능 생성 직후 선택이 이전 코드 대상으로 돌아가는 화면도 관측했다. 이후 해당 기능을 다시 선택해 내부 탐색·저장·원문 이동을 완료했으며, 생성 직후 선택 유지까지 검증했다고 주장하지 않는다.
+이 실행에서는 업무 기능 생성 직후 선택이 이전 코드 대상으로 돌아가는 화면도 관측했다. 이후 해당 기능을 다시 선택해 내부 탐색·저장·원문 이동을 완료했다. 이 기록의 제한은 그대로 보존하며, 해당 결함의 수정과 별도 설치 검증은 [기능 저장 뒤 선택 유지](WORKSPACE_NAVIGATION.md#2026-10-20-후속-기능-저장-뒤-선택-유지)에 기록했다.
 
 ![설치 화면의 함수 전달과 소스 근거](evidence/system-workspace/2026-10-20/callback-relations.jpg)
 

@@ -12,6 +12,7 @@ import { compareObservations } from "../../src/workspace/observations";
 import type { DesignDraft } from "../../src/workspace/drafts";
 import { approvalMatches } from "../../src/workspace/execution";
 import { initialNavigation } from "../../src/workspace/navigation";
+import { ancestors } from "../../src/workspace/model";
 import { readFile, writeFile, rename } from "node:fs/promises";
 
 export async function run() {
@@ -479,6 +480,35 @@ export async function run() {
     .map((node) => node.id);
   assert.equal(memberIds.length, 3);
   const sourceBeforeGrouping = await readFile(file.uri.fsPath, "utf8");
+  const selectedMember = workspace.state.graph!.nodes.find(
+    (node) => node.id === memberIds[0],
+  )!;
+  await workspace.handleRequest({
+    id: "navigate-before-feature",
+    action: "saveNavigation",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      generation: workspace.state.navigation!.generation,
+      patch: {
+        selection: selectedMember.id,
+        scopeTrail: ancestors(workspace.state.graph!, selectedMember.id).map(
+          (node) => node.id,
+        ),
+        included: memberIds,
+        savedSpecId: concurrent.id,
+        search: selectedMember.label,
+        focus: true,
+        canvases: [
+          {
+            scopeId: selectedMember.id,
+            positions: [],
+            viewport: { x: 14, y: 18, zoom: 0.9 },
+          },
+        ],
+      },
+    },
+  });
+  const beforeFeatureNavigation = structuredClone(workspace.state.navigation!);
   const request = {
     title: "프로젝트 공유",
     description: "화면·서비스·권한을 함께 검토",
@@ -486,7 +516,7 @@ export async function run() {
     expectedRevision: 0,
     expectedGraphRevision: workspace.state.graph!.revision,
   };
-  const feature = (await workspace.handleRequest({
+  let feature = (await workspace.handleRequest({
     id: "create-feature",
     action: "saveFeature",
     payload: request,
@@ -499,6 +529,47 @@ export async function run() {
     featureNode.members!.slice().sort(),
     memberIds.slice().sort(),
   );
+  assert.equal(
+    workspace.state.navigation!.view.selection,
+    featureNode.id,
+    "saving the first feature selects it even when topology reconciliation replaced navigation",
+  );
+  assert.deepEqual(workspace.state.navigation!.view.scopeTrail, ["system"]);
+  assert.deepEqual(workspace.state.navigation!.view.included, []);
+  assert.deepEqual(workspace.state.navigation!.view.connections, []);
+  assert.equal(workspace.state.navigation!.view.savedSpecId, undefined);
+  assert.equal(workspace.state.navigation!.view.search, "");
+  assert.equal(workspace.state.navigation!.view.focus, true);
+  assert.equal(
+    workspace.state.navigation!.view.canvases.find(
+      (canvas) => canvas.scopeId === "system",
+    )!.viewport,
+    undefined,
+  );
+  assert.deepEqual(
+    workspace.state.navigation!.view.canvases.find(
+      (canvas) => canvas.scopeId === selectedMember.id,
+    ),
+    beforeFeatureNavigation.view.canvases.find(
+      (canvas) => canvas.scopeId === selectedMember.id,
+    ),
+  );
+  assert.ok(
+    workspace.state.navigation!.generation > beforeFeatureNavigation.generation,
+  );
+  await workspace.handleRequest({
+    id: "late-navigation-before-feature",
+    action: "saveNavigation",
+    payload: {
+      projectKey: workspace.state.projectKey,
+      generation: beforeFeatureNavigation.generation,
+      patch: { selection: selectedMember.id, search: "오래된 검색" },
+    },
+  });
+  assert.equal(workspace.state.navigation!.view.selection, featureNode.id);
+  assert.equal(workspace.state.navigation!.view.search, "");
+  await workspace.open();
+  assert.equal(workspace.state.navigation!.view.selection, featureNode.id);
   assert.equal(workspace.state.job, undefined);
   assert.equal(await readFile(file.uri.fsPath, "utf8"), sourceBeforeGrouping);
   await assert.rejects(
@@ -509,6 +580,21 @@ export async function run() {
     }),
     /바뀌었/,
   );
+  const firstFeatureGeneration = workspace.state.navigation!.generation;
+  feature = (await workspace.handleRequest({
+    id: "edit-feature",
+    action: "saveFeature",
+    payload: {
+      ...request,
+      id: feature.id,
+      title: "프로젝트 공유·권한",
+      expectedRevision: feature.revision,
+      expectedGraphRevision: workspace.state.graph!.revision,
+    },
+  })) as Feature;
+  assert.equal(feature.revision, 2);
+  assert.equal(workspace.state.navigation!.view.selection, featureNode.id);
+  assert.ok(workspace.state.navigation!.generation > firstFeatureGeneration);
   const groupedSpec = await workspace.save({
     targetIds: [featureNode.id],
     content,
@@ -535,7 +621,7 @@ export async function run() {
     action: "removeFeature",
     payload: {
       id: feature.id,
-      expectedRevision: 1,
+      expectedRevision: feature.revision,
       expectedGraphRevision: workspace.state.graph!.revision,
     },
   });
@@ -551,6 +637,10 @@ export async function run() {
   );
   assert.equal(workspace.state.stale, false);
   assert.equal(workspace.state.specs.features!.length, 0);
+  assert.equal(workspace.state.navigation!.view.selection, "system");
+  assert.deepEqual(workspace.state.navigation!.view.scopeTrail, ["system"]);
+  assert.equal(workspace.state.navigation!.view.savedSpecId, undefined);
+  assert.equal(workspace.state.navigationNotice, undefined);
   assert.equal(
     workspace.state.specs.specs.some((spec) => spec.id === groupedSpec.id),
     true,
@@ -607,6 +697,11 @@ export async function run() {
       "baseline history and desired intent survive subsequent document edits",
       "baseline acceptance never starts an agent",
       "cross-folder business feature stores canonical code membership",
+      "first feature save selects the new feature after topology repair, clears stale design/search and rejects late navigation",
+      "feature selection survives reopening the workspace",
+      "feature save refits the changed root without losing nested canvas locations",
+      "editing an existing feature retains its identity and selects its updated design",
+      "feature removal selects the root and clears obsolete navigation notice",
       "feature grouping does not change source or start an agent",
       "stale feature edits are rejected",
       "design save preserves feature metadata",

@@ -56,3 +56,23 @@ React Flow의 `defaultViewport`, `onMoveEnd`, `onNodesChange`를 사용하고 �
 - 최종 [전체 회귀 241개](evidence/system-workspace/2026-10-20/navigation-writes-regression.json), [호스트 검사 34개](evidence/system-workspace/2026-10-20/navigation-writes-host-integration.json), 웹·확장 빌드를 통과했다. 탐색 관련 14개 검사는 전체 회귀에도 포함되므로 별도로 더해 집계하지 않는다. [독립 대조와 소스 해시](evidence/system-workspace/2026-10-20/navigation-writes-verification.json)를 함께 보존한다.
 
 [재시작 전](evidence/system-workspace/2026-10-20/navigation-writes-before.jpg) · [재시작 후](evidence/system-workspace/2026-10-20/navigation-writes-after.jpg) · [집중 보기 복원](evidence/system-workspace/2026-10-20/navigation-writes-focus.jpg)
+
+## 2026-10-20 후속: 기능 저장 뒤 선택 유지
+
+처음 업무 기능을 만들면 루트에 사용자 기능과 `코드 구조` 묶음이 생긴다. 기존 코드 경로를 이 구조에 맞추는 동안 탐색 세대가 바뀌었는데, 화면의 저장 완료 콜백은 교체 전 탐색 기록기에 새 기능 선택을 전달했다. 그 결과 저장은 성공해도 이전 코드 선언이 계속 선택됐다. [수정 전 확장 호스트 검사](evidence/system-workspace/2026-10-20/feature-navigation-before.json)에서도 새 기능 대신 `ProjectEditor`가 남는 실패를 재현했다.
+
+이제 기능 저장을 처리하는 호스트가 최신 구조 분석을 기다린 뒤 선택과 루트 경로를 함께 보관한다. 생성·편집한 기능의 설계가 바로 열리고, 기능을 해제하면 프로젝트로 돌아간다. 이전 검색어·묶인 대상·저장 설계 선택을 정리하고, 늦은 이전 탐색 요청은 새 선택을 덮지 못한다. 첫 묶음 생성으로 루트 구성이 달라지면 화면을 다시 맞춘다. 기존 노드 위치와 내부 범위의 확대·이동 기록은 유지한다. 코드 수정이나 모델 실행은 시작하지 않는다.
+
+첫 수정 설치본에서 선택 유지는 확인했으나 이전 축소율이 남아 새 카드가 작게 보였다. [중간 실행 기록](evidence/system-workspace/2026-10-20/feature-navigation-before-fit-ui.json)과 [당시 화면](evidence/system-workspace/2026-10-20/feature-navigation-before-fit.jpg)을 보존한다. 루트 화면 맞춤까지 적용한 별도 설치본에서 다시 검증했다.
+
+- [최종 설치 호스트 기록](evidence/system-workspace/2026-10-20/feature-navigation-installed-ui.json): 요청 122개 성공(초안 저장 100개, 탐색 저장 15개 포함), 클라이언트 오류 0개, 모델 작업 0개. 원본 추적 파일 57개와 Git HEAD·인덱스·상태 보존.
+- `TeamMembers`를 검색해 선택한 상태에서 화면과 `removeTeamMember`를 묶었다. 새 기능 선택과 검색어 정리, 읽을 수 있는 카드 크기를 확인했다. 선택 세대는 생성 `0→2`, 이름 편집 `2→3`, 해제 `3→5`로 바뀌었고 각 완료 시점의 선택을 호스트가 검사했다.
+- 이름을 `구성원 제거·권한`으로 편집하고 목표와 완료 기준을 저장했다. 화면 재로딩 뒤에도 해당 기능과 저장 설계를 확인했다. 내부 전달 연결선에서 실제 101행의 `removeTeamMember` 범위를 열었다. 묶음 해제 후 프로젝트 선택과 저장 설계 보존을 확인했다.
+- 설치 VSIX SHA-256: `89ff0a7aba5f3e6f1bfae245c9faf3100efc58cabac12bbae8f1ea2200194f91`. 수정하지 않은 설치 JS/CSS와 Production 확장 호스트를 사용했다. 브라우저 전송 경로의 검증이며 네이티브 VS Code Webview 포인터 전달은 별도 미검증이다.
+- [확장 호스트 검사 39개](evidence/system-workspace/2026-10-20/feature-navigation-host-integration.json), [전체 회귀 248개](evidence/system-workspace/2026-10-20/feature-navigation-regression.json)가 통과했다. 호스트 검사는 생성·편집·해제, 같은 작업 공간 재열기, 이전 세대 요청 거절, 내부 캔버스 보존과 겹치는 재분석까지 포함한다. 전체 회귀는 `pnpm exec vitest run --maxWorkers=2`로 실행했다.
+
+![생성 직후 자동 선택과 화면 맞춤](evidence/system-workspace/2026-10-20/feature-navigation-created.jpg)
+
+[이름 편집·재로딩 후](evidence/system-workspace/2026-10-20/feature-navigation-reloaded.jpg) · [해제 후](evidence/system-workspace/2026-10-20/feature-navigation-removed.jpg)
+
+설치 재현은 `PUREOBOM_DESIGN_UI=1`, `PUREOBOM_STRUCTURE_UI=1`에서 `node scripts/test-installed-design-ui.mjs '<준비한 Next baseline Git 폴더>'`를 실행한다. 함수 검색부터 첫 기능 생성·편집·설계 저장·원문 이동·해제까지 조작한 뒤 검증 종료 버튼으로 결과를 기록한다.

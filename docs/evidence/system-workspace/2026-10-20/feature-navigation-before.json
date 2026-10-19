@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-19T20:54:55.833Z",
+  "productCommit": "4be1cfb2d2106e7c4412df8296b837788a4bc187",
+  "command": "pnpm extension:design-test",
+  "scope": "Existing product extension bundle with a new host integration assertion; test runner only changed before this run.",
+  "exitCode": 1,
+  "assertion": "saving the first feature selects it even when topology reconciliation replaced navigation",
+  "actualSelection": "symbol:components%2FProjectEditor.tsx:ProjectEditor",
+  "expectedSelection": "feature:8ba0c2e6-6ce8-4343-ae4a-a8f86ed040e2",
+  "fixture": "test-results/design-workspace/run-tjnB6l/project"
+}

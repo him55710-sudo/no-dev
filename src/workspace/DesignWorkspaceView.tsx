@@ -20,7 +20,6 @@ import { useDesignDrafts, type DraftActions } from "./useDesignDrafts";
 import { draftMatches } from "./drafts";
 import { DraftNotice } from "./DraftNotice";
 import {
-  featureNodeId,
   type Feature,
   type FeatureRequest,
   type RemoveFeatureRequest,
@@ -763,23 +762,8 @@ export function DesignWorkspaceView({
                 jobIsActive(state.job) ||
                 state.job?.phase === "recovery"
               }
-              save={async (request) => {
-                const feature = await actions.saveFeature!(request);
-                setIncluded([]);
-                setSelection(featureNodeId(feature.id));
-                setScope("system");
-                return feature;
-              }}
-              remove={
-                actions.removeFeature
-                  ? async (request) => {
-                      await actions.removeFeature!(request);
-                      setIncluded([]);
-                      setSelection("system");
-                      setScope("system");
-                    }
-                  : undefined
-              }
+              save={actions.saveFeature}
+              remove={actions.removeFeature}
               close={() => setEditingFeature(undefined)}
             />
           ) : null}

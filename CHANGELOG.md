@@ -2,6 +2,7 @@
 
 ## 0.7.0 — local AI development preview (unreleased)
 
+- Keep newly saved or edited business features selected after graph projection changes the navigation context. Commit the refreshed graph and selection in the host, reject delayed old navigation, and fit the changed root while preserving nested canvas locations. See [reproduction and installed validation](docs/WORKSPACE_NAVIGATION.md#2026-10-20-후속-기능-저장-뒤-선택-유지).
 - Trace compiler-resolved function values passed as call arguments or JSX props, including hooks and form actions. Preserve distinct source evidence, include these relationships in implementation scope and stored observations, and label them as function passing rather than execution. See [external-app evidence and limits](docs/CALLBACK_RELATIONS.md).
 - Include a system-design walkthrough with original screenshots, an evidence manifest and a support matrix. Reproduce two missing server permission guards with a controlled fixture: the real checks fail and applying is rejected; restoring the guards passes all nine checks. Keep this deliberate failure separate from the recorded real-model success; see [the walkthrough](docs/SYSTEM_WORKSPACE_DEMO.md).
 - Verify a real Codex continuation of a timed-out external Next app job, including fresh checks, full production compilation with local pricing fixtures, and same-job apply/undo recovery. Preserve the validation-driver failure and blocked browser evidence separately. Include external validation tools in the source archive; see [evidence and limits](docs/LIVE_CONTINUATION.md).

@@ -419,6 +419,7 @@ const observationChange=document.getElementById('observation-change');if(observa
                 "source",
                 "saveNavigation",
                 "saveFeature",
+                "removeFeature",
                 "saveSpec",
                 "saveDraft",
                 "removeDraft",
@@ -427,7 +428,30 @@ const observationChange=document.getElementById('observation-change');if(observa
               ].includes(payload.action),
               "This structure validation must not invoke a provider or implementation.",
             );
+          const featureMutation =
+            configuration.structureValidation &&
+            ["saveFeature", "removeFeature"].includes(payload.action);
+          if (featureMutation)
+            entry.navigationBefore = structuredClone(
+              workspace.state.navigation,
+            );
           const result = await workspace.handleRequest(payload);
+          if (featureMutation) {
+            const feature = result as
+              | { id: string; revision: number }
+              | undefined;
+            const selected =
+              payload.action === "saveFeature"
+                ? `feature:${feature!.id}`
+                : "system";
+            assert.equal(workspace.state.navigation!.view.selection, selected);
+            assert.deepEqual(workspace.state.navigation!.view.scopeTrail, [
+              "system",
+            ]);
+            assert.equal(workspace.state.navigation!.view.search, "");
+            entry.feature = feature ?? { removedId: payload.payload.id };
+            entry.navigationAfter = structuredClone(workspace.state.navigation);
+          }
           if (
             configuration.navigationValidation &&
             payload.action === "saveNavigation"
@@ -631,6 +655,7 @@ const observationChange=document.getElementById('observation-change');if(observa
             continuationWitness,
             clientErrors,
             finalSpecs: workspace.state.specs,
+            finalNavigation: workspace.state.navigation,
             originalRestored: true,
           };
           await writeFile(

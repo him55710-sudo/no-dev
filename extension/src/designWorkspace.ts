@@ -61,6 +61,7 @@ import {
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import {
   featureRequestSchema,
+  featureNodeId,
   projectFeatures,
   saveFeature,
   removeFeature,
@@ -972,6 +973,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.busy || this.state.stale)
       throw Error("구조 분석이 완료된 뒤 기능 묶음을 편집해 주세요.");
     const serial = this.serial;
+    const folder = this.folder;
     const id = request.id ?? randomUUID();
     const next = specDocumentSchema.parse({
       ...this.state.specs,
@@ -990,6 +992,7 @@ export class DesignWorkspace implements vscode.Disposable {
           throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
       });
       await this.refresh();
+      await this.finishFeatureEdit(featureNodeId(id), folder);
       return next.features!.find((feature) => feature.id === id)!;
     } finally {
       this.saving = false;
@@ -1010,6 +1013,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.busy || this.state.stale)
       throw Error("구조 분석이 완료된 뒤 기능 묶음을 해제해 주세요.");
     const serial = this.serial;
+    const folder = this.folder;
     const next = specDocumentSchema.parse({
       ...this.state.specs,
       features: removeFeature(this.state.specs.features ?? [], graph, request),
@@ -1022,9 +1026,43 @@ export class DesignWorkspace implements vscode.Disposable {
           throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
       });
       await this.refresh();
+      await this.finishFeatureEdit("system", folder);
     } finally {
       this.saving = false;
     }
+  }
+  private async finishFeatureEdit(
+    selection: string,
+    folder: vscode.WorkspaceFolder | undefined,
+  ) {
+    if (this.disposed || this.folder !== folder) return;
+    if (!this.state.graph?.nodes.some((node) => node.id === selection))
+      throw Error(
+        "저장 후 기능 구성이 바뀌었습니다. 구조를 다시 확인해 주세요.",
+      );
+    // Feature projection can replace navigation while the request is pending.
+    // Commit the selection with the refreshed graph, not through the UI's old
+    // writer. A new generation also rejects delayed pre-save canvas/input writes.
+    const view = this.state.navigation?.view ?? initialNavigation();
+    await this.replaceNavigation({
+      ...view,
+      selection,
+      scopeTrail: ["system"],
+      savedSpecId: undefined,
+      included: [],
+      connections: [],
+      search: "",
+      // The root changes from code folders to feature cards (or back). Fit that
+      // visible result once, retaining node positions and every nested viewport.
+      canvases: view.canvases.map((canvas) =>
+        canvas.scopeId === "system"
+          ? { ...canvas, viewport: undefined }
+          : canvas,
+      ),
+    });
+    if (this.disposed || this.folder !== folder) return;
+    this.state.navigationNotice = undefined;
+    this.emit();
   }
   private async persistDesign(
     next: SpecDocument,
