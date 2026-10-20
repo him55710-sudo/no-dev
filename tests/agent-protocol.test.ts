@@ -277,6 +277,65 @@ describe("Codex App Server protocol", { timeout: 45000 }, () => {
       await outcome;
     }
   });
+  it("drops buffered events and approvals after cancellation closes the connection", async () => {
+    const server = client("hang"),
+      abort = new AbortController();
+    let ready!: () => void;
+    const started = new Promise<void>((resolve) => {
+      ready = resolve;
+    });
+    const events: string[] = [],
+      approvals: string[] = [];
+    server.onEvent(({ method }) => {
+      events.push(method);
+      if (method === "fixture/cancel") abort.abort();
+    });
+    server.onApproval(({ id }) => approvals.push(id));
+    await server.start();
+    const run = server.run({
+      prompt: "Test",
+      signal: abort.signal,
+      onSession: () => ready(),
+    });
+    const outcome = run.catch((error: Error) => error);
+    try {
+      await started;
+      // Feed one complete transport chunk directly so the OS cannot split the
+      // frames and accidentally hide the buffered-after-close regression.
+      server["receive"](
+        Buffer.from(
+          [
+            { method: "fixture/cancel", params: {} },
+            {
+              id: 20,
+              method: "item/fileChange/requestApproval",
+              params: { threadId: "thread", turnId: "turn", itemId: "late" },
+            },
+            { method: "item/agentMessage/delta", params: { delta: "late" } },
+            {
+              method: "turn/completed",
+              params: {
+                threadId: "thread",
+                turn: { id: "turn", status: "completed", error: null },
+              },
+            },
+          ]
+            .map((frame) => JSON.stringify(frame) + "\n")
+            .join(""),
+        ),
+      );
+      const result = await outcome;
+      expect(result).toBeInstanceOf(Error);
+      expect((result as Error).message).toMatch(/취소/);
+      expect(approvals).toEqual([]);
+      expect(events).toEqual(["fixture/cancel"]);
+      expect(() => server.decide("20", "accept")).toThrow(/이미 끝났거나/);
+    } finally {
+      abort.abort();
+      await server.close();
+      await outcome;
+    }
+  });
   it("cancels a live turn and closes its process", async () => {
     const server = client("hang"),
       abort = new AbortController();

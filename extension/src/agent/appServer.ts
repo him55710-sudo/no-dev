@@ -165,7 +165,9 @@ export class CodexAppServer {
       return;
     }
     let end: number;
-    while ((end = this.buffer.indexOf("\n")) !== -1) {
+    // A listener can cancel/close while handling the previous frame. Do not
+    // dispatch approvals or events that arrived in the same transport chunk.
+    while (!this.stopped && (end = this.buffer.indexOf("\n")) !== -1) {
       const line = this.buffer.slice(0, end).trim();
       this.buffer = this.buffer.slice(end + 1);
       if (!line) continue;
