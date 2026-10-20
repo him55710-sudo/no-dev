@@ -26,6 +26,11 @@ import {
 } from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
+import {
+  scopeHighlights,
+  scopeMarkerLabels,
+  type ScopeHighlights,
+} from "./scopeHighlight";
 import { ObservationComparison } from "./ObservationComparison";
 import { ConnectionEvidence } from "./ConnectionEvidence";
 import { enterScope, type WorkspaceNavigation } from "./navigation";
@@ -88,6 +93,7 @@ function StructureTree({
   onEnter,
   expanded,
   onExpanded,
+  highlights,
 }: {
   graph: StructureGraph;
   selectedId: string;
@@ -95,6 +101,7 @@ function StructureTree({
   onEnter: (id: string) => void;
   expanded: string[];
   onExpanded: (ids: string[]) => void;
+  highlights: ScopeHighlights;
 }) {
   const children = useMemo(() => {
     const result = new Map<string, StructureNode[]>();
@@ -114,7 +121,7 @@ function StructureTree({
       return (
         <li key={node.id}>
           <div
-            className={`design-tree-row ${selectedId === node.id ? "selected" : ""}`}
+            className={`design-tree-row ${highlights.nodes.has(node.id) ? `scope-${highlights.nodes.get(node.id)}` : ""} ${selectedId === node.id ? "selected" : ""}`}
             style={{ paddingLeft: 10 + depth * 12 }}
           >
             {hasChildren ? (
@@ -143,7 +150,12 @@ function StructureTree({
               onDoubleClick={() => onEnter(node.id)}
             >
               <span className={`tree-dot kind-${node.kind}`} />
-              {node.label}
+              <span className="tree-label">{node.label}</span>
+              {highlights.nodes.has(node.id) ? (
+                <span className="tree-scope-label">
+                  {scopeMarkerLabels[highlights.nodes.get(node.id)!]}
+                </span>
+              ) : null}
             </button>
           </div>
           {open && hasChildren ? <ul>{render(node.id, depth + 1)}</ul> : null}
@@ -496,6 +508,20 @@ export function DesignWorkspaceView({
       graph && spec ? implementationScope(graph, spec.targetIds) : undefined,
     [graph, spec],
   );
+  const showScope =
+    !!spec &&
+    (spec.targetIds.some((id) => id !== "system") || !!content?.desired.trim());
+  const highlights = useMemo<ScopeHighlights>(
+    () =>
+      graph && spec && showScope
+        ? scopeHighlights(
+            graph,
+            spec.targetIds,
+            related?.nodes.map((node) => node.id) ?? [],
+          )
+        : { nodes: new Map(), edges: new Set<string>() },
+    [graph, spec, related, showScope],
+  );
   const perform = (work: () => Promise<unknown>) => {
     setFeedback("");
     void work().catch((e) =>
@@ -627,12 +653,22 @@ export function DesignWorkspaceView({
                 {results.map((node) => (
                   <li key={node.id}>
                     <button
+                      className={
+                        highlights.nodes.has(node.id)
+                          ? `scope-${highlights.nodes.get(node.id)}`
+                          : undefined
+                      }
                       onClick={() => {
                         setSelection(node.id);
                         setScope(node.parentId ?? "system");
                       }}
                     >
                       <strong>{node.label}</strong>
+                      {highlights.nodes.has(node.id) ? (
+                        <span>
+                          {scopeMarkerLabels[highlights.nodes.get(node.id)!]}
+                        </span>
+                      ) : null}
                       <span>
                         {typeNames[node.kind]} ·{" "}
                         {node.sources[0]?.path ?? node.label}
@@ -649,6 +685,7 @@ export function DesignWorkspaceView({
                 onEnter={enter}
                 expanded={expanded}
                 onExpanded={(value) => field("expanded", value)}
+                highlights={highlights}
               />
             )
           ) : (
@@ -742,6 +779,21 @@ export function DesignWorkspaceView({
                   "코드에서 시스템으로"}
               </h1>
               <p>선택해서 설계를 읽고, 두 번 눌러 내부 구조로 들어가세요.</p>
+              {showScope ? (
+                <div
+                  className="scope-legend"
+                  aria-label="설계와 연결된 코드 표시"
+                >
+                  <span className="scope-target">설계 대상</span>
+                  <span className="scope-related">
+                    연결 후보 · 대상 포함 {related?.paths.length ?? 0}개 파일
+                  </span>
+                  <p>
+                    코드 연결로 찾은 후보입니다. 실제 수정 여부는 변경 검토에서
+                    확인합니다.
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="design-canvas">
@@ -760,6 +812,7 @@ export function DesignWorkspaceView({
                   ])
                 }
                 selectedId={selectedId}
+                highlights={highlights}
                 onSelect={setSelection}
                 onEnter={enter}
                 onConnection={(ids) => {

@@ -18,6 +18,11 @@ import {
   type StructureNode,
 } from "./model";
 import type { CanvasLocation } from "./navigation";
+import {
+  scopeMarkerLabels,
+  type ScopeHighlights,
+  type ScopeMarker,
+} from "./scopeHighlight";
 
 type CardData = {
   label: string;
@@ -25,6 +30,7 @@ type CardData = {
   detail: string;
   selected: boolean;
   children: number;
+  scope?: ScopeMarker;
 };
 type Card = Node<CardData, "structure">;
 const labels: Record<string, string> = {
@@ -37,12 +43,19 @@ const labels: Record<string, string> = {
 };
 const StructureCard = memo(function StructureCard({ data }: NodeProps<Card>) {
   return (
-    <div className={`structure-card ${data.selected ? "is-selected" : ""}`}>
+    <div
+      className={`structure-card ${data.scope ? `scope-${data.scope}` : ""} ${data.selected ? "is-selected" : ""}`}
+    >
       <Handle type="target" position={Position.Left} isConnectable={false} />
       <span className="structure-card-kind">{labels[data.kind]}</span>
       <strong title={data.label}>{data.label}</strong>
       <span className="structure-card-detail">{data.detail}</span>
-      {data.children > 0 ? (
+      {data.scope ? (
+        <span className="structure-scope-label">
+          {scopeMarkerLabels[data.scope]}
+          {data.children > 0 ? ` · 하위 ${data.children}개 ↗` : ""}
+        </span>
+      ) : data.children > 0 ? (
         <span className="structure-card-count">
           {data.children}개 하위 구조 ↗
         </span>
@@ -62,6 +75,7 @@ export function StructureCanvas({
   onConnection,
   location,
   onLocation,
+  highlights,
 }: {
   graph: StructureGraph;
   scopeId: string;
@@ -71,6 +85,7 @@ export function StructureCanvas({
   onConnection: (ids: string[]) => void;
   location?: CanvasLocation;
   onLocation: (location: CanvasLocation) => void;
+  highlights: ScopeHighlights;
 }) {
   const [positions, setPositions] = useState<
     Record<string, { x: number; y: number }>
@@ -155,8 +170,9 @@ export function StructureCanvas({
             : "코드 경로에서 추출",
       selected: selectedId === node.id,
       children: structureChildren(graph, node.id).length,
+      scope: highlights.nodes.get(node.id),
     },
-    ariaLabel: `${labels[node.kind]} ${node.label}`,
+    ariaLabel: `${labels[node.kind]} ${node.label}${highlights.nodes.has(node.id) ? ` · ${scopeMarkerLabels[highlights.nodes.get(node.id)!]}` : ""}`,
     selected: selectedId === node.id,
   }));
   const updatePositions = (changes: NodeChange<Card>[]) => {
@@ -184,7 +200,12 @@ export function StructureCanvas({
     <ReactFlow<Card>
       key={scopeId}
       nodes={nodes}
-      edges={layout.edges}
+      edges={layout.edges.map((edge) => ({
+        ...edge,
+        className: edge.data.originals.some((id) => highlights.edges.has(id))
+          ? "scope-related-edge"
+          : undefined,
+      }))}
       nodeTypes={nodeTypes}
       onNodesChange={updatePositions}
       onMoveEnd={(_, viewport) => {

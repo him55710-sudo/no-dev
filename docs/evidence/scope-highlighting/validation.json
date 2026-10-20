@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-20T07:08:50.465Z",
+  "tests": [
+    {
+      "name": "scope-highlight-regression.json",
+      "sha256": "464bac13bf6c3b6b968a10f2db6577eb0bb4b9aabfd58e89d659d752f8e0ed4f",
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "file": "design-drafts.test.ts",
+          "tests": [
+            {
+              "title": "durable design drafts restores unfinished text and the original context without writing a project or design",
+              "status": "passed"
+            },
+            {
+              "title": "durable design drafts isolates projects and refuses stale writers or silent context replacement",
+              "status": "passed"
+            },
+            {
+              "title": "durable design drafts keeps input on failed confirmation and consumes only the reviewed draft revision",
+              "status": "passed"
+            },
+            {
+              "title": "durable design drafts detects same-revision manual edits and corrupt records without overwriting them",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "system-workspace.test.ts",
+          "tests": [
+            {
+              "title": "source-backed system structure resolves aliases and re-exports to the real policy shared by API and UI",
+              "status": "passed"
+            },
+            {
+              "title": "source-backed system structure keeps same-named but unrelated functions separate, and reports dynamic gaps",
+              "status": "passed"
+            },
+            {
+              "title": "source-backed system structure keeps symbol identities after line shifts and records syntax errors",
+              "status": "passed"
+            },
+            {
+              "title": "source-backed system structure rejects paths outside the snapshot and duplicate files",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation accepts reviewed evidence without rewriting intent, and permits the next change",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation reconnects a renamed declaration by explicit selection, preserving identity and history",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation rejects stale code/design previews and unavailable targets without changing saved evidence",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation preserves confirmed intent while code drifts and rejects a stale implementation request",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation reconnects unchanged moved code, without guessing ambiguous duplicates",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation retains the baseline and enforces revisions on concurrent design edits",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation creates a multi-file change contract only from an explicit behavioral action",
+              "status": "passed"
+            },
+            {
+              "title": "living design and observed implementation expands a single policy to its API and UI callers without unrelated modules",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-callbacks.test.ts",
+          "tests": [
+            {
+              "title": "compiler-backed function passing connects aliased hook callbacks and JSX actions to their implementation without claiming a direct call",
+              "status": "passed"
+            },
+            {
+              "title": "compiler-backed function passing retains callback evidence through save, old-snapshot comparison and changed callback targets",
+              "status": "passed"
+            },
+            {
+              "title": "compiler-backed function passing keeps ordinary call results separate and reports unresolved function values instead of guessing by name",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-connections.test.ts",
+          "tests": [
+            {
+              "title": "connection occurrence evidence keeps each call's arguments, branches and nearby catch separate with exact source locations",
+              "status": "passed"
+            },
+            {
+              "title": "connection occurrence evidence does not inherit an outer creation condition into a deferred function and describes short-circuit and loop syntax",
+              "status": "passed"
+            },
+            {
+              "title": "connection occurrence evidence distinguishes callback registration, JSX props and spreads without inventing parameter positions",
+              "status": "passed"
+            },
+            {
+              "title": "connection occurrence evidence detects changed arguments at the second occurrence and guards, but ignores comments and line shifts",
+              "status": "passed"
+            },
+            {
+              "title": "connection occurrence evidence describes switch fallthrough, catch without a binding, result storage and callbacks after spreads accurately",
+              "status": "passed"
+            },
+            {
+              "title": "connection occurrence evidence hashes full evidence while bounding displayed input and context excerpts",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-features.test.ts",
+          "tests": [
+            {
+              "title": "user-defined business features keeps many-to-many membership and canonical compiler evidence across folders",
+              "status": "passed"
+            },
+            {
+              "title": "user-defined business features surfaces removed membership as drift and preserves target intent on explicit rebaseline",
+              "status": "passed"
+            },
+            {
+              "title": "user-defined business features reattaches unique moves, retains missing references, and refuses ambiguous implementation",
+              "status": "passed"
+            },
+            {
+              "title": "user-defined business features rejects stale updates, nested feature cycles, forged targets and duplicate identities",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-function-bodies.test.ts",
+          "tests": [
+            {
+              "title": "function bodies in structure descriptions reads direct, parenthesized and asserted arrow/function expressions with stable identities and nested branches",
+              "status": "passed"
+            },
+            {
+              "title": "function bodies in structure descriptions separates factory creation, passed callback and returned function bodies instead of assuming wrapper behavior",
+              "status": "passed"
+            },
+            {
+              "title": "function bodies in structure descriptions retains unknown factory return types and does not flatten another function's deferred implementation",
+              "status": "passed"
+            },
+            {
+              "title": "function bodies in structure descriptions preserves try/catch/finally order and limits large summaries explicitly",
+              "status": "passed"
+            },
+            {
+              "title": "function bodies in structure descriptions keeps stored goals and old descriptions while detecting callback edits; comments and line shifts do not rewrite descriptions",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-navigation.test.ts",
+          "tests": [
+            {
+              "title": "workspace navigation restores a feature's alias path, selected rule, saved design and per-scope layout without canonicalizing away the user's context",
+              "status": "passed"
+            },
+            {
+              "title": "workspace navigation keeps only valid path prefixes after deletion and never rebinds a missing symbol by matching its label",
+              "status": "passed"
+            },
+            {
+              "title": "workspace navigation preserves a saved draft's identity and an edge inspector, but truncates forged or cyclic breadcrumb chains",
+              "status": "passed"
+            },
+            {
+              "title": "workspace navigation rejects executable fields and invalid viewport values in browser input",
+              "status": "passed"
+            },
+            {
+              "title": "local navigation storage survives a new store instance, isolates projects and persists the latest queued interaction",
+              "status": "passed"
+            },
+            {
+              "title": "local navigation storage rejects corrupt, oversized and cross-project records and preserves valid data on invalid writes",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-observations.test.ts",
+          "tests": [
+            {
+              "title": "stored observations and current evidence captures real shared policy behavior and compiler-backed UI/API relations, preserving goal text across external edits",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence tracks added declarations and changed call targets/counts without calling a missing static edge a removed runtime path",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence restores uniquely moved facts, ignores comment/line shifts and refuses ambiguous same-content candidates",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence aligns unchanged conditions before matching numbered positions after an inserted rule",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence retains observations for a moved file when other selected files still exist",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence round-trips old designs without fabricating historic facts and keeps snapshots through explicit baseline acceptance",
+              "status": "passed"
+            },
+            {
+              "title": "stored observations and current evidence bounds snapshots and reports omitted facts, unsupported files and syntax errors honestly",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-routes.test.ts",
+          "tests": [
+            {
+              "title": "Next App Router path candidates does not treat a tsconfig alias named swr as the external SWR hook",
+              "status": "passed"
+            },
+            {
+              "title": "Next App Router path candidates connects fixed fetch addresses and imported SWR keys to route files, retaining their distinct evidence",
+              "status": "passed"
+            },
+            {
+              "title": "Next App Router path candidates preserves goals, old snapshots, compiler edge identities and full request evidence across changes",
+              "status": "passed"
+            },
+            {
+              "title": "Next App Router path candidates does not confuse shadowed helpers, arbitrary strings, external URLs or dynamic keys with local routes",
+              "status": "passed"
+            },
+            {
+              "title": "Next App Router path candidates uses src/app only when root app is absent and refuses conflicting route groups",
+              "status": "passed"
+            },
+            {
+              "title": "Next App Router path candidates leaves private, dynamic, parallel and non-handler files unconnected and explains unresolved paths",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "workspace-scope-highlight.test.ts",
+          "tests": [
+            {
+              "title": "design scope across navigation levels projects real UI/API callers into their folders without marking unrelated siblings or import edges",
+              "status": "passed"
+            },
+            {
+              "title": "design scope across navigation levels marks overlapping business features without selecting their unrelated members",
+              "status": "passed"
+            },
+            {
+              "title": "design scope across navigation levels uses the selected file's full contents as targets and does not fabricate missing selections",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scope-highlight-final.json",
+      "sha256": "831317f25e819337b0ae16dbc3308dba59a88c7dd4ffc330799f9cf06afd7771",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "file": "workspace-scope-highlight.test.ts",
+          "tests": [
+            {
+              "title": "design scope across navigation levels projects real UI/API/test callers into their folders without marking unrelated siblings or import edges",
+              "status": "passed"
+            },
+            {
+              "title": "design scope across navigation levels marks overlapping business features without selecting their unrelated members",
+              "status": "passed"
+            },
+            {
+              "title": "design scope across navigation levels uses the selected file's full contents as targets and does not fabricate missing selections",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "testCounting": "The final three tests replace the three scope tests in the 56-test regression run; these are not 59 distinct tests.",
+  "finalVsixSha256": "bbdb9fd10276cc7129f1a773ab7e6c79f8fcb60e54282aeae62e6e222c4d1a06",
+  "finalDesignJsSha256": "094b2d2ad8099e6cd37368564c1154300bda8ae76e3f87e795f127a724e3955e",
+  "finalDesignCssSha256": "6c9ef204bda37f014b5b65a83134da83a4474d0d38d66e88d3dcb93bc568cf83",
+  "nativeAttempt": {
+    "artifact": {
+      "vsixSha256": "146391998e7a352b9f5afcdf5efb3f5c24af2068fa505b5e1dd334c393756ece",
+      "files": {
+        "out/extension.cjs": "db3078f9c82952f2402d0419330773c6de2c10ed601db619e7c4e8e1e74d4560",
+        "out/worker.cjs": "336c797222355550a408a9bde9ea6d4030ebcee2a912641ed36052c122999dc8",
+        "out/agent-host.cjs": "8c4443ca7502a12578a8da04bfdb46da2c82de3e1744ee5b20b6ea825d7da8cb",
+        "media/design.js": "f4eb0b53150cc482d58747328755c348a142dd998f681e4dcaf2637d8972acff",
+        "media/design.css": "0b5e3bd2d73e32f665651b79ff1401b9c970d1df95f2913e45a39e8780f63f32"
+      }
+    },
+    "status": "incomplete",
+    "exitCode": 1,
+    "terminalError": "Manual UI validation timed out after 60 minutes",
+    "observedThroughWindowsComputerUse": [
+      "Selected policy.js; target and related UI/service/test markers appeared in native Webview.",
+      "Created and saved a business feature containing policy.js.",
+      "Entered the feature, dragged its code card, and entered desired behavior; the UI showed a locally saved draft.",
+      "Code candidate labels overflowed horizontally before the checkbox width fix."
+    ],
+    "notVerified": [
+      "The planned saved-spec checkpoint, restart and finish assertions were not reached.",
+      "No complete native implementation/review/apply/undo flow was verified.",
+      "Client-side native JavaScript errors were not captured.",
+      "No final request report was written; request counts cannot be reconstructed."
+    ],
+    "originalProjectVerifiedAfterExit": {
+      "fileCount": 8,
+      "hashesPreserved": true,
+      "headIndexAndStatusPreserved": true
+    }
+  },
+  "browserComponentCheck": {
+    "status": "observed",
+    "scope": "Actual FeatureEditor and design.css in a local Vite component fixture; not an installed VS Code host.",
+    "widths": [
+      320,
+      380
+    ],
+    "observed": [
+      "File labels visible next to checkboxes.",
+      "Long file paths wrap in the narrow panel.",
+      "Searching update-project, selecting its file and saving yielded two selected members."
+    ],
+    "screenshotSha256": {
+      "code-picker.png": "a06787b999e09517f25a97f2b291d24b66a428f49bebd6a7e1c3e94541cb2e36",
+      "code-picker-detail.png": "176310694691cecc1f411659df84ec9bb21df1d86636fbf3cb9e4f3fedf0eb8f"
+    }
+  },
+  "humanParticipants": 0,
+  "humanStudyResults": 0
+}

@@ -7,6 +7,7 @@
   --design-line: var(--vscode-panel-border, #e0e5ec);
   --design-accent: var(--vscode-button-background, #3d65d8);
   --design-accent-text: var(--vscode-button-foreground, #fff);
+  --design-related: var(--vscode-charts-green, #16776a);
   --design-input: var(--vscode-input-background, #f7f8fa);
   --design-grid: var(--vscode-editorWidget-border, #d9dfeb);
   font-family: var(--vscode-font-family, Inter, "Segoe UI", sans-serif);
@@ -210,6 +211,29 @@ textarea {
   background: #929db1;
   flex: none;
 }
+.tree-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tree-scope-label {
+  margin-left: auto;
+  flex: none;
+  font-size: 9px;
+  color: var(--design-muted);
+}
+.design-tree-row.scope-target,
+.design-tree-row.scope-target-container,
+.search-results .scope-target,
+.search-results .scope-target-container {
+  box-shadow: inset 3px 0 var(--design-accent);
+}
+.design-tree-row.scope-related,
+.design-tree-row.scope-related-container,
+.search-results .scope-related,
+.search-results .scope-related-container {
+  box-shadow: inset 3px 0 var(--design-related);
+}
 .kind-group {
   background: #727de7;
 }
@@ -327,6 +351,44 @@ textarea {
   box-shadow: 0 0 0 4px
     color-mix(in srgb, var(--design-accent) 10%, transparent);
 }
+.structure-card.scope-target,
+.structure-card.scope-target-container {
+  background: color-mix(in srgb, var(--design-accent) 7%, var(--design-panel));
+}
+.structure-card.scope-related,
+.structure-card.scope-related-container {
+  border-color: var(--design-related);
+  background: color-mix(in srgb, var(--design-related) 7%, var(--design-panel));
+}
+.structure-card.is-selected {
+  border-color: var(--design-accent);
+}
+.structure-scope-label {
+  font-size: 10px;
+  line-height: 1.4;
+}
+.scope-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.scope-legend > span {
+  padding: 3px 7px;
+  font-size: 10px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.scope-legend .scope-target {
+  border-color: var(--design-accent);
+}
+.scope-legend .scope-related {
+  border-color: var(--design-related);
+}
+.scope-legend p {
+  flex-basis: 100%;
+  font-size: 10px;
+}
 .structure-card-kind {
   font-size: 9px;
   color: var(--design-muted);
@@ -358,6 +420,10 @@ textarea {
 .react-flow__edge-path {
   stroke: var(--design-grid);
   stroke-width: 1.7;
+}
+.scope-related-edge .react-flow__edge-path {
+  stroke: var(--design-related);
+  stroke-width: 2.5;
 }
 .react-flow__handle {
   background: var(--design-grid);
@@ -941,8 +1007,13 @@ textarea {
   align-items: start;
 }
 .baseline-search input {
+  width: auto;
   flex: 0 0 auto;
   margin-top: 3px;
+}
+.baseline-search label > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .baseline-review details,
 .baseline-history {

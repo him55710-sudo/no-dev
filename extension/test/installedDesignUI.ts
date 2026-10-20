@@ -15,8 +15,8 @@ import {
 import { compareObservations } from "../../src/workspace/observations";
 import type { ImplementationJob } from "../../src/workspace/job";
 
-/** Test-only loopback transport for the unmodified installed Webview bundle.
- * This is browser UI + installed host evidence, not native VS Code pointer evidence. */
+/** Browser transport or native request observation for the installed bundle.
+ * Native mode rejects browser product requests and leaves Webview HTML/CSP/API intact. */
 export async function run() {
   const configuration = JSON.parse(
     await readFile(process.env.PUREOBOM_UI_CONFIGURATION!, "utf8"),
@@ -146,6 +146,54 @@ $provider = $providers[0];
   const requests: Record<string, unknown>[] = previous?.requests ?? [],
     jobs: unknown[] = previous?.jobs ?? [],
     clientErrors: unknown[] = previous?.clientErrors ?? [];
+  if (configuration.nativeValidation) {
+    const handle = workspace.handleRequest.bind(workspace);
+    workspace.handleRequest = async (raw: unknown) => {
+      const action =
+        raw && typeof raw === "object" && "action" in raw
+          ? raw.action
+          : undefined;
+      const entry: Record<string, unknown> = {
+        action,
+        at: new Date().toISOString(),
+        transport: "native-webview",
+      };
+      requests.push(entry);
+      try {
+        if (configuration.navigationValidation)
+          assert.ok(
+            [
+              "ready",
+              "refresh",
+              "source",
+              "saveNavigation",
+              "saveFeature",
+              "removeFeature",
+              "saveSpec",
+              "saveDraft",
+              "removeDraft",
+              "rebaseDraft",
+              "loadDrafts",
+            ].includes(String(action)),
+            "Native navigation validation must not start an implementation or provider.",
+          );
+        const result = await handle(raw);
+        entry.ok = true;
+        if (action === "source" && vscode.window.activeTextEditor) {
+          const editor = vscode.window.activeTextEditor;
+          entry.sourceSelection = {
+            path: vscode.workspace.asRelativePath(editor.document.uri),
+            text: editor.document.getText(editor.selection),
+          };
+        }
+        return result;
+      } catch (error) {
+        entry.ok = false;
+        entry.error = String(error);
+        throw error;
+      }
+    };
+  }
   const subscription = workspace.changes.event((state) => {
     revision++;
     if (state.job && phase !== state.job.phase) {
@@ -413,6 +461,10 @@ const observationChange=document.getElementById('observation-change');if(observa
         return;
       }
       if (url.pathname === prefix + "/request") {
+        if (configuration.nativeValidation)
+          return send(403, {
+            error: "Use the actual VS Code Webview in native validation mode.",
+          });
         const entry: Record<string, unknown> = {
           action: payload.action,
           at: new Date().toISOString(),
@@ -736,8 +788,9 @@ const observationChange=document.getElementById('observation-change');if(observa
             platform: process.platform,
             vscode: vscode.version,
             artifact: configuration.artifact,
-            scope:
-              "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+            scope: configuration.nativeValidation
+              ? "Native installed VS Code Webview operated through Windows Computer Use. Original Webview HTML/CSP/acquireVsCodeApi and installed JS/CSS retained. The test driver observes actual handler requests; browser product requests are rejected. Restart/finish are out-of-band test controls."
+              : "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
             provider: configuration.structureValidation
               ? "No provider invoked; read-only external-app structure exploration, callback source navigation and design metadata save."
               : configuration.realProvider
@@ -755,6 +808,9 @@ const observationChange=document.getElementById('observation-change');if(observa
             continuationWitness,
             verificationWitness,
             clientErrors,
+            clientErrorCapture: configuration.nativeValidation
+              ? "Native client-side JavaScript errors are not captured by this driver."
+              : "Browser error and rejection events captured by the test transport.",
             finalSpecs: workspace.state.specs,
             finalNavigation: workspace.state.navigation,
             originalRestored: true,

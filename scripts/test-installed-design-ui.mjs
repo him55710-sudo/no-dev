@@ -27,6 +27,7 @@ const verificationValidation = process.env.PUREOBOM_VERIFICATION_UI === "1";
 const realProvider = !!process.argv[2] && !structureValidation;
 const reconnectValidation = process.env.PUREOBOM_RECONNECT_UI === "1";
 const navigationValidation = process.env.PUREOBOM_NAVIGATION_UI === "1";
+const nativeValidation = process.env.PUREOBOM_NATIVE_UI === "1";
 const observationValidation = process.env.PUREOBOM_OBSERVATION_UI === "1";
 const continuationValidation = process.env.PUREOBOM_CONTINUATION_UI === "1";
 assert.ok(
@@ -214,6 +215,7 @@ const configuration = {
   continuationValidation,
   structureValidation,
   verificationValidation,
+  nativeValidation,
   runIndex: 0,
   originalHashes,
   originalHead: (await git("rev-parse", "HEAD")).trim(),

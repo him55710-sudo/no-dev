@@ -1,0 +1,19 @@
+{
+  "id": 39351153526,
+  "head_sha": "749695b700213be664e9f30b3d426be5c2a8026f",
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/him55710-sudo/no-dev/actions/runs/39351153526",
+  "jobs": [
+    {
+      "name": "verify (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify (windows-latest)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}
