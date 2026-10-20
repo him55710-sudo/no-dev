@@ -461,6 +461,33 @@ textarea {
   color: #b7791f;
   font-size: 12px;
 }
+.spec-baseline summary,
+.spec-evidence > summary,
+.spec-details > summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.7;
+}
+.spec-evidence,
+.spec-details {
+  border-block: 1px solid var(--design-line);
+  padding: 12px 0;
+  margin: 16px 0;
+}
+.spec-detail-count {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--design-muted);
+  margin-left: 14px;
+}
+.spec-baseline + .source-pills:not(:empty) {
+  margin-top: 10px;
+}
+.spec-baseline ~ button {
+  margin-top: 10px;
+}
 .source-pills {
   display: flex;
   flex-wrap: wrap;

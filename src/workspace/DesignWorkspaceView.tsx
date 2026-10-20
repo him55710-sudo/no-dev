@@ -184,6 +184,18 @@ function SpecEditor({
 }) {
   const [reviewing, setReviewing] = useState(false);
   const observation = useMemo(() => observeSpec(spec, graph), [spec, graph]);
+  const targetKinds = spec.targetIds.map(
+    (id) => graph.nodes.find((node) => node.id === id)?.kind,
+  );
+  const isRule =
+    targetKinds.length > 0 && targetKinds.every((kind) => kind === "rule");
+  const isImplementation =
+    targetKinds.length > 0 && targetKinds.every((kind) => kind === "symbol");
+  const primaryField = isRule
+    ? "policies"
+    : isImplementation
+      ? "inputsOutputs"
+      : "purpose";
   const fields: [
     keyof Pick<
       SpecContent,
@@ -206,6 +218,29 @@ function SpecEditor({
     ],
     ["failures", "예외와 실패 처리", "실패할 때 사용자가 확인해야 할 동작"],
   ];
+  const primaryFields = [
+    fields.find(([key]) => key === primaryField)!,
+    fields.find(([key]) => key === "desired")!,
+  ];
+  const otherFields = fields.filter(
+    ([key]) => key !== primaryField && key !== "desired",
+  );
+  const renderField = ([key, label, placeholder]: (typeof fields)[number]) => (
+    <label
+      className={`spec-field ${key === "desired" ? "desired-field" : ""}`}
+      key={key}
+    >
+      {label}
+      <textarea
+        value={content[key]}
+        placeholder={placeholder}
+        rows={key === "desired" ? 4 : 2}
+        maxLength={12000}
+        disabled={saving}
+        onChange={(e) => onChange({ ...content, [key]: e.target.value })}
+      />
+    </label>
+  );
   return (
     <div className="spec-editor">
       <div className="spec-heading">
@@ -224,23 +259,28 @@ function SpecEditor({
           onChange={(e) => onChange({ ...content, title: e.target.value })}
         />
       </label>
+      {observation.status !== "unchanged" ? (
+        <div className="observed-block needs-review" role="status">
+          <strong>설계와 구현의 재검토가 필요해요</strong>
+          {observation.details.map((detail, i) => (
+            <p key={i}>{detail}</p>
+          ))}
+          <p>
+            아래 목표는 유지됩니다. 코드 변화만으로 동작의 정합성을 판정하지
+            않습니다.
+          </p>
+        </div>
+      ) : null}
+      {primaryFields.map(renderField)}
       <section
         className={`observed-block ${observation.status !== "unchanged" ? "needs-review" : ""}`}
       >
-        <span className="eyebrow">저장한 구현 기준</span>
-        <p>{spec.baseline.observed || "아직 구현 근거가 없습니다."}</p>
-        {observation.status !== "unchanged" ? (
-          <div role="status">
-            <strong>설계와 구현의 재검토가 필요해요</strong>
-            {observation.details.map((detail, i) => (
-              <p key={i}>{detail}</p>
-            ))}
-            <p>
-              아래 목표는 유지됩니다. 코드 변화만으로 동작의 정합성을 판정하지
-              않습니다.
-            </p>
-          </div>
-        ) : null}
+        <details className="spec-baseline" open={isRule || isImplementation}>
+          <summary>
+            저장한 구현 기준 · {spec.baseline.sources.length}개 근거
+          </summary>
+          <p>{spec.baseline.observed || "아직 구현 근거가 없습니다."}</p>
+        </details>
         <div className="source-pills">
           {spec.targetIds.map((id) => {
             const node = graph.nodes.find((n) => n.id === id);
@@ -302,29 +342,25 @@ function SpecEditor({
           </details>
         ) : null}
       </section>
-      <ObservationComparison
-        spec={spec}
-        graph={graph}
-        content={content}
-        source={onSource}
-        disabled={readOnly || saving}
-      />
-      {fields.map(([key, label, placeholder]) => (
-        <label
-          className={`spec-field ${key === "desired" ? "desired-field" : ""}`}
-          key={key}
-        >
-          {label}
-          <textarea
-            value={content[key]}
-            placeholder={placeholder}
-            rows={key === "desired" ? 4 : 2}
-            maxLength={12000}
-            disabled={saving}
-            onChange={(e) => onChange({ ...content, [key]: e.target.value })}
-          />
-        </label>
-      ))}
+      <details className="spec-evidence">
+        <summary>설계와 코드 관측 비교</summary>
+        <ObservationComparison
+          spec={spec}
+          graph={graph}
+          content={content}
+          source={onSource}
+          disabled={readOnly || saving}
+        />
+      </details>
+      <details className="spec-details" open={isRule || isImplementation}>
+        <summary>
+          세부 설계 · {otherFields.map(([, label]) => label).join(" / ")}
+          <span className="spec-detail-count">
+            {otherFields.filter(([key]) => content[key].trim()).length}개 작성됨
+          </span>
+        </summary>
+        <div>{otherFields.map(renderField)}</div>
+      </details>
       {(
         [
           ["invariants", "유지해야 하는 동작"],
