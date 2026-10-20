@@ -21,6 +21,13 @@ const exec = promisify(execFile);
 const maxBytes = 32 * 1024 * 1024;
 const excluded =
   /(^|\/)(?:\.pureobom|\.env(?:\.[^/]*)?|\.npmrc|\.netrc|\.pypirc|\.aws|\.ssh|[^/]*\.(?:pem|key|p12|pfx))($|\/)/i;
+// Tool-created caches are not proposed source changes. Intentionally tracked
+// files still enter the snapshot and remain subject to review and drift checks.
+const generatedDependency = /(^|\/)(?:node_modules|\.pnpm-store)(\/|$)/i;
+const untrackedExclusions = [
+  "--exclude=node_modules/",
+  "--exclude=.pnpm-store/",
+];
 const hash = (bytes: Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
 export type JobWorkspace = {
@@ -285,6 +292,7 @@ export async function createJobWorkspace(
           "--cached",
           "--others",
           "--exclude-standard",
+          ...untrackedExclusions,
         ])
       )
         .split("\0")
@@ -412,9 +420,19 @@ export async function reviewJobWorkspace(
       "-z",
       "--others",
       "--exclude-standard",
+      ...untrackedExclusions,
     ])
   ).split("\0");
-  const paths = [...new Set([...changed, ...untracked].filter(Boolean))].sort();
+  const paths = [
+    ...new Set(
+      [...changed, ...untracked].filter(
+        (path) =>
+          path &&
+          (workspace.hashes[path] !== undefined ||
+            !generatedDependency.test(path)),
+      ),
+    ),
+  ].sort();
   if (paths.length > 200)
     throw Error("변경 파일이 200개를 초과합니다. 작업을 나눠 주세요.");
   const files: FileProposal[] = [];
@@ -577,6 +595,7 @@ async function applyReview(
           "--cached",
           "--others",
           "--exclude-standard",
+          ...untrackedExclusions,
         ])
       )
         .split("\0")

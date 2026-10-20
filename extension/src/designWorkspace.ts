@@ -76,6 +76,11 @@ import {
   validateChangeStory,
   type ChangeStory,
 } from "../../src/workspace/narrative";
+import {
+  fileReadingRequestSchema,
+  readingAnchorSchema,
+  assertReadingAnchor,
+} from "../../src/workspace/codeReading";
 
 const requestSchema = z
   .object({
@@ -83,6 +88,7 @@ const requestSchema = z
     action: z.enum([
       "ready",
       "explainProject",
+      "readFile",
       "cancelExplanation",
       "explainChanges",
       "refresh",
@@ -436,6 +442,8 @@ export class DesignWorkspace implements vscode.Disposable {
       this.emit();
     } else if (request.action === "explainProject")
       result = await this.explainProject(request.payload);
+    else if (request.action === "readFile")
+      result = await this.readFile(request.payload);
     else if (request.action === "explainChanges")
       result = await this.explainChanges(request.payload);
     else if (request.action === "cancelExplanation") this.storyAbort?.abort();
@@ -1278,6 +1286,66 @@ export class DesignWorkspace implements vscode.Disposable {
       }
     }
   }
+  async readFile(raw: unknown) {
+    const payload = fileReadingRequestSchema.parse(raw);
+    this.assertStoryContext({
+      projectKey: payload.projectKey,
+      revision: payload.revision,
+    });
+    const file = this.sourceFiles.find((file) => file.path === payload.path);
+    if (!file) throw Error("현재 프로젝트에서 읽을 수 있는 파일이 아닙니다.");
+    const abort = new AbortController(),
+      folder = this.folder;
+    this.storyAbort = abort;
+    this.state.fileReadingError = undefined;
+    this.state.fileReadingProgress = {
+      path: file.path,
+      completed: 0,
+      total: 1,
+      message: "코드를 차근차근 읽을 준비를 합니다.",
+    };
+    this.emit();
+    try {
+      const reading = await this.narrator().readFile(
+        file,
+        payload.revision,
+        abort.signal,
+        (progress) => {
+          if (this.folder === folder && this.storyAbort === abort) {
+            this.state.fileReadingProgress = { ...progress, path: file.path };
+            this.emit();
+          }
+        },
+      );
+      if (
+        abort.signal.aborted ||
+        this.disposed ||
+        this.folder !== folder ||
+        this.state.graph?.revision !== payload.revision ||
+        this.state.stale
+      )
+        throw Error(
+          "읽는 동안 코드가 바뀌었습니다. 새 내용으로 다시 읽어 주세요.",
+        );
+      this.state.fileReading = reading;
+      return reading;
+    } catch (error) {
+      if (this.folder === folder)
+        this.state.fileReadingError = {
+          path: file.path,
+          message: abort.signal.aborted
+            ? "읽기를 멈췄습니다. 완료된 부분은 다음 읽기에 재사용합니다."
+            : String(error),
+        };
+      throw error;
+    } finally {
+      if (this.storyAbort === abort) {
+        this.storyAbort = undefined;
+        this.state.fileReadingProgress = undefined;
+        this.emit();
+      }
+    }
+  }
   async explainChanges(raw: unknown) {
     const payload = z.object({ reviewId: z.string() }).strict().parse(raw);
     if (
@@ -1459,6 +1527,7 @@ export class DesignWorkspace implements vscode.Disposable {
     const payload = saveSchema
       .extend({
         execution: executionUseSchema,
+        readingAnchor: readingAnchorSchema.optional(),
       })
       .strict()
       .parse(raw);
@@ -1466,8 +1535,16 @@ export class DesignWorkspace implements vscode.Disposable {
     const folder = this.folder!;
     assertExecutionContext(payload.execution, await this.executionContext());
     const start = async () => {
+      this.assertExecutionReady();
       if (this.executionProfiles !== store)
         throw Error("프로젝트가 바뀌었습니다.");
+      if (payload.readingAnchor)
+        assertReadingAnchor(
+          payload.readingAnchor,
+          this.state.fileReading,
+          this.state.graph!,
+          payload.targetIds,
+        );
       const saved = await this.save({
         specId: payload.specId,
         targetIds: payload.targetIds,
@@ -1480,6 +1557,14 @@ export class DesignWorkspace implements vscode.Disposable {
       const context = await this.executionContext();
       assertExecutionContext(payload.execution, context);
       if (this.folder !== folder) throw Error("프로젝트가 바뀌었습니다.");
+      this.assertExecutionReady();
+      if (payload.readingAnchor)
+        assertReadingAnchor(
+          payload.readingAnchor,
+          this.state.fileReading,
+          this.state.graph!,
+          payload.targetIds,
+        );
       return this.jobs.start(folder.uri.fsPath, change, {
         executable: context.executable,
         model: context.model || undefined,

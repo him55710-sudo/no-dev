@@ -2,9 +2,11 @@
 
 # Pureobom · 풀어봄
 
-### Explore the system. Edit the design. Review the implementation.
+### Understand what the code does. Describe what you want to change.
 
-Explore an existing codebase, edit the behavior you want, and connect that design to changes in code and tests.
+Read each file as accessible explanations of its purpose, inputs, conditions, execution order and results. See the exact source beside the explanation, choose a possible change, and edit the request in your own words.
+
+**Current product direction:** [Source-linked code reading](docs/CODE_READING_PRODUCT.md). The development VS Code workspace now opens in the reading view; structural tools remain available. A standalone app with folder and GitHub import is still to be built. The earlier result-preview mockup was rejected and is not the product specification.
 
 **System design workspace · 0.7 development:** [Product requirements](docs/SYSTEM_WORKSPACE_PLAN.md) · [Verified scope and remaining work](docs/SYSTEM_WORKSPACE_STATUS.md) · [Start here](docs/SYSTEM_WORKSPACE_START.md). The published 0.6.0 extension and hosted browser demo are the earlier single-file preview; they do not include this workspace.
 
@@ -39,7 +41,13 @@ It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elap
 
 </div>
 
-## Start with the system design workspace
+## Start by reading the code
+
+Open **풀어봄: 시스템 설계 워크스페이스 열기** in the development extension, connect Codex, and ask it to read the project. Choose a file by its explanation, then read its purpose, step-by-step behavior, reasons and possible changes. **코드와 나란히 보기** shows the exact source beside each explanation. A suggested request remains editable before implementation starts.
+
+Detailed reading checks source coverage and quoted evidence, but those checks cannot prove the model's interpretation is correct. Explicit reasons, inferred reasons and unknowns are distinguished. See [the current requirements and validation scope](docs/CODE_READING_PRODUCT.md).
+
+## Additional structure and design tools
 
 [Follow the recorded workflow](docs/SYSTEM_WORKSPACE_DEMO.md): inspect the actual seven-file permission change, checks, apply and undo, plus a separate deliberate server-guard failure that prevents applying. Run `pnpm build` and `node scripts/serve.mjs`, then open `/workspace-demo.html`. The walkthrough and original screenshots are included in the source and demo archives; hosted deployment is separate.
 

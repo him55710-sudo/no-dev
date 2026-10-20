@@ -285,6 +285,7 @@ export class ImplementationJobs {
         "The following JSON is the user's design and source-backed context. The scope is a starting point; follow real dependencies and include necessary tests. Report any unresolved acceptance criteria honestly.",
         JSON.stringify(request, null, 2),
         `Verification scripts selected by the user: ${options.checks.join(", ")}. Run and repair these checks. Do not deploy, push or merge.`,
+        `The detected package manager is ${verification.manager}. Use its existing selected scripts; do not change the scripts or package-manager choice to hide a failure. For pnpm, set pnpm_config_verify_deps_before_run=false when running scripts so dependency-free checks do not trigger automatic installation. Install dependencies only when the implementation actually needs them.`,
       ].join("\n\n");
       for (let attempt = 0; attempt < 2; attempt++) {
         signal.throwIfAborted();

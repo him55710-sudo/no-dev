@@ -1,5 +1,6 @@
 import type { StructureGraph } from "./model";
 import type { ProjectStory, ChangeStory, ReadingProgress } from "./narrative";
+import type { FileReading } from "./codeReading";
 import type { SpecDocument } from "./spec";
 import type { DesignDraft } from "./drafts";
 import type { NavigationSnapshot } from "./navigation";
@@ -14,6 +15,9 @@ import type {
   JobHistoryEntry,
 } from "./job";
 export type DesignWorkspaceState = {
+  fileReading?: FileReading;
+  fileReadingProgress?: ReadingProgress & { path: string };
+  fileReadingError?: { path: string; message: string };
   story?: ProjectStory;
   storyProgress?: ReadingProgress;
   storyError?: string;

@@ -1,0 +1,35 @@
+{
+  "stage": "generated",
+  "inferenceRun": true,
+  "phase": "failed",
+  "message": "바이너리 파일 변경은 지원하지 않습니다: .pnpm-store/v11/index.db",
+  "checks": [
+    {
+      "name": "test",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ node --test\n✔ 주문 금액 검사는 0 이상의 유한한 숫자를 허용 (2.7756ms)\n✔ 주문 금액 검사는 잘못된 입력에 기존 오류 안내를 유지 (2.4235ms)\n✔ 일반 배송의 경계 금액 (2.2571ms)\n✔ 일반 배송은 0원과 소수 금액도 처리 (0.3668ms)\n✔ 기본 배송과 명시한 일반 배송의 요금은 동일 (2.217ms)\n✔ 빠른 배송은 별도 요금 (0.7072ms)\n✔ 잘못된 주문 금액 (3.6334ms)\nℹ tests 7\nℹ suites 0\nℹ pass 7\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 405.356\n",
+      "outputTruncated": false,
+      "elapsedMs": 8892
+    },
+    {
+      "name": "check",
+      "status": "passed",
+      "exitCode": 0,
+      "output": "$ node --check src/shipping.js\n",
+      "outputTruncated": false,
+      "elapsedMs": 7498
+    }
+  ],
+  "files": [],
+  "events": [
+    "코드를 차근차근 읽을 준비를 합니다.",
+    "1~9줄의 역할·읽는 순서·수정 방법을 풀고 있습니다.",
+    "preparing",
+    "running",
+    "approval",
+    "running",
+    "checking",
+    "failed"
+  ]
+}

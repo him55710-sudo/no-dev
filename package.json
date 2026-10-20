@@ -36,7 +36,10 @@
     "pages:preview": "node scripts/serve.mjs --site",
     "verify": "pnpm test && pnpm build && pnpm extension:build && pnpm extension:test",
     "format": "prettier --write src tests docs *.json *.ts *.html",
-    "extension:project-live-test": "node scripts/test-project-reader.mjs"
+    "extension:project-live-test": "node scripts/test-project-reader.mjs",
+    "extension:code-reading-live-test": "node scripts/test-installed-code-reading.mjs",
+    "reader:live-test": "node scripts/check-live-code-reading.mjs",
+    "reader:preview": "node scripts/preview-code-reading.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "3.1.1",

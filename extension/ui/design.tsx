@@ -10,7 +10,7 @@ import { request } from "./bridge";
 import { ProjectReader } from "./ProjectReader";
 
 function DesignApp() {
-  const [reading, setReading] = useState(false);
+  const [reading, setReading] = useState(true);
   const [state, setState] = useState<DesignWorkspaceState>({
     projectName: "",
     selectedId: "system",
@@ -41,12 +41,16 @@ function DesignApp() {
       <div
         aria-hidden={reading}
         inert={reading}
-        style={reading ? {
-          position: "fixed",
-          inset: 0,
-          visibility: "hidden",
-          pointerEvents: "none",
-        } : undefined}
+        style={
+          reading
+            ? {
+                position: "fixed",
+                inset: 0,
+                visibility: "hidden",
+                pointerEvents: "none",
+              }
+            : undefined
+        }
       >
         <DesignWorkspaceView
           key={state.projectKey ?? "loading"}

@@ -49,6 +49,65 @@ async function fixture() {
   return { directory, source, storage: resolve(directory, "jobs") };
 }
 describe("isolated implementation and review", { timeout: 30000 }, () => {
+  it("leaves new dependency caches out of source snapshots, review and apply while preserving tracked dependency files", async () => {
+    const f = await fixture();
+    await mkdir(resolve(f.source, "node_modules/local-policy"), {
+      recursive: true,
+    });
+    await writeFile(
+      resolve(f.source, "node_modules/local-policy/index.js"),
+      "export const enabled = true;\n",
+    );
+    await git(f.source, "add", "node_modules/local-policy/index.js");
+    await git(f.source, "commit", "-m", "An intentionally tracked dependency");
+    await mkdir(resolve(f.source, ".pnpm-store/v11"), { recursive: true });
+    await writeFile(
+      resolve(f.source, ".pnpm-store/v11/index.db"),
+      Buffer.from([0, 1, 2]),
+    );
+    const job = await createJobWorkspace(f.source, f.storage);
+    expect(job.hashes[".pnpm-store/v11/index.db"]).toBeUndefined();
+    expect(job.hashes["node_modules/local-policy/index.js"]).toBeDefined();
+    await mkdir(resolve(job.path, ".pnpm-store/v11"), { recursive: true });
+    await writeFile(
+      resolve(job.path, ".pnpm-store/v11/index.db"),
+      Buffer.from([0, 1, 3]),
+    );
+    await writeFile(resolve(job.path, "node_modules/generated.json"), "{}");
+    await git(job.path, "add", ".pnpm-store/v11/index.db");
+    await writeFile(
+      resolve(job.path, "node_modules/local-policy/index.js"),
+      "export const enabled = false;\n",
+    );
+    await writeFile(
+      resolve(job.path, "policy.ts"),
+      "export const canEdit = false;\n",
+    );
+    await writeFile(
+      resolve(job.path, "pnpm-lock.yaml"),
+      "lockfileVersion: '9.0'\n",
+    );
+    const review = await reviewJobWorkspace(job);
+    expect(review.files.map((file) => file.path)).toEqual([
+      "node_modules/local-policy/index.js",
+      "pnpm-lock.yaml",
+      "policy.ts",
+    ]);
+    await applyJobReview(job, review);
+    expect(
+      await readFile(resolve(f.source, ".pnpm-store/v11/index.db")),
+    ).toEqual(Buffer.from([0, 1, 2]));
+    await expect(
+      readFile(resolve(f.source, "node_modules/generated.json")),
+    ).rejects.toThrow();
+    await undoJobReview(job, review);
+    expect(
+      await readFile(
+        resolve(f.source, "node_modules/local-policy/index.js"),
+        "utf8",
+      ),
+    ).toContain("true");
+  });
   it("carries modified, added and deleted files into an independent continuation without touching the original candidate", async () => {
     const f = await fixture();
     const before = await createJobWorkspace(f.source, f.storage);

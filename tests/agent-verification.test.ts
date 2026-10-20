@@ -134,9 +134,22 @@ describe("independent implementation verification", { timeout: 120000 }, () => {
         )
       ).output,
     ).toContain("명령이 구현 도중 바뀌었");
-    expect((await verifyWorkspace(root, "build", signal, 5000)).status).toBe(
-      "timeout",
+    // A slow package-manager startup can consume five seconds before the fixture
+    // starts. Observe both processes before claiming the timeout killed them.
+    const timeoutController = new AbortController();
+    const timed = verifyWorkspace(
+      root,
+      "build",
+      timeoutController.signal,
+      30000,
     );
+    try {
+      await vi.waitFor(() => readTree(root), { timeout: 15000, interval: 50 });
+      expect((await timed).status).toBe("timeout");
+    } finally {
+      timeoutController.abort();
+      await timed.catch(() => {});
+    }
     await expectTreeStopped(root);
   });
   it("cancels a running check only after its actual child and descendant stop", async () => {
