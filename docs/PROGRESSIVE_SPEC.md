@@ -54,3 +54,8 @@ production 확장 호스트를 브라우저 전송 경로로 연결한 결과다
 모두 성공했다([실행 상태](evidence/progressive-spec/integration-ci.json)). 그 결과를
 이번 UI 변경의 새 CI 결과로 취급하지 않는다. 네이티브 Webview 전체 포인터 흐름,
 비개발자·숙련 개발자의 실제 판단이나 탐색 시간 개선은 아직 입증하지 않았다.
+
+후속 확인: 이 UI 변경 커밋 `436b40f`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/no-dev/actions/runs/39349428048)도
+모두 성공했다. [최종 실행 상태](evidence/progressive-spec/final-ci.json)에서 핵심 검사,
+개발/설치 확장 검사, 설계 호스트, 여섯 단계 복구, 릴리스 검사를 확인할 수 있다.
+이 자동 실행을 위에 남긴 네이티브 포인터·사람 관찰의 근거로 확대하지 않는다.

@@ -226,7 +226,58 @@ describe("Codex App Server protocol", { timeout: 45000 }, () => {
       await server.close();
     }
   });
-  it("cancels a live turn and closes its process; a late success cannot revive it", async () => {
+  it("rejects cancellation received after a terminal frame but before run resolves", async () => {
+    const server = client("hang"),
+      abort = new AbortController();
+    let ready!: () => void;
+    const started = new Promise<void>((resolve) => {
+      ready = resolve;
+    });
+    await server.start();
+    let settled = false;
+    const run = server.run({
+      prompt: "Test",
+      signal: abort.signal,
+      onSession: () => ready(),
+    });
+    const outcome = run.then(
+      (value) => {
+        settled = true;
+        return { status: "resolved", value } as const;
+      },
+      (error: Error) => {
+        settled = true;
+        return { status: "rejected", error } as const;
+      },
+    );
+    let completions = 0;
+    let cancelledBeforeSettlement = false;
+    // Register after run's own listener: the completion promise is already
+    // resolved, but its awaiting continuation has not consumed it yet.
+    const remove = server.onEvent(({ method }) => {
+      if (method !== "turn/completed") return;
+      completions++;
+      cancelledBeforeSettlement = !settled;
+      abort.abort(Error("구현 작업을 취소했습니다."));
+    });
+    try {
+      await started;
+      await server.request("fixture/complete", {});
+      const result = await outcome;
+      expect(completions).toBe(1);
+      expect(cancelledBeforeSettlement).toBe(true);
+      expect(result.status).toBe("rejected");
+      if (result.status === "rejected")
+        expect(result.error.message).toMatch(/취소/);
+      await expect(server.request("thread/start", {})).rejects.toThrow(/닫았/);
+    } finally {
+      remove();
+      abort.abort();
+      await server.close();
+      await outcome;
+    }
+  });
+  it("cancels a live turn and closes its process", async () => {
     const server = client("hang"),
       abort = new AbortController();
     await server.start();
