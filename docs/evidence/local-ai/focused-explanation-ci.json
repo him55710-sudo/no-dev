@@ -1,0 +1,108 @@
+{
+  "commit": "9758dacdc0908d22966e7e6877c3639a3f8af13a",
+  "run": "https://github.com/him55710-sudo/pureobom/actions/runs/39304019563",
+  "collectedAt": "2026-10-19T18:45:05.876Z",
+  "scope": "CI core checks, actual VS Code development and installed integrations, builds and extracted package helpers. Model replies are controlled fixtures. Private user-project inference and external upstream tests are separate local evidence, not part of this CI. Local timeouts remain recorded.",
+  "jobs": [
+    {
+      "name": "verify (windows-latest)",
+      "id": 118236269859,
+      "url": "https://github.com/him55710-sudo/pureobom/actions/runs/39304019563/job/118236269859",
+      "conclusion": "success",
+      "logSha256": "ff349c293eb9768b8df5844d14babd3dbfc363ffdbfebc5d66b701372613f07c",
+      "corePassed": 259,
+      "development": {
+        "vscode": "1.96.4",
+        "passed": 55,
+        "timestamp": "2026-10-19T18:42:22.104Z",
+        "focusedCheck": "Focused local explanation: host resolves the selected function, keeps full-file context, rejects unknown/stale/edit focus before sending, requires an in-function citation and navigates exact source without edits; controlled model response"
+      },
+      "installed": {
+        "vscode": "1.96.4",
+        "passed": 55,
+        "timestamp": "2026-10-19T18:43:43.240Z",
+        "kind": "installed-vsix",
+        "version": "0.7.0",
+        "vsixSha256": "7d29cd95ebf01797307c9b25c37dc93a09953130dced09f6abe418cc29073a2e",
+        "verifiedFiles": {
+          "out/extension.cjs": "1c226cbaed48de3a5342ac63398ec95357fd0a56b6fc35e202ef0c947edb6406",
+          "out/worker.cjs": "53143de0023005da0f399698b6846f7d1b7cf086d4aef1f11773a80826ffb674",
+          "runtime/benchmark.py": "dc403b72ad1a349071ab7a8543ce44563415e485d85111c9fc8764156b59660b",
+          "runtime/python_source.py": "1e972114a1cc94eb9260c9530955f49a96f473d322fe4209a58ec97d6e34d4cb",
+          "runtime/go_source.go": "a8e185b81d3aa62a9cbfafdec9d8a8926c9ead6bfe4533fe9038d0a7ad714824",
+          "runtime/PureobomJavaSource.java": "6d439b2668972bf3c32e1574ad714d63ed0c5444de5bef80448e72f19f5b7b10",
+          "runtime/PureobomCSharpSource.cs": "ed8a9bc9d9f081dbe5d61d260ea68a70d0403ee4b1469298a1a2a121e7f544ac",
+          "runtime/rust/tree-sitter-rust.wasm": "24c89bd9252255e4aebbcbd7d2d308bd92c86dd95a130fdc80efa49577b8d738",
+          "runtime/rust/web-tree-sitter.wasm": "beca80e44cccbf2299ed4d1e3fa6462a9a6fe818aeebf847547a392227ce4acc",
+          "media/view.js": "b99248838cefe2aa9b253ad6de3c9334c5c40af93f830c5a86612320c04e0765",
+          "media/view.css": "1483175d14fa9f0b665b655cc5d7eb2fb11f7e699fedcedf44e0f3ff7fb9122a"
+        },
+        "extensionMode": "production"
+      },
+      "packaged": {
+        "rust": true,
+        "analysisAndPackage": true,
+        "measurement": true,
+        "python": true,
+        "go": true,
+        "java": true,
+        "csharp": true
+      },
+      "nonfatalHostDiagnostics": {
+        "authenticationProviderTimeout": true,
+        "unexpectedSigpipe": false,
+        "dbusConnectionError": false
+      }
+    },
+    {
+      "name": "verify (ubuntu-latest)",
+      "id": 118236270418,
+      "url": "https://github.com/him55710-sudo/pureobom/actions/runs/39304019563/job/118236270418",
+      "conclusion": "success",
+      "logSha256": "e596069340c715945a163afc88cc94b297917a0abf10ec8fc8cfc58b9476404a",
+      "corePassed": 259,
+      "development": {
+        "vscode": "1.96.4",
+        "passed": 55,
+        "timestamp": "2026-10-19T18:40:01.101Z",
+        "focusedCheck": "Focused local explanation: host resolves the selected function, keeps full-file context, rejects unknown/stale/edit focus before sending, requires an in-function citation and navigates exact source without edits; controlled model response"
+      },
+      "installed": {
+        "vscode": "1.96.4",
+        "passed": 55,
+        "timestamp": "2026-10-19T18:40:50.840Z",
+        "kind": "installed-vsix",
+        "version": "0.7.0",
+        "vsixSha256": "987db49ddc7487fc79b072f020696fdc54058b6b59d3a6868240381148e6f71a",
+        "verifiedFiles": {
+          "out/extension.cjs": "1c226cbaed48de3a5342ac63398ec95357fd0a56b6fc35e202ef0c947edb6406",
+          "out/worker.cjs": "53143de0023005da0f399698b6846f7d1b7cf086d4aef1f11773a80826ffb674",
+          "runtime/benchmark.py": "bb136c4c7bdd452aa7a75d216aa5998c41c98fc2cf9cfc089e2edae5ae80c6f9",
+          "runtime/python_source.py": "3b4ddd3535ee4bc0c578bc20463640d94b2f30ef74b463db6f7e1416a04f9ef1",
+          "runtime/go_source.go": "8c49ca4cd6b1e5fdc2b1eae3ea22b9a7c0bed7bb6a1ac0fabfcad7816d29c3ca",
+          "runtime/PureobomJavaSource.java": "6b3ef1aa18ad1b834c0e98ab6c4538d5ece40afd098bc9da6b0e0bb37fe4b9f4",
+          "runtime/PureobomCSharpSource.cs": "86d605f322f2331e864d55613bf0b43948c6dc424b364895c5d344e771d4fdf3",
+          "runtime/rust/tree-sitter-rust.wasm": "24c89bd9252255e4aebbcbd7d2d308bd92c86dd95a130fdc80efa49577b8d738",
+          "runtime/rust/web-tree-sitter.wasm": "beca80e44cccbf2299ed4d1e3fa6462a9a6fe818aeebf847547a392227ce4acc",
+          "media/view.js": "b99248838cefe2aa9b253ad6de3c9334c5c40af93f830c5a86612320c04e0765",
+          "media/view.css": "1483175d14fa9f0b665b655cc5d7eb2fb11f7e699fedcedf44e0f3ff7fb9122a"
+        },
+        "extensionMode": "production"
+      },
+      "packaged": {
+        "rust": true,
+        "analysisAndPackage": true,
+        "measurement": true,
+        "python": true,
+        "go": true,
+        "java": true,
+        "csharp": true
+      },
+      "nonfatalHostDiagnostics": {
+        "authenticationProviderTimeout": true,
+        "unexpectedSigpipe": true,
+        "dbusConnectionError": true
+      }
+    }
+  ]
+}

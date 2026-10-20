@@ -3,6 +3,7 @@ import type { Lang } from "../../src/core/types";
 import type { ViewState } from "../src/protocol";
 import type { ProjectCheck, ProjectTask } from "../src/projectChecks";
 import { request } from "./bridge";
+import { Benchmarks } from "./Benchmarks";
 
 export function ProjectChecks({
   state,
@@ -219,6 +220,7 @@ export function ProjectChecks({
           </p>
         </div>
       ) : null}
+      <Benchmarks state={state} lang={lang} task={task} />
     </section>
   );
 }

@@ -44,12 +44,19 @@ readline
         result: {
           thread: { id: "thread" },
           sandbox: {
-            type: scenario === "unsafe" ? "dangerFullAccess" : "workspaceWrite",
+            type:
+              scenario === "unsafe"
+                ? "dangerFullAccess"
+                : scenario === "read-only"
+                  ? "readOnly"
+                  : "workspaceWrite",
           },
           approvalPolicy: "on-request",
         },
       });
     else if (message.method === "turn/start") {
+      if (scenario === "read-only")
+        send({ method: "fixture/readOnly", params: message.params });
       turnRequest = message.id;
       if (scenario === "early") {
         done();

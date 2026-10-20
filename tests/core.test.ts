@@ -13,7 +13,7 @@ describe("source-grounded analysis", () => {
         name: "subtotal",
         type: "number",
         optional: false,
-        label: { ko: "상품 합계", en: "Subtotal" },
+        label: { ko: "부분 합계", en: "Subtotal" },
       },
     ]);
     const r = a.rules.find((x) => x.name === "freeShippingThreshold")!;

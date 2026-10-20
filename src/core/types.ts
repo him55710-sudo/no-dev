@@ -1,6 +1,10 @@
 export type Lang = "ko" | "en";
 export type Words = { ko: string; en: string };
-export type SourceFile = { path: string; content: string };
+export type SourceFile = {
+  path: string;
+  content: string;
+  sqlDialect?: "sqlite";
+};
 export type Anchor = {
   start: number;
   end: number;
@@ -14,6 +18,7 @@ export type Step = Anchor & {
   children: Step[];
   otherwise?: Step[];
   finalizer?: Step;
+  branches?: { label: Words; steps: Step[] }[];
   supported: boolean;
 };
 export type Rule = Anchor & {
@@ -25,7 +30,20 @@ export type Rule = Anchor & {
   scope: string;
   raw: string;
   note?: Words;
-  syntax?: "jsxText" | "jsxAttribute";
+  cssProperty?: string;
+  syntax?:
+    | "jsxText"
+    | "jsxAttribute"
+    | "json"
+    | "python"
+    | "go"
+    | "java"
+    | "csharp"
+    | "rust"
+    | "sql"
+    | "htmlText"
+    | "htmlAttribute"
+    | "css";
 };
 export type InterfaceNode = Anchor & {
   id: string;
@@ -51,6 +69,7 @@ export type InterfaceStructure = {
   truncated: boolean;
 };
 export type FunctionInfo = Anchor & {
+  note?: Words;
   id: string;
   name: string;
   label: Words;
@@ -73,6 +92,14 @@ export type ImportInfo = {
   external: boolean;
 };
 export type FileAnalysis = {
+  sql?: { dialect?: "sqlite"; version: string; truncated: boolean };
+  web?: { language: "html" | "css"; truncated: boolean; nodes: number };
+  python?: { version: string; truncated: boolean };
+  go?: { version: string; truncated: boolean };
+  java?: { version: string; truncated: boolean };
+  csharp?: { version: string; languageVersion: string; truncated: boolean };
+  rust?: { version: string; truncated: boolean };
+  data?: import("./jsonData").JsonDataFacts;
   interface?: InterfaceStructure;
   terms?: import("./glossary").CodeTerm[];
   path: string;

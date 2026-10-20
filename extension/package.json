@@ -62,15 +62,39 @@
       "properties": {
         "pureobom.codexPath": {
           "type": "string",
-          "default": "codex",
+          "default": "",
           "scope": "application",
-          "description": "Installed Codex executable for system design implementation. Uses the CLI's existing sign-in."
+          "description": "Codex 실행 파일. 비어 있으면 설치된 codex를 사용합니다. 로그인된 ChatGPT 계정에 연결합니다."
         },
         "pureobom.codexModel": {
           "type": "string",
           "default": "",
           "scope": "application",
-          "description": "Optional Codex model. Empty uses the installed CLI's configured model."
+          "description": "사용할 모델. 비어 있으면 Codex 기본 모델을 사용합니다."
+        },
+        "pureobom.analysisJavaHome": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Absolute JDK 21+ directory for model-free Java syntax reading, literal edits and proposal parsing. Empty uses JAVA_HOME, then java/javac on PATH. Only the bundled helper is compiled in extension storage. User source is parsed without annotation processing, class loading or dependency downloads; types and runtime behavior are not checked."
+        },
+        "pureobom.analysisGo": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Installed Go executable for model-free Go syntax reading, literal edits and AI proposal syntax checks. Empty uses go. The bundled standard-library helper is built once in extension storage with module/toolchain downloads disabled. User source is parsed, never compiled or run."
+        },
+        "pureobom.analysisPython": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Python 3 executable for model-free Python source reading and literal edits. Empty uses python on Windows and python3 elsewhere. Only the bundled isolated reader runs; user code is parsed, never executed or imported."
+        },
+        "pureobom.benchmarkPython": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "description": "Python 3 executable for local command measurements. Empty uses python on Windows and python3 elsewhere. Standard library only; no API service."
         },
         "pureobom.ollamaPort": {
           "type": "integer",
@@ -79,6 +103,12 @@
           "maximum": 65535,
           "scope": "application",
           "description": "Local Ollama port on 127.0.0.1. Start Ollama with OLLAMA_NO_CLOUD=1. No external hosts or paid API fallback."
+        },
+        "pureobom.analysisDotnet": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Absolute dotnet executable for model-free C# reading, literal edits and proposal parsing. Empty uses dotnet on PATH. Requires a stable .NET SDK 8+ with its reference pack/runtime. Compiles only the bundled helper with SDK Roslyn; no restore, MSBuild, project loading, source generators or user-code execution. Project defines, language version, types and dependencies are not checked."
         }
       }
     },

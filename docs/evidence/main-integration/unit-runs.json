@@ -1,0 +1,101 @@
+{
+  "scope": "Merged core sources before the later UI-only React Flow patch. Earlier failing runs are retained separately; final run used Go, Java and .NET SDKs without concurrent heavy installed tests.",
+  "runs": [
+    {
+      "source": "test-results/main-merge-unit.json",
+      "sha256": "9c66f7c3e60f5c1a77c474433ed88be78d58a1eb2b464274a5bf44cac8b78b54",
+      "startTime": 1792454208673,
+      "success": false,
+      "files": 47,
+      "tests": 384,
+      "passed": 359,
+      "failed": 1,
+      "pending": 24,
+      "failedSuites": [
+        {
+          "file": "tests/agent-host.test.ts",
+          "status": "failed",
+          "message": "",
+          "assertions": [
+            {
+              "title": "managed implementation host refuses unauthenticated clients and restores a dead host as interrupted without repeating inference",
+              "status": "failed",
+              "messages": [
+                "Error: 구현 실행기에 연결하지 못했습니다. 자동으로 구현을 다시 시작하지 않았습니다.\n    at ManagedImplementationJobs.establish (C:/Users/user/.codex/worktrees/system-design-workspace/비개발자/extension/src/agent/managedJobs.ts:204:11)\n    at ManagedImplementationJobs.history (C:/Users/user/.codex/worktrees/system-design-workspace/비개발자/extension/src/agent/managedJobs.ts:233:7)\n    at C:/Users/user/.codex/worktrees/system-design-workspace/비개발자/tests/agent-host.test.ts:672:7\n    at file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "tests/csharp-source.test.ts",
+          "status": "failed",
+          "message": ".NET SDK 8+가 필요합니다. 런타임만으로는 분석할 수 없습니다. / Install .NET SDK 8+; a runtime alone is insufficient.",
+          "assertions": []
+        },
+        {
+          "file": "tests/go-source.test.ts",
+          "status": "failed",
+          "message": "Go 도구를 실행할 수 없습니다. 설치·실행 경로를 확인하세요. / Go unavailable; check the installed tool and executable path.",
+          "assertions": []
+        },
+        {
+          "file": "tests/java-source.test.ts",
+          "status": "failed",
+          "message": "JDK를 실행할 수 없습니다. JDK 21+ 설치·경로를 확인하세요. / JDK unavailable; check a JDK 21+ installation and path.",
+          "assertions": []
+        }
+      ]
+    },
+    {
+      "source": "test-results/main-merge-host-retry.json",
+      "sha256": "c4395206ad84f7562cc4d5c01c263e5bd63f87b84daf1f2e7559ad69353eaa4a",
+      "startTime": 1792454524621,
+      "success": true,
+      "files": 1,
+      "tests": 8,
+      "passed": 1,
+      "failed": 0,
+      "pending": 7,
+      "failedSuites": []
+    },
+    {
+      "source": "test-results/main-merge-unit-with-sdks.json",
+      "sha256": "fd69979e9514b8f535f7c667701a3e3f31d6b8f2ec004985520db55f8be1bf5e",
+      "startTime": 1792454563784,
+      "success": false,
+      "files": 47,
+      "tests": 384,
+      "passed": 383,
+      "failed": 1,
+      "pending": 0,
+      "failedSuites": [
+        {
+          "file": "tests/java-source.test.ts",
+          "status": "failed",
+          "message": "",
+          "assertions": [
+            {
+              "title": "Java JDK source reader changes one supported literal while rejecting expressions, comments, text blocks, chars and token escapes",
+              "status": "failed",
+              "messages": [
+                "Error: STACK_TRACE_ERROR\n    at task (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1784:27)\n    at Object.<anonymous> (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1817:16)\n    at Object.<anonymous> (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1563:28)\n    at chain (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:599:14)\n    at C:/Users/user/.codex/worktrees/system-design-workspace/비개발자/tests/java-source.test.ts:129:3\n    at file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1889:40\n    at runWithSuite (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2258:8)\n    at Object.collect (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1889:10)\n    at Object.collect (file:///C:/Users/user/.codex/worktrees/system-design-workspace/%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:54)\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "test-results/main-merge-unit-final.json",
+      "sha256": "23a99eea8fd94f80ba272370d46b82677d304959eee04e1d08eb6bf7f8e6100d",
+      "startTime": 1792454817046,
+      "success": true,
+      "files": 47,
+      "tests": 384,
+      "passed": 384,
+      "failed": 0,
+      "pending": 0,
+      "failedSuites": []
+    }
+  ]
+}

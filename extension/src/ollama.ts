@@ -10,6 +10,7 @@ import {
 } from "../../src/core/localAssistant";
 
 export type LocalModel = { name: string; digest: string; size: number };
+export type InferenceProcessor = "auto" | "cpu";
 const object = (v: unknown): Record<string, any> =>
   v && typeof v === "object" && !Array.isArray(v)
     ? (v as Record<string, any>)
@@ -26,9 +27,14 @@ export class OllamaClient {
   constructor(
     readonly port = 11434,
     private timeoutMs = 180000,
+    readonly processor: InferenceProcessor = "auto",
   ) {
     if (!Number.isInteger(port) || port < 1024 || port > 65535)
       throw Error("Invalid local Ollama port");
+    if (!["auto", "cpu"].includes(processor))
+      throw Error(
+        "연산 장치를 다시 선택하세요. / Select a valid inference processor.",
+      );
     this.origin = `http://127.0.0.1:${port}`;
   }
   private json(
@@ -209,18 +215,28 @@ export class OllamaClient {
     await this.localOnly(signal);
     const messages = assistantMessages(input);
     const contextSize = assistantContextSize(messages);
+    // Reserve our bounded output for the final structured answer. Only request
+    // this switch when the server explicitly advertises it; some models have
+    // named reasoning levels or do not permit disabling thinking.
+    const thinkingValues = object(info.thinking).values;
+    const canDisableThinking =
+      Array.isArray(thinkingValues) && thinkingValues.includes(false);
     const started = Date.now();
     const result = await this.json(
       "/api/chat",
       {
         model: model.name,
         stream: false,
+        truncate: false,
+        shift: false,
+        ...(canDisableThinking ? { think: false } : {}),
         messages,
         format: assistantSchema,
         options: {
           temperature: 0,
           num_ctx: contextSize,
           num_predict: assistantLimits.outputTokens,
+          ...(this.processor === "cpu" ? { num_gpu: 0 } : {}),
         },
         keep_alive: "5m",
       },
@@ -241,6 +257,7 @@ export class OllamaClient {
       model,
       elapsedMs: Date.now() - started,
       contextSize,
+      processor: this.processor,
       proposal: parseAssistantProposal(result.message.content, input),
     };
   }

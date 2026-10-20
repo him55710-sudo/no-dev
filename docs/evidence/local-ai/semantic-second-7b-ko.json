@@ -1,0 +1,522 @@
+{
+  "startedAt": "2026-10-16T07:43:28.160Z",
+  "model": "qwen2.5-coder:7b",
+  "responseLanguage": "ko",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "implementation": {
+    "baseCommit": "fe685a8c7f84fdc11c8b991dfd7af009390d8dfb",
+    "transportSha256": "17f42b92f0f03a7a714baa4915a134aa00391744ca7a7629c6be7479012c84d7",
+    "protocolSha256": "37834150396f77011c68d872b2d547db46a1fe8a85935c48b90874412027ffbf",
+    "frozenClientSha256": "b1bc5ce6daaf2bdd583a6884797cb1f7ea93ca3cfb94b50897953f051194fcb5"
+  },
+  "kind": "actual local Ollama; public synthetic examples; one attempt per selected case; no changes applied or executed",
+  "limitations": "Quote coverage only checks expected source text appears in citations. It is NOT semantic accuracy. Prose requires manual review against the published criteria; all errors are retained. Elapsed time is not a controlled performance comparison.",
+  "results": [
+    {
+      "id": "python-branches",
+      "file": "shipping.py",
+      "language": "python",
+      "sourceSha256": "59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1",
+      "reviewCriteria": "Explain negative-input ValueError, subtotal >= 50000 returning 0, otherwise 3000. No currency is declared. Do not cite constants alone.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 103778,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 Python 함수는 주문의 합계 금액에 따라 배송비를 계산합니다. 합계 금액이 0보다 작으면 오류를 발생시킵니다. 합계 금액이 무료 배송 기준(50,000원) 이상이면 배송비가 없습니다. 그렇지 않으면 배송비는 3,000원입니다.",
+          "citations": [
+            {
+              "quote": "if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")",
+              "explanation": "주문 합계가 0보다 작으면 ValueError를 발생시킵니다.",
+              "start": 195,
+              "end": 269,
+              "line": 8
+            },
+            {
+              "quote": "if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0",
+              "explanation": "주문 합계가 무료 배송 기준 이상이면 배송비를 0으로 반환합니다.",
+              "start": 274,
+              "end": 330,
+              "line": 10
+            },
+            {
+              "quote": "return SHIPPING_FEE",
+              "explanation": "주문 합계가 무료 배송 기준 미만이면 배송비를 3,000원으로 반환합니다.",
+              "start": 335,
+              "end": 354,
+              "line": 12
+            }
+          ],
+          "edits": [],
+          "updated": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 50_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "subtotal < 0",
+          "covered": true
+        },
+        {
+          "quote": "raise ValueError",
+          "covered": true
+        },
+        {
+          "quote": "subtotal >= FREE_SHIPPING_THRESHOLD",
+          "covered": true
+        },
+        {
+          "quote": "return SHIPPING_FEE",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "go-errors",
+      "file": "shipping.go",
+      "language": "go",
+      "sourceSha256": "2efb6acd36af25a8db1ef722eb0053887c706430066f3c1606734f2b4e7d5b1a",
+      "reviewCriteria": "Preserve both return values on every path: negative returns 0 plus an error, threshold returns 0 plus nil, default 3000 plus nil. No business motive.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 89795,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 함수는 주어진 소계 금액에 따라 배송비를 계산합니다. 소계 금액이 0보다 작으면 오류를 반환합니다. 소계 금액이 50,000원 이상이면 배송비가 없습니다. 그 외에는 배송비가 3,000원입니다.",
+          "citations": [
+            {
+              "quote": "if subtotal < 0 { return 0, errors.New(\"negative subtotal\") }",
+              "explanation": "소계 금액이 0보다 작으면 오류 메시지를 반환합니다.",
+              "start": 77,
+              "end": 138,
+              "line": 6
+            },
+            {
+              "quote": "if subtotal >= 50000 { return 0, nil }",
+              "explanation": "소계 금액이 50,000원 이상이면 배송비가 없습니다.",
+              "start": 143,
+              "end": 181,
+              "line": 7
+            },
+            {
+              "quote": "return 3000, nil",
+              "explanation": "소계 금액이 0보다 크고 50,000원 미만이면 배송비가 3,000원입니다.",
+              "start": 186,
+              "end": 202,
+              "line": 8
+            }
+          ],
+          "edits": [],
+          "updated": "package shipping\n\nimport \"errors\"\n\nfunc Fee(subtotal int) (int, error) {\n    if subtotal < 0 { return 0, errors.New(\"negative subtotal\") }\n    if subtotal >= 50000 { return 0, nil }\n    return 3000, nil\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "subtotal < 0",
+          "covered": true
+        },
+        {
+          "quote": "errors.New",
+          "covered": true
+        },
+        {
+          "quote": "subtotal >= 50000",
+          "covered": true
+        },
+        {
+          "quote": "return 3000, nil",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "css-columns",
+      "file": "cards.css",
+      "language": "css",
+      "sourceSha256": "bedb33b58c1429d3f3ee32b474a26cdafb4022615b1589c3a1ef9cea13374d27",
+      "reviewCriteria": "Three equal column tracks, 16px gap, one column at viewport widths <= 600px. Not vertical default layout. No claim about unseen HTML.",
+      "protocolAccepted": false,
+      "error": "모델이 가리킨 원문이 없거나 여러 곳입니다. 다시 요청하세요. / The model's source quote is missing or ambiguous. Retry."
+    },
+    {
+      "id": "jsonc-data",
+      "file": "shipping.jsonc",
+      "language": "jsonc",
+      "sourceSha256": "5bcb247e01554bddffa462c08c69daa678f588d9223678e42519d1021c59fee6",
+      "reviewCriteria": "Describe the actual settings and comments. No consuming code is present: do not invent >=/> comparison, claim the fee applies to every order, or state that this file executes calculation.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 76494,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 JSON 파일은 애플리케이션의 배송 정책을 정의합니다. 배송비와 무료 배송 기준을 설정하고 통화 단위를 지정합니다. 입력으로 주어진 금액에 따라 무료 배송 여부와 배송비를 결정합니다.",
+          "citations": [
+            {
+              "quote": "\"freeShippingThreshold\": 50000,",
+              "explanation": "이 값은 무료 배송이 적용되는 최소 금액입니다. 만약 주어진 금액이 이 값보다 높다면 무료 배송이 적용됩니다.",
+              "start": 80,
+              "end": 111,
+              "line": 3
+            },
+            {
+              "quote": "\"shippingFee\": 3000,",
+              "explanation": "이 값은 배송비를 나타냅니다. 만약 무료 배송이 적용되지 않는다면 이 금액이 배송비로 적용됩니다.",
+              "start": 114,
+              "end": 134,
+              "line": 4
+            },
+            {
+              "quote": "\"currency\": \"KRW\"",
+              "explanation": "이 값은 통화 단위를 나타냅니다. 이 경우 한국 원화(KRW)를 사용합니다.",
+              "start": 137,
+              "end": 154,
+              "line": 5
+            }
+          ],
+          "edits": [],
+          "updated": "{\n  // Shipping policy used by an application; this file does not run itself.\n  \"freeShippingThreshold\": 50000,\n  \"shippingFee\": 3000,\n  \"currency\": \"KRW\"\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "50000",
+          "covered": true
+        },
+        {
+          "quote": "3000",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "python-batches",
+      "file": "batches.py",
+      "language": "python",
+      "sourceSha256": "073166954f8235a54872fe49e9091aae867ddd03d5876633b1495b4e7870785e",
+      "reviewCriteria": "size defaults to 4; size <= 0 throws before the count check. Nonpositive count returns 0 only after size check. Positive count uses integer ceiling division. Type hints do not enforce argument types at runtime.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 83049,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "함수 `batch_count`는 주어진 `count`를 `size`로 나눈 배치 수를 계산합니다. `size`가 0 이하이면 오류를 발생시킵니다. `count`가 0 이하면 0을 반환합니다. 그렇지 않으면 `(count + size - 1) // size`를 계산하여 배치 수를 반환합니다.",
+          "citations": [
+            {
+              "quote": "if size <= 0:\n        raise ValueError(\"size must be positive\")",
+              "explanation": "만약 `size`가 0 이하이면 `ValueError`를 발생시킵니다. 이는 `size`가 양수인지 확인하는 조건입니다.",
+              "start": 55,
+              "end": 118,
+              "line": 2
+            },
+            {
+              "quote": "if count <= 0:\n        return 0",
+              "explanation": "만약 `count`가 0 이하면 0을 반환합니다. 이는 `count`가 양수인지 확인하는 조건입니다.",
+              "start": 123,
+              "end": 154,
+              "line": 4
+            },
+            {
+              "quote": "return (count + size - 1) // size",
+              "explanation": "배치 수를 계산하는 식입니다. 이 식은 `(count + size - 1) // size`를 계산하여 배치 수를 반환합니다.",
+              "start": 159,
+              "end": 192,
+              "line": 6
+            }
+          ],
+          "edits": [],
+          "updated": "def batch_count(count: int, size: int = 4) -> int:\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    if count <= 0:\n        return 0\n    return (count + size - 1) // size\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "size <= 0",
+          "covered": true
+        },
+        {
+          "quote": "raise ValueError",
+          "covered": true
+        },
+        {
+          "quote": "count <= 0",
+          "covered": true
+        },
+        {
+          "quote": "(count + size - 1) // size",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "go-presence",
+      "file": "first.go",
+      "language": "go",
+      "sourceSha256": "82d1598c4988e671ae5fb406d584ca127e3868d7b3ffbd1887e2c4b09b2bbf84",
+      "reviewCriteria": "An empty/nil slice returns empty string and false; otherwise first item and true, including an empty first string. The boolean indicates presence, not whether the text is nonempty.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 60135,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "함수 `First`는 문자열 슬라이스 `items`의 첫 번째 요소를 반환합니다. 슬라이스가 비어 있으면 빈 문자열과 `false`를 반환합니다. 그렇지 않으면 첫 번째 요소와 `true`를 반환합니다.",
+          "citations": [
+            {
+              "quote": "if len(items) == 0 {",
+              "explanation": "슬라이스의 길이가 0인지 확인합니다. 슬라이스가 비어 있으면 조건이 참이 됩니다.",
+              "start": 64,
+              "end": 84,
+              "line": 4
+            },
+            {
+              "quote": "return \"\", false",
+              "explanation": "슬라이스가 비어 있으면 빈 문자열과 `false`를 반환합니다.",
+              "start": 93,
+              "end": 109,
+              "line": 5
+            },
+            {
+              "quote": "return items[0], true",
+              "explanation": "슬라이스가 비어 있지 않으면 첫 번째 요소와 `true`를 반환합니다.",
+              "start": 120,
+              "end": 141,
+              "line": 7
+            }
+          ],
+          "edits": [],
+          "updated": "package sample\n\nfunc First(items []string) (string, bool) {\n    if len(items) == 0 {\n        return \"\", false\n    }\n    return items[0], true\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "len(items) == 0",
+          "covered": true
+        },
+        {
+          "quote": "return \"\", false",
+          "covered": true
+        },
+        {
+          "quote": "return items[0], true",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "css-widths",
+      "file": "panel.css",
+      "language": "css",
+      "sourceSha256": "39d3493fc4388ef98a9ba7f74f510fccfb51fdf89ea1f9da88d1e37f2fc80c9a",
+      "reviewCriteria": "Default two tracks with 2:1 fractional shares; at >= 900px three equal fractional tracks. 12px gap remains. Do not invert min-width into max-width or promise literal rendered widths for all content.",
+      "protocolAccepted": false,
+      "error": "모델이 가리킨 원문이 없거나 여러 곳입니다. 다시 요청하세요. / The model's source quote is missing or ambiguous. Retry."
+    },
+    {
+      "id": "jsonc-retry",
+      "file": "retry.jsonc",
+      "language": "jsonc",
+      "sourceSha256": "dfc06a7af7db7e4fc47370811c3117e7d67cd596783f97541b19c1beb752d1b2",
+      "reviewCriteria": "Read three values, comments and trailing comma. Names suggest retries but consumption is absent: no proven loop, exact retry count, delay schedule, or service behavior.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 63762,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 JSON 파일은 재시도 설정을 포함하고 있습니다. 기본적으로 재시도는 비활성화되어 있으며, 최대 재시도 횟수는 3회이고, 각 재시도 사이의 지연 시간은 250밀리초입니다.",
+          "citations": [
+            {
+              "quote": "\"retryLimit\": 3,",
+              "explanation": "최대 재시도 횟수는 3회입니다.",
+              "start": 24,
+              "end": 40,
+              "line": 3
+            },
+            {
+              "quote": "\"backoffMs\": 250,",
+              "explanation": "각 재시도 사이의 지연 시간은 250밀리초입니다.",
+              "start": 43,
+              "end": 60,
+              "line": 4
+            },
+            {
+              "quote": "\"enabled\": false,",
+              "explanation": "재시도는 비활성화되어 있습니다.",
+              "start": 63,
+              "end": 80,
+              "line": 5
+            }
+          ],
+          "edits": [],
+          "updated": "{\n  // Retry settings\n  \"retryLimit\": 3,\n  \"backoffMs\": 250,\n  \"enabled\": false,\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "\"retryLimit\": 3",
+          "covered": true
+        },
+        {
+          "quote": "\"backoffMs\": 250",
+          "covered": true
+        },
+        {
+          "quote": "\"enabled\": false",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "typescript-async",
+      "file": "load-label.ts",
+      "language": "typescript",
+      "sourceSha256": "ffa1b579483ae7aaca15cd3ddf81206dee4577da0e14000a1f8c9151700f6f4a",
+      "reviewCriteria": "Blank id yields a Promise of missing without fetcher; else awaits fetcher with original id. Nullish fallback preserves an empty string. A rejected fetcher propagates because there is no catch. No invented retries or network implementation.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 72006,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 함수는 주어진 ID를 받아 해당 ID에 대한 라벨을 가져옵니다. ID가 비어있으면 'missing'을 반환하고, 그렇지 않으면 fetcher 함수를 통해 라벨을 가져옵니다. 라벨이 없으면 'untitled'을 반환합니다.",
+          "citations": [
+            {
+              "quote": "if (!id.trim()) return \"missing\";",
+              "explanation": "ID가 비어있으면 'missing'을 반환합니다.",
+              "start": 109,
+              "end": 142,
+              "line": 5
+            },
+            {
+              "quote": "const label = await fetcher(id);",
+              "explanation": "fetcher 함수를 통해 ID에 해당하는 라벨을 가져옵니다.",
+              "start": 145,
+              "end": 177,
+              "line": 6
+            },
+            {
+              "quote": "return label ?? \"untitled\";",
+              "explanation": "라벨이 없으면 'untitled'을 반환합니다.",
+              "start": 180,
+              "end": 207,
+              "line": 7
+            }
+          ],
+          "edits": [],
+          "updated": "export async function loadLabel(\n  id: string,\n  fetcher: (id: string) => Promise<string | undefined>,\n) {\n  if (!id.trim()) return \"missing\";\n  const label = await fetcher(id);\n  return label ?? \"untitled\";\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "!id.trim()",
+          "covered": true
+        },
+        {
+          "quote": "await fetcher(id)",
+          "covered": true
+        },
+        {
+          "quote": "label ?? \"untitled\"",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "sql-null",
+      "file": "results.sql",
+      "language": "sql",
+      "sourceSha256": "eafd15f10e9d776a605889c30f94b10fc176cd26a24416c137dadbd13f35951f",
+      "reviewCriteria": "Read-only projection with null unrated, >=80 pass, other values retry, only active true rows. No database mutation or implied ordering/index/speed claim.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:7b",
+          "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+          "size": 4683087561
+        },
+        "elapsedMs": 82049,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 SQL 쿼리는 `attempts` 테이블에서 활성화된 시도(`active = TRUE`)를 필터링하고, 각 시도의 점수(`score`)에 따라 결과를 분류합니다. 점수가 없으면 'unrated', 80점 이상이면 'pass', 그 외에는 'retry'가 됩니다.",
+          "citations": [
+            {
+              "quote": "SELECT id,\n       CASE WHEN score IS NULL THEN 'unrated'\n            WHEN score >= 80 THEN 'pass'\n            ELSE 'retry' END AS result\nFROM attempts\nWHERE active = TRUE;",
+              "explanation": "이 쿼리는 `attempts` 테이블에서 `active`가 `TRUE`인 행을 선택합니다. 각 행의 `score`에 따라 `result` 컬럼을 설정합니다. `score`가 `NULL`이면 'unrated', `score`가 80점 이상이면 'pass', 그 외에는 'retry'가 됩니다.",
+              "start": 0,
+              "end": 171,
+              "line": 1
+            }
+          ],
+          "edits": [],
+          "updated": "SELECT id,\n       CASE WHEN score IS NULL THEN 'unrated'\n            WHEN score >= 80 THEN 'pass'\n            ELSE 'retry' END AS result\nFROM attempts\nWHERE active = TRUE;\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "score IS NULL",
+          "covered": true
+        },
+        {
+          "quote": "score >= 80",
+          "covered": true
+        },
+        {
+          "quote": "ELSE 'retry'",
+          "covered": true
+        },
+        {
+          "quote": "active = TRUE",
+          "covered": true
+        }
+      ]
+    }
+  ],
+  "completedAt": "2026-10-16T07:57:10.153Z"
+}

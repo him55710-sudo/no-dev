@@ -15,17 +15,28 @@ export type ViewState = {
   analysis?: FileAnalysis;
   diagnostics?: import("../../src/core/editorDiagnostics").EditorDiagnostics;
   projectCheck?: import("./projectChecks").ProjectCheck;
+  benchmark?: import("./benchmarks").BenchmarkState;
   project?: ProjectAnalysis;
   scanNote?: string;
   error?: string;
+  pythonNotice?: string;
+  goNotice?: string;
+  javaNotice?: string;
+  csharpNotice?: string;
+  rustNotice?: string;
   tab?: "story" | "map" | "local";
 };
 export type PatchSummary = {
+  kind?: "function-format";
+  reviewed?: boolean;
   id: string;
   description: Words;
   oldText: string;
   newText: string;
 };
+export type FormatSummary =
+  | PatchSummary
+  | { unchanged: true; description: Words };
 export type Request = {
   id: string;
   action: string;

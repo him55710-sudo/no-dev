@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-10-19T20:11:29.250Z",
+  "vsix": "release/pureobom-0.7.0-project.vsix",
+  "vsixSha256": "234e95376697bf05412f747ed21eb00a6794f6754a08101b3e6ac5ad1b6e5bf1",
+  "files": [
+    {
+      "file": "out/extension.cjs",
+      "sha256": "6e5494f525f320411490246c0b6bb2b451d28aa319f44b99abad3ab6c519b6a5",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "out/worker.cjs",
+      "sha256": "3e6598bc8047ceb4a2d145b3a1a4b83e4e9d64c5b8bf12532e2c7de40ee8070f",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "out/agent-host.cjs",
+      "sha256": "7caa24435edcb2dd968954cf70f9f82ed85e03194b25ac396eeacde476222a17",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "media/design.js",
+      "sha256": "cbac337c9b22af4d4eaaa76f78fe59529ede8cabecf9510ace8d9146deeff80c",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "media/design.css",
+      "sha256": "8846482a0474e8d0222b121c09571f4d917b80f1ad291064d317cdd637ba7b6b",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "media/view.js",
+      "sha256": "0eee49912ef43da105b31eb2fbdb820de697b55b405a956ded9bf2df48a62c5b",
+      "packagedBuiltInstalledMatch": true
+    },
+    {
+      "file": "media/view.css",
+      "sha256": "3963785129d404f4fd30ebacf8c267984758d9bda0340b6be2006cde14d8c7f3",
+      "packagedBuiltInstalledMatch": true
+    }
+  ]
+}

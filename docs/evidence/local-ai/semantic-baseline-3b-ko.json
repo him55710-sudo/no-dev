@@ -1,0 +1,607 @@
+{
+  "startedAt": "2026-10-16T07:25:56.592Z",
+  "model": "qwen2.5-coder:3b",
+  "responseLanguage": "ko",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "implementation": {
+    "baseCommit": "fe685a8c7f84fdc11c8b991dfd7af009390d8dfb",
+    "transportSha256": "17f42b92f0f03a7a714baa4915a134aa00391744ca7a7629c6be7479012c84d7",
+    "protocolSha256": "4aff8cbbb7ea1cc438b487e93f988569c217c35d264733101a254d2f4c26d8f0",
+    "frozenClientSha256": "721b5f6af0c8ec1e67f8e661b1d06dcf152189e99bcefd0f76ed0312de3ca594"
+  },
+  "kind": "actual local Ollama; public synthetic examples; one attempt per selected case; no changes applied or executed",
+  "limitations": "Quote coverage only checks expected source text appears in citations. It is NOT semantic accuracy. Prose requires manual review against the published criteria; all errors are retained. Elapsed time is not a controlled performance comparison.",
+  "results": [
+    {
+      "id": "python-branches",
+      "file": "shipping.py",
+      "language": "python",
+      "sourceSha256": "59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1",
+      "reviewCriteria": "Explain negative-input ValueError, subtotal >= 50000 returning 0, otherwise 3000. No currency is declared. Do not cite constants alone.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 22660,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 코드는 주문의 총 금액에 따라 배송비를 계산하는 간단한 예시입니다. 무료 배송 기준이 50,000원 이상일 경우 배송비는 0원입니다.",
+          "citations": [
+            {
+              "quote": "FREE_SHIPPING_THRESHOLD = 50_000\nSHIPPING_FEE = 3_000",
+              "explanation": "이 두 변수는 무료 배송 기준과 배송비를 정의합니다.",
+              "start": 89,
+              "end": 142,
+              "line": 3
+            }
+          ],
+          "edits": [],
+          "updated": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 50_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "subtotal < 0",
+          "covered": false
+        },
+        {
+          "quote": "raise ValueError",
+          "covered": false
+        },
+        {
+          "quote": "subtotal >= FREE_SHIPPING_THRESHOLD",
+          "covered": false
+        },
+        {
+          "quote": "return SHIPPING_FEE",
+          "covered": false
+        }
+      ]
+    },
+    {
+      "id": "go-errors",
+      "file": "shipping.go",
+      "language": "go",
+      "sourceSha256": "2efb6acd36af25a8db1ef722eb0053887c706430066f3c1606734f2b4e7d5b1a",
+      "reviewCriteria": "Preserve both return values on every path: negative returns 0 plus an error, threshold returns 0 plus nil, default 3000 plus nil. No business motive.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 35136,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 코드는 배송비 계산을 담당하는 함수입니다. 주문 금액이 0보다 작으면 0을 반환하고, 50,000원 이상이면 배송비를 계산하지 않습니다. 그 외의 경우 배송비는 3,000원입니다.",
+          "citations": [
+            {
+              "quote": "if subtotal < 0 { return 0, errors.New(\"negative subtotal\") }",
+              "explanation": "주문 금액이 0보다 작으면 음수입니다. 이 경우 배송비를 계산하지 않고 에러를 반환합니다.",
+              "start": 77,
+              "end": 138,
+              "line": 6
+            },
+            {
+              "quote": "if subtotal >= 50000 { return 0, nil }",
+              "explanation": "주문 금액이 50,000원 이상이면 배송비를 계산하지 않습니다. 이 경우 배송비를 계산하지 않고 nil을 반환합니다.",
+              "start": 143,
+              "end": 181,
+              "line": 7
+            },
+            {
+              "quote": "return 3000, nil",
+              "explanation": "주문 금액이 0보다 작지 않고 50,000원 미만이면 배송비는 3,000원입니다. 이 경우 배송비를 계산하고 nil을 반환합니다.",
+              "start": 186,
+              "end": 202,
+              "line": 8
+            }
+          ],
+          "edits": [],
+          "updated": "package shipping\n\nimport \"errors\"\n\nfunc Fee(subtotal int) (int, error) {\n    if subtotal < 0 { return 0, errors.New(\"negative subtotal\") }\n    if subtotal >= 50000 { return 0, nil }\n    return 3000, nil\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "subtotal < 0",
+          "covered": true
+        },
+        {
+          "quote": "errors.New",
+          "covered": true
+        },
+        {
+          "quote": "subtotal >= 50000",
+          "covered": true
+        },
+        {
+          "quote": "return 3000, nil",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "css-columns",
+      "file": "cards.css",
+      "language": "css",
+      "sourceSha256": "bedb33b58c1429d3f3ee32b474a26cdafb4022615b1589c3a1ef9cea13374d27",
+      "reviewCriteria": "Three equal column tracks, 16px gap, one column at viewport widths <= 600px. Not vertical default layout. No claim about unseen HTML.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 36143,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 CSS 코드는 카드를 가로로 배치하는 데 사용됩니다. 화면 크기가 600px 이하일 경우, 카드가 가로로 한 줄로 배치됩니다.",
+          "citations": [
+            {
+              "quote": ".cards {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}",
+              "explanation": "이 코드는 `.cards` 클래스를 가로로 배치하는 데 사용됩니다. `display: grid;` 속성은 요소를 그리드로 배치합니다. `grid-template-columns: repeat(3, 1fr);` 속성은 카드를 세 개로 배치하며, 각 카드 사이의 간격은 `16px`입니다.",
+              "start": 0,
+              "end": 81,
+              "line": 1
+            },
+            {
+              "quote": "@media (max-width: 600px) {\n  .cards { grid-template-columns: 1fr; }\n}",
+              "explanation": "이 코드는 화면 크기가 600px 이하일 경우, 카드가 가로로 한 줄로 배치됩니다. `@media` 쿼리는 화면 크기가 600px 이하일 때만 적용됩니다. `grid-template-columns: 1fr;` 속성은 카드를 한 줄로 배치합니다.",
+              "start": 82,
+              "end": 152,
+              "line": 6
+            }
+          ],
+          "edits": [],
+          "updated": ".cards {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 16px;\n}\n@media (max-width: 600px) {\n  .cards { grid-template-columns: 1fr; }\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "repeat(3, 1fr)",
+          "covered": true
+        },
+        {
+          "quote": "gap: 16px",
+          "covered": true
+        },
+        {
+          "quote": "max-width: 600px",
+          "covered": true
+        },
+        {
+          "quote": "grid-template-columns: 1fr",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "jsonc-data",
+      "file": "shipping.jsonc",
+      "language": "jsonc",
+      "sourceSha256": "5bcb247e01554bddffa462c08c69daa678f588d9223678e42519d1021c59fee6",
+      "reviewCriteria": "Describe the actual settings and comments. No consuming code is present: do not invent >=/> comparison, claim the fee applies to every order, or state that this file executes calculation.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 25030,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 코드는 애플리케이션의 배송 정책을 정의하는 JSON 파일입니다. 이 파일은 실행되지 않습니다.",
+          "citations": [
+            {
+              "quote": "\"freeShippingThreshold\": 50000",
+              "explanation": "이 값은 무료 배송 기준 금액을 설정합니다. 이 값이 50000원 이상일 경우 무료 배송이 적용됩니다.",
+              "start": 80,
+              "end": 110,
+              "line": 3
+            },
+            {
+              "quote": "\"shippingFee\": 3000",
+              "explanation": "이 값은 배송료를 설정합니다. 이 값은 무료 배송 기준 금액 미만일 경우 적용됩니다.",
+              "start": 114,
+              "end": 133,
+              "line": 4
+            },
+            {
+              "quote": "\"currency\": \"KRW\"",
+              "explanation": "이 값은 통화 단위를 설정합니다. 이 값은 한국 원화로 설정되어 있습니다.",
+              "start": 137,
+              "end": 154,
+              "line": 5
+            }
+          ],
+          "edits": [],
+          "updated": "{\n  // Shipping policy used by an application; this file does not run itself.\n  \"freeShippingThreshold\": 50000,\n  \"shippingFee\": 3000,\n  \"currency\": \"KRW\"\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "50000",
+          "covered": true
+        },
+        {
+          "quote": "3000",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "python-batches",
+      "file": "batches.py",
+      "language": "python",
+      "sourceSha256": "073166954f8235a54872fe49e9091aae867ddd03d5876633b1495b4e7870785e",
+      "reviewCriteria": "size defaults to 4; size <= 0 throws before the count check. Nonpositive count returns 0 only after size check. Positive count uses integer ceiling division. Type hints do not enforce argument types at runtime.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 37463,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 함수는 주어진 개수를 주어진 크기로 나누어 몇 개의 그룹이 필요한지 계산합니다.",
+          "citations": [
+            {
+              "quote": "if size <= 0:\n        raise ValueError(\"size must be positive\")",
+              "explanation": "이 조건은 size가 0보다 작을 때 예외를 발생시킵니다. size가 음수일 경우, 정확한 그룹 수를 계산할 수 없기 때문입니다.",
+              "start": 55,
+              "end": 118,
+              "line": 2
+            },
+            {
+              "quote": "if count <= 0:\n        return 0",
+              "explanation": "이 조건은 count가 0보다 작을 때 0을 반환합니다. count가 음수일 경우, 그룹 수는 항상 0개 이상이어야 합니다.",
+              "start": 123,
+              "end": 154,
+              "line": 4
+            },
+            {
+              "quote": "return (count + size - 1) // size",
+              "explanation": "이 식은 count를 size로 나누어 몇 개의 그룹이 필요한지 계산합니다. // 연산자는 몫을 반환합니다.",
+              "start": 159,
+              "end": 192,
+              "line": 6
+            }
+          ],
+          "edits": [],
+          "updated": "def batch_count(count: int, size: int = 4) -> int:\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n    if count <= 0:\n        return 0\n    return (count + size - 1) // size\n",
+          "risks": [
+            "size가 0보다 작을 때의 예외 처리",
+            "count가 0보다 작을 때의 반환 값",
+            "정확한 그룹 수 계산"
+          ],
+          "checks": [
+            "size가 0보다 큰지 확인",
+            "count가 0보다 큰지 확인",
+            "결과가 정확한지 확인"
+          ]
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "size <= 0",
+          "covered": true
+        },
+        {
+          "quote": "raise ValueError",
+          "covered": true
+        },
+        {
+          "quote": "count <= 0",
+          "covered": true
+        },
+        {
+          "quote": "(count + size - 1) // size",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "go-presence",
+      "file": "first.go",
+      "language": "go",
+      "sourceSha256": "82d1598c4988e671ae5fb406d584ca127e3868d7b3ffbd1887e2c4b09b2bbf84",
+      "reviewCriteria": "An empty/nil slice returns empty string and false; otherwise first item and true, including an empty first string. The boolean indicates presence, not whether the text is nonempty.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 16655,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 함수는 문자열 슬라이스에서 첫 번째 요소와 첫 번째 요소가 있는지 여부를 반환합니다.",
+          "citations": [
+            {
+              "quote": "if len(items) == 0 {",
+              "explanation": "이 조건은 슬라이스가 비어 있는지 확인합니다. 비어 있으면 빈 문자열과 false를 반환합니다.",
+              "start": 64,
+              "end": 84,
+              "line": 4
+            },
+            {
+              "quote": "return items[0], true",
+              "explanation": "슬라이스가 비어 있지 않으면 첫 번째 요소를 반환하고 true를 반환합니다.",
+              "start": 120,
+              "end": 141,
+              "line": 7
+            }
+          ],
+          "edits": [],
+          "updated": "package sample\n\nfunc First(items []string) (string, bool) {\n    if len(items) == 0 {\n        return \"\", false\n    }\n    return items[0], true\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "len(items) == 0",
+          "covered": true
+        },
+        {
+          "quote": "return \"\", false",
+          "covered": false
+        },
+        {
+          "quote": "return items[0], true",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "css-widths",
+      "file": "panel.css",
+      "language": "css",
+      "sourceSha256": "39d3493fc4388ef98a9ba7f74f510fccfb51fdf89ea1f9da88d1e37f2fc80c9a",
+      "reviewCriteria": "Default two tracks with 2:1 fractional shares; at >= 900px three equal fractional tracks. 12px gap remains. Do not invert min-width into max-width or promise literal rendered widths for all content.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 33028,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 CSS 코드는 패널의 디자인을 정의합니다. 패널은 두 열로 분할되며, 작은 화면에서는 두 열로, 큰 화면에서는 세 열로 분할됩니다.",
+          "citations": [
+            {
+              "quote": ".panel {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  gap: 12px;\n}",
+              "explanation": "이 코드는 `.panel` 클래스를 선택하고, 그리드 디자인을 적용합니다. 그리드의 열은 두 개로 분할되며, 각 열의 너비는 2fr와 1fr로 설정됩니다. 열 사이의 간격은 12px로 설정됩니다.",
+              "start": 0,
+              "end": 74,
+              "line": 1
+            },
+            {
+              "quote": "@media (min-width: 900px) {\n  .panel { grid-template-columns: 1fr 1fr 1fr; }\n}",
+              "explanation": "이 코드는 화면의 너비가 900px 이상일 때, `.panel` 클래스의 그리드 열을 세 개로 분할합니다. 각 열의 너비는 1fr로 설정됩니다.",
+              "start": 76,
+              "end": 154,
+              "line": 7
+            }
+          ],
+          "edits": [],
+          "updated": ".panel {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  gap: 12px;\n}\n\n@media (min-width: 900px) {\n  .panel { grid-template-columns: 1fr 1fr 1fr; }\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "2fr 1fr",
+          "covered": true
+        },
+        {
+          "quote": "gap: 12px",
+          "covered": true
+        },
+        {
+          "quote": "min-width: 900px",
+          "covered": true
+        },
+        {
+          "quote": "1fr 1fr 1fr",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "jsonc-retry",
+      "file": "retry.jsonc",
+      "language": "jsonc",
+      "sourceSha256": "dfc06a7af7db7e4fc47370811c3117e7d67cd596783f97541b19c1beb752d1b2",
+      "reviewCriteria": "Read three values, comments and trailing comma. Names suggest retries but consumption is absent: no proven loop, exact retry count, delay schedule, or service behavior.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 22586,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 코드는 재시도 설정을 포함하고 있습니다. 재시도 횟수는 3번, 재시도 간의 지연 시간은 250밀리초이며, 재시도가 활성화되어 있지 않습니다.",
+          "citations": [
+            {
+              "quote": "\"retryLimit\": 3",
+              "explanation": "이 설정은 최대 재시도 횟수를 3번으로 설정합니다.",
+              "start": 24,
+              "end": 39,
+              "line": 3
+            },
+            {
+              "quote": "\"backoffMs\": 250",
+              "explanation": "이 설정은 재시도 간의 지연 시간을 250밀리초로 설정합니다.",
+              "start": 43,
+              "end": 59,
+              "line": 4
+            },
+            {
+              "quote": "\"enabled\": false",
+              "explanation": "이 설정은 재시도를 비활성화합니다.",
+              "start": 63,
+              "end": 79,
+              "line": 5
+            }
+          ],
+          "edits": [],
+          "updated": "{\n  // Retry settings\n  \"retryLimit\": 3,\n  \"backoffMs\": 250,\n  \"enabled\": false,\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "\"retryLimit\": 3",
+          "covered": true
+        },
+        {
+          "quote": "\"backoffMs\": 250",
+          "covered": true
+        },
+        {
+          "quote": "\"enabled\": false",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "typescript-async",
+      "file": "load-label.ts",
+      "language": "typescript",
+      "sourceSha256": "ffa1b579483ae7aaca15cd3ddf81206dee4577da0e14000a1f8c9151700f6f4a",
+      "reviewCriteria": "Blank id yields a Promise of missing without fetcher; else awaits fetcher with original id. Nullish fallback preserves an empty string. A rejected fetcher propagates because there is no catch. No invented retries or network implementation.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 30078,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 함수는 주어진 ID를 사용하여 라벨을 로드합니다. 라벨이 없으면 'untitled'를 반환합니다.",
+          "citations": [
+            {
+              "quote": "if (!id.trim()) return \"missing\";",
+              "explanation": "이 조건은 라벨 ID가 공백이나 탭으로만 이루어져 있는지 확인합니다. 공백이나 탭이 있으면 'missing'를 반환합니다.",
+              "start": 109,
+              "end": 142,
+              "line": 5
+            },
+            {
+              "quote": "const label = await fetcher(id);",
+              "explanation": "이 코드는 주어진 ID를 사용하여 라벨을 가져옵니다. fetcher 함수는 ID를 인자로 받아 라벨을 반환하거나 undefined를 반환합니다.",
+              "start": 145,
+              "end": 177,
+              "line": 6
+            },
+            {
+              "quote": "return label ?? \"untitled\";",
+              "explanation": "이 코드는 가져온 라벨이 undefined인지 확인합니다. undefined이면 'untitled'를 반환합니다. 이는 라벨이 없을 때의 기본값을 설정합니다.",
+              "start": 180,
+              "end": 207,
+              "line": 7
+            }
+          ],
+          "edits": [],
+          "updated": "export async function loadLabel(\n  id: string,\n  fetcher: (id: string) => Promise<string | undefined>,\n) {\n  if (!id.trim()) return \"missing\";\n  const label = await fetcher(id);\n  return label ?? \"untitled\";\n}\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "!id.trim()",
+          "covered": true
+        },
+        {
+          "quote": "await fetcher(id)",
+          "covered": true
+        },
+        {
+          "quote": "label ?? \"untitled\"",
+          "covered": true
+        }
+      ]
+    },
+    {
+      "id": "sql-null",
+      "file": "results.sql",
+      "language": "sql",
+      "sourceSha256": "eafd15f10e9d776a605889c30f94b10fc176cd26a24416c137dadbd13f35951f",
+      "reviewCriteria": "Read-only projection with null unrated, >=80 pass, other values retry, only active true rows. No database mutation or implied ordering/index/speed claim.",
+      "response": {
+        "model": {
+          "name": "qwen2.5-coder:3b",
+          "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+          "size": 1929912626
+        },
+        "elapsedMs": 25477,
+        "contextSize": 16384,
+        "proposal": {
+          "summary": "이 SQL 쿼리는 'attempts' 테이블에서 활성 상태인 행을 선택하고, 각 행의 'score' 컬럼을 기반으로 'result' 컬럼을 생성합니다.",
+          "citations": [
+            {
+              "quote": "SELECT id,\n       CASE WHEN score IS NULL THEN 'unrated'\n            WHEN score >= 80 THEN 'pass'\n            ELSE 'retry' END AS result\nFROM attempts\nWHERE active = TRUE;",
+              "explanation": "이 쿼리는 'attempts' 테이블에서 'active' 컬럼이 'TRUE'인 행을 선택합니다.",
+              "start": 0,
+              "end": 171,
+              "line": 1
+            }
+          ],
+          "edits": [],
+          "updated": "SELECT id,\n       CASE WHEN score IS NULL THEN 'unrated'\n            WHEN score >= 80 THEN 'pass'\n            ELSE 'retry' END AS result\nFROM attempts\nWHERE active = TRUE;\n",
+          "risks": [],
+          "checks": []
+        }
+      },
+      "protocolAccepted": true,
+      "quoteCoverage": [
+        {
+          "quote": "score IS NULL",
+          "covered": true
+        },
+        {
+          "quote": "score >= 80",
+          "covered": true
+        },
+        {
+          "quote": "ELSE 'retry'",
+          "covered": true
+        },
+        {
+          "quote": "active = TRUE",
+          "covered": true
+        }
+      ]
+    }
+  ],
+  "completedAt": "2026-10-16T07:30:41.936Z"
+}

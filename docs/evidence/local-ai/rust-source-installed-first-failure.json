@@ -1,0 +1,11 @@
+{
+  "observedAt": "2026-10-19T17:33:15.638Z",
+  "kind": "Failed installed-VSIX test attempt, before Rust checks",
+  "exitCode": 1,
+  "phase": "goSourceChecks: first Go analysis availability assertion",
+  "assertion": "assert.ok(c.state.analysis?.go?.version)",
+  "cause": "Not established. The original assertion did not include goNotice or host error state.",
+  "changesAfterFailure": "Added notice/error/kind/language/busy to the existing assertion message. No assertion or production timeout was relaxed.",
+  "environment": "Windows, VS Code 1.96.4; other local verification was also running during the failed attempt.",
+  "caveat": "Concurrency is context, not a proven cause. Do not count this attempt as a pass or a Rust result. Subsequent isolated installed test results are separate evidence."
+}

@@ -90,8 +90,29 @@ describe("Ollama loopback protocol (controlled HTTP fixture, not real inference)
     expect(chat).not.toHaveProperty("tools");
     expect(chat).not.toHaveProperty("api_key");
     expect(chat.stream).toBe(false);
+    expect(chat.truncate).toBe(false);
+    expect(chat.shift).toBe(false);
+    expect(chat.options).not.toHaveProperty("num_gpu");
+    expect(result.processor).toBe("auto");
     expect(chat.options.num_ctx).toBeLessThan(32768);
     expect(result.contextSize).toBe(chat.options.num_ctx);
+  });
+  it("requests CPU only when explicitly selected and rejects invalid hardware choices", async () => {
+    let chat: any;
+    const port = await server((req, res, body) => {
+      if (req.url === "/api/chat") chat = body;
+      reply(res, fixture(req.url));
+    });
+    const result = await new OllamaClient(port, undefined, "cpu").generate(
+      model.name,
+      input,
+    );
+    expect(chat.options.num_gpu).toBe(0);
+    expect(result.processor).toBe("cpu");
+    for (const bad of ["gpu", "", 1, null])
+      expect(() => new OllamaClient(port, undefined, bad as "cpu")).toThrow(
+        /inference processor/,
+      );
   });
   it("rejects enabled cloud before source transmission", async () => {
     const seen: string[] = [];
@@ -103,6 +124,30 @@ describe("Ollama loopback protocol (controlled HTTP fixture, not real inference)
       new OllamaClient(port).generate(model.name, input),
     ).rejects.toThrow(/OLLAMA_NO_CLOUD/);
     expect(seen).toEqual(["/api/status"]);
+  });
+  it("requests direct answers only when the model advertises a supported off switch", async () => {
+    for (const thinking of [
+      { values: [false, true], default: true },
+      { values: ["low", "medium", "high"], default: "medium" },
+      { values: [true], default: true },
+      undefined,
+    ]) {
+      let chat: any;
+      const port = await server((req, res, body) => {
+        if (req.url === "/api/chat") chat = body;
+        reply(
+          res,
+          req.url === "/api/show"
+            ? { ...fixture(req.url), thinking }
+            : fixture(req.url),
+        );
+      });
+      await new OllamaClient(port).generate(model.name, input);
+      if (thinking?.values.some((value) => value === false))
+        expect(chat.think).toBe(false);
+      else expect(chat).not.toHaveProperty("think");
+      expect(chat.options.num_predict).toBe(4096);
+    }
   });
   it("filters cloud aliases and rejects remote metadata before chat", async () => {
     let chat = false;

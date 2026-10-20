@@ -1,0 +1,92 @@
+{
+  "checkedAt": "2026-10-19T16:52:18.286Z",
+  "kind": "Actual built extension React UI and worker; simulated editor operations, public sample only. Native integration is recorded separately.",
+  "source": {
+    "baseCommit": "cb5ceba61a072e79827142149cc91998752bd3a2",
+    "state": "Development working tree adding deterministic selected-function formatting",
+    "sha256": {
+      "src/core/formatFunction.ts": "7d89803938808eddb3131dcaf3357c40c896236c7803b9b8d9a2b691f7fa6af7",
+      "src/core/changeFacts.ts": "0575a1a734908055dd81feaa2ae8d407b3adf6d81837467bbe1152c7da11d678",
+      "src/core/analyze.ts": "27f92a0cb41edc4f0dbcf34c8fe3bb2981809f9c0acb1a8ffe4c05ef1f05915a",
+      "extension/src/controller.ts": "3debc119405bbf58ffa699bc2a1956ed01761b4a0d465c744423eb6f417e0a6f",
+      "extension/src/worker.ts": "ed845c3090fe3bf868f081f6820ac415082c0208fe33878f332ffee62862adf2",
+      "extension/src/extension.ts": "50f2475b101471fa6b5f9c3cdb22cbcea4c429435f503b85830e474e1d4719d8",
+      "extension/src/protocol.ts": "e3301332ebc3777f62e5dfad126f018b174173691253fadb52136760702ce183",
+      "extension/ui/main.tsx": "1e9bc8b33a616b2f69f1e2a666f0ced368eecf8844bf10cb7098cd38ed961462",
+      "extension/ui/ReadingView.tsx": "58f057f45ca033b54d65c52eb826b8a15161c750d8345f30a9caf132f64f9618",
+      "extension/ui/RuleWorkbench.tsx": "ff0440c5ac81636a95dd24e6c18aec3023e7e2c49ad4e395a2dcb6afc6859728",
+      "extension/ui/journey.css": "834bc137536fe95f883679b5d693c407c3d12a6a3c1aaf72c9891992414ca542",
+      "extension/test/formatFunction.ts": "bda3001710e49efda35f2f54ca5a2238070340722173501569358b99f38a9a7e",
+      "extension/test/integration.ts": "81e98dc3d103743a8686b8bbca51afa4d9890e8df2db87e01510978c987798cd",
+      "tests/formatFunction.test.ts": "a9ae91717dd050ec4dedb9535965faa3438427ba4a8c8f82c30afb732ce56e78",
+      "extension/out/extension.cjs": "4c44b77467b95853f4ea84d92abde251aedf5980ef81ab6268bd6f24d9969e57",
+      "extension/out/worker.cjs": "6fcb5646b1998c1fbce93b88428e968c0b5004c1a498bfd3d6ad9ff467e16af3",
+      "extension/out/integration.cjs": "d17f58642c09ab49087d265e5db084868f23146980e3432f1d7feaa4cc645e22",
+      "extension/media/view.js": "bea8474838ce5d916b3ff9b5de14e96104276a9180d2d34ce1e178908d2f991c",
+      "extension/media/view.css": "1483175d14fa9f0b665b655cc5d7eb2fb11f7e699fedcedf44e0f3ff7fb9122a",
+      "scripts/preview-function-format.mjs": "0707817612c706d8e8a7c3ece406460d28feb8a8a499fe2b26cf58cd97e888e2",
+      "scripts/fixtures/function-format/theme.css": "3a5b2f1d94a5b62994adee3528d367b567cf39d0e9760c1f314f31aab1e63d81"
+    }
+  },
+  "checks": [
+    "Korean and English proposals disable apply before preview.",
+    "Opening the diff enables apply.",
+    "Apply refreshes document state as unsaved.",
+    "Formatting again reports already formatted, with no new patch."
+  ],
+  "limitations": [
+    "Bright browser fixture only; not a manual installed-VSIX UI test or human usability study.",
+    "Fixed-port collision and incomplete fixture theme were corrected before final captures."
+  ],
+  "calls": [
+    {
+      "id": "1",
+      "action": "ready"
+    },
+    {
+      "id": "2",
+      "action": "formatFunction",
+      "payload": {
+        "functionId": "fn:0"
+      },
+      "contextId": "1"
+    },
+    {
+      "id": "3",
+      "action": "preview",
+      "payload": {
+        "id": "format-fixture",
+        "lang": "en"
+      },
+      "contextId": "1"
+    },
+    {
+      "id": "4",
+      "action": "apply",
+      "payload": {
+        "id": "format-fixture"
+      },
+      "contextId": "1"
+    },
+    {
+      "id": "5",
+      "action": "formatFunction",
+      "payload": {
+        "functionId": "fn:0"
+      },
+      "contextId": "2"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/evidence/local-ai/function-format-review-ko.jpg",
+      "sha256": "361d88d411471458a9de517b0265f8f508e8a1609637f1686423e3c5e907a2ee",
+      "mime": "image/jpeg"
+    },
+    {
+      "path": "docs/evidence/local-ai/function-format-ready-en.jpg",
+      "sha256": "c924f90634e9f6008395a43a633d55b8b332319175424e49409f652e67116aee",
+      "mime": "image/jpeg"
+    }
+  ]
+}

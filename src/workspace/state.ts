@@ -1,4 +1,5 @@
 import type { StructureGraph } from "./model";
+import type { ProjectStory, ChangeStory, ReadingProgress } from "./narrative";
 import type { SpecDocument } from "./spec";
 import type { DesignDraft } from "./drafts";
 import type { NavigationSnapshot } from "./navigation";
@@ -13,6 +14,11 @@ import type {
   JobHistoryEntry,
 } from "./job";
 export type DesignWorkspaceState = {
+  story?: ProjectStory;
+  storyProgress?: ReadingProgress;
+  storyError?: string;
+  changeStory?: ChangeStory;
+  changeStoryBusy?: boolean;
   projectName: string;
   projectKey?: string;
   drafts?: DesignDraft[];

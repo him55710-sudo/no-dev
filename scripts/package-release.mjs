@@ -28,6 +28,7 @@ for (const directory of [
   "public",
   "examples",
   "validation",
+  "patches",
   "docs",
   ".github",
   "extension",

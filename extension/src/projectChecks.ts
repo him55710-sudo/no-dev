@@ -43,7 +43,7 @@ type Run = {
   finishing?: boolean;
 };
 // Generated/dependency directories are outside the change-observation scope.
-const ignored = new Set([
+export const ignoredCheckDirectories = new Set([
   ".git",
   "node_modules",
   "dist",
@@ -115,7 +115,7 @@ function view(task: vscode.Task, id: string): ProjectTask {
   };
 }
 
-function executionSettings(task: vscode.Task) {
+export function executionSettings(task: vscode.Task) {
   const platform =
     process.platform === "win32"
       ? "windows"
@@ -158,6 +158,7 @@ export class ProjectChecks implements vscode.Disposable {
   result?: ProjectCheck;
   private choices = new Map<string, Choice>();
   private active?: Run;
+  private measurement?: symbol;
   private resultFolder?: vscode.WorkspaceFolder;
   private resultUri?: string;
   private resultTask?: vscode.Task;
@@ -237,7 +238,7 @@ export class ProjectChecks implements vscode.Disposable {
     )
       return;
     const path = uri.path.slice(folder.uri.path.length).split("/");
-    if (!path.some((part) => ignored.has(part)))
+    if (!path.some((part) => ignoredCheckDirectories.has(part)))
       this.markStale(`file changed: ${path.filter(Boolean).join("/")}`);
   }
   private context(context: string | undefined) {
@@ -272,7 +273,7 @@ export class ProjectChecks implements vscode.Disposable {
     const tasks = await vscode.tasks.fetchTasks();
     if (this.context(context).doc !== doc)
       throw Error("File changed. Refresh tasks.");
-    this.choices.clear();
+    if (this.choices.size > 100) this.choices.clear();
     return tasks
       .filter((task) => eligible(task, folder))
       .map((task) => {
@@ -286,15 +287,23 @@ export class ProjectChecks implements vscode.Disposable {
       });
   }
   async start(context: string | undefined, id: string, reviewed: unknown) {
-    if (this.active)
+    if (this.active || this.measurement)
       throw Error("검사가 진행 중입니다. / A check is already running.");
     if (reviewed !== true)
       throw Error("실행할 명령을 먼저 확인하세요. / Review the command first.");
+    const { selected, doc, folder, bytes } = await this.select(context, id);
+    if (this.active || this.measurement)
+      throw Error("A check is already running.");
+    return this.execute(selected, doc, folder, bytes);
+  }
+  /** Resolve a previously listed task again without executing it. */
+  async select(context: string | undefined, id: string) {
     const choice = this.choices.get(id),
       { doc, folder } = this.context(context);
     if (!choice || choice.uri !== doc.uri.toString())
       throw Error("검사 목록을 새로 읽으세요. / Refresh the task list.");
     this.requireSaved(folder);
+    const version = doc.version;
     const tasks = await vscode.tasks.fetchTasks();
     const selected = tasks.find(
       (task) =>
@@ -305,10 +314,48 @@ export class ProjectChecks implements vscode.Disposable {
         "검사 명령이 바뀌었습니다. 목록을 새로 읽으세요. / Task configuration changed. Refresh the list.",
       );
     const bytes = await vscode.workspace.fs.readFile(doc.uri);
-    this.context(context);
-    this.requireSaved(folder);
-    // A second request may have crossed the awaits above.
-    if (this.active) throw Error("A check is already running.");
+    this.confirm(context, doc, version);
+    if (executionSettings(selected) !== choice.settings)
+      throw Error("Task configuration changed. Refresh the list.");
+    return { selected, doc, folder, bytes };
+  }
+  confirm(
+    context: string | undefined,
+    doc: vscode.TextDocument,
+    version: number,
+  ) {
+    const current = this.context(context);
+    if (current.doc !== doc || doc.version !== version)
+      throw Error("File changed. Refresh tasks.");
+    this.requireSaved(current.folder);
+  }
+  reserveMeasurement(): vscode.Disposable {
+    if (this.active || this.measurement)
+      throw Error(
+        "검사 또는 측정이 진행 중입니다. / A check or measurement is already running.",
+      );
+    const token = Symbol();
+    this.measurement = token;
+    return {
+      dispose: () => {
+        if (this.measurement === token) this.measurement = undefined;
+      },
+    };
+  }
+  evidence(uri: vscode.Uri, sourceSha256: string): ProjectCheck | undefined {
+    return this.resultUri === uri.toString() &&
+      this.result?.sourceSha256 === sourceSha256 &&
+      this.result.status === "passed" &&
+      !this.result.stale
+      ? { ...this.result }
+      : undefined;
+  }
+  private async execute(
+    selected: vscode.Task,
+    doc: vscode.TextDocument,
+    folder: vscode.WorkspaceFolder,
+    bytes: Uint8Array,
+  ) {
     const runId = randomUUID();
     const run: Run = {
       id: runId,

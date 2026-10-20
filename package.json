@@ -26,6 +26,7 @@
     "extension:recovery-test": "node scripts/test-installed-recovery.mjs",
     "agent:connection": "node scripts/check-agent-connection.mjs",
     "agent:live-test": "node scripts/test-live-design.mjs",
+    "extension:test:installed": "node scripts/test-extension.mjs --installed",
     "extension:package": "node scripts/package-extension.mjs",
     "release:package": "node scripts/package-release.mjs",
     "release:check": "node scripts/check-release.mjs",
@@ -34,19 +35,25 @@
     "pages:package": "node scripts/package-pages.mjs",
     "pages:preview": "node scripts/serve.mjs --site",
     "verify": "pnpm test && pnpm build && pnpm extension:build && pnpm extension:test",
-    "format": "prettier --write src tests docs *.json *.ts *.html"
+    "format": "prettier --write src tests docs *.json *.ts *.html",
+    "extension:project-live-test": "node scripts/test-project-reader.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "3.1.1",
     "@xyflow/react": "12.12.0",
+    "css-tree": "3.2.1",
     "jsonc-parser": "3.3.1",
     "jszip": "3.10.1",
+    "parse5": "8.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "sqlite3-parser": "0.7.1",
     "typescript": "5.9.3",
+    "web-tree-sitter": "0.27.1",
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@types/css-tree": "3.2.0",
     "@types/node": "24.10.0",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

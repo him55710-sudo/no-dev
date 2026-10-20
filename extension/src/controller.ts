@@ -6,7 +6,13 @@ import type {
   Simulation,
   SourceFile,
   Lang,
+  FileAnalysis,
 } from "../../src/core/types";
+import { parseRequest } from "../../src/core/ruleRequest";
+import { pythonSource } from "./pythonSource";
+import { goSource } from "./goSource";
+import { javaSource } from "./javaSource";
+import { csharpSource } from "./csharpSource";
 import {
   normalizeGlossary,
   updateGlossary,
@@ -18,7 +24,10 @@ import type { Scenario, ScenarioReport } from "../../src/core/scenarioModel";
 import { assistantLanguages } from "../../src/core/localAssistant";
 import { LocalAssistantController } from "./localAssistantController";
 import { ProjectChecks } from "./projectChecks";
+import { Benchmarks } from "./benchmarks";
 import { inputString, type PatchSummary, type ViewState } from "./protocol";
+import type { FormatSummary } from "./protocol";
+import type { FunctionFormatResult } from "../../src/core/formatFunction";
 
 const FILE_BYTES = 512 * 1024,
   TOTAL_BYTES = 8 * 1024 * 1024;
@@ -28,10 +37,13 @@ type PendingPatch = {
   uri: vscode.Uri;
   version: number;
   contextId: string;
+  reviewRequired?: boolean;
+  reviewed?: boolean;
 };
 export class Controller implements vscode.Disposable {
   readonly assistant: LocalAssistantController;
   readonly checks: ProjectChecks;
+  readonly benchmarks: Benchmarks;
   readonly changes = new vscode.EventEmitter<ViewState>();
   state: ViewState = {
     contextId: "",
@@ -50,16 +62,85 @@ export class Controller implements vscode.Disposable {
   private registration: vscode.Disposable;
   private diagnosticRegistration: vscode.Disposable;
   private glossary: GlossaryEntry[] = [];
+  private pythonWork?: AbortController;
+  private goWork?: AbortController;
+  private javaWork?: AbortController;
+  private csharpWork?: AbortController;
+  private sqlDialects = new WeakMap<vscode.TextDocument, "sqlite">();
   constructor(
     private client: AnalysisClient,
     private storage?: vscode.Memento,
+    private pythonScript?: string,
+    private goRuntime?: { script: string; cache: string },
+    private javaRuntime?: { script: string; cache: string },
+    private csharpRuntime?: { script: string; cache: string },
   ) {
     this.assistant = new LocalAssistantController(
       (context) => this.current(context),
       client,
+      async (source, signal) => {
+        try {
+          const analysis = (await this.readGo(
+            { path: "proposal.go", content: source },
+            { action: "analyze" },
+            signal,
+          )) as FileAnalysis;
+          return {
+            status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+            detail: analysis.syntaxValid
+              ? `${analysis.go!.version}: Go 문법 파싱 통과. 타입·범위·동작·성능은 미검증입니다. / Go syntax parsed; types, ranges, behavior and performance unchecked.`
+              : analysis.issues.map((i) => i.detail.en).join("\n"),
+          };
+        } catch (error) {
+          return { status: "unavailable", detail: message(error) };
+        }
+      },
+      async (source, signal) => {
+        try {
+          const analysis = (await this.readJava(
+            { path: "Proposal.java", content: source },
+            { action: "analyze" },
+            signal,
+          )) as FileAnalysis;
+          return {
+            status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+            detail: analysis.syntaxValid
+              ? `${analysis.java!.version}: Java 문법 파싱 통과. 타입·의존성·동작·성능은 미검증입니다. / Java syntax parsed; types, dependencies, behavior and performance unchecked.`
+              : analysis.issues.map((i) => i.detail.en).join("\n"),
+          };
+        } catch (error) {
+          return { status: "unavailable", detail: message(error) };
+        }
+      },
+      (doc) => this.sqlDialects.get(doc),
+      async (source, signal) => {
+        try {
+          const analysis = (await this.readCSharp(
+            { path: "Proposal.cs", content: source },
+            { action: "analyze" },
+            signal,
+          )) as FileAnalysis;
+          return {
+            status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+            detail: analysis.syntaxValid
+              ? `${analysis.csharp!.version}: C# 문법 파싱 통과. 타입·의존성·동작·성능은 미검증입니다. / C# syntax parsed; types, dependencies, behavior and performance unchecked.`
+              : analysis.issues.map((i) => i.detail.en).join("\n"),
+          };
+        } catch (error) {
+          return { status: "unavailable", detail: message(error) };
+        }
+      },
+      (context, id) => {
+        this.current(context);
+        const fn = this.state.analysis!.functions.find((f) => f.id === id);
+        if (!fn) return undefined;
+        return { name: fn.name.slice(0, 400), start: fn.start, end: fn.end };
+      },
     );
     this.checks = new ProjectChecks((context) => this.current(context));
     this.checks.changes.event((projectCheck) => this.publish({ projectCheck }));
+    this.benchmarks = new Benchmarks(this.checks);
+    this.benchmarks.changes.event((benchmark) => this.publish({ benchmark }));
     try {
       this.glossary = normalizeGlossary(storage?.get("pureobom.glossary.v1"));
     } catch {
@@ -163,7 +244,7 @@ export class Controller implements vscode.Disposable {
       return `workspace-${index + 1}/${uri.path.slice(folder.uri.path.length).replace(/^\//, "")}`;
     }
     if (uri.scheme === "untitled")
-      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc" } as Record<string, string>)[languageId || ""] || "txt"}`;
+      return `untitled/${uri.path}.${({ typescript: "ts", typescriptreact: "tsx", javascript: "js", javascriptreact: "jsx", json: "json", jsonc: "jsonc", python: "py", go: "go", java: "java", csharp: "cs", rust: "rs", html: "html", css: "css", sql: "sql" } as Record<string, string>)[languageId || ""] || "txt"}`;
     return uri.path;
   }
   private publish(next: Partial<ViewState>) {
@@ -219,6 +300,10 @@ export class Controller implements vscode.Disposable {
     await this.refresh();
   }
   private invalidate() {
+    this.pythonWork?.abort();
+    this.goWork?.abort();
+    this.javaWork?.abort();
+    this.csharpWork?.abort();
     this.assistant.invalidate();
     this.epoch++;
     this.patches.clear();
@@ -240,6 +325,11 @@ export class Controller implements vscode.Disposable {
       language: doc.languageId,
       sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
       analysis: undefined,
+      pythonNotice: undefined,
+      goNotice: undefined,
+      javaNotice: undefined,
+      csharpNotice: undefined,
+      rustNotice: undefined,
       diagnostics: changedDocument
         ? undefined
         : this.state.diagnostics &&
@@ -258,6 +348,11 @@ export class Controller implements vscode.Disposable {
       language: undefined,
       sourceBytes: undefined,
       analysis: undefined,
+      pythonNotice: undefined,
+      goNotice: undefined,
+      javaNotice: undefined,
+      csharpNotice: undefined,
+      rustNotice: undefined,
       diagnostics: undefined,
       busy: false,
       dirty: false,
@@ -306,7 +401,10 @@ export class Controller implements vscode.Disposable {
         );
       if (!this.sources.has(path) && this.sources.size >= 300)
         this.sources.delete(this.sources.keys().next().value!);
-      this.sources.set(path, { uri: doc.uri, file: { path, content } });
+      this.sources.set(path, {
+        uri: doc.uri,
+        file: { path, content, sqlDialect: this.sqlDialects.get(doc) },
+      });
       // Open documents are authoritative, including unsaved editor changes.
       for (const source of this.sources.values()) {
         const open = vscode.workspace.textDocuments.find(
@@ -330,6 +428,77 @@ export class Controller implements vscode.Disposable {
         glossary: this.analysisGlossary(),
       });
       if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
+      let pythonNotice: string | undefined;
+      let goNotice: string | undefined;
+      let javaNotice: string | undefined;
+      let csharpNotice: string | undefined;
+      let rustNotice: string | undefined;
+      if (doc.languageId === "python") {
+        try {
+          const analysis = (await this.readPython(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          pythonNotice = message(error);
+        }
+      }
+      if (doc.languageId === "go") {
+        try {
+          const analysis = (await this.readGo(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          goNotice = message(error);
+        }
+      }
+      if (doc.languageId === "java") {
+        try {
+          const analysis = (await this.readJava(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          javaNotice = message(error);
+        }
+      }
+      if (doc.languageId === "csharp") {
+        try {
+          const analysis = (await this.readCSharp(
+            { path, content },
+            { action: "analyze" },
+          )) as FileAnalysis;
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          csharpNotice = message(error);
+        }
+      }
+      if (doc.languageId === "rust") {
+        try {
+          const analysis = await this.client.call<FileAnalysis>("rust", {
+            file: { path, content },
+            action: "analyze",
+          });
+          project.files = project.files.map((f) =>
+            f.path === path ? analysis : f,
+          );
+        } catch (error) {
+          rustNotice = message(error);
+        }
+      }
+      if (epoch !== this.epoch || doc !== this.active || doc.isClosed) return;
       this.publish({
         project,
         analysis: project.files.find((f) => f.path === path),
@@ -338,6 +507,11 @@ export class Controller implements vscode.Disposable {
         dirty: doc.isDirty,
         language: doc.languageId,
         sourceBytes: Buffer.byteLength(doc.getText(), "utf8"),
+        pythonNotice,
+        goNotice,
+        javaNotice,
+        csharpNotice,
+        rustNotice,
       });
     } catch (e) {
       if (epoch === this.epoch)
@@ -420,6 +594,143 @@ export class Controller implements vscode.Disposable {
       throw Error("파일이 바뀌었습니다. 최신 설명에서 다시 시도해 주세요.");
     return doc;
   }
+  private async readPython(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+  ) {
+    if (vscode.env.remoteName || !this.pythonScript)
+      throw Error(
+        "Python 구문 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / Python syntax reading requires a local desktop workspace.",
+      );
+    this.pythonWork?.abort();
+    const run = new AbortController();
+    this.pythonWork = run;
+    try {
+      return await pythonSource(file, this.pythonScript, action, {
+        executable: vscode.workspace
+          .getConfiguration("pureobom")
+          .get<string>("analysisPython", ""),
+        signal: run.signal,
+      });
+    } finally {
+      if (this.pythonWork === run) this.pythonWork = undefined;
+    }
+  }
+  private async readGo(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+    signal?: AbortSignal,
+  ) {
+    if (vscode.env.remoteName || !this.goRuntime)
+      throw Error(
+        "Go 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / Go reading requires a local desktop workspace.",
+      );
+    if (signal?.aborted) throw Error("Go work cancelled");
+    this.goWork?.abort();
+    const run = new AbortController();
+    this.goWork = run;
+    const cancel = () => run.abort();
+    signal?.addEventListener("abort", cancel, { once: true });
+    try {
+      return await goSource(
+        file,
+        this.goRuntime.script,
+        this.goRuntime.cache,
+        action,
+        {
+          executable: vscode.workspace
+            .getConfiguration("pureobom")
+            .get<string>("analysisGo", ""),
+          signal: run.signal,
+        },
+      );
+    } finally {
+      signal?.removeEventListener("abort", cancel);
+      if (this.goWork === run) this.goWork = undefined;
+    }
+  }
+  private async readJava(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+    signal?: AbortSignal,
+  ) {
+    if (vscode.env.remoteName || !this.javaRuntime)
+      throw Error(
+        "Java 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / Java reading requires a local desktop workspace.",
+      );
+    if (signal?.aborted) throw Error("Java work cancelled");
+    this.javaWork?.abort();
+    const run = new AbortController();
+    this.javaWork = run;
+    const cancel = () => run.abort();
+    signal?.addEventListener("abort", cancel, { once: true });
+    try {
+      return await javaSource(
+        file,
+        this.javaRuntime.script,
+        this.javaRuntime.cache,
+        action,
+        {
+          javaHome: vscode.workspace
+            .getConfiguration("pureobom")
+            .get<string>("analysisJavaHome", ""),
+          signal: run.signal,
+        },
+      );
+    } finally {
+      signal?.removeEventListener("abort", cancel);
+      if (this.javaWork === run) this.javaWork = undefined;
+    }
+  }
+  private async readCSharp(
+    file: SourceFile,
+    action:
+      | { action: "analyze" }
+      | { action: "patch"; ruleId: string; value: string },
+    signal?: AbortSignal,
+  ) {
+    if (vscode.env.remoteName || !this.csharpRuntime)
+      throw Error(
+        "C# 읽기는 데스크톱 로컬 작업 공간에서 사용하세요. / C# reading requires a local desktop workspace.",
+      );
+    if (signal?.aborted) throw Error("C# work cancelled");
+    this.csharpWork?.abort();
+    const run = new AbortController();
+    this.csharpWork = run;
+    const cancel = () => run.abort();
+    signal?.addEventListener("abort", cancel, { once: true });
+    try {
+      return await csharpSource(
+        file,
+        this.csharpRuntime.script,
+        this.csharpRuntime.cache,
+        action,
+        {
+          dotnet: vscode.workspace
+            .getConfiguration("pureobom")
+            .get<string>("analysisDotnet", ""),
+          signal: run.signal,
+        },
+      );
+    } finally {
+      signal?.removeEventListener("abort", cancel);
+      if (this.csharpWork === run) this.csharpWork = undefined;
+    }
+  }
+  async setSqlDialect(contextId: string | undefined, dialect: unknown) {
+    const doc = this.current(contextId);
+    if (doc.languageId !== "sql" || (dialect !== "sqlite" && dialect !== ""))
+      throw Error("Invalid SQL dialect selection");
+    if (dialect === "sqlite") this.sqlDialects.set(doc, "sqlite");
+    else this.sqlDialects.delete(doc);
+    await this.refresh();
+  }
   async prepare(
     contextId: string | undefined,
     payload: Record<string, unknown>,
@@ -427,21 +738,59 @@ export class Controller implements vscode.Disposable {
     const doc = this.current(contextId);
     if (!vscode.workspace.isTrusted)
       throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
-    const file = { path: this.path(doc), content: doc.getText() },
+    const file = {
+        path: this.path(doc),
+        content: doc.getText(),
+        sqlDialect: this.sqlDialects.get(doc),
+      },
       version = doc.version;
-    const patch =
-      payload.request !== undefined
-        ? await this.client.call<Patch>("request", {
-            file,
-            request: inputString(payload.request),
-            glossary: this.analysisGlossary(),
-          })
-        : await this.client.call<Patch>("patch", {
-            file,
-            ruleId: inputString(payload.ruleId),
-            value: inputString(payload.value),
-            glossary: this.analysisGlossary(),
-          });
+    let patch: Patch;
+    if (["python", "go", "java", "csharp", "rust"].includes(doc.languageId)) {
+      const selected =
+        payload.request !== undefined
+          ? parseRequest(
+              inputString(payload.request),
+              this.state.analysis!.rules,
+            )
+          : {
+              rule: { id: inputString(payload.ruleId) },
+              value: inputString(payload.value),
+            };
+      patch =
+        doc.languageId === "rust"
+          ? await this.client.call<Patch>("rust", {
+              file,
+              action: "patch",
+              ruleId: selected.rule.id,
+              value: selected.value,
+            })
+          : ((await (
+              doc.languageId === "csharp"
+                ? this.readCSharp.bind(this)
+                : doc.languageId === "java"
+                  ? this.readJava.bind(this)
+                  : doc.languageId === "go"
+                    ? this.readGo.bind(this)
+                    : this.readPython.bind(this)
+            )(file, {
+              action: "patch",
+              ruleId: selected.rule.id,
+              value: selected.value,
+            })) as Patch);
+    } else
+      patch =
+        payload.request !== undefined
+          ? await this.client.call<Patch>("request", {
+              file,
+              request: inputString(payload.request),
+              glossary: this.analysisGlossary(),
+            })
+          : await this.client.call<Patch>("patch", {
+              file,
+              ruleId: inputString(payload.ruleId),
+              value: inputString(payload.value),
+              glossary: this.analysisGlossary(),
+            });
     if (
       this.current(contextId) !== doc ||
       doc.version !== version ||
@@ -465,6 +814,59 @@ export class Controller implements vscode.Disposable {
       newText: patch.newText,
     };
   }
+  async prepareFormat(
+    contextId: string | undefined,
+    functionId: string,
+  ): Promise<FormatSummary> {
+    const doc = this.current(contextId);
+    if (!vscode.workspace.isTrusted)
+      throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
+    if (
+      ![
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+      ].includes(doc.languageId)
+    )
+      throw Error("Only JS/TS functions are supported.");
+    const original = doc.getText(),
+      version = doc.version;
+    const result = await this.client.call<FunctionFormatResult>(
+      "formatFunction",
+      {
+        file: { path: this.path(doc), content: original },
+        functionId,
+      },
+    );
+    if (
+      this.current(contextId) !== doc ||
+      doc.version !== version ||
+      doc.getText() !== original
+    )
+      throw Error(
+        "파일이 바뀌었습니다. 다시 시도해 주세요. / The file changed; try again.",
+      );
+    this.patches.clear();
+    if (!result.patch)
+      return { unchanged: true, description: result.description };
+    const id = randomUUID(),
+      patch = result.patch;
+    this.patches.set(id, {
+      patch,
+      uri: doc.uri,
+      version,
+      contextId: contextId!,
+      reviewRequired: true,
+    });
+    return {
+      id,
+      kind: "function-format",
+      description: patch.description,
+      oldText: patch.oldText,
+      newText: patch.newText,
+    };
+  }
   private pending(id: string, contextId: string | undefined) {
     const doc = this.current(contextId),
       pending = this.patches.get(id);
@@ -480,7 +882,7 @@ export class Controller implements vscode.Disposable {
       );
     return { doc, ...pending };
   }
-  async preview(id: string, contextId: string | undefined) {
+  async preview(id: string, contextId: string | undefined, lang: Lang = "ko") {
     const pending = this.pending(id, contextId);
     const suffix =
       this.path(pending.doc).match(/\.[a-zA-Z0-9]+$/)?.[0] || ".txt";
@@ -499,15 +901,21 @@ export class Controller implements vscode.Disposable {
       "vscode.diff",
       before,
       after,
-      `풀어봄 · ${pending.patch.description.ko}`,
+      `풀어봄 · ${pending.patch.description[lang]}`,
       { preview: true },
     );
+    this.pending(id, contextId);
+    this.patches.get(id)!.reviewed = true;
     return { before: before.toString(), after: after.toString() };
   }
   async apply(id: string, contextId: string | undefined) {
     if (!vscode.workspace.isTrusted)
       throw Error("코드를 변경하려면 작업 공간을 신뢰해야 합니다.");
     const pending = this.pending(id, contextId);
+    if (pending.reviewRequired && !pending.reviewed)
+      throw Error(
+        "먼저 코드 차이를 확인해 주세요. / Preview the code diff first.",
+      );
     const editor = await vscode.window.showTextDocument(pending.doc, {
       preview: false,
       preserveFocus: true,
@@ -608,6 +1016,11 @@ export class Controller implements vscode.Disposable {
     return report;
   }
   dispose() {
+    this.pythonWork?.abort();
+    this.goWork?.abort();
+    this.javaWork?.abort();
+    this.csharpWork?.abort();
+    this.benchmarks.dispose();
     this.checks.dispose();
     this.assistant.dispose();
     clearTimeout(this.timer);

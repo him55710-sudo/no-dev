@@ -1,7 +1,10 @@
 import { analyzeFile, diagnostics, parse } from "./analyze";
 import { operators } from "./labels";
-import { words, type Patch, type Rule, type SourceFile } from "./types";
+import { words, type Patch, type SourceFile } from "./types";
 import type { GlossaryEntry } from "./glossary";
+import { readJsonStructure, jsonDataLimits } from "./jsonData";
+import { webReplacement } from "./webSource";
+import { sqlReplacement } from "./sqlSource";
 export function makePatch(
   file: SourceFile,
   ruleId: string,
@@ -16,16 +19,33 @@ export function makePatch(
   const r = a.rules.find((x) => x.id === ruleId);
   if (!r)
     throw Error("규칙이 바뀌었습니다. 다시 선택해 주세요. / Rule is stale.");
+  if (r.syntax === "json" && input.length > jsonDataLimits.editable)
+    throw Error(
+      "값은 4096자 이내로 입력해 주세요. / Enter a value up to 4096 characters.",
+    );
   let value: string;
-  if (r.type === "number") {
-    if (
-      !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(input.trim()) ||
-      !Number.isFinite(Number(input))
-    )
-      throw Error(
-        "유한한 숫자를 입력해 주세요. 예: 70000, 0.15 / Enter a finite number.",
-      );
-    value = String(Number(input));
+  if (r.syntax === "sql") {
+    value = sqlReplacement(r, input);
+  } else if (a.web) {
+    value = webReplacement(r, input);
+  } else if (r.type === "number") {
+    if (r.syntax === "json") {
+      // Preserve numeric lexemes, including integers outside JS's safe range.
+      if (!/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(input.trim()))
+        throw Error(
+          "JSON 숫자 표기로 입력해 주세요. / Enter a valid JSON number.",
+        );
+      value = input.trim();
+    } else {
+      if (
+        !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(input.trim()) ||
+        !Number.isFinite(Number(input))
+      )
+        throw Error(
+          "유한한 숫자를 입력해 주세요. 예: 70000, 0.15 / Enter a finite number.",
+        );
+      value = String(Number(input));
+    }
   } else if (r.type === "boolean") {
     if (!["true", "false"].includes(input))
       throw Error("true 또는 false만 가능합니다.");
@@ -42,7 +62,27 @@ export function makePatch(
   if (value === r.raw) throw Error("현재 값과 같습니다. / No change.");
   const updated =
     file.content.slice(0, r.start) + value + file.content.slice(r.end);
-  if (diagnostics(parse({ ...file, content: updated })).length)
+  if (r.syntax === "sql") {
+    const checked = analyzeFile({ ...file, content: updated });
+    const replacement = checked.rules.find(
+      (candidate) =>
+        candidate.start === r.start && candidate.end === r.start + value.length,
+    );
+    if (
+      !checked.syntaxValid ||
+      !replacement ||
+      replacement.type !== r.type ||
+      replacement.raw !== value
+    )
+      throw Error(
+        "변경 후 SQL 값·문법을 확인할 수 없습니다. / Cannot verify the updated SQL literal and syntax.",
+      );
+  } else if (a.web) {
+    if (!analyzeFile({ ...file, content: updated }).syntaxValid)
+      throw Error("변경 후 원문을 읽을 수 없습니다. / Invalid updated source.");
+  } else if (r.syntax === "json") {
+    readJsonStructure(updated, /\.jsonc$/i.test(file.path));
+  } else if (diagnostics(parse({ ...file, content: updated })).length)
     throw Error(
       "변경 후 문법 오류가 발견되어 적용할 수 없습니다. / Invalid syntax.",
     );
@@ -73,67 +113,4 @@ export function applyPatch(file: SourceFile, patch: Patch) {
     );
   return { ...file, content: patch.updated };
 }
-export function parseRequest(
-  request: string,
-  rules: Rule[],
-): { rule: Rule; value: string } {
-  const normalized = request.trim();
-  const candidates = rules.filter(
-    (r) =>
-      normalized.toLocaleLowerCase().includes(r.name.toLocaleLowerCase()) ||
-      normalized.includes(r.label.ko) ||
-      normalized.toLowerCase().includes(r.label.en.toLowerCase()),
-  );
-  if (candidates.length !== 1)
-    throw Error(
-      candidates.length
-        ? "여러 규칙이 해당됩니다. 표에서 하나를 선택해 주세요. / Choose one matching rule in the table."
-        : "규칙 이름을 정확히 넣어 주세요. 예: 무료 배송 기준을 70000으로 변경 / Include a rule name.",
-    );
-  const rule = candidates[0];
-  let rest = normalized;
-  for (const n of [rule.name, rule.label.ko, rule.label.en].sort(
-    (a, b) => b.length - a.length,
-  )) {
-    const i = rest.toLowerCase().indexOf(n.toLowerCase());
-    if (i >= 0) {
-      rest = rest.slice(0, i) + rest.slice(i + n.length);
-      break;
-    }
-  }
-  if (rule.type === "string") {
-    const quoted = rest.match(/"((?:[^"\\]|\\.)*)"/g);
-    if (!quoted || quoted.length !== 1)
-      throw Error(
-        "새 문구 하나를 큰따옴표로 감싸 주세요. / Quote one new string.",
-      );
-    return { rule, value: JSON.parse(quoted[0]) };
-  }
-  if (rule.type === "boolean") {
-    const yes = /\btrue\b|켜기|(?<!비)활성화/.test(rest),
-      no = /\bfalse\b|끄기|비활성화/.test(rest);
-    if (yes === no) throw Error("true 또는 false 중 하나를 적어 주세요.");
-    return { rule, value: yes ? "true" : "false" };
-  }
-  if (rule.type === "operator") {
-    const symbolic = rest.match(/===|!==|>=|<=|==|!=|>|</g) || [];
-    const matches = symbolic.length
-      ? symbolic
-      : Object.entries(operators)
-          .filter(([, ds]) => ds.some((d) => rest.includes(d)))
-          .map(([op]) => op);
-    if (matches.length !== 1)
-      throw Error(
-        "표에서 비교 방식을 직접 선택해 주세요. / Select a comparison in the table.",
-      );
-    return { rule, value: matches[0] };
-  }
-  if (/%|퍼센트|percent|\d\s*만|\d\s*천|\d,\d/.test(rest))
-    throw Error(
-      "단위 없이 숫자를 적어 주세요. 7만 → 70000, 15% → 0.15 / Use plain numbers.",
-    );
-  const numbers = rest.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi);
-  if (numbers?.length !== 1)
-    throw Error("새 값 하나만 적어 주세요. / Provide exactly one new value.");
-  return { rule, value: numbers[0] };
-}
+export { parseRequest } from "./ruleRequest";

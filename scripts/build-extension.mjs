@@ -1,6 +1,21 @@
 import { build } from "esbuild";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, copyFile, readFile, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import { createHash } from "node:crypto";
+const require = createRequire(import.meta.url);
 await mkdir("extension/out", { recursive: true });
+const rustGrammar = await readFile(
+  "extension/runtime/rust/tree-sitter-rust.wasm",
+);
+if (
+  createHash("sha256").update(rustGrammar).digest("hex") !==
+  "24c89bd9252255e4aebbcbd7d2d308bd92c86dd95a130fdc80efa49577b8d738"
+)
+  throw Error("Bundled Rust grammar SHA-256 mismatch");
+await copyFile(
+  require.resolve("web-tree-sitter/web-tree-sitter.wasm"),
+  "extension/runtime/rust/web-tree-sitter.wasm",
+);
 const common = {
   bundle: true,
   sourcemap: false,
@@ -43,6 +58,12 @@ const results = await Promise.all([
     platform: "node",
     // jsonc-parser's UMD entry hides relative requires from the bundler.
     mainFields: ["module", "main"],
+    // CSS Tree's ESM loader uses createRequire(import.meta.url). Its CJS entry
+    // has static requires, so grammar data can be included in this CJS worker.
+    alias: {
+      "css-tree": require.resolve("css-tree"),
+      "web-tree-sitter": require.resolve("web-tree-sitter"),
+    },
     format: "cjs",
     target: "node20",
     minify: true,

@@ -1,0 +1,115 @@
+[
+  {
+    "id": "python-branches",
+    "file": "../../shipping.py",
+    "language": "python",
+    "group": "regression",
+    "quoteChecks": [
+      "subtotal < 0",
+      "raise ValueError",
+      "subtotal >= FREE_SHIPPING_THRESHOLD",
+      "return SHIPPING_FEE"
+    ],
+    "review": "Explain negative-input ValueError, subtotal >= 50000 returning 0, otherwise 3000. No currency is declared. Do not cite constants alone."
+  },
+  {
+    "id": "go-errors",
+    "file": "../shipping.go",
+    "language": "go",
+    "group": "regression",
+    "quoteChecks": [
+      "subtotal < 0",
+      "errors.New",
+      "subtotal >= 50000",
+      "return 3000, nil"
+    ],
+    "review": "Preserve both return values on every path: negative returns 0 plus an error, threshold returns 0 plus nil, default 3000 plus nil. No business motive."
+  },
+  {
+    "id": "css-columns",
+    "file": "../cards.css",
+    "language": "css",
+    "group": "regression",
+    "quoteChecks": [
+      "repeat(3, 1fr)",
+      "gap: 16px",
+      "max-width: 600px",
+      "grid-template-columns: 1fr"
+    ],
+    "review": "Three equal column tracks, 16px gap, one column at viewport widths <= 600px. Not vertical default layout. No claim about unseen HTML."
+  },
+  {
+    "id": "jsonc-data",
+    "file": "../shipping.jsonc",
+    "language": "jsonc",
+    "group": "regression",
+    "quoteChecks": ["50000", "3000"],
+    "review": "Describe the actual settings and comments. No consuming code is present: do not invent >=/> comparison, claim the fee applies to every order, or state that this file executes calculation."
+  },
+  {
+    "id": "python-batches",
+    "file": "batches.py",
+    "language": "python",
+    "group": "new",
+    "quoteChecks": [
+      "size <= 0",
+      "raise ValueError",
+      "count <= 0",
+      "(count + size - 1) // size"
+    ],
+    "review": "size defaults to 4; size <= 0 throws before the count check. Nonpositive count returns 0 only after size check. Positive count uses integer ceiling division. Type hints do not enforce argument types at runtime."
+  },
+  {
+    "id": "go-presence",
+    "file": "first.go",
+    "language": "go",
+    "group": "new",
+    "quoteChecks": [
+      "len(items) == 0",
+      "return \"\", false",
+      "return items[0], true"
+    ],
+    "review": "An empty/nil slice returns empty string and false; otherwise first item and true, including an empty first string. The boolean indicates presence, not whether the text is nonempty."
+  },
+  {
+    "id": "css-widths",
+    "file": "panel.css",
+    "language": "css",
+    "group": "new",
+    "quoteChecks": ["2fr 1fr", "gap: 12px", "min-width: 900px", "1fr 1fr 1fr"],
+    "review": "Default two tracks with 2:1 fractional shares; at >= 900px three equal fractional tracks. 12px gap remains. Do not invert min-width into max-width or promise literal rendered widths for all content."
+  },
+  {
+    "id": "jsonc-retry",
+    "file": "retry.jsonc",
+    "language": "jsonc",
+    "group": "new",
+    "quoteChecks": [
+      "\"retryLimit\": 3",
+      "\"backoffMs\": 250",
+      "\"enabled\": false"
+    ],
+    "review": "Read three values, comments and trailing comma. Names suggest retries but consumption is absent: no proven loop, exact retry count, delay schedule, or service behavior."
+  },
+  {
+    "id": "typescript-async",
+    "file": "load-label.ts",
+    "language": "typescript",
+    "group": "new",
+    "quoteChecks": ["!id.trim()", "await fetcher(id)", "label ?? \"untitled\""],
+    "review": "Blank id yields a Promise of missing without fetcher; else awaits fetcher with original id. Nullish fallback preserves an empty string. A rejected fetcher propagates because there is no catch. No invented retries or network implementation."
+  },
+  {
+    "id": "sql-null",
+    "file": "results.sql",
+    "language": "sql",
+    "group": "new",
+    "quoteChecks": [
+      "score IS NULL",
+      "score >= 80",
+      "ELSE 'retry'",
+      "active = TRUE"
+    ],
+    "review": "Read-only projection with null unrated, >=80 pass, other values retry, only active true rows. No database mutation or implied ordering/index/speed claim."
+  }
+]

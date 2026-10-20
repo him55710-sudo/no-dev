@@ -3,6 +3,7 @@ import {
   assistantMessages,
   assistantContextSize,
   assistantLimits,
+  validateAssistantInput,
   parseAssistantProposal,
   type AssistantInput,
 } from "../src/core/localAssistant";
@@ -28,6 +29,145 @@ const parse = (r: unknown, i = input) =>
   parseAssistantProposal(JSON.stringify(r), i);
 
 describe("grounded local assistant proposals", () => {
+  it("accepts beginner presentation without weakening source grounding", () => {
+    const beginner = {
+      ...input,
+      task: "explain" as const,
+      presentation: "beginner" as const,
+      instruction: "",
+    };
+    const messages = assistantMessages(beginner);
+    expect(JSON.parse(messages[1].content).source).toBe(input.source);
+    expect(messages[0].content).toContain("Progressive explanation");
+    expect(messages[0].content).toContain("untrusted DATA");
+    expect(() =>
+      validateAssistantInput({
+        ...beginner,
+        presentation: "anything",
+      } as unknown as AssistantInput),
+    ).toThrow(/presentation/);
+    expect(() =>
+      parse(
+        {
+          summary: "값을 준비해요.",
+          citations: [{ quote: "not in source", explanation: "근거" }],
+          edits: [],
+          risks: [],
+          checks: [],
+        },
+        beginner,
+      ),
+    ).toThrow();
+  });
+  it("grounds a selected function in the full file and requires evidence inside it", () => {
+    const source =
+      "// 😀\r\nconst scale = 2;\r\nfunction double(x) { return x * scale; }\r\nfunction other() { return 9; }";
+    const focus = {
+      name: "double",
+      start: source.indexOf("function double"),
+      end: source.indexOf("\r\nfunction other"),
+    };
+    const selected: AssistantInput = {
+      ...input,
+      source,
+      language: "javascript",
+      task: "explain",
+      instruction: "",
+      focus,
+    };
+    const messages = assistantMessages(selected),
+      data = JSON.parse(messages[1].content);
+    expect(data.source.selectedFunction).toBe(
+      source.slice(focus.start, focus.end),
+    );
+    expect(
+      data.source.before + data.source.selectedFunction + data.source.after,
+    ).toBe(source);
+    expect(data.explanationFocus).toEqual({
+      name: "double",
+      startLine: 3,
+      endLine: 3,
+      declaration: source.slice(focus.start, focus.end),
+    });
+    const report = {
+      summary: "입력에 두 배를 곱합니다. 입력 검사는 없습니다.",
+      citations: [{ quote: "const scale = 2;", explanation: "배율 값입니다." }],
+      edits: [],
+      risks: [],
+      checks: [],
+    };
+    expect(() => parse(report, selected)).toThrow(
+      /inside the selected function/,
+    );
+    report.citations.push({
+      quote: "return x * scale;",
+      explanation: "입력에 배율을 곱해 반환합니다.",
+    });
+    expect(parse(report, selected).updated).toBe(source);
+    expect(messages[0].content).toContain(
+      "preconditions the caller must supply",
+    );
+    for (const invalid of [
+      { ...focus, start: -1 },
+      { ...focus, end: source.length + 1 },
+      { ...focus, end: focus.start },
+      { ...focus, name: "" },
+      { ...focus, start: 0.5 },
+      null,
+    ]) {
+      expect(() =>
+        validateAssistantInput({
+          ...selected,
+          focus: invalid,
+        } as AssistantInput),
+      ).toThrow(/explanation focus/);
+    }
+    expect(() =>
+      validateAssistantInput({
+        ...selected,
+        task: "edit",
+        instruction: "change it",
+      }),
+    ).toThrow(/explanation focus/);
+  });
+  it("accepts an explicit whitespace restriction only for supported editing requests", () => {
+    const constrained = {
+      ...input,
+      language: "javascript",
+      editConstraint: "whitespace-only" as const,
+    };
+    for (const language of [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+    ]) {
+      expect(() =>
+        validateAssistantInput({ ...constrained, language }),
+      ).not.toThrow();
+      const messages = assistantMessages({ ...constrained, language });
+      expect(JSON.parse(messages[1].content).editConstraint).toBe(
+        "whitespace-only",
+      );
+      expect(messages[0].content).toContain("WHITESPACE-ONLY");
+    }
+    for (const override of [
+      { language: "python" },
+      { task: "explain" },
+      { task: "optimize" },
+      { editConstraint: "anything" },
+      { editConstraint: null },
+    ])
+      expect(() =>
+        validateAssistantInput({
+          ...constrained,
+          ...override,
+        } as AssistantInput),
+      ).toThrow(/Whitespace-only constraints/);
+    expect(assistantMessages(input)[0].content).not.toContain(
+      "WHITESPACE-ONLY",
+    );
+  });
   it("reserves input, output and template space without allocating the maximum for every file", () => {
     const small = assistantMessages(input);
     expect(assistantContextSize(small)).toBeLessThan(32768);

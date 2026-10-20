@@ -3,6 +3,8 @@ import type { FileAnalysis, Lang, Step, Rule } from "../core/types";
 import { label } from "../core/labels";
 import { Icon } from "./Icon";
 import { InterfaceTree } from "./InterfaceTree";
+import { DataFacts } from "./DataFacts";
+import { SqlStory } from "./SqlStory";
 export function Steps({
   steps,
   lang,
@@ -52,6 +54,18 @@ export function Steps({
               depth={depth + 1}
             />
           )}{" "}
+          {depth < 12 &&
+            step.branches?.map((branch, index) => (
+              <div className="otherwise" key={index}>
+                <span>{branch.label[lang]}</span>
+                <Steps
+                  steps={branch.steps}
+                  lang={lang}
+                  onSource={onSource}
+                  depth={depth + 1}
+                />
+              </div>
+            ))}
           {depth < 12 && step.otherwise && (
             <div className="otherwise">
               <span>
@@ -80,7 +94,10 @@ export function Steps({
             />
           )}
           {depth >= 12 &&
-            (step.children.length > 0 || step.otherwise || step.finalizer) && (
+            (step.children.length > 0 ||
+              step.otherwise ||
+              step.finalizer ||
+              step.branches?.length) && (
               <p className="muted">
                 {lang === "ko"
                   ? "더 깊은 구조는 원문에서 확인해 주세요."
@@ -98,15 +115,99 @@ export function Story({
   onSource,
   onSimulate,
   onEdit,
+  disabled = false,
+  editDisabled = disabled,
+  onSqlDialect,
 }: {
   analysis: FileAnalysis;
   lang: Lang;
   onSource: (line: number) => void;
   onSimulate: (name: string) => void;
   onEdit: (rule: Rule) => void;
+  disabled?: boolean;
+  editDisabled?: boolean;
+  onSqlDialect?: (dialect: "sqlite" | undefined) => void;
 }) {
   const [detail, setDetail] = useState(false);
   const ko = lang === "ko";
+  const native =
+    analysis.python ||
+    analysis.go ||
+    analysis.java ||
+    analysis.csharp ||
+    analysis.rust;
+  const nativeName = analysis.python
+    ? "Python"
+    : analysis.go
+      ? "Go"
+      : analysis.java
+        ? "Java"
+        : analysis.rust
+          ? "Rust"
+          : `C# ${analysis.csharp?.languageVersion} (Roslyn)`;
+  if (analysis.sql)
+    return (
+      <SqlStory
+        analysis={analysis}
+        lang={lang}
+        onSource={onSource}
+        onEdit={onEdit}
+        onDialect={onSqlDialect}
+        disabled={disabled}
+        editDisabled={editDisabled}
+      />
+    );
+  if (analysis.web)
+    return (
+      <div className="story">
+        <p className="card data-facts">
+          {ko
+            ? "원문의 태그·문구·스타일 선언을 로컬 파서로 읽었습니다. API나 모델 없이 작동하며, 실행 결과를 예측하지 않습니다. 직접 수정은 일반 HTML 문구·일부 텍스트 속성·CSS 선언 값만 지원합니다."
+            : "A local parser reads tags, text and style declarations without an API or model. It does not predict runtime outcomes. Direct editing covers ordinary HTML text, selected text attributes and CSS declaration values."}
+        </p>
+        {analysis.issues.length > 0 ? (
+          <section className="card" role="status">
+            {analysis.issues.map((issue) => (
+              <p key={issue.id}>
+                {issue.detail[lang]}{" "}
+                <button
+                  className="line-link"
+                  onClick={() => onSource(issue.line)}
+                >
+                  L{issue.line}
+                </button>
+              </p>
+            ))}
+          </section>
+        ) : null}
+        <InterfaceTree
+          analysis={analysis}
+          lang={lang}
+          onSource={onSource}
+          onEdit={onEdit}
+          editDisabled={editDisabled}
+        />
+        {!analysis.interface?.roots.length && analysis.syntaxValid ? (
+          <p>
+            {ko
+              ? "표시할 원문 항목이 없습니다."
+              : "No source entries to display."}
+          </p>
+        ) : null}
+      </div>
+    );
+  if (analysis.kind === "json")
+    return (
+      <DataFacts
+        key={analysis.path}
+        analysis={analysis}
+        lang={lang}
+        onSource={onSource}
+        onEdit={onEdit}
+        disabled={disabled}
+        editDisabled={editDisabled}
+      />
+    );
   if (analysis.kind === "text")
     return (
       <div className="empty card">
@@ -124,11 +225,53 @@ export function Story({
     );
   return (
     <div className="story">
+      {native ? (
+        <p className="card data-facts">
+          {ko
+            ? `${nativeName} ${native.version} 구문에서 읽었습니다. 사용자 코드는 실행하거나 가져오지 않습니다. 일부 구문의 구조와 적힌 값만 설명하며, 타입·사용처·실행 결과·성능은 별도 확인 대상입니다.`
+            : `Read from ${nativeName} ${native.version} syntax without executing or importing user code. Describes supported structure and written values; types, uses, runtime outcomes and performance need separate checks.`}
+          {native.truncated
+            ? ko
+              ? " 표시 한도에 도달해 일부가 생략됐습니다. 아래 안내와 원문을 확인하세요."
+              : " Some content is omitted at the display limit. Review the notes and source."
+            : null}
+        </p>
+      ) : null}
+      {native && analysis.issues.length > 0 ? (
+        <section className="card" role="status">
+          <h3>
+            {analysis.syntaxValid
+              ? ko
+                ? "원문 읽기에서 확인할 부분"
+                : "Source reading notes"
+              : ko
+                ? `${nativeName} 문법을 확인해 주세요`
+                : `Check ${nativeName} syntax`}
+          </h3>
+          {analysis.issues.map((issue) => (
+            <p key={issue.id}>
+              {issue.detail[lang]}{" "}
+              <button
+                className="line-link"
+                onClick={() => onSource(issue.line)}
+              >
+                L{issue.line}
+              </button>
+            </p>
+          ))}
+        </section>
+      ) : null}
       <div className="section-heading">
         <div>
           <span className="eyebrow">READ THE LOGIC</span>
           <h2>
-            {ko ? "이 파일은 이렇게 작동해요" : "Here is how this file works"}
+            {native
+              ? ko
+                ? "원문에서 읽은 구조"
+                : "Structure read from source"
+              : ko
+                ? "이 파일은 이렇게 작동해요"
+                : "Here is how this file works"}
           </h2>
         </div>
         <button
@@ -140,23 +283,33 @@ export function Story({
         </button>
       </div>
       {analysis.rules.some(
-        (r) => r.scope === "file" && r.type !== "operator",
+        (r) =>
+          (analysis.csharp || analysis.rust || r.scope === "file") &&
+          r.type !== "operator",
       ) && (
         <div className="story-rules">
           {analysis.rules
-            .filter((r) => r.scope === "file" && r.type !== "operator")
+            .filter(
+              (r) =>
+                (analysis.csharp || analysis.rust || r.scope === "file") &&
+                r.type !== "operator",
+            )
             .map((r) => (
               <button
                 key={r.id}
                 className="story-rule"
                 onClick={() => onEdit(r)}
-                disabled={!analysis.syntaxValid}
+                disabled={editDisabled || !analysis.syntaxValid}
               >
                 <span>{r.label[lang]}</span>
                 <strong>
-                  {typeof r.value === "number"
-                    ? r.value.toLocaleString("en-US")
-                    : String(r.value)}
+                  {["python", "go", "java", "csharp", "rust"].includes(
+                    r.syntax || "",
+                  )
+                    ? r.raw
+                    : typeof r.value === "number"
+                      ? r.value.toLocaleString("en-US")
+                      : String(r.value)}
                 </strong>
                 <span className="story-rule-action">
                   {ko ? "바꾸기" : "Edit"} <Icon name="arrow" size={13} />
@@ -167,7 +320,15 @@ export function Story({
       )}
       {detail && (
         <section className="card setup-card">
-          <h3>{ko ? "파일을 불러올 때 준비하는 것" : "Module setup"}</h3>
+          <h3>
+            {native
+              ? ko
+                ? "최상위 선언과 코드"
+                : "Top-level declarations and code"
+              : ko
+                ? "파일을 불러올 때 준비하는 것"
+                : "Module setup"}
+          </h3>
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
         </section>
       )}
@@ -176,11 +337,12 @@ export function Story({
         lang={lang}
         onSource={onSource}
         onEdit={onEdit}
+        editDisabled={editDisabled}
       />
       {analysis.functions.length === 0 ? (
         <section className="card setup-card">
           <Steps steps={analysis.steps} lang={lang} onSource={onSource} />
-          {analysis.steps.length === 0 && (
+          {analysis.syntaxValid && analysis.steps.length === 0 && (
             <p>
               {ko
                 ? "분석할 실행 구문이 없습니다."
@@ -209,6 +371,7 @@ export function Story({
                     : "Function"}
               </span>
             </header>
+            {fn.note ? <p>{fn.note[lang]}</p> : null}
             <div className="function-input">
               <span className="mini-label">{ko ? "받는 정보" : "INPUTS"}</span>
               {fn.params.length ? (
@@ -254,9 +417,13 @@ export function Story({
       )}
       <p className="footnote">
         <Icon name="info" size={15} />
-        {ko
-          ? "이름 번역은 용어 사전을 사용합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
-          : "Names use a small glossary. Descriptions do not establish author intent, called-function behavior or runtime outcomes."}
+        {native
+          ? ko
+            ? `${nativeName} 이름과 식은 원문을 유지합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다.`
+            : `${nativeName} names and expressions retain their source spelling. Descriptions do not establish author intent, called-function behavior or runtime outcomes.`
+          : ko
+            ? "이름 번역은 용어 사전을 사용합니다. 호출한 기능의 실제 동작·작성 의도·실행 결과까지 보장하지는 않습니다."
+            : "Names use a small glossary. Descriptions do not establish author intent, called-function behavior or runtime outcomes."}
       </p>
     </div>
   );

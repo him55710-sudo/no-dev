@@ -19,6 +19,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.27.2'
+          cache: false
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.402'
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          # Adoptium API SemVer for the JDK reporting 25.0.4.1+1-LTS.
+          java-version: '25.0.4+101.0.LTS'
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm test

@@ -1,8 +1,45 @@
 import ts from "typescript";
-import { diagnostics, parse } from "./analyze";
+import { analyzeFile, diagnostics, parse } from "./analyze";
 import { readJsonStructure } from "./jsonData";
+import { compareParsedChanges, type ChangeFacts } from "./changeFacts";
 
-export function validateAssistantChange(language: string, source: string) {
+export function validateAssistantChange(
+  language: string,
+  source: string,
+  sqlDialect?: "sqlite",
+  original?: string,
+) {
+  if (language === "sql") {
+    if (sqlDialect !== "sqlite")
+      return {
+        status: "unavailable",
+        detail:
+          "SQL 방언을 선택하지 않았습니다. / SQL dialect was not selected.",
+      };
+    const analysis = analyzeFile({
+      path: "proposal.sql",
+      content: source,
+      sqlDialect,
+    });
+    return {
+      status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+      detail: analysis.syntaxValid
+        ? `SQLite ${analysis.sql!.version} 문법 파싱 통과. 데이터베이스·열·제약·결과·성능은 미검증입니다. / SQLite syntax parsed; database, columns, constraints, results and performance unchecked.`
+        : analysis.issues.map((issue) => issue.detail.en).join("\n"),
+    };
+  }
+  if (language === "html" || language === "css") {
+    const analysis = analyzeFile({
+      path: `proposal.${language}`,
+      content: source,
+    });
+    return {
+      status: analysis.syntaxValid ? "syntax-passed" : "syntax-failed",
+      detail: analysis.syntaxValid
+        ? "HTML/CSS 원문 파싱 통과. 렌더링·접근성·스타일 우선순위·속성값의 유효성·성능은 미검증입니다. / HTML/CSS source parsing passed; rendering, accessibility, cascade, property value validity and performance are unchecked."
+        : analysis.issues.map((issue) => issue.detail.en).join("\n"),
+    };
+  }
   const extensions: Record<string, string> = {
     javascript: "js",
     javascriptreact: "jsx",
@@ -10,11 +47,25 @@ export function validateAssistantChange(language: string, source: string) {
     typescriptreact: "tsx",
   };
   if (Object.hasOwn(extensions, language)) {
-    const errors = diagnostics(
-      parse({ path: `proposal.${extensions[language]}`, content: source }),
-    );
+    const after = parse({
+      path: `proposal.${extensions[language]}`,
+      content: source,
+    });
+    const errors = diagnostics(after);
+    let changeFacts: ChangeFacts | undefined;
+    if (original !== undefined) {
+      const before = parse({
+        path: `original.${extensions[language]}`,
+        content: original,
+      });
+      changeFacts =
+        errors.length || diagnostics(before).length
+          ? { status: "unavailable" }
+          : compareParsedChanges(before, after);
+    }
     return {
       status: errors.length ? "syntax-failed" : "syntax-passed",
+      ...(changeFacts ? { changeFacts } : {}),
       detail: errors.length
         ? errors
             .slice(0, 3)

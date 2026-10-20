@@ -14,6 +14,10 @@ export function* iterStoryLines(
   for (const step of steps) {
     yield "  ".repeat(depth) + `- L${step.line}: ${step.text[lang]}`;
     yield* iterStoryLines(step.children, lang, depth + 1);
+    for (const branch of step.branches || []) {
+      yield "  ".repeat(depth + 1) + `- ${branch.label[lang]}`;
+      yield* iterStoryLines(branch.steps, lang, depth + 2);
+    }
     if (step.otherwise) {
       const label =
         step.kind === "guard"

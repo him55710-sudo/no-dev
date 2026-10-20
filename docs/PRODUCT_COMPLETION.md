@@ -1,16 +1,25 @@
 # 제품 완성 계획 · Product completion plan
 
-상태 기준: 2026-10-16, 시작 커밋 `7603971`. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 실제 작업과 결과는 [에이전트 작업 기록](AGENT_WORKLOG.md)에 남긴다.
+상태 기준: **2026-10-20 · 진행 중**. 시작 커밋은 `7603971`이다. 이 문서는 공개 개발 계약이며 완료 보고서가 아니다. 세부 변경·실패·검증 이력은 [에이전트 작업 기록](AGENT_WORKLOG.md), 언어별 범위는 [지원 및 검증 표](LANGUAGE_SUPPORT.md), 원자료는 [검증 자료](evidence/local-ai/README.md)에서 확인한다.
 
-현재 증분: 상세 기획은 `68f5c51`로 공개했다. 0.7 개발 소스에 로컬 Ollama 연결·다중 범위 편집·Python 문법 검사와 실제 외부 Python 프로젝트 1건 검증을 추가하고 있다. 최적화 제안 1건의 성능 회귀를 발견해 채택하지 않았다. [현재 증거](evidence/local-ai/README.md). 아래 '시작 상태'는 기준선이며 전체 P0–P6 완료를 뜻하지 않는다.
+## 현재 상태
 
-첫 기능 증분은 `3710ea1`로 공개했으며 [Windows·Linux CI](https://github.com/him55710-sudo/pureobom/actions/runs/38853005494)의 두 검증 작업이 성공했다. 현재 P0 공개 기록, P1 로컬 연결, P3 단일 파일 변경의 첫 구현·검증이 있다. P2 언어별 설명 품질, P4 언어별 프로젝트 검사, P5 사용자용 성능 측정, P6 새 기능의 실패·설치 조합 검증은 진행 중이다. 한 단계의 구현이 전체 계획 완료를 뜻하지 않는다.
+- **0.7 개발 소스:** 로컬 Ollama 연결, 정확한 원문에 연결한 다중 범위 편집, native diff·적용·undo, 기존 프로젝트 명령 실행, 전후 시간·메모리 측정이 있다. 공개 안정판과 Pages 데모는 **0.6.0**이며 새 기능 배포와 구분한다.
+- **설명 대상 연결:** [선택한 함수 설명](FOCUSED_EXPLANATIONS.md)을 읽기 화면에 연결했다. 호스트가 최신 원문 범위를 확인하고 해당 함수의 실제 인용을 요구한다. 전체 원문을 선택 함수와 앞뒤 문맥으로 구분해 보존한다. 첫 두 실제 요청은 timeout, [후속 CPU 응답 세 건](evidence/local-ai/focused-context-cpu.md)은 인용 또는 의미 검토에 실패했다. 요청별 CPU 선택은 제공하지만 실제 과제의 설명 품질은 아직 부족하다.
+- **함수 선택 후속 검증:** CPU 옵션과 원문 구분을 포함한 `954d6cf`의 [Windows·Ubuntu CI](evidence/local-ai/focused-context-cpu-ci.json)는 각 핵심 260개·개발/설치 각 55개·파일 11개 해시·추출 도구 실행을 통과했다. 로컬에서도 같은 수가 통과했으며 이전 시도의 Java timeout은 별도 실패로 남긴다. 실제 사용자 프로젝트의 모델 품질이나 원격·모든 환경 지원을 입증한 결과는 아니다.
+- **사용자 지정 실제 프로젝트 후속:** JS/TS 원문 비교와 사용자가 선택하는 [공백·줄바꿈 제한](evidence/local-ai/whitespace-constraint.md)을 추가했다. 실제 요청 밖 변경의 호스트 적용 차단을 확인했지만, 해당 실제 유지보수 과제의 모델 수정은 아직 실패다. 비교·차단 기능을 요청 달성이나 최적화 성공으로 세지 않는다.
+- **모델 없는 함수 정리:** [선택한 JS/TS 함수의 줄바꿈 정리](FUNCTION_FORMATTING.md)를 추가했다. 사용자 프로젝트의 실제 함수에서 명시적 적용·기존 테스트 **8→8→8 통과**·native undo·원본 복구를 확인했다. 이는 요청의 서식 부분을 해결한 별도 경로이며 모델의 설명·수정 품질이나 성능 최적화 성공은 아니다. [검증 기록](evidence/local-ai/function-format.md).
+- **모델 없는 원문 읽기·수정:** JS/TS의 일부 구문·JSX, [JSON/JSONC](JSON_DATA.md), 설치 도구를 사용하는 [Python](PYTHON_SOURCE.md)·[Go](GO_SOURCE.md)·[Java](JAVA_SOURCE.md)·[C#](CSHARP_SOURCE.md), 포함된 파서의 [HTML/CSS](HTML_CSS_SOURCE.md)·개발 검증 중인 [Rust](RUST_SOURCE.md). 전체 구문·타입·프로젝트 의미 분석을 제공하는 것은 아니다.
+- **실제 외부 검사:** Python itsdangerous, JavaScript clsx, Go Google UUID에서 고정 오류 발견과 undo 복구를 확인했다. [HTML/CSS modern-normalize](evidence/local-ai/web-source-project.md)는 Chrome 전체 54개 중 실패 **7→9→7**을 확인했다. 원래 실패와 assertion 없는 TODO 8개를 보존한다. 모든 외부 프로젝트가 전체 통과했다는 뜻은 아니다. [Java minimal-json](evidence/local-ai/java-source-project.md)은 별도 JDK 호환 adapter로 452 pass → 고정 오류 13 fail → undo 후 452 pass를 확인했다.
+- **SQL 증분:** [명시적으로 선택한 SQLite 읽기·리터럴 수정](SQL_SOURCE.md)을 추가했다. [외부 sqlc 예제](evidence/local-ai/sql-source-project.md)는 공식 재생성과 원래 테스트로 1 pass → 고정 LIMIT 오류 1 fail → undo 후 1 pass를 확인했다. 다른 SQL 방언·스키마·쿼리 성능·모든 식의 자연어 설명은 미제공이다.
+- **설치 후속:** Rust 초기 로컬 설치 54개 성공 이후 한도 보완본의 로컬 재검사는 Rust 이전 단계에서 실패했다. [시도별 기록](RUST_SOURCE.md)을 유지한다. 최종 제품 커밋 `7df2ee6`의 [Windows·Ubuntu CI](evidence/local-ai/rust-source-ci.json)는 각 핵심 258개, 개발/production 설치 각 54개, 실제 파일 11개 해시·추출 Rust worker 실행을 통과했다. CI 패키지의 결과이며 안정 릴리스 게시나 모든 수동 UI 검증은 아니다.
+- **C# 외부 연동:** [GuardClauses](evidence/local-ai/csharp-source-project.md)에서 원래 테스트 959 pass → 검증용 경계값 편집으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 처리 오류는 검증 스크립트에서 수정했고 실패 기록을 보존했다. 실제 발견한 upstream 버그나 모델 품질·최적화 사례가 아니다.
+- **Rust 외부 연동:** [humantime](evidence/local-ai/rust-source-project.md)의 원래 테스트 42 pass → 고정 상수 오류 8 fail → native undo 후 42 pass와 원본 복구를 Windows에서 확인했다. 앞선 Windows·Ubuntu 제품 CI와 별도 사례다. 실제 외부 프로젝트의 Linux 실행과 다른 SDK 조합은 남아 있다.
+- **남은 우선순위:** 사용자 지정 실제 프로젝트의 일반 모델 수정·설명 품질, 로컬 실행 지연과 검사 시간 초과의 원인 확인, Rust 외부 프로젝트 Linux 검증, C# 새 설치본 수동 UI 검증과 다른 SDK 조합, 다른 SQL 방언, 모델의 분기·경계·데이터 의미 오류, 환경별 사용 흐름, 실제 성능 개선의 근거다. 이미 측정한 Python 모델 제안은 느려져 채택하지 않았다. 원격 VS Code·모든 브라우저·모든 언어 정확성은 보장하지 않는다.
+
+제품 소스 `0a95520`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/39289761695)는 각각 핵심 **242개**, 개발/설치 각 **51개**, production 모드·패키지 파일 9개 해시와 C#을 포함한 추출 도구 실행에 성공했다. [CI 원자료](evidence/local-ai/function-format-ci.json). 실제 외부 프로젝트와 수동 화면 검사는 별도 기록이며 CI 수에 합치지 않는다. 새 C# 외부 harness의 BOM 수정은 이 CI 이후다. 좁은 화면·직접 수정 범위·별도 언어 서버의 진단 대기 등 사용성 제약은 남아 있다. 이전 커밋별 CI와 설치본·실제 모델 기록은 작업 기록에서 추적한다.
 
 ## 요청과 우선순위
-
-추가 P4 증분: [실제 프로젝트 검사](PROJECT_CHECKS.md)의 첫 구현은 VS Code에 등록한 일회성 test/build 명령을 명시적으로 실행하고, 종료 코드·저장된 파일 해시·후속 파일 변경 여부를 표시한다. itsdangerous에서 297개 통과 → 검증용 오류 1개 발견 → 원본 복구 후 297개 통과를 확인했다. 이것은 개별 언어의 파서·타입 검사기나 사용자용 성능 측정까지 완성했다는 뜻은 아니다.
-
-`a3e6f84`의 [Windows·Ubuntu CI](https://github.com/him55710-sudo/pureobom/actions/runs/38858730263)는 양쪽에서 핵심 152개·실제 VS Code 통합 25개·패키지 Worker 검사에 성공했다. [증거](evidence/local-ai/project-checks-ci.json). 확인한 구현 범위와 전체 P0–P6 완료를 계속 구분한다.
 
 비개발자가 AI로 만든 코드를 자신의 말로 이해하고, 설명에서 수정하고, 결과를 검증하며 최적화한다. 주 제품은 VS Code 확장이다. API 사용료 없이 사용할 수 있어야 하며, 여러 프로그래밍 언어와 실제 프로젝트에서 작동해야 한다. 사용자는 Ollama 로컬 모델 활용을 허용했다. 공개 기획과 에이전트의 변경·실패·검증 기록을 먼저 갖춘다. 모집·홍보·Marketplace 계정은 이 개발의 선행 조건이 아니다.
 
@@ -40,12 +49,16 @@
 
 ## 연결 설계
 
+Rust 전용 경로의 사전 [구현 계획](RUST_SOURCE_PLAN.md)에 이어 [0.7 개발판 읽기·값 수정·AI 문법 검사](RUST_SOURCE.md)를 연결했다. Windows·Ubuntu CI에서 개발/설치 각 54개와 포함된 WASM 실행을 확인했다. 별도 Windows 실제 편집기에서 [humantime의 원래 검사](evidence/local-ai/rust-source-project.md) 42 pass → 고정 시간 상수 변경으로 8 fail → undo 후 42 pass·원본 복구를 확인했다. 모델 의미 정확성·최적화·다른 SDK/환경을 포함한 전체 지원 완료로 처리하지 않는다.
+
 - 첫 연결은 데스크톱 VS Code 확장 호스트에서 `127.0.0.1`의 Ollama HTTP API로만 한다. 외부 주소·리디렉션·클라우드 모델·유료 API로의 자동 대체를 허용하지 않는다. 원격 VS Code와 공개 웹 데모에서 로컬 PC에 연결하는 기능은 별도 검증 전까지 지원으로 표기하지 않는다.
 - 모델의 JSON 출력도 검증해야 하는 입력이다. 인용은 실제 문자열, 변경은 유일한 원문 범위에 연결한다. 모델은 파일 경로, 셸 명령, 네트워크 주소, 적용 여부를 실행 권한으로 사용할 수 없다.
 - 모델 선택과 요청은 사용자의 명시적 조작으로 시작한다. 큰 요청을 몰래 자르지 않는다. 코드 내용은 로그·공개 피드백에 자동 저장하지 않는다.
 - 로컬 문법 분석·편집 경로는 모델 없이도 유지한다. 무거운 분석과 추론은 UI와 분리한다. 요청 중 파일 변경·탭 전환·취소를 처리한다.
 
 ## 실제 프로젝트 검증 방법
+
+사용자 추가 요구(2026-10-20): 만든 예제·고정 오류 검사만으로 실사용 가능성을 판단하지 않는다. 사용자가 직접 지정한 자신의 프로젝트에서 기존 코드·기존 검사와 실제 유지보수 요청을 평가한다. [실제 프로젝트 평가 절차](REAL_PROJECT_EVALUATION.md)에 따라 읽기·설명 정확성·수정 의도·기존 동작·편집기 연동·사용성을 구분하고, 비공개 소스는 공개 증거 자료에 넣지 않는다. 이는 기존 P2–P6를 대체하지 않고 그 실사용 근거를 보강하는 요구다.
 
 본 저장소만 분석한 결과를 외부 프로젝트 검증으로 부르지 않는다. 공개 라이선스를 확인한 외부 저장소를 별도 검증 폴더에 고정 커밋으로 가져온다. URL·커밋·대상 파일·작업 목적·수정 diff·검증 명령·도구 버전·결과를 공개한다. 원격 저장소에 변경을 보내지 않는다. 비공개 사용자 파일·계정·토큰은 공개 자료에 포함하지 않는다.
 

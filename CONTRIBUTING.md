@@ -1,5 +1,7 @@
 # Contributing to Pureobom
 
+SQLite source analysis uses a bundled MIT parser and needs no database server. Core SQL tests use Node 24's built-in `node:sqlite`. The optional [external sqlc regression](scripts/fixtures/sqlc/README.md) requires the pinned checkout, Go and official sqlc; it is separate from the default integration count.
+
 Help someone understand a program and make a change they can check. A small, accurate explanation is more useful than a confident guess.
 
 ## Run locally
@@ -7,6 +9,12 @@ Help someone understand a program and make a change they can check. A small, acc
 Use Node.js 24 and pnpm 11.25.0. Run `pnpm install --frozen-lockfile`, then `pnpm dev`. No accounts, API keys, telemetry service or application backend are needed. `pnpm extension:build` builds the VS Code extension; `pnpm extension:test` launches an isolated VS Code test host (first run downloads VS Code).
 
 Before a PR: run `pnpm test`, `pnpm build`, and `pnpm extension:build`. Run `pnpm extension:test` for changes to document handling, patches, host messages or the extension UI. On Linux use `xvfb-run -a pnpm extension:test`. Check the UI in both languages and at a narrow panel width.
+
+The full development test suite also needs Python 3.12, Go 1.27.2 and Temurin JDK 25.0.4.1 (the versions pinned in CI). They run fixed standard-library readers and measurement helpers; no Ollama model is required for core/integration tests. Put `python` (Windows) or `python3` (Linux) and `go` on PATH. `PUREOBOM_TEST_GO` can select a separate Go executable for core and Go project fixtures; extension integration also needs Go on PATH or the appropriate test-profile setting. Set `JAVA_HOME` or `PUREOBOM_TEST_JAVA_HOME` to the JDK directory for Java tests. Building or browsing the web demo alone does not require these SDKs. The optional [minimal-json regression](scripts/fixtures/minimal-json/README.md) uses unchanged upstream tests with a documented JDK compatibility adapter; it is separate from the default count.
+
+The opt-in [modern-normalize browser fixture](scripts/fixtures/modern-normalize/README.md) uses a separate pinned dependency lock and an installed Chrome. It is not part of the default test count. Read its evidence: the upstream baseline contains failures and assertion-free TODOs; the harness checks an added regression and exact undo recovery.
+
+For packaging or runtime changes, run `pnpm extension:package` followed by `pnpm extension:test:installed` (prefix with `xvfb-run -a` on headless Linux). This installs the VSIX into a fresh profile, verifies the installed runtime hashes and production extension mode, and runs the same integration flows. The test driver is a separate development extension. Controlled AI fixtures in this suite do not count as real-model accuracy checks; see [the evidence index](docs/evidence/local-ai/README.md).
 
 ## Useful first contributions
 

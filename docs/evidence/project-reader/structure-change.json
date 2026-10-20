@@ -1,0 +1,16 @@
+{
+  "path": "index.js",
+  "before": "export default function escapeStringRegexp(string) {\n\tif (typeof string !== 'string') {\n\t\tthrow new TypeError('Expected a string');\n\t}\n\n\t// Escape characters with special meaning either inside or outside character sets.\n\t// Use a simple backslash escape when it’s always valid, and a `\\xnn` escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.\n\treturn string\n\t\t.replace(/[|\\\\{}()[\\]^$+*?.]/g, '\\\\$&')\n\t\t.replace(/-/g, '\\\\x2d');\n}\n",
+  "after": "function assertString(string) {\n\tif (typeof string !== 'string') {\n\t\tthrow new TypeError('문자열을 입력해 주세요.');\n\t}\n}\n\nexport default function escapeStringRegexp(string) {\n\tassertString(string);\n\n\t// Escape characters with special meaning either inside or outside character sets.\n\t// Use a simple backslash escape when it’s always valid, and a `\\xnn` escape when the simpler form would be disallowed by Unicode patterns’ stricter grammar.\n\treturn string\n\t\t.replace(/[|\\\\{}()[\\]^$+*?.]/g, '\\\\$&')\n\t\t.replace(/-/g, '\\\\x2d');\n}\n",
+  "reviewId": "557334ca905eca4a6030180dbc9e21c27f2f18791233a7a54c170f3a20e8b8e6",
+  "explanation": {
+    "path": "index.js",
+    "title": "입력 확인 분리와 한국어 안내",
+    "before": "한곳에서 입력이 글자인지 확인하고, 검색에서 특별한 뜻을 갖는 기호를 글자 그대로 찾을 수 있도록 바꿨습니다. 숫자처럼 글자가 아닌 값을 넣으면 변환을 중단하고 ‘Expected a string’이라는 오류를 냈습니다.",
+    "after": "입력이 글자인지 확인하는 일을 별도 규칙으로 분리하고, 변환을 시작하기 전에 그 규칙을 부릅니다. 글자가 아닌 값을 넣으면 변환을 중단하고 ‘문자열을 입력해 주세요.’라는 한국어 오류를 냅니다. 글자를 넣었을 때 기호를 바꾸는 방식은 그대로입니다.",
+    "beforeQuote": "export default function escapeStringRegexp(string) {\n\tif (typeof string !== 'string') {\n\t\tthrow new TypeError('Expected a string');\n\t}",
+    "afterQuote": "function assertString(string) {\n\tif (typeof string !== 'string') {\n\t\tthrow new TypeError('문자열을 입력해 주세요.');\n\t}\n}\n\nexport default function escapeStringRegexp(string) {\n\tassertString(string);",
+    "caution": ""
+  },
+  "observation": "Input validation is extracted into assertString and invoked before escaping; default export is preserved."
+}

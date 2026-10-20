@@ -1,0 +1,67 @@
+.data-facts {
+  padding: 20px;
+  min-width: 0;
+}
+.data-facts h2 {
+  margin: 8px 0 12px;
+}
+.data-facts p {
+  line-height: 1.65;
+}
+.data-facts-boundary {
+  border-left: 3px solid var(--accent, #177c69);
+  padding: 6px 12px;
+}
+.data-facts-search {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+.data-facts-search input {
+  width: 100%;
+  min-width: 0;
+}
+.data-facts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.data-facts-list > li {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  min-width: 0;
+}
+.data-facts-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+.data-facts-heading code {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.data-facts-type {
+  color: var(--muted);
+  font-size: 12px;
+}
+.data-facts-value {
+  margin: 10px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.data-facts-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.data-facts-actions button {
+  font-size: 12px;
+}
+.data-facts-note {
+  border-left: 3px solid var(--muted);
+  padding-left: 10px;
+  font-size: 12px;
+}

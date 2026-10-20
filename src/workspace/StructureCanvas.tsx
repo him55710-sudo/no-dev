@@ -89,6 +89,7 @@ export function StructureCanvas({
     () => () => {
       if (locationFrame.current !== null)
         cancelAnimationFrame(locationFrame.current);
+      locationFrame.current = null;
     },
     [],
   );

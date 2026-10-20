@@ -13,6 +13,21 @@ export function activate(context: vscode.ExtensionContext) {
   const controller = new Controller(
     new AnalysisClient(context.asAbsolutePath("out/worker.cjs")),
     context.workspaceState,
+    context.asAbsolutePath("runtime/python_source.py"),
+    {
+      script: context.asAbsolutePath("runtime/go_source.go"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "go-reader").fsPath,
+    },
+    {
+      script: context.asAbsolutePath("runtime/PureobomJavaSource.java"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "java-reader")
+        .fsPath,
+    },
+    {
+      script: context.asAbsolutePath("runtime/PureobomCSharpSource.cs"),
+      cache: vscode.Uri.joinPath(context.globalStorageUri, "csharp-reader")
+        .fsPath,
+    },
   );
   let panel: vscode.WebviewPanel | undefined;
   const refreshEditor = async () => {
@@ -26,15 +41,21 @@ export function activate(context: vscode.ExtensionContext) {
     else await controller.refresh();
   };
   const openPanel = async () => {
+    const sourceDocument = vscode.window.activeTextEditor?.document;
+    const readSelected = async () => {
+      if (sourceDocument && Controller.accepts(sourceDocument))
+        await controller.setDocument(sourceDocument);
+      else await refreshEditor();
+    };
     if (panel) {
-      panel.reveal(panel.viewColumn, true);
-      await refreshEditor();
+      panel.reveal(panel.viewColumn, false);
+      await readSelected();
       return;
     }
     panel = vscode.window.createWebviewPanel(
       "pureobom.reader",
-      "풀어봄 · 코드 설명",
-      { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
+      "풀어봄 · 쉬운 설명",
+      { viewColumn: vscode.ViewColumn.Active, preserveFocus: false },
       {
         enableScripts: true,
         retainContextWhenHidden: true,
@@ -60,6 +81,34 @@ export function activate(context: vscode.ExtensionContext) {
         const p = r.payload || {};
         let result: unknown;
         switch (r.action) {
+          case "benchmarkPrepare":
+            result = await controller.benchmarks.prepare(
+              r.contextId,
+              inputString(p.id, 100),
+            );
+            break;
+          case "benchmarkRun":
+            result = await controller.benchmarks.start(
+              r.contextId,
+              inputString(p.id, 100),
+              p.phase,
+              p.reviewed,
+            );
+            break;
+          case "benchmarkCancel":
+            controller.benchmarks.cancel();
+            break;
+          case "benchmarkReport": {
+            const document = await vscode.workspace.openTextDocument({
+              language: "json",
+              content: JSON.stringify(controller.benchmarks.report(), null, 2),
+            });
+            await vscode.window.showTextDocument(document, {
+              viewColumn: vscode.ViewColumn.One,
+              preview: false,
+            });
+            break;
+          }
           case "projectTasks":
             result = await controller.checks.list(r.contextId);
             break;
@@ -86,6 +135,14 @@ export function activate(context: vscode.ExtensionContext) {
             result = await controller.assistant.preview(
               inputString(p.id, 100),
               r.contextId,
+            );
+            break;
+          case "localReviewSummary":
+            result = controller.assistant.reviewSummary(
+              inputString(p.id, 100),
+              r.contextId,
+              p.reviewed,
+              p.editCount,
             );
             break;
           case "localApply":
@@ -117,6 +174,15 @@ export function activate(context: vscode.ExtensionContext) {
           case "prepare":
             result = await controller.prepare(r.contextId, p);
             break;
+          case "formatFunction":
+            result = await controller.prepareFormat(
+              r.contextId,
+              inputString(p.functionId, 100),
+            );
+            break;
+          case "sqlDialect":
+            await controller.setSqlDialect(r.contextId, p.dialect);
+            break;
           case "term":
             if (p.lang !== "ko" && p.lang !== "en")
               throw Error("Invalid language");
@@ -128,9 +194,12 @@ export function activate(context: vscode.ExtensionContext) {
             );
             break;
           case "preview":
+            if (p.lang !== undefined && p.lang !== "ko" && p.lang !== "en")
+              throw Error("Invalid language");
             result = await controller.preview(
               inputString(p.id, 100),
               r.contextId,
+              p.lang,
             );
             break;
           case "apply":
@@ -214,7 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
       receiver.dispose();
       panel = undefined;
     });
-    await refreshEditor();
+    await readSelected();
   };
   const handle = (fn: () => Promise<unknown>) => async () => {
     try {

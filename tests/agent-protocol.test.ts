@@ -13,6 +13,37 @@ function client(scenario: string) {
   });
 }
 describe("Codex App Server protocol", { timeout: 45000 }, () => {
+  it("uses read-only turns and a structured response contract for project explanations", async () => {
+    const server = client("read-only");
+    let received: Record<string, unknown> | undefined;
+    server.onEvent((event) => {
+      if (event.method === "fixture/readOnly") received = event.params;
+    });
+    await server.start();
+    const outputSchema = {
+      type: "object",
+      properties: { summary: { type: "string" } },
+      required: ["summary"],
+      additionalProperties: false,
+    };
+    await server.run({
+      prompt: "한국어 설명",
+      signal: new AbortController().signal,
+      readOnly: true,
+      outputSchema,
+    });
+    expect(received?.sandboxPolicy).toEqual({ type: "readOnly" });
+    expect(received?.outputSchema).toEqual(outputSchema);
+    const mismatched = client("early");
+    await mismatched.start();
+    await expect(
+      mismatched.run({
+        prompt: "설명",
+        signal: new AbortController().signal,
+        readOnly: true,
+      }),
+    ).rejects.toThrow(/실행 제한/);
+  });
   it("decodes split UTF-8, redacts identity, and handles terminal events before the response", async () => {
     const server = client("early");
     expect((await server.start()).userAgent).toBe("테스트 protocol");

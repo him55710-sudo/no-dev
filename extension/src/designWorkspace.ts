@@ -70,12 +70,21 @@ import {
 } from "../../src/workspace/features";
 import { ManagedImplementationJobs } from "./agent/managedJobs";
 import { availableChecks } from "./agent/verify";
+import { ProjectNarrator } from "./projectNarrator";
+import type { SourceFile } from "../../src/workspace/narrative";
+import {
+  validateChangeStory,
+  type ChangeStory,
+} from "../../src/workspace/narrative";
 
 const requestSchema = z
   .object({
     id: z.string().max(100),
     action: z.enum([
       "ready",
+      "explainProject",
+      "cancelExplanation",
+      "explainChanges",
       "refresh",
       "saveNavigation",
       "source",
@@ -120,11 +129,13 @@ const saveSchema = z
   })
   .strict();
 const excluded =
-  "**/{node_modules,.git,.next,dist,build,coverage,vendor,release,test-results,.vscode-test,.pureobom}/**";
+  "**/{node_modules,.git,.next,dist,build,out,target,coverage,vendor,release,test-results,.vscode-test,.pureobom,evidence}/**";
 const included =
   "**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts,json,jsonc,md,py,go,rs,java,cs,html,css,sql}";
 
 export class DesignWorkspace implements vscode.Disposable {
+  private storyAbort?: AbortController;
+  private sourceFiles: SourceFile[] = [];
   private navigationStore?: NavigationStore;
   readonly changes = new vscode.EventEmitter<DesignWorkspaceState>();
   state: DesignWorkspaceState = {
@@ -137,6 +148,7 @@ export class DesignWorkspace implements vscode.Disposable {
     trusted: vscode.workspace.isTrusted,
   };
   private panel?: vscode.WebviewPanel;
+  private postedState?: DesignWorkspaceState;
   private folder?: vscode.WorkspaceFolder;
   private worker: AnalysisClient;
   private jobs: ManagedImplementationJobs;
@@ -192,6 +204,9 @@ export class DesignWorkspace implements vscode.Disposable {
               ".next",
               "dist",
               "build",
+              "out",
+              "target",
+              "evidence",
               "coverage",
               "release",
               "test-results",
@@ -208,6 +223,7 @@ export class DesignWorkspace implements vscode.Disposable {
       )
         return;
       this.state.stale = true;
+      this.storyAbort?.abort();
       this.serial++;
       this.emit();
       clearTimeout(this.timer);
@@ -242,10 +258,30 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   private emit() {
     this.changes.fire(this.state);
-    void this.panel?.webview.postMessage({
-      type: "workspaceState",
-      state: this.state,
-    });
+    if (!this.panel) return;
+    if (!this.postedState)
+      void this.panel.webview.postMessage({
+        type: "workspaceState",
+        state: this.state,
+      });
+    else {
+      const previous = this.postedState as Record<string, unknown>,
+        next = this.state as Record<string, unknown>;
+      const changed = Object.fromEntries(
+        Object.entries(next).filter(
+          ([key, value]) => value !== undefined && previous[key] !== value,
+        ),
+      );
+      const removed = Object.keys(previous).filter(
+        (key) => previous[key] !== undefined && next[key] === undefined,
+      );
+      void this.panel.webview.postMessage({
+        type: "workspacePatch",
+        changed,
+        removed,
+      });
+    }
+    this.postedState = { ...this.state };
   }
   private fail(error: unknown) {
     this.state.busy = false;
@@ -263,6 +299,7 @@ export class DesignWorkspace implements vscode.Disposable {
       if (this.jobs.isRunning || this.saving)
         throw Error("진행 중인 구현 작업이 끝난 뒤 프로젝트를 바꿔 주세요.");
       this.jobs.dispose();
+      this.storyAbort?.abort();
       this.connectionSerial++;
       void this.connectionServer?.close();
       this.connectionServer = undefined;
@@ -292,6 +329,9 @@ export class DesignWorkspace implements vscode.Disposable {
         await realpath(folder.uri.fsPath),
       );
       this.state.projectKey = this.drafts.projectKey;
+      this.state.story = this.context.workspaceState.get(
+        "pureobom.projectStory." + this.drafts.projectKey,
+      );
       this.navigationStore = new NavigationStore(
         this.context.globalStorageUri.fsPath,
         this.drafts.projectKey,
@@ -319,6 +359,7 @@ export class DesignWorkspace implements vscode.Disposable {
       await this.loadJobHistory();
     } else await this.loadDrafts();
     if (!this.panel) {
+      this.postedState = undefined;
       const panel = (this.panel = vscode.window.createWebviewPanel(
         "pureobom.design",
         "풀어봄 · 시스템 설계",
@@ -390,7 +431,14 @@ export class DesignWorkspace implements vscode.Disposable {
   async handleRequest(raw: unknown) {
     const request = requestSchema.parse(raw);
     let result: unknown;
-    if (request.action === "ready") this.emit();
+    if (request.action === "ready") {
+      this.postedState = undefined;
+      this.emit();
+    } else if (request.action === "explainProject")
+      result = await this.explainProject(request.payload);
+    else if (request.action === "explainChanges")
+      result = await this.explainChanges(request.payload);
+    else if (request.action === "cancelExplanation") this.storyAbort?.abort();
     else if (request.action === "refresh") await this.refresh();
     else if (request.action === "saveNavigation")
       result = await this.saveNavigation(request.payload);
@@ -628,6 +676,12 @@ export class DesignWorkspace implements vscode.Disposable {
       if (serial !== this.serial || this.folder !== folder || this.disposed)
         return;
       this.state.graph = graph;
+      this.sourceFiles = files.filter(
+        (file) =>
+          !/(?:^|\/)(?:secrets?|credentials?|tokens?)(?:\.|\/)|(?:^|\/)docs\/evidence\//i.test(
+            file.path,
+          ),
+      );
       this.state.checks = checks;
       this.state.notices = notices;
       this.state.stale = false;
@@ -1144,6 +1198,142 @@ export class DesignWorkspace implements vscode.Disposable {
       scripts: checks.scripts,
     });
   }
+  private narrator() {
+    if (!this.folder || !this.state.execution)
+      throw Error("프로젝트 연결 정보를 불러오는 중입니다.");
+    const context = this.state.execution.context;
+    return new ProjectNarrator({
+      executable: context.executable,
+      model: context.model || undefined,
+      cwd: this.folder.uri.fsPath,
+      cache: resolve(
+        this.context.globalStorageUri.fsPath,
+        "korean-explanations",
+      ),
+    });
+  }
+  private assertStoryContext(raw: unknown) {
+    const payload = z
+      .object({ projectKey: z.string(), revision: z.string() })
+      .strict()
+      .parse(raw);
+    if (!vscode.workspace.isTrusted)
+      throw Error("신뢰한 프로젝트에서 AI로 읽어 주세요.");
+    if (
+      !this.state.graph ||
+      this.state.stale ||
+      this.state.busy ||
+      payload.projectKey !== this.state.projectKey ||
+      payload.revision !== this.state.graph.revision
+    )
+      throw Error("프로젝트 내용이 바뀌었습니다. 새로 읽은 뒤 시도해 주세요.");
+    if (this.storyAbort)
+      throw Error("이전 설명이 끝나거나 취소된 뒤 시도해 주세요.");
+    return payload;
+  }
+  async explainProject(raw: unknown) {
+    const payload = this.assertStoryContext(raw),
+      abort = new AbortController(),
+      folder = this.folder;
+    this.storyAbort = abort;
+    this.state.storyError = undefined;
+    try {
+      const story = await this.narrator().explain(
+        this.sourceFiles,
+        payload.revision,
+        abort.signal,
+        (progress) => {
+          if (this.folder === folder) {
+            this.state.storyProgress = progress;
+            this.emit();
+          }
+        },
+      );
+      if (
+        abort.signal.aborted ||
+        this.folder !== folder ||
+        this.state.graph?.revision !== payload.revision ||
+        this.state.stale
+      )
+        throw Error(
+          "읽는 동안 코드가 바뀌었습니다. 새 내용으로 다시 읽어 주세요.",
+        );
+      this.state.story = story;
+      await this.context.workspaceState.update(
+        "pureobom.projectStory." + payload.projectKey,
+        story,
+      );
+      return story;
+    } catch (error) {
+      if (this.folder === folder)
+        this.state.storyError = abort.signal.aborted
+          ? "읽기를 멈췄습니다. 완료된 부분은 다음 읽기에 재사용합니다."
+          : String(error);
+      throw error;
+    } finally {
+      if (this.storyAbort === abort) {
+        this.storyAbort = undefined;
+        this.state.storyProgress = undefined;
+        this.emit();
+      }
+    }
+  }
+  async explainChanges(raw: unknown) {
+    const payload = z.object({ reviewId: z.string() }).strict().parse(raw);
+    if (
+      !vscode.workspace.isTrusted ||
+      !this.state.job ||
+      this.state.job.phase !== "review" ||
+      this.state.job.reviewId !== payload.reviewId
+    )
+      throw Error("현재 검토하는 변경이 아닙니다.");
+    if (this.storyAbort) throw Error("진행 중인 읽기가 끝난 뒤 시도해 주세요.");
+    const abort = new AbortController();
+    this.storyAbort = abort;
+    this.state.changeStoryBusy = true;
+    this.emit();
+    try {
+      const files = [];
+      for (let index = 0; index < this.state.job.files.length; index++)
+        files.push(await this.jobs.file(index, payload.reviewId));
+      const cached = this.context.workspaceState.get<ChangeStory>(
+        "pureobom.changeStory." + this.state.projectKey,
+      );
+      if (cached?.reviewId === payload.reviewId) {
+        try {
+          const checked = {
+            ...validateChangeStory({ changes: cached.changes }, files),
+            reviewId: payload.reviewId,
+          };
+          this.state.changeStory = checked;
+          this.emit();
+          return checked;
+        } catch {
+          /* Invalid cached evidence must be regenerated from the immutable review. */
+        }
+      }
+      const story = await this.narrator().changes(
+        files,
+        payload.reviewId,
+        abort.signal,
+      );
+      if (abort.signal.aborted || this.state.job?.reviewId !== payload.reviewId)
+        throw Error("비교할 내용이 바뀌었습니다.");
+      this.state.changeStory = story;
+      await this.context.workspaceState.update(
+        "pureobom.changeStory." + this.state.projectKey,
+        story,
+      );
+      this.emit();
+      return story;
+    } finally {
+      if (this.storyAbort === abort) {
+        this.storyAbort = undefined;
+        this.state.changeStoryBusy = false;
+        this.emit();
+      }
+    }
+  }
   private async loadExecution() {
     const store = this.executionProfiles;
     if (!store || this.disposed) return;
@@ -1382,6 +1572,7 @@ export class DesignWorkspace implements vscode.Disposable {
   }
   dispose() {
     this.disposed = true;
+    this.storyAbort?.abort();
     this.connectionSerial++;
     clearTimeout(this.timer);
     this.serial++;

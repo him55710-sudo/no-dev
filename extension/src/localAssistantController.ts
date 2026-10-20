@@ -1,24 +1,31 @@
 import * as vscode from "vscode";
 import { randomUUID } from "node:crypto";
-import { OllamaClient } from "./ollama";
+import { OllamaClient, type InferenceProcessor } from "./ollama";
 import { inputString } from "./protocol";
 import type { AnalysisClient } from "./analysisClient";
 import type {
   AssistantInput,
   AssistantProposal,
+  AssistantConstraintCheck,
 } from "../../src/core/localAssistant";
+import { checkAssistantConstraint } from "../../src/core/localAssistant";
 import { validatePython } from "./pythonValidation";
+import type { ChangeFacts } from "../../src/core/changeFacts";
 
 export type AssistantValidation = {
   status: "syntax-passed" | "syntax-failed" | "unavailable";
   detail: string;
+  changeFacts?: ChangeFacts;
 };
 export type AssistantResult = Omit<AssistantProposal, "updated"> & {
   id: string;
   model: string;
   digest: string;
   elapsedMs: number;
+  processor: InferenceProcessor;
   validation: AssistantValidation;
+  constraint?: AssistantConstraintCheck;
+  focus?: { name: string; line: number; endLine: number };
 };
 type Pending = {
   result: AssistantResult;
@@ -44,8 +51,25 @@ export class LocalAssistantController implements vscode.Disposable {
   constructor(
     private current: (context: string | undefined) => vscode.TextDocument,
     private analyzer: AnalysisClient,
+    private validateGo?: (
+      source: string,
+      signal: AbortSignal,
+    ) => Promise<AssistantValidation>,
+    private validateJava?: (
+      source: string,
+      signal: AbortSignal,
+    ) => Promise<AssistantValidation>,
+    private sqlDialect?: (doc: vscode.TextDocument) => "sqlite" | undefined,
+    private validateCSharp?: (
+      source: string,
+      signal: AbortSignal,
+    ) => Promise<AssistantValidation>,
+    private resolveFocus?: (
+      context: string | undefined,
+      id: string,
+    ) => AssistantInput["focus"],
   ) {}
-  private client() {
+  private client(processor: InferenceProcessor = "auto") {
     if (vscode.env.remoteName)
       throw Error(
         "로컬 AI는 데스크톱의 로컬 작업 공간에서 사용하세요. / Local AI requires a local desktop workspace.",
@@ -54,6 +78,8 @@ export class LocalAssistantController implements vscode.Disposable {
       vscode.workspace
         .getConfiguration("pureobom")
         .get<number>("ollamaPort", 11434),
+      undefined,
+      processor,
     );
   }
   async models() {
@@ -68,6 +94,18 @@ export class LocalAssistantController implements vscode.Disposable {
   invalidate() {
     this.cancel();
     this.pending = undefined;
+  }
+  private focus(context: string | undefined, id: unknown, task: unknown) {
+    if (task !== "explain" || !this.resolveFocus)
+      throw Error(
+        "기능 선택은 설명 요청에서만 사용할 수 있습니다. / Function focus requires an explanation request.",
+      );
+    const focus = this.resolveFocus(context, inputString(id, 1000));
+    if (!focus)
+      throw Error(
+        "최신 원문에서 설명할 기능을 다시 선택하세요. / Select a function from the current source.",
+      );
+    return focus;
   }
   async generate(
     context: string | undefined,
@@ -85,27 +123,56 @@ export class LocalAssistantController implements vscode.Disposable {
     const input: AssistantInput = {
       source: doc.getText(),
       language: doc.languageId,
+      sqlDialect: this.sqlDialect?.(doc),
       instruction: inputString(payload.instruction, 2000),
       task: payload.task as AssistantInput["task"],
       lang: payload.lang as AssistantInput["lang"],
+      presentation: payload.presentation as AssistantInput["presentation"],
+      editConstraint:
+        payload.editConstraint as AssistantInput["editConstraint"],
+      ...(payload.focusFunctionId !== undefined
+        ? {
+            focus: this.focus(context, payload.focusFunctionId, payload.task),
+          }
+        : {}),
     };
     const version = doc.version;
     const controller = new AbortController();
     this.running = controller;
     this.pending = undefined;
     try {
-      const response = await this.client().generate(
-        inputString(payload.model, 200),
-        input,
-        controller.signal,
-      );
-      const validation = response.proposal.edits.length
+      const response = await this.client(
+        (payload.processor === undefined
+          ? "auto"
+          : payload.processor) as InferenceProcessor,
+      ).generate(inputString(payload.model, 200), input, controller.signal);
+      const validation: AssistantValidation = response.proposal.edits.length
         ? doc.languageId === "python"
           ? await validatePython(response.proposal.updated)
-          : await this.analyzer.call<AssistantValidation>("validateAssistant", {
-              language: doc.languageId,
-              source: response.proposal.updated,
-            })
+          : doc.languageId === "csharp" && this.validateCSharp
+            ? await this.validateCSharp(
+                response.proposal.updated,
+                controller.signal,
+              )
+            : doc.languageId === "java" && this.validateJava
+              ? await this.validateJava(
+                  response.proposal.updated,
+                  controller.signal,
+                )
+              : doc.languageId === "go" && this.validateGo
+                ? await this.validateGo(
+                    response.proposal.updated,
+                    controller.signal,
+                  )
+                : await this.analyzer.call<AssistantValidation>(
+                    "validateAssistant",
+                    {
+                      language: doc.languageId,
+                      source: response.proposal.updated,
+                      original: input.source,
+                      sqlDialect: input.sqlDialect,
+                    },
+                  )
         : {
             status: "unavailable" as const,
             detail: "변경안 없음 / No proposed change",
@@ -126,7 +193,21 @@ export class LocalAssistantController implements vscode.Disposable {
         model: response.model.name,
         digest: response.model.digest,
         elapsedMs: response.elapsedMs,
+        processor: response.processor,
         validation,
+        ...(input.focus
+          ? {
+              focus: {
+                name: input.focus.name,
+                line: doc.positionAt(input.focus.start).line + 1,
+                endLine: doc.positionAt(input.focus.end).line + 1,
+              },
+            }
+          : {}),
+        constraint: checkAssistantConstraint(
+          input.editConstraint,
+          validation.changeFacts,
+        ),
       };
       this.pending = {
         result,
@@ -185,7 +266,27 @@ export class LocalAssistantController implements vscode.Disposable {
     const p = this.checked(id, context);
     if (!p.result.edits.length)
       throw Error("변경안이 없습니다. / No proposed change.");
-    const suffix = p.doc.uri.path.match(/\.[a-zA-Z0-9]+$/)?.[0] || ".txt";
+    const suffix =
+      p.doc.uri.path.match(/\.[a-zA-Z0-9]+$/)?.[0] ||
+      (
+        {
+          javascript: ".js",
+          javascriptreact: ".jsx",
+          typescript: ".ts",
+          typescriptreact: ".tsx",
+          python: ".py",
+          go: ".go",
+          rust: ".rs",
+          java: ".java",
+          csharp: ".cs",
+          html: ".html",
+          css: ".css",
+          sql: ".sql",
+          json: ".json",
+          jsonc: ".jsonc",
+        } as Record<string, string>
+      )[p.doc.languageId] ||
+      ".txt";
     const before = vscode.Uri.from({
       scheme: "pureobom-local-preview",
       path: `/${id}/before${suffix}`,
@@ -207,6 +308,26 @@ export class LocalAssistantController implements vscode.Disposable {
     this.checked(id, context).reviewed = true;
     return { before: before.toString(), after: after.toString() };
   }
+  reviewSummary(
+    id: string,
+    context: string | undefined,
+    reviewed: unknown,
+    editCount: unknown,
+  ) {
+    const p = this.checked(id, context);
+    if (
+      reviewed !== true ||
+      !p.result.edits.length ||
+      editCount !== p.result.edits.length
+    )
+      throw Error(
+        "변경 내용을 읽고 확인해 주세요. / Review the proposed changes first.",
+      );
+    // The novice view presents the generated reasons, risks and optional exact
+    // before/after text. A native code editor is not required for that review.
+    p.reviewed = true;
+    return { reviewed: true };
+  }
   async apply(
     id: string,
     context: string | undefined,
@@ -218,10 +339,16 @@ export class LocalAssistantController implements vscode.Disposable {
       );
     const p = this.checked(id, context);
     if (!p.reviewed || !p.result.edits.length)
-      throw Error("먼저 코드 차이를 확인하세요. / Review the code diff first.");
+      throw Error(
+        "먼저 변경 내용을 확인하세요. / Review the proposed changes first.",
+      );
     if (p.result.validation.status === "syntax-failed")
       throw Error(
         "문법 오류가 있는 제안은 적용할 수 없습니다. / A syntax-invalid proposal cannot be applied.",
+      );
+    if (p.result.constraint && p.result.constraint.status !== "passed")
+      throw Error(
+        "선택한 공백·줄바꿈 제한을 확인하지 못한 제안은 적용할 수 없습니다. / The whitespace-only constraint was not satisfied; this proposal cannot be applied.",
       );
     if (acknowledgeUnchecked !== true)
       throw Error(

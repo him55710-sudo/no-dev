@@ -5,17 +5,31 @@ import { makePatch, parseRequest } from "../../src/core/edit";
 import { simulate } from "../../src/core/simulate";
 import { compareScenarios } from "../../src/core/scenarios";
 import { validateAssistantChange } from "../../src/core/assistantValidation";
+import { formatFunction } from "../../src/core/formatFunction";
+import { rustSource } from "./rustParser";
 import { analyzeStructure } from "../../src/workspace/analyze";
 const analyzer = new ProjectAnalyzer();
 parentPort!.on("message", async ({ id, type, payload }) => {
   try {
     let result: unknown;
-    if (type === "structure")
-      result = await analyzeStructure(payload.files);
+    if (type === "structure") result = await analyzeStructure(payload.files);
+    else if (type === "rust") result = await rustSource(payload.file, payload);
+    else if (type === "validateAssistant" && payload.language === "rust")
+      result = await rustSource(
+        { path: "proposal.rs", content: payload.source },
+        { action: "validate" },
+      );
     else if (type === "analyze")
       result = analyzer.analyze(payload.files, payload.glossary);
     else if (type === "validateAssistant")
-      result = validateAssistantChange(payload.language, payload.source);
+      result = validateAssistantChange(
+        payload.language,
+        payload.source,
+        payload.sqlDialect,
+        payload.original,
+      );
+    else if (type === "formatFunction")
+      result = formatFunction(payload.file, payload.functionId);
     else if (type === "patch")
       result = makePatch(
         payload.file,

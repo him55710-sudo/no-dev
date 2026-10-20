@@ -1,0 +1,232 @@
+{
+  "checkedAt": "2026-10-16T12:17:37.515Z",
+  "project": "https://github.com/sqlc-dev/sqlc",
+  "commit": "c69308b521a50f92fee48ae623702c5550c49d95",
+  "file": "examples/authors/sqlite/query.sql",
+  "sourceSha256": "229bed6489f38068b4f9fc425f702ca71cca2ce4167468686e3e60a07ad2adc7",
+  "vscode": "1.96.4",
+  "kind": "Known LIMIT regression through actual VS Code source reading, literal edit, native diff, task execution and undo. Original upstream SQLite example test only; no model or optimization claim.",
+  "analysis": {
+    "sql": {
+      "dialect": "sqlite",
+      "version": "3.53.0",
+      "truncated": false
+    },
+    "explained": 11,
+    "total": 11,
+    "selectedRule": {
+      "start": 70,
+      "end": 71,
+      "line": 3,
+      "endLine": 3,
+      "id": "sql-value:70:71",
+      "name": "SQL L3 @70",
+      "label": {
+        "ko": "SQL L3 @70 숫자",
+        "en": "SQL L3 @70 number"
+      },
+      "value": "1",
+      "type": "number",
+      "scope": "file",
+      "raw": "1",
+      "syntax": "sql",
+      "note": {
+        "ko": "적힌 값만 바꿉니다. 열·자료형·제약·함수·결과·성능은 검증하지 않습니다.",
+        "en": "Changes only the written value. Columns, types, constraints, functions, results and performance are unchecked."
+      }
+    },
+    "ko": [
+      "- L2: 조회문 — 실행 결과는 데이터와 호출 환경에 따라 달라집니다: SELECT * FROM authors\r\nWHERE id = ? LIMIT 1",
+      "  - L2: 조회 대상과 결합: FROM authors",
+      "  - L3: WHERE: 조건이 참인 행이 대상 — NULL은 참이 아님: id = ?",
+      "  - L3: LIMIT·OFFSET 식 — 음수 LIMIT는 상한 없음, 0은 결과 없음: LIMIT 1",
+      "    - L3: 최대 반환 행 수 식: 1",
+      "- L6: 조회문 — 실행 결과는 데이터와 호출 환경에 따라 달라집니다: SELECT * FROM authors\r\nORDER BY name",
+      "  - L6: 조회 대상과 결합: FROM authors",
+      "  - L7: ORDER BY: 정렬 식·방향: name",
+      "- L10: 행 추가·충돌 처리 선언: INSERT INTO authors (\r\n  name, bio\r\n) VALUES (\r\n  ?, ? \r\n)",
+      "- L17: 행 삭제 선언: DELETE FROM authors\r\nWHERE id = ?",
+      "  - L18: WHERE: 조건이 참인 행이 대상 — NULL은 참이 아님: id = ?"
+    ],
+    "en": [
+      "- L2: Query — results depend on data and the caller: SELECT * FROM authors\r\nWHERE id = ? LIMIT 1",
+      "  - L2: Query sources and joins: FROM authors",
+      "  - L3: WHERE: target rows whose condition is true — NULL is not true: id = ?",
+      "  - L3: LIMIT/OFFSET expressions — negative LIMIT has no upper bound; zero returns no rows: LIMIT 1",
+      "    - L3: Maximum returned row count expression: 1",
+      "- L6: Query — results depend on data and the caller: SELECT * FROM authors\r\nORDER BY name",
+      "  - L6: Query sources and joins: FROM authors",
+      "  - L7: ORDER BY: ordering expression/direction: name",
+      "- L10: Insert and conflict-handling statement: INSERT INTO authors (\r\n  name, bio\r\n) VALUES (\r\n  ?, ? \r\n)",
+      "- L17: Delete statement: DELETE FROM authors\r\nWHERE id = ?",
+      "  - L18: WHERE: target rows whose condition is true — NULL is not true: id = ?"
+    ]
+  },
+  "baseline": {
+    "result": {
+      "id": "f37bc77d-293b-48a4-bf8c-20b8fcf68cbd",
+      "name": "sqlc SQLite regression",
+      "folder": "sqlc",
+      "file": "examples/authors/sqlite/query.sql",
+      "sourceSha256": "229bed6489f38068b4f9fc425f702ca71cca2ce4167468686e3e60a07ad2adc7",
+      "startedAt": "2026-10-16T12:17:38.885Z",
+      "status": "passed",
+      "stale": true,
+      "staleReason": "file changed: examples/authors/.pureobom-sqlite.json",
+      "exitCode": 0,
+      "elapsedMs": 3348
+    },
+    "checkedAt": "2026-10-16T12:17:39.550Z",
+    "commands": [
+      {
+        "command": "<workspace>\\test-results\\tools\\sqlc\\bin\\sqlc.exe",
+        "args": [
+          "generate",
+          "-f",
+          "<workspace>\\test-results\\projects\\sqlc\\examples\\authors\\.pureobom-sqlite.json"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples\\authors",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": "<workspace>\\test-results\\tools\\go1.27.2\\go\\bin\\go.exe",
+        "args": [
+          "test",
+          "-json",
+          "-tags",
+          "examples",
+          "-count=1",
+          "./authors/sqlite"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples",
+        "exitCode": 0,
+        "stdout": "{\"Time\":\"2026-10-16T21:17:40.771617+09:00\",\"Action\":\"start\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\"}\n{\"Time\":\"2026-10-16T21:17:40.7969054+09:00\",\"Action\":\"run\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\"}\n{\"Time\":\"2026-10-16T21:17:40.7974368+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"=== RUN   TestAuthors\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:40.7979641+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:14: open C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\sqltest_sqlite_58774263\\n\"}\n{\"Time\":\"2026-10-16T21:17:40.8222211+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:26: []\\n\"}\n{\"Time\":\"2026-10-16T21:17:40.8354584+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:40: 1\\n\"}\n{\"Time\":\"2026-10-16T21:17:40.836212+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:47: {1 Brian Kernighan {Co-author of The C Programming Language and The Go Programming Language true}}\\n\"}\n{\"Time\":\"2026-10-16T21:17:40.8372382+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"--- PASS: TestAuthors (0.04s)\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:40.8372382+09:00\",\"Action\":\"pass\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Elapsed\":0.04}\n{\"Time\":\"2026-10-16T21:17:40.8372382+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"PASS\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:40.8397342+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"ok  \\tgithub.com/sqlc-dev/sqlc/examples/authors/sqlite\\t0.068s\\n\"}\n{\"Time\":\"2026-10-16T21:17:40.8397342+09:00\",\"Action\":\"pass\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Elapsed\":0.068}\n",
+        "stderr": ""
+      }
+    ],
+    "counts": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exitCode": 0,
+    "generatedSha256": "2cdf9bc293ffe4b1aa369dae4c29599e24aa16adf688652389e0d31eb3c14f54"
+  },
+  "change": {
+    "before": "1",
+    "after": "0",
+    "start": 70,
+    "end": 71,
+    "semanticChecked": false
+  },
+  "unsavedBlocked": true,
+  "changedSha256": "03c43e29a8f4baf0c3a5bc9e4fd137e431e7b56259bd203808e0e0d9ec9d682e",
+  "regression": {
+    "result": {
+      "id": "67772500-e3b0-4558-9224-69a09cdaf71d",
+      "name": "sqlc SQLite regression",
+      "folder": "sqlc",
+      "file": "examples/authors/sqlite/query.sql",
+      "sourceSha256": "03c43e29a8f4baf0c3a5bc9e4fd137e431e7b56259bd203808e0e0d9ec9d682e",
+      "startedAt": "2026-10-16T12:17:43.063Z",
+      "status": "failed",
+      "stale": true,
+      "staleReason": "file changed: examples/authors/.pureobom-sqlite.json",
+      "exitCode": 1,
+      "elapsedMs": 2937
+    },
+    "checkedAt": "2026-10-16T12:17:43.337Z",
+    "commands": [
+      {
+        "command": "<workspace>\\test-results\\tools\\sqlc\\bin\\sqlc.exe",
+        "args": [
+          "generate",
+          "-f",
+          "<workspace>\\test-results\\projects\\sqlc\\examples\\authors\\.pureobom-sqlite.json"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples\\authors",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": "<workspace>\\test-results\\tools\\go1.27.2\\go\\bin\\go.exe",
+        "args": [
+          "test",
+          "-json",
+          "-tags",
+          "examples",
+          "-count=1",
+          "./authors/sqlite"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples",
+        "exitCode": 1,
+        "stdout": "{\"Time\":\"2026-10-16T21:17:44.5637614+09:00\",\"Action\":\"start\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\"}\n{\"Time\":\"2026-10-16T21:17:44.5829219+09:00\",\"Action\":\"run\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\"}\n{\"Time\":\"2026-10-16T21:17:44.5829219+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"=== RUN   TestAuthors\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:44.5838117+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:14: open C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\sqltest_sqlite_3511795764\\n\"}\n{\"Time\":\"2026-10-16T21:17:44.6054796+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:26: []\\n\"}\n{\"Time\":\"2026-10-16T21:17:44.6175199+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:40: 1\\n\"}\n{\"Time\":\"2026-10-16T21:17:44.6182468+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:45: sql: no rows in result set\\n\",\"OutputType\":\"error\"}\n{\"Time\":\"2026-10-16T21:17:44.6187642+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"--- FAIL: TestAuthors (0.04s)\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:44.6187642+09:00\",\"Action\":\"fail\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Elapsed\":0.04}\n{\"Time\":\"2026-10-16T21:17:44.6187642+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"FAIL\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:44.6209282+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"FAIL\\tgithub.com/sqlc-dev/sqlc/examples/authors/sqlite\\t0.057s\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:44.6209282+09:00\",\"Action\":\"fail\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Elapsed\":0.057}\n",
+        "stderr": ""
+      }
+    ],
+    "counts": {
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exitCode": 1,
+    "generatedSha256": "7dd1f597821c790cdf994599b84b5ff301deb459fc35ab4504603a2f50ebd502"
+  },
+  "restored": {
+    "result": {
+      "id": "d513c26d-9ae7-40fd-bb8d-bcab5d4828e5",
+      "name": "sqlc SQLite regression",
+      "folder": "sqlc",
+      "file": "examples/authors/sqlite/query.sql",
+      "sourceSha256": "229bed6489f38068b4f9fc425f702ca71cca2ce4167468686e3e60a07ad2adc7",
+      "startedAt": "2026-10-16T12:17:46.583Z",
+      "status": "passed",
+      "stale": true,
+      "staleReason": "file changed: examples/authors/.pureobom-sqlite.json",
+      "exitCode": 0,
+      "elapsedMs": 3680
+    },
+    "checkedAt": "2026-10-16T12:17:47.015Z",
+    "commands": [
+      {
+        "command": "<workspace>\\test-results\\tools\\sqlc\\bin\\sqlc.exe",
+        "args": [
+          "generate",
+          "-f",
+          "<workspace>\\test-results\\projects\\sqlc\\examples\\authors\\.pureobom-sqlite.json"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples\\authors",
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": "<workspace>\\test-results\\tools\\go1.27.2\\go\\bin\\go.exe",
+        "args": [
+          "test",
+          "-json",
+          "-tags",
+          "examples",
+          "-count=1",
+          "./authors/sqlite"
+        ],
+        "cwd": "<workspace>\\test-results\\projects\\sqlc\\examples",
+        "exitCode": 0,
+        "stdout": "{\"Time\":\"2026-10-16T21:17:48.7745693+09:00\",\"Action\":\"start\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\"}\n{\"Time\":\"2026-10-16T21:17:48.7999535+09:00\",\"Action\":\"run\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\"}\n{\"Time\":\"2026-10-16T21:17:48.7999535+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"=== RUN   TestAuthors\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:48.8005256+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:14: open C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\sqltest_sqlite_3480735087\\n\"}\n{\"Time\":\"2026-10-16T21:17:48.8238714+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:26: []\\n\"}\n{\"Time\":\"2026-10-16T21:17:48.8345207+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:40: 1\\n\"}\n{\"Time\":\"2026-10-16T21:17:48.8380279+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"    db_test.go:47: {1 Brian Kernighan {Co-author of The C Programming Language and The Go Programming Language true}}\\n\"}\n{\"Time\":\"2026-10-16T21:17:48.838534+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Output\":\"--- PASS: TestAuthors (0.04s)\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:48.838534+09:00\",\"Action\":\"pass\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Test\":\"TestAuthors\",\"Elapsed\":0.04}\n{\"Time\":\"2026-10-16T21:17:48.838534+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"PASS\\n\",\"OutputType\":\"frame\"}\n{\"Time\":\"2026-10-16T21:17:48.8402065+09:00\",\"Action\":\"output\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Output\":\"ok  \\tgithub.com/sqlc-dev/sqlc/examples/authors/sqlite\\t0.066s\\n\"}\n{\"Time\":\"2026-10-16T21:17:48.8416824+09:00\",\"Action\":\"pass\",\"Package\":\"github.com/sqlc-dev/sqlc/examples/authors/sqlite\",\"Elapsed\":0.067}\n",
+        "stderr": ""
+      }
+    ],
+    "counts": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exitCode": 0,
+    "generatedSha256": "2cdf9bc293ffe4b1aa369dae4c29599e24aa16adf688652389e0d31eb3c14f54"
+  },
+  "originalRestored": true,
+  "restoredSha256": "229bed6489f38068b4f9fc425f702ca71cca2ce4167468686e3e60a07ad2adc7"
+}

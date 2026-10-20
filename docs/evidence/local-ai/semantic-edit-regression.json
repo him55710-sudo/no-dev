@@ -1,0 +1,185 @@
+{
+  "sourceCommit": "a184b681cb9c41ecafbb9befdb818e21f6c5a486",
+  "scope": "Three real local edit proposals after the explanation protocol change; one attempt each; exact expected text match; not applied or executed",
+  "runs": [
+    {
+      "startedAt": "2026-10-16T08:20:06.170Z",
+      "model": "qwen2.5-coder:3b",
+      "platform": "win32",
+      "node": "v24.19.0",
+      "implementation": {
+        "transportSha256": "e2a3bdacfaa62e5c7c9bd67a539bedc42e04982d08201f14ab7335b4def2a800",
+        "protocolSha256": "37834150396f77011c68d872b2d547db46a1fe8a85935c48b90874412027ffbf"
+      },
+      "kind": "actual Ollama on public synthetic fixtures; no code applied or executed",
+      "limitations": "One run per case; exact text matching is not semantic accuracy. Explanation prose requires human review. Runtime, compilation and project integration are not tested here.",
+      "results": [
+        {
+          "file": "shipping.py",
+          "language": "python",
+          "task": "edit",
+          "sourceSha256": "59725d269c730d3aedaf10f2b8e6f2e3feb99645d2a6e2692bf1b7d62091ebd1",
+          "response": {
+            "model": {
+              "name": "qwen2.5-coder:3b",
+              "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+              "size": 1929912626
+            },
+            "elapsedMs": 58399,
+            "contextSize": 16384,
+            "proposal": {
+              "summary": "이 코드는 주문의 총 합이 무료 배송 기준 이상일 경우 무료 배송을 적용하고, 그렇지 않으면 기본 배송료를 추가합니다. 무료 배송 기준은 50,000원으로 변경되었습니다.",
+              "citations": [
+                {
+                  "quote": "FREE_SHIPPING_THRESHOLD = 50_000",
+                  "explanation": "이 줄은 무료 배송 기준을 설정합니다.",
+                  "start": 89,
+                  "end": 121,
+                  "line": 3
+                }
+              ],
+              "edits": [
+                {
+                  "before": "FREE_SHIPPING_THRESHOLD = 50_000",
+                  "after": "FREE_SHIPPING_THRESHOLD = 70_000",
+                  "reason": "무료 배송 기준을 70,000원으로 변경했습니다.",
+                  "start": 89,
+                  "end": 121
+                }
+              ],
+              "updated": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 70_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+              "risks": [
+                "변경 후, 무료 배송 기준이 변경되어 무료 배송을 적용하는 경우가 줄어들 수 있습니다."
+              ],
+              "checks": [
+                "변경된 코드를 실행하여 무료 배송 기준이 70,000원으로 변경되었는지 확인하세요."
+              ]
+            }
+          },
+          "protocolAccepted": true,
+          "expectedSource": "\"\"\"Small Python example for local explanation and edit proposals; no external calls.\"\"\"\n\nFREE_SHIPPING_THRESHOLD = 70_000\nSHIPPING_FEE = 3_000\n\n\ndef calculate_shipping(subtotal: int) -> int:\n    if subtotal < 0:\n        raise ValueError(\"Subtotal must not be negative\")\n    if subtotal >= FREE_SHIPPING_THRESHOLD:\n        return 0\n    return SHIPPING_FEE\n",
+          "matchesExpectedText": true
+        }
+      ],
+      "completedAt": "2026-10-16T08:21:04.681Z"
+    },
+    {
+      "startedAt": "2026-10-16T08:21:04.880Z",
+      "model": "qwen2.5-coder:3b",
+      "platform": "win32",
+      "node": "v24.19.0",
+      "implementation": {
+        "transportSha256": "e2a3bdacfaa62e5c7c9bd67a539bedc42e04982d08201f14ab7335b4def2a800",
+        "protocolSha256": "37834150396f77011c68d872b2d547db46a1fe8a85935c48b90874412027ffbf"
+      },
+      "kind": "actual Ollama on public synthetic fixtures; no code applied or executed",
+      "limitations": "One run per case; exact text matching is not semantic accuracy. Explanation prose requires human review. Runtime, compilation and project integration are not tested here.",
+      "results": [
+        {
+          "file": "shipping.ts",
+          "language": "typescript",
+          "task": "edit",
+          "sourceSha256": "57761f3b40c6cfd4bd09ff66abc017bd2a97e642710fc6b257b2af858c1782be",
+          "response": {
+            "model": {
+              "name": "qwen2.5-coder:3b",
+              "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+              "size": 1929912626
+            },
+            "elapsedMs": 44990,
+            "contextSize": 16384,
+            "proposal": {
+              "summary": "현재 함수는 무료 배송 기준이 50000원인 경우 무료 배송을, 그렇지 않은 경우 3000원의 배송료를 반환합니다. 무료 배송 기준을 70000원으로 변경합니다.",
+              "citations": [
+                {
+                  "quote": "return subtotal >= 50000 ? 0 : 3000;",
+                  "explanation": "이 코드는 무료 배송 기준이 50000원인 경우 무료 배송을, 그렇지 않은 경우 3000원의 배송료를 반환합니다.",
+                  "start": 116,
+                  "end": 152,
+                  "line": 3
+                }
+              ],
+              "edits": [
+                {
+                  "before": "return subtotal >= 50000 ? 0 : 3000;",
+                  "after": "return subtotal >= 70000 ? 0 : 3000;",
+                  "reason": "무료 배송 기준을 70000원으로 변경합니다.",
+                  "start": 116,
+                  "end": 152
+                }
+              ],
+              "updated": "export function shippingFee(subtotal: number): number {\n  if (subtotal < 0) throw new Error(\"Negative subtotal\");\n  return subtotal >= 70000 ? 0 : 3000;\n}\n",
+              "risks": [
+                " 무료 배송 기준이 70000원인 경우 무료 배송을 제공하지 않을 수 있습니다."
+              ],
+              "checks": [
+                " 무료 배송 기준이 70000원인 경우 무료 배송을 제공하는지 확인합니다."
+              ]
+            }
+          },
+          "protocolAccepted": true,
+          "expectedSource": "export function shippingFee(subtotal: number): number {\n  if (subtotal < 0) throw new Error(\"Negative subtotal\");\n  return subtotal >= 70000 ? 0 : 3000;\n}\n",
+          "matchesExpectedText": true
+        }
+      ],
+      "completedAt": "2026-10-16T08:21:50.087Z"
+    },
+    {
+      "startedAt": "2026-10-16T08:21:50.312Z",
+      "model": "qwen2.5-coder:3b",
+      "platform": "win32",
+      "node": "v24.19.0",
+      "implementation": {
+        "transportSha256": "e2a3bdacfaa62e5c7c9bd67a539bedc42e04982d08201f14ab7335b4def2a800",
+        "protocolSha256": "37834150396f77011c68d872b2d547db46a1fe8a85935c48b90874412027ffbf"
+      },
+      "kind": "actual Ollama on public synthetic fixtures; no code applied or executed",
+      "limitations": "One run per case; exact text matching is not semantic accuracy. Explanation prose requires human review. Runtime, compilation and project integration are not tested here.",
+      "results": [
+        {
+          "file": "shipping.jsonc",
+          "language": "jsonc",
+          "task": "edit",
+          "sourceSha256": "5bcb247e01554bddffa462c08c69daa678f588d9223678e42519d1021c59fee6",
+          "response": {
+            "model": {
+              "name": "qwen2.5-coder:3b",
+              "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+              "size": 1929912626
+            },
+            "elapsedMs": 35885,
+            "contextSize": 16384,
+            "proposal": {
+              "summary": "이 파일은 애플리케이션의 배송 정책을 정의하는 JSON 파일입니다. 이 파일은 자체적으로 실행되지 않습니다.",
+              "citations": [
+                {
+                  "quote": "\"freeShippingThreshold\": 50000",
+                  "explanation": "무료 배송 기준이 50000원에서 70000원으로 변경되었습니다.",
+                  "start": 80,
+                  "end": 110,
+                  "line": 3
+                }
+              ],
+              "edits": [
+                {
+                  "before": "\"freeShippingThreshold\": 50000",
+                  "after": "\"freeShippingThreshold\": 70000",
+                  "reason": "무료 배송 기준을 70000원으로 변경했습니다.",
+                  "start": 80,
+                  "end": 110
+                }
+              ],
+              "updated": "{\n  // Shipping policy used by an application; this file does not run itself.\n  \"freeShippingThreshold\": 70000,\n  \"shippingFee\": 3000,\n  \"currency\": \"KRW\"\n}\n",
+              "risks": [],
+              "checks": []
+            }
+          },
+          "protocolAccepted": true,
+          "expectedSource": "{\n  // Shipping policy used by an application; this file does not run itself.\n  \"freeShippingThreshold\": 70000,\n  \"shippingFee\": 3000,\n  \"currency\": \"KRW\"\n}\n",
+          "matchesExpectedText": true
+        }
+      ],
+      "completedAt": "2026-10-16T08:22:26.402Z"
+    }
+  ]
+}

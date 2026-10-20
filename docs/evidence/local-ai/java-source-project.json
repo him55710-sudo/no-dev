@@ -1,0 +1,512 @@
+{
+  "checkedAt": "2026-10-16T11:37:25.385Z",
+  "project": "https://github.com/ralfstx/minimal-json",
+  "commit": "5518c876226ae07f8291d6b41209bc3c979f4a55",
+  "file": "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java",
+  "sourceSha256": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+  "vscode": "1.96.4",
+  "kind": "actual VS Code Java AST reading, exact initializer edit, upstream task checks and undo; known regression; no model or optimization claim",
+  "command": "node scripts/run-minimal-json-tests.mjs PROJECT REPORT (javac --release 8; original JUnit dependencies)",
+  "displayTruncated": false,
+  "java": {
+    "version": "25.0.4.1+1-LTS",
+    "truncated": false
+  },
+  "analysis": {
+    "explained": 283,
+    "total": 312,
+    "functions": [
+      "JsonParser.<constructor>(JsonHandler<?, ?>)",
+      "JsonParser.parse(String)",
+      "JsonParser.parse(Reader)",
+      "JsonParser.parse(Reader, int)",
+      "JsonParser.readValue()",
+      "JsonParser.readArray()",
+      "JsonParser.readObject()",
+      "JsonParser.readName()",
+      "JsonParser.readNull()",
+      "JsonParser.readTrue()",
+      "JsonParser.readFalse()",
+      "JsonParser.readRequiredChar(char)",
+      "JsonParser.readString()",
+      "JsonParser.readStringInternal()",
+      "JsonParser.readEscape()",
+      "JsonParser.readNumber()",
+      "JsonParser.readFraction()",
+      "JsonParser.readExponent()",
+      "JsonParser.readChar(char)",
+      "JsonParser.readDigit()",
+      "JsonParser.skipWhiteSpace()",
+      "JsonParser.read()",
+      "JsonParser.startCapture()",
+      "JsonParser.pauseCapture()",
+      "JsonParser.endCapture()",
+      "JsonParser.getLocation()",
+      "JsonParser.expected(String)",
+      "JsonParser.error(String)",
+      "JsonParser.isWhiteSpace()",
+      "JsonParser.isDigit()",
+      "JsonParser.isHexDigit()",
+      "JsonParser.isEndOfText()"
+    ],
+    "selectedRule": {
+      "start": 1597,
+      "end": 1601,
+      "line": 34,
+      "endLine": 34,
+      "id": "java:1597",
+      "name": "MAX_NESTING_LEVEL",
+      "label": {
+        "ko": "MAX_NESTING_LEVEL",
+        "en": "MAX_NESTING_LEVEL"
+      },
+      "scope": "JsonParser",
+      "type": "number",
+      "value": "1000",
+      "raw": "1000",
+      "syntax": "java",
+      "note": {
+        "ko": "원문 값 하나입니다. 대입 타입·사용처·실행 결과는 별도 검사해야 합니다.",
+        "en": "One written value. Assignment types, uses and runtime results need separate checks."
+      }
+    },
+    "ko": [
+      "- L198: 변수/필드 선언: Object array = handler.startArray();. 초기화 결과·대입 타입은 미검증입니다.",
+      "- L199: 식 구문: read();. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "- L200: 조건이 참이면: (++nestingLevel > MAX_NESTING_LEVEL)",
+      "  - L201: 예외를 던집니다: error(\"Nesting too deep\"). 실제 타입·처리 대상은 미검증입니다.",
+      "- L203: 식 구문: skipWhiteSpace();. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "- L204: 조건이 참이면: (readChar(']'))",
+      "  - L205: 식 구문: nestingLevel--;. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L206: 식 구문: handler.endArray(array);. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L207: 반환하려 합니다: 값 없음. 적용되는 자원 정리/finally가 먼저 진행될 수 있습니다.",
+      "- L209: 본문을 먼저 수행하고 각 반복 뒤 조건 확인: (readChar(','))",
+      "  - L210: 식 구문: skipWhiteSpace();. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L211: 식 구문: handler.startArrayValue(array);. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L212: 식 구문: readValue();. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L213: 식 구문: handler.endArrayValue(array);. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "  - L214: 식 구문: skipWhiteSpace();. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "- L216: 조건이 참이면: (!readChar(']'))",
+      "  - L217: 예외를 던집니다: expected(\"',' or ']'\"). 실제 타입·처리 대상은 미검증입니다.",
+      "- L219: 식 구문: nestingLevel--;. 호출 내부 동작과 계산 결과는 미검증입니다.",
+      "- L220: 식 구문: handler.endArray(array);. 호출 내부 동작과 계산 결과는 미검증입니다."
+    ],
+    "en": [
+      "- L198: Variable/field declaration: Object array = handler.startArray();. Initialization results and assignment types are unchecked.",
+      "- L199: Expression statement: read();. Called behavior and computed results are unchecked.",
+      "- L200: If the condition is true: (++nestingLevel > MAX_NESTING_LEVEL)",
+      "  - L201: Throw: error(\"Nesting too deep\"). Actual type and handler are unchecked.",
+      "- L203: Expression statement: skipWhiteSpace();. Called behavior and computed results are unchecked.",
+      "- L204: If the condition is true: (readChar(']'))",
+      "  - L205: Expression statement: nestingLevel--;. Called behavior and computed results are unchecked.",
+      "  - L206: Expression statement: handler.endArray(array);. Called behavior and computed results are unchecked.",
+      "  - L207: Return without a value. Applicable resource cleanup/finally can run first.",
+      "- L209: Run the body first, then check after each iteration: (readChar(','))",
+      "  - L210: Expression statement: skipWhiteSpace();. Called behavior and computed results are unchecked.",
+      "  - L211: Expression statement: handler.startArrayValue(array);. Called behavior and computed results are unchecked.",
+      "  - L212: Expression statement: readValue();. Called behavior and computed results are unchecked.",
+      "  - L213: Expression statement: handler.endArrayValue(array);. Called behavior and computed results are unchecked.",
+      "  - L214: Expression statement: skipWhiteSpace();. Called behavior and computed results are unchecked.",
+      "- L216: If the condition is true: (!readChar(']'))",
+      "  - L217: Throw: expected(\"',' or ']'\"). Actual type and handler are unchecked.",
+      "- L219: Expression statement: nestingLevel--;. Called behavior and computed results are unchecked.",
+      "- L220: Expression statement: handler.endArray(array);. Called behavior and computed results are unchecked."
+    ]
+  },
+  "baseline": {
+    "result": {
+      "id": "440c9821-a689-49b9-9c1c-d32873cf86b0",
+      "name": "minimal-json Java AST regression",
+      "folder": "minimal-json",
+      "file": "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java",
+      "sourceSha256": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+      "startedAt": "2026-10-16T11:37:34.072Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 6656
+    },
+    "checkedAt": "2026-10-16T11:37:35.155Z",
+    "project": "https://github.com/ralfstx/minimal-json",
+    "commit": "5518c876226ae07f8291d6b41209bc3c979f4a55",
+    "java": "openjdk 25.0.4.1 2026-08-18 LTS\r\nOpenJDK Runtime Environment Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS, mixed mode, sharing)",
+    "testClasses": [
+      "com.eclipsesource.json.JsonArray_Test",
+      "com.eclipsesource.json.JsonLiteral_Test",
+      "com.eclipsesource.json.JsonNumber_Test",
+      "com.eclipsesource.json.JsonObject_Test",
+      "com.eclipsesource.json.JsonParser_Test",
+      "com.eclipsesource.json.JsonString_Test",
+      "com.eclipsesource.json.JsonValue_Test",
+      "com.eclipsesource.json.JsonWriter_Test",
+      "com.eclipsesource.json.Json_Test",
+      "com.eclipsesource.json.ParseException_Test",
+      "com.eclipsesource.json.PrettyPrint_Test",
+      "com.eclipsesource.json.WritingBuffer_Test",
+      "com.eclipsesource.json.test.mocking.Mocking_Test"
+    ],
+    "mainFiles": 15,
+    "testFiles": 14,
+    "dependencies": [
+      {
+        "name": "junit-4.12.jar",
+        "url": "https://repo.maven.apache.org/maven2/junit/junit/4.12/junit-4.12.jar",
+        "bytes": 314932,
+        "sha256": "59721f0805e223d84b90677887d9ff567dc534d7c502ca903c0c2b17f05c116a",
+        "publishedSha1": "2973d150c0dc1fefe998f834810d68f278ea58ec"
+      },
+      {
+        "name": "hamcrest-core-1.3.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
+        "bytes": 45024,
+        "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+        "publishedSha1": "42a25dc3219429f0e5d060061f71acb49bf010a0"
+      },
+      {
+        "name": "mockito-core-1.10.19.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/mockito/mockito-core/1.10.19/mockito-core-1.10.19.jar",
+        "bytes": 1172979,
+        "sha256": "d5831ee4f71055800821a34a3051cf1ed5b3702f295ffebd50f65fb5d81a71b8",
+        "publishedSha1": "e8546f5bef4e061d8dd73895b4e8f40e3fe6effe"
+      },
+      {
+        "name": "objenesis-2.1.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/objenesis/objenesis/2.1/objenesis-2.1.jar",
+        "bytes": 41755,
+        "sha256": "c74330cc6b806c804fd37e74487b4fe5d7c2750c5e15fbc6efa13bdee1bdef80",
+        "publishedSha1": "87c0ea803b69252868d09308b4618f766f135a96"
+      }
+    ],
+    "adaptations": [
+      "Javac --release 8 replaces upstream Maven Java 1.5 target; production and test source unchanged",
+      "JUnitCore invokes every upstream library *Test class; benchmark and Maven packaging/API compatibility plugins are outside this check",
+      "--add-opens java.base/java.lang and java.base/java.io=ALL-UNNAMED for original Mockito 1.10.19 on JDK 25"
+    ],
+    "sourceHashes": {
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Json.java": "8f7b635d322d7173c47a56513fd03bd433e2c2c347c22c4d882043537acc4e86",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonArray.java": "24218384ea3c60b37a429516d87ed14fa82079424d1ccaaee7b5f561492cbfca",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonHandler.java": "28d9852618301979b54454beb5c595e76355d36980d474eb1d38823c523aad99",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonLiteral.java": "714b769728263c475282bdc760f5173a9150fb409dd56375dc0b95fa1dfb0002",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonNumber.java": "31c4ec810db716dfec71dc157cc727eb389c945e604ebb07e1f9bac3c6edef8d",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonObject.java": "d010113c72611a9f59e357d69e46c390ea6c54a6e6f5cd4fe506ef42fb7701a4",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonString.java": "33c20c3ecc30a0c8aaca5b8900860e4f2d94842ba655b20847b1eba232de236e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonValue.java": "45594296f09551536cd4da2ea0bd49e23ec12745778035baa8562f921f72a3d8",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonWriter.java": "e63ba7ea82462d31cdc8e8c08fbd6a0b5921800f161e2e05e1097de1bff61d8b",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Location.java": "996b5711e4b14ec5bfdc36b2ac4f65f1ea55ba3d537438f8b93361ac8314481e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/ParseException.java": "9976c7caeae441dc07a6fa6eb44df17ede07ddc4aeb074e7e5c2833ccb279baa",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/PrettyPrint.java": "5f96a38abea6558450637307124f828acc9b46def236c28ad4f72a76453b1e98",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WriterConfig.java": "776982028a57a0a71d43230544950c2acf34b0f4d012c60425062637f0735f89",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WritingBuffer.java": "59ab7f9dbb9eaef09babd6ed329895ad2be576f13806214d22d68a2622b1d18d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonArray_Test.java": "a6c85bd876e7a4f8abc432cc9dd48d15f38402d85c75e44bc60a398e8b58a690",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonLiteral_Test.java": "81f255e1d75ae509209370791c1e4b8f0f688e9ce0f92c0f69140e6c384d31b8",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonNumber_Test.java": "fc78fb9c2f0d5ac3dbea0bc35431739111895b30dcb35f82c3d300416b56b294",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonObject_Test.java": "01f900b5b0de113232dd4d8325cd3810f371e5aca088fc99e991f4d310ce6f75",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonParser_Test.java": "3650854fb45fca347947a6902d57a993c44d65e7959139f006bbf341f2b1851f",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonString_Test.java": "db20ec1a4a00005d68964357a2235f95297d6bd112859b09c18c959c4d13e8b6",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonValue_Test.java": "1986247ee6c425305b315e6ea61e1d67c48478b7662be5ad8a7dec96caadd402",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonWriter_Test.java": "358c986b150256ebca9c06c2672d7f0cebce0347b7bf6ae21e7725d9dadecfb4",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/Json_Test.java": "56cf682474ce2be2cad13f00133fe2fd2b9e8a56f9ef11914fab83312e877511",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/ParseException_Test.java": "0a4e6cb478b1e4dcd0d8d5d5728b1d932741c2f835a038a6b28943de17a81f06",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/PrettyPrint_Test.java": "ff7735bdbe06c58f56674d420b02fb010633cea452bf5d584f05bcb99d0358ad",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/TestUtil.java": "08601db9edc406af0b776a9e6d4f53bb8b740cbf1c62e57f1a7b30685195dc5d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/WritingBuffer_Test.java": "671162fea4d21ef12e32e60fc145ee4e19eaa1a02aef527402b7462943a91335",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/test/mocking/Mocking_Test.java": "04f91eec014d1f81a82d337800a358aa9268e3cba87b5ce22ee373a3529c6f02"
+    },
+    "compile": {
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: [options] source value 8 is obsolete and will be removed in a future release\r\nwarning: [options] target value 8 is obsolete and will be removed in a future release\r\nwarning: [options] To suppress warnings about obsolete options, use -Xlint:-options.\r\n3 warnings\r\n"
+    },
+    "exitCode": 0,
+    "counts": {
+      "run": 452,
+      "passed": 452,
+      "failed": 0,
+      "ignored": 0,
+      "timeMs": 558
+    },
+    "failures": [],
+    "stderr": ""
+  },
+  "change": {
+    "before": "1000",
+    "after": "1",
+    "start": 1597,
+    "end": 1601,
+    "semanticChecked": false
+  },
+  "unsavedBlocked": true,
+  "changedSha256": "6d7982c6dd6e0bd70cacc1858ef980e5119d2ec9fe9fe2827b9d4a41359adfa8",
+  "regression": {
+    "result": {
+      "id": "0c198a20-b50f-4a07-9507-8100b6dc9f2c",
+      "name": "minimal-json Java AST regression",
+      "folder": "minimal-json",
+      "file": "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java",
+      "sourceSha256": "6d7982c6dd6e0bd70cacc1858ef980e5119d2ec9fe9fe2827b9d4a41359adfa8",
+      "startedAt": "2026-10-16T11:37:43.725Z",
+      "status": "failed",
+      "stale": false,
+      "exitCode": 1,
+      "elapsedMs": 5154
+    },
+    "checkedAt": "2026-10-16T11:37:44.318Z",
+    "project": "https://github.com/ralfstx/minimal-json",
+    "commit": "5518c876226ae07f8291d6b41209bc3c979f4a55",
+    "java": "openjdk 25.0.4.1 2026-08-18 LTS\r\nOpenJDK Runtime Environment Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS, mixed mode, sharing)",
+    "testClasses": [
+      "com.eclipsesource.json.JsonArray_Test",
+      "com.eclipsesource.json.JsonLiteral_Test",
+      "com.eclipsesource.json.JsonNumber_Test",
+      "com.eclipsesource.json.JsonObject_Test",
+      "com.eclipsesource.json.JsonParser_Test",
+      "com.eclipsesource.json.JsonString_Test",
+      "com.eclipsesource.json.JsonValue_Test",
+      "com.eclipsesource.json.JsonWriter_Test",
+      "com.eclipsesource.json.Json_Test",
+      "com.eclipsesource.json.ParseException_Test",
+      "com.eclipsesource.json.PrettyPrint_Test",
+      "com.eclipsesource.json.WritingBuffer_Test",
+      "com.eclipsesource.json.test.mocking.Mocking_Test"
+    ],
+    "mainFiles": 15,
+    "testFiles": 14,
+    "dependencies": [
+      {
+        "name": "junit-4.12.jar",
+        "url": "https://repo.maven.apache.org/maven2/junit/junit/4.12/junit-4.12.jar",
+        "bytes": 314932,
+        "sha256": "59721f0805e223d84b90677887d9ff567dc534d7c502ca903c0c2b17f05c116a",
+        "publishedSha1": "2973d150c0dc1fefe998f834810d68f278ea58ec"
+      },
+      {
+        "name": "hamcrest-core-1.3.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
+        "bytes": 45024,
+        "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+        "publishedSha1": "42a25dc3219429f0e5d060061f71acb49bf010a0"
+      },
+      {
+        "name": "mockito-core-1.10.19.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/mockito/mockito-core/1.10.19/mockito-core-1.10.19.jar",
+        "bytes": 1172979,
+        "sha256": "d5831ee4f71055800821a34a3051cf1ed5b3702f295ffebd50f65fb5d81a71b8",
+        "publishedSha1": "e8546f5bef4e061d8dd73895b4e8f40e3fe6effe"
+      },
+      {
+        "name": "objenesis-2.1.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/objenesis/objenesis/2.1/objenesis-2.1.jar",
+        "bytes": 41755,
+        "sha256": "c74330cc6b806c804fd37e74487b4fe5d7c2750c5e15fbc6efa13bdee1bdef80",
+        "publishedSha1": "87c0ea803b69252868d09308b4618f766f135a96"
+      }
+    ],
+    "adaptations": [
+      "Javac --release 8 replaces upstream Maven Java 1.5 target; production and test source unchanged",
+      "JUnitCore invokes every upstream library *Test class; benchmark and Maven packaging/API compatibility plugins are outside this check",
+      "--add-opens java.base/java.lang and java.base/java.io=ALL-UNNAMED for original Mockito 1.10.19 on JDK 25"
+    ],
+    "sourceHashes": {
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Json.java": "8f7b635d322d7173c47a56513fd03bd433e2c2c347c22c4d882043537acc4e86",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonArray.java": "24218384ea3c60b37a429516d87ed14fa82079424d1ccaaee7b5f561492cbfca",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonHandler.java": "28d9852618301979b54454beb5c595e76355d36980d474eb1d38823c523aad99",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonLiteral.java": "714b769728263c475282bdc760f5173a9150fb409dd56375dc0b95fa1dfb0002",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonNumber.java": "31c4ec810db716dfec71dc157cc727eb389c945e604ebb07e1f9bac3c6edef8d",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonObject.java": "d010113c72611a9f59e357d69e46c390ea6c54a6e6f5cd4fe506ef42fb7701a4",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java": "6d7982c6dd6e0bd70cacc1858ef980e5119d2ec9fe9fe2827b9d4a41359adfa8",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonString.java": "33c20c3ecc30a0c8aaca5b8900860e4f2d94842ba655b20847b1eba232de236e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonValue.java": "45594296f09551536cd4da2ea0bd49e23ec12745778035baa8562f921f72a3d8",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonWriter.java": "e63ba7ea82462d31cdc8e8c08fbd6a0b5921800f161e2e05e1097de1bff61d8b",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Location.java": "996b5711e4b14ec5bfdc36b2ac4f65f1ea55ba3d537438f8b93361ac8314481e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/ParseException.java": "9976c7caeae441dc07a6fa6eb44df17ede07ddc4aeb074e7e5c2833ccb279baa",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/PrettyPrint.java": "5f96a38abea6558450637307124f828acc9b46def236c28ad4f72a76453b1e98",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WriterConfig.java": "776982028a57a0a71d43230544950c2acf34b0f4d012c60425062637f0735f89",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WritingBuffer.java": "59ab7f9dbb9eaef09babd6ed329895ad2be576f13806214d22d68a2622b1d18d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonArray_Test.java": "a6c85bd876e7a4f8abc432cc9dd48d15f38402d85c75e44bc60a398e8b58a690",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonLiteral_Test.java": "81f255e1d75ae509209370791c1e4b8f0f688e9ce0f92c0f69140e6c384d31b8",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonNumber_Test.java": "fc78fb9c2f0d5ac3dbea0bc35431739111895b30dcb35f82c3d300416b56b294",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonObject_Test.java": "01f900b5b0de113232dd4d8325cd3810f371e5aca088fc99e991f4d310ce6f75",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonParser_Test.java": "3650854fb45fca347947a6902d57a993c44d65e7959139f006bbf341f2b1851f",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonString_Test.java": "db20ec1a4a00005d68964357a2235f95297d6bd112859b09c18c959c4d13e8b6",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonValue_Test.java": "1986247ee6c425305b315e6ea61e1d67c48478b7662be5ad8a7dec96caadd402",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonWriter_Test.java": "358c986b150256ebca9c06c2672d7f0cebce0347b7bf6ae21e7725d9dadecfb4",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/Json_Test.java": "56cf682474ce2be2cad13f00133fe2fd2b9e8a56f9ef11914fab83312e877511",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/ParseException_Test.java": "0a4e6cb478b1e4dcd0d8d5d5728b1d932741c2f835a038a6b28943de17a81f06",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/PrettyPrint_Test.java": "ff7735bdbe06c58f56674d420b02fb010633cea452bf5d584f05bcb99d0358ad",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/TestUtil.java": "08601db9edc406af0b776a9e6d4f53bb8b740cbf1c62e57f1a7b30685195dc5d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/WritingBuffer_Test.java": "671162fea4d21ef12e32e60fc145ee4e19eaa1a02aef527402b7462943a91335",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/test/mocking/Mocking_Test.java": "04f91eec014d1f81a82d337800a358aa9268e3cba87b5ce22ee373a3529c6f02"
+    },
+    "compile": {
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: [options] source value 8 is obsolete and will be removed in a future release\r\nwarning: [options] target value 8 is obsolete and will be removed in a future release\r\nwarning: [options] To suppress warnings about obsolete options, use -Xlint:-options.\r\n3 warnings\r\n"
+    },
+    "exitCode": 1,
+    "counts": {
+      "run": 452,
+      "passed": 439,
+      "failed": 13,
+      "ignored": 0,
+      "timeMs": 496
+    },
+    "failures": [
+      "parse_failsOnTooDeeplyNestedArray(com.eclipsesource.json.JsonParser_Test)\norg.junit.ComparisonFailure: expected:<...sting too deep at 1:[1002]> but was:<...sting too deep at 1:[3]>\r\n\tat org.junit.Assert.assertEquals(Assert.java:115)\r\n\tat org.junit.Assert.assertEquals(Assert.java:144)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_failsOnTooDeeplyNestedArray(JsonParser_Test.java:309)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "objects_illegalSyntax(com.eclipsesource.json.JsonParser_Test)\njava.lang.AssertionError: \nExpected: a string starting with \"Expected name at\"\n     but: was \"Nesting too deep at 1:2\"\r\n\tat org.hamcrest.MatcherAssert.assertThat(MatcherAssert.java:20)\r\n\tat org.junit.Assert.assertThat(Assert.java:956)\r\n\tat org.junit.Assert.assertThat(Assert.java:923)\r\n\tat com.eclipsesource.json.JsonParser_Test.assertParseException(JsonParser_Test.java:747)\r\n\tat com.eclipsesource.json.JsonParser_Test.objects_illegalSyntax(JsonParser_Test.java:502)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "arrays_nested(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:3\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:201)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:212)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.arrays_nested(JsonParser_Test.java:443)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "arrays_incomplete(com.eclipsesource.json.JsonParser_Test)\njava.lang.AssertionError: expected:<2> but was:<1>\r\n\tat org.junit.Assert.fail(Assert.java:88)\r\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\r\n\tat org.junit.Assert.assertEquals(Assert.java:645)\r\n\tat org.junit.Assert.assertEquals(Assert.java:631)\r\n\tat com.eclipsesource.json.JsonParser_Test.assertParseException(JsonParser_Test.java:746)\r\n\tat com.eclipsesource.json.JsonParser_Test.arrays_incomplete(JsonParser_Test.java:462)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "objects_incomplete(com.eclipsesource.json.JsonParser_Test)\njava.lang.AssertionError: expected:<2> but was:<1>\r\n\tat org.junit.Assert.fail(Assert.java:88)\r\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\r\n\tat org.junit.Assert.assertEquals(Assert.java:645)\r\n\tat org.junit.Assert.assertEquals(Assert.java:631)\r\n\tat com.eclipsesource.json.JsonParser_Test.assertParseException(JsonParser_Test.java:746)\r\n\tat com.eclipsesource.json.JsonParser_Test.objects_incomplete(JsonParser_Test.java:514)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "objects_nested(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:9\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readObject(JsonParser.java:227)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:177)\r\n\tat com.eclipsesource.json.JsonParser.readObject(JsonParser.java:246)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:177)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.objects_nested(JsonParser_Test.java:491)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_doesNotFailWithManyEmptyObjects(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:3\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readObject(JsonParser.java:227)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:177)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:212)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_doesNotFailWithManyEmptyObjects(JsonParser_Test.java:393)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_failsOnTooDeeplyNestedMixedObject(com.eclipsesource.json.JsonParser_Test)\norg.junit.ComparisonFailure: expected:<...sting too deep at 1:[4002]> but was:<...sting too deep at 1:[3]>\r\n\tat org.junit.Assert.assertEquals(Assert.java:115)\r\n\tat org.junit.Assert.assertEquals(Assert.java:144)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_failsOnTooDeeplyNestedMixedObject(JsonParser_Test.java:343)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_doesNotFailWithManyEmptyArrays(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:3\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:201)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:212)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_doesNotFailWithManyEmptyArrays(JsonParser_Test.java:367)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_doesNotFailWithManyObjects(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:3\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readObject(JsonParser.java:227)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:177)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:212)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_doesNotFailWithManyObjects(JsonParser_Test.java:380)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_doesNotFailWithManyArrays(com.eclipsesource.json.JsonParser_Test)\ncom.eclipsesource.json.ParseException: Nesting too deep at 1:3\r\n\tat com.eclipsesource.json.JsonParser.error(JsonParser.java:490)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:201)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.readArray(JsonParser.java:212)\r\n\tat com.eclipsesource.json.JsonParser.readValue(JsonParser.java:174)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:152)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:91)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:295)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_doesNotFailWithManyArrays(JsonParser_Test.java:354)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "arrays_illegalSyntax(com.eclipsesource.json.JsonParser_Test)\njava.lang.AssertionError: expected:<4> but was:<1>\r\n\tat org.junit.Assert.fail(Assert.java:88)\r\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\r\n\tat org.junit.Assert.assertEquals(Assert.java:645)\r\n\tat org.junit.Assert.assertEquals(Assert.java:631)\r\n\tat com.eclipsesource.json.JsonParser_Test.assertParseException(JsonParser_Test.java:746)\r\n\tat com.eclipsesource.json.JsonParser_Test.arrays_illegalSyntax(JsonParser_Test.java:455)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+      "parse_failsOnTooDeeplyNestedObject(com.eclipsesource.json.JsonParser_Test)\norg.junit.ComparisonFailure: expected:<...sting too deep at 1:[7002]> but was:<...sting too deep at 1:[9]>\r\n\tat org.junit.Assert.assertEquals(Assert.java:115)\r\n\tat org.junit.Assert.assertEquals(Assert.java:144)\r\n\tat com.eclipsesource.json.JsonParser_Test.parse_failsOnTooDeeplyNestedObject(JsonParser_Test.java:326)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n"
+    ],
+    "stderr": ""
+  },
+  "restored": {
+    "result": {
+      "id": "14d11050-829f-4f38-b5a9-63d9d06059c0",
+      "name": "minimal-json Java AST regression",
+      "folder": "minimal-json",
+      "file": "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java",
+      "sourceSha256": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+      "startedAt": "2026-10-16T11:37:50.725Z",
+      "status": "passed",
+      "stale": false,
+      "exitCode": 0,
+      "elapsedMs": 5171
+    },
+    "checkedAt": "2026-10-16T11:37:51.141Z",
+    "project": "https://github.com/ralfstx/minimal-json",
+    "commit": "5518c876226ae07f8291d6b41209bc3c979f4a55",
+    "java": "openjdk 25.0.4.1 2026-08-18 LTS\r\nOpenJDK Runtime Environment Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS, mixed mode, sharing)",
+    "testClasses": [
+      "com.eclipsesource.json.JsonArray_Test",
+      "com.eclipsesource.json.JsonLiteral_Test",
+      "com.eclipsesource.json.JsonNumber_Test",
+      "com.eclipsesource.json.JsonObject_Test",
+      "com.eclipsesource.json.JsonParser_Test",
+      "com.eclipsesource.json.JsonString_Test",
+      "com.eclipsesource.json.JsonValue_Test",
+      "com.eclipsesource.json.JsonWriter_Test",
+      "com.eclipsesource.json.Json_Test",
+      "com.eclipsesource.json.ParseException_Test",
+      "com.eclipsesource.json.PrettyPrint_Test",
+      "com.eclipsesource.json.WritingBuffer_Test",
+      "com.eclipsesource.json.test.mocking.Mocking_Test"
+    ],
+    "mainFiles": 15,
+    "testFiles": 14,
+    "dependencies": [
+      {
+        "name": "junit-4.12.jar",
+        "url": "https://repo.maven.apache.org/maven2/junit/junit/4.12/junit-4.12.jar",
+        "bytes": 314932,
+        "sha256": "59721f0805e223d84b90677887d9ff567dc534d7c502ca903c0c2b17f05c116a",
+        "publishedSha1": "2973d150c0dc1fefe998f834810d68f278ea58ec"
+      },
+      {
+        "name": "hamcrest-core-1.3.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar",
+        "bytes": 45024,
+        "sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+        "publishedSha1": "42a25dc3219429f0e5d060061f71acb49bf010a0"
+      },
+      {
+        "name": "mockito-core-1.10.19.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/mockito/mockito-core/1.10.19/mockito-core-1.10.19.jar",
+        "bytes": 1172979,
+        "sha256": "d5831ee4f71055800821a34a3051cf1ed5b3702f295ffebd50f65fb5d81a71b8",
+        "publishedSha1": "e8546f5bef4e061d8dd73895b4e8f40e3fe6effe"
+      },
+      {
+        "name": "objenesis-2.1.jar",
+        "url": "https://repo.maven.apache.org/maven2/org/objenesis/objenesis/2.1/objenesis-2.1.jar",
+        "bytes": 41755,
+        "sha256": "c74330cc6b806c804fd37e74487b4fe5d7c2750c5e15fbc6efa13bdee1bdef80",
+        "publishedSha1": "87c0ea803b69252868d09308b4618f766f135a96"
+      }
+    ],
+    "adaptations": [
+      "Javac --release 8 replaces upstream Maven Java 1.5 target; production and test source unchanged",
+      "JUnitCore invokes every upstream library *Test class; benchmark and Maven packaging/API compatibility plugins are outside this check",
+      "--add-opens java.base/java.lang and java.base/java.io=ALL-UNNAMED for original Mockito 1.10.19 on JDK 25"
+    ],
+    "sourceHashes": {
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Json.java": "8f7b635d322d7173c47a56513fd03bd433e2c2c347c22c4d882043537acc4e86",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonArray.java": "24218384ea3c60b37a429516d87ed14fa82079424d1ccaaee7b5f561492cbfca",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonHandler.java": "28d9852618301979b54454beb5c595e76355d36980d474eb1d38823c523aad99",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonLiteral.java": "714b769728263c475282bdc760f5173a9150fb409dd56375dc0b95fa1dfb0002",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonNumber.java": "31c4ec810db716dfec71dc157cc727eb389c945e604ebb07e1f9bac3c6edef8d",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonObject.java": "d010113c72611a9f59e357d69e46c390ea6c54a6e6f5cd4fe506ef42fb7701a4",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonParser.java": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonString.java": "33c20c3ecc30a0c8aaca5b8900860e4f2d94842ba655b20847b1eba232de236e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonValue.java": "45594296f09551536cd4da2ea0bd49e23ec12745778035baa8562f921f72a3d8",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/JsonWriter.java": "e63ba7ea82462d31cdc8e8c08fbd6a0b5921800f161e2e05e1097de1bff61d8b",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/Location.java": "996b5711e4b14ec5bfdc36b2ac4f65f1ea55ba3d537438f8b93361ac8314481e",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/ParseException.java": "9976c7caeae441dc07a6fa6eb44df17ede07ddc4aeb074e7e5c2833ccb279baa",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/PrettyPrint.java": "5f96a38abea6558450637307124f828acc9b46def236c28ad4f72a76453b1e98",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WriterConfig.java": "776982028a57a0a71d43230544950c2acf34b0f4d012c60425062637f0735f89",
+      "com.eclipsesource.json/src/main/java/com/eclipsesource/json/WritingBuffer.java": "59ab7f9dbb9eaef09babd6ed329895ad2be576f13806214d22d68a2622b1d18d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonArray_Test.java": "a6c85bd876e7a4f8abc432cc9dd48d15f38402d85c75e44bc60a398e8b58a690",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonLiteral_Test.java": "81f255e1d75ae509209370791c1e4b8f0f688e9ce0f92c0f69140e6c384d31b8",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonNumber_Test.java": "fc78fb9c2f0d5ac3dbea0bc35431739111895b30dcb35f82c3d300416b56b294",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonObject_Test.java": "01f900b5b0de113232dd4d8325cd3810f371e5aca088fc99e991f4d310ce6f75",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonParser_Test.java": "3650854fb45fca347947a6902d57a993c44d65e7959139f006bbf341f2b1851f",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonString_Test.java": "db20ec1a4a00005d68964357a2235f95297d6bd112859b09c18c959c4d13e8b6",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonValue_Test.java": "1986247ee6c425305b315e6ea61e1d67c48478b7662be5ad8a7dec96caadd402",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/JsonWriter_Test.java": "358c986b150256ebca9c06c2672d7f0cebce0347b7bf6ae21e7725d9dadecfb4",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/Json_Test.java": "56cf682474ce2be2cad13f00133fe2fd2b9e8a56f9ef11914fab83312e877511",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/ParseException_Test.java": "0a4e6cb478b1e4dcd0d8d5d5728b1d932741c2f835a038a6b28943de17a81f06",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/PrettyPrint_Test.java": "ff7735bdbe06c58f56674d420b02fb010633cea452bf5d584f05bcb99d0358ad",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/TestUtil.java": "08601db9edc406af0b776a9e6d4f53bb8b740cbf1c62e57f1a7b30685195dc5d",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/WritingBuffer_Test.java": "671162fea4d21ef12e32e60fc145ee4e19eaa1a02aef527402b7462943a91335",
+      "com.eclipsesource.json/src/test/java/com/eclipsesource/json/test/mocking/Mocking_Test.java": "04f91eec014d1f81a82d337800a358aa9268e3cba87b5ce22ee373a3529c6f02"
+    },
+    "compile": {
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: [options] source value 8 is obsolete and will be removed in a future release\r\nwarning: [options] target value 8 is obsolete and will be removed in a future release\r\nwarning: [options] To suppress warnings about obsolete options, use -Xlint:-options.\r\n3 warnings\r\n"
+    },
+    "exitCode": 0,
+    "counts": {
+      "run": 452,
+      "passed": 452,
+      "failed": 0,
+      "ignored": 0,
+      "timeMs": 481
+    },
+    "failures": [],
+    "stderr": ""
+  },
+  "originalRestored": true,
+  "restoredSha256": "fbb4b36589fbb6cd795aca555557aa7fcbe7fd2d7f04fcfac64e47aee5c1961e",
+  "preparationFailures": [
+    {
+      "issue": "Initial test class discovery flattened a helper subpackage and raised ClassNotFoundException for Mocking_Test. Corrected class names from their package-relative paths.",
+      "countedAsProjectResult": false
+    },
+    {
+      "issue": "Original Mockito 1.10.19 on JDK 25 required opening java.io as well as java.lang in this isolated test JVM. Before that change, original source ran 447 pass / 5 fail. No upstream tests or production source changed.",
+      "counts": {
+        "run": 452,
+        "passed": 447,
+        "failed": 5,
+        "ignored": 0,
+        "timeMs": 341
+      },
+      "failures": [
+        "writeTo_doesNotCloseWriter(com.eclipsesource.json.JsonValue_Test)\njava.lang.NullPointerException: Cannot invoke \"java.lang.StringBuffer.append(char[], int, int)\" because \"this.buf\" is null\r\n\tat java.base/java.io.StringWriter.write(StringWriter.java:99)\r\n\tat com.eclipsesource.json.WritingBuffer.flush(WritingBuffer.java:88)\r\n\tat com.eclipsesource.json.JsonValue.writeTo(JsonValue.java:437)\r\n\tat com.eclipsesource.json.JsonValue.writeTo(JsonValue.java:412)\r\n\tat com.eclipsesource.json.JsonValue_Test.writeTo_doesNotCloseWriter(JsonValue_Test.java:161)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+        "readFrom_reader_doesNotCloseReader(com.eclipsesource.json.JsonValue_Test)\njava.lang.NullPointerException: Cannot enter synchronized block because \"this.lock\" is null\r\n\tat java.base/java.io.StringReader.read(StringReader.java:87)\r\n\tat com.eclipsesource.json.JsonParser.read(JsonParser.java:435)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:150)\r\n\tat com.eclipsesource.json.JsonParser.parse(JsonParser.java:114)\r\n\tat com.eclipsesource.json.Json.parse(Json.java:320)\r\n\tat com.eclipsesource.json.JsonValue.readFrom(JsonValue.java:110)\r\n\tat com.eclipsesource.json.JsonValue_Test.readFrom_reader_doesNotCloseReader(JsonValue_Test.java:108)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+        "testIndentWithSpaces_createsIndependentInstances(com.eclipsesource.json.PrettyPrint_Test)\njava.lang.reflect.InaccessibleObjectException: Unable to make protected java.io.Writer(java.lang.Object) accessible: module java.base does not \"opens java.io\" to unnamed module @20fa23c1\r\n\tat java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)\r\n\tat java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:192)\r\n\tat java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:185)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:86)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:56)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:49)\r\n\tat org.mockito.internal.creation.cglib.CglibMockMaker.createMock(CglibMockMaker.java:24)\r\n\tat org.mockito.internal.util.MockUtil.createMock(MockUtil.java:33)\r\n\tat org.mockito.internal.MockitoCore.mock(MockitoCore.java:59)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1285)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1163)\r\n\tat com.eclipsesource.json.PrettyPrint_Test.testIndentWithSpaces_createsIndependentInstances(PrettyPrint_Test.java:118)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+        "testIndentWithTabs_createsIndependentInstances(com.eclipsesource.json.PrettyPrint_Test)\njava.lang.reflect.InaccessibleObjectException: Unable to make protected java.io.Writer(java.lang.Object) accessible: module java.base does not \"opens java.io\" to unnamed module @20fa23c1\r\n\tat java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)\r\n\tat java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:192)\r\n\tat java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:185)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:86)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:56)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:49)\r\n\tat org.mockito.internal.creation.cglib.CglibMockMaker.createMock(CglibMockMaker.java:24)\r\n\tat org.mockito.internal.util.MockUtil.createMock(MockUtil.java:33)\r\n\tat org.mockito.internal.MockitoCore.mock(MockitoCore.java:59)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1285)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1163)\r\n\tat com.eclipsesource.json.PrettyPrint_Test.testIndentWithTabs_createsIndependentInstances(PrettyPrint_Test.java:136)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n",
+        "testSingleLine_createsIndependentInstances(com.eclipsesource.json.PrettyPrint_Test)\njava.lang.reflect.InaccessibleObjectException: Unable to make protected java.io.Writer(java.lang.Object) accessible: module java.base does not \"opens java.io\" to unnamed module @20fa23c1\r\n\tat java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)\r\n\tat java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)\r\n\tat java.base/java.lang.reflect.Constructor.checkCanSetAccessible(Constructor.java:192)\r\n\tat java.base/java.lang.reflect.Constructor.setAccessible(Constructor.java:185)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.setConstructorsAccessible(ClassImposterizer.java:86)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:56)\r\n\tat org.mockito.internal.creation.cglib.ClassImposterizer.imposterise(ClassImposterizer.java:49)\r\n\tat org.mockito.internal.creation.cglib.CglibMockMaker.createMock(CglibMockMaker.java:24)\r\n\tat org.mockito.internal.util.MockUtil.createMock(MockUtil.java:33)\r\n\tat org.mockito.internal.MockitoCore.mock(MockitoCore.java:59)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1285)\r\n\tat org.mockito.Mockito.mock(Mockito.java:1163)\r\n\tat com.eclipsesource.json.PrettyPrint_Test.testSingleLine_createsIndependentInstances(PrettyPrint_Test.java:163)\r\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\r\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\r\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\r\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\r\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\r\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\r\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\r\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:128)\r\n\tat org.junit.runners.Suite.runChild(Suite.java:27)\r\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\r\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\r\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\r\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\r\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\r\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:137)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:115)\r\n\tat org.junit.runner.JUnitCore.run(JUnitCore.java:105)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:62)\r\n\tat org.junit.runner.JUnitCore.runClasses(JUnitCore.java:49)\r\n\tat PureobomJUnitRunner.main(PureobomJUnitRunner.java:10)\r\n"
+      ]
+    }
+  ]
+}

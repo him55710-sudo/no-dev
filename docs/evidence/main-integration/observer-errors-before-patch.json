@@ -1,0 +1,347 @@
+[
+  {
+    "message": "ResizeObserver loop completed with undelivered notifications.",
+    "at": "2026-10-20T00:14:31.388Z",
+    "recentRequests": [
+      {
+        "action": "saveNavigation",
+        "at": "2026-10-20T00:14:03.804Z",
+        "navigation": {
+          "generation": 1,
+          "revision": 4,
+          "view": {
+            "selection": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+            "scopeTrail": [
+              "system",
+              "feature:2aa38db8-34b0-4f3e-a480-857266032c5e"
+            ],
+            "included": [],
+            "connections": [],
+            "expanded": [
+              "system"
+            ],
+            "search": "",
+            "focus": false,
+            "canvases": [
+              {
+                "scopeId": "system",
+                "viewport": {
+                  "x": -17.636363636363654,
+                  "y": -4.181818181818187,
+                  "zoom": 0.9545454545454546
+                },
+                "positions": []
+              },
+              {
+                "scopeId": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+                "viewport": {
+                  "x": -5.242718446601941,
+                  "y": -3.635922330097088,
+                  "zoom": 1.174757281553398
+                },
+                "positions": []
+              }
+            ]
+          }
+        },
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.186Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.217Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.247Z",
+        "ok": true
+      },
+      {
+        "action": "saveSpec",
+        "at": "2026-10-20T00:14:27.251Z",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "message": "ResizeObserver loop completed with undelivered notifications.",
+    "at": "2026-10-20T00:14:31.453Z",
+    "recentRequests": [
+      {
+        "action": "saveNavigation",
+        "at": "2026-10-20T00:14:03.804Z",
+        "navigation": {
+          "generation": 1,
+          "revision": 4,
+          "view": {
+            "selection": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+            "scopeTrail": [
+              "system",
+              "feature:2aa38db8-34b0-4f3e-a480-857266032c5e"
+            ],
+            "included": [],
+            "connections": [],
+            "expanded": [
+              "system"
+            ],
+            "search": "",
+            "focus": false,
+            "canvases": [
+              {
+                "scopeId": "system",
+                "viewport": {
+                  "x": -17.636363636363654,
+                  "y": -4.181818181818187,
+                  "zoom": 0.9545454545454546
+                },
+                "positions": []
+              },
+              {
+                "scopeId": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+                "viewport": {
+                  "x": -5.242718446601941,
+                  "y": -3.635922330097088,
+                  "zoom": 1.174757281553398
+                },
+                "positions": []
+              }
+            ]
+          }
+        },
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.186Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.217Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.247Z",
+        "ok": true
+      },
+      {
+        "action": "saveSpec",
+        "at": "2026-10-20T00:14:27.251Z",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "message": "ResizeObserver loop completed with undelivered notifications.",
+    "at": "2026-10-20T00:14:31.470Z",
+    "recentRequests": [
+      {
+        "action": "saveNavigation",
+        "at": "2026-10-20T00:14:03.804Z",
+        "navigation": {
+          "generation": 1,
+          "revision": 4,
+          "view": {
+            "selection": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+            "scopeTrail": [
+              "system",
+              "feature:2aa38db8-34b0-4f3e-a480-857266032c5e"
+            ],
+            "included": [],
+            "connections": [],
+            "expanded": [
+              "system"
+            ],
+            "search": "",
+            "focus": false,
+            "canvases": [
+              {
+                "scopeId": "system",
+                "viewport": {
+                  "x": -17.636363636363654,
+                  "y": -4.181818181818187,
+                  "zoom": 0.9545454545454546
+                },
+                "positions": []
+              },
+              {
+                "scopeId": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+                "viewport": {
+                  "x": -5.242718446601941,
+                  "y": -3.635922330097088,
+                  "zoom": 1.174757281553398
+                },
+                "positions": []
+              }
+            ]
+          }
+        },
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.186Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.217Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.247Z",
+        "ok": true
+      },
+      {
+        "action": "saveSpec",
+        "at": "2026-10-20T00:14:27.251Z",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "message": "ResizeObserver loop completed with undelivered notifications.",
+    "at": "2026-10-20T00:14:31.486Z",
+    "recentRequests": [
+      {
+        "action": "saveNavigation",
+        "at": "2026-10-20T00:14:03.804Z",
+        "navigation": {
+          "generation": 1,
+          "revision": 4,
+          "view": {
+            "selection": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+            "scopeTrail": [
+              "system",
+              "feature:2aa38db8-34b0-4f3e-a480-857266032c5e"
+            ],
+            "included": [],
+            "connections": [],
+            "expanded": [
+              "system"
+            ],
+            "search": "",
+            "focus": false,
+            "canvases": [
+              {
+                "scopeId": "system",
+                "viewport": {
+                  "x": -17.636363636363654,
+                  "y": -4.181818181818187,
+                  "zoom": 0.9545454545454546
+                },
+                "positions": []
+              },
+              {
+                "scopeId": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+                "viewport": {
+                  "x": -5.242718446601941,
+                  "y": -3.635922330097088,
+                  "zoom": 1.174757281553398
+                },
+                "positions": []
+              }
+            ]
+          }
+        },
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.186Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.217Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.247Z",
+        "ok": true
+      },
+      {
+        "action": "saveSpec",
+        "at": "2026-10-20T00:14:27.251Z",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "message": "ResizeObserver loop completed with undelivered notifications.",
+    "at": "2026-10-20T00:14:31.504Z",
+    "recentRequests": [
+      {
+        "action": "saveNavigation",
+        "at": "2026-10-20T00:14:03.804Z",
+        "navigation": {
+          "generation": 1,
+          "revision": 4,
+          "view": {
+            "selection": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+            "scopeTrail": [
+              "system",
+              "feature:2aa38db8-34b0-4f3e-a480-857266032c5e"
+            ],
+            "included": [],
+            "connections": [],
+            "expanded": [
+              "system"
+            ],
+            "search": "",
+            "focus": false,
+            "canvases": [
+              {
+                "scopeId": "system",
+                "viewport": {
+                  "x": -17.636363636363654,
+                  "y": -4.181818181818187,
+                  "zoom": 0.9545454545454546
+                },
+                "positions": []
+              },
+              {
+                "scopeId": "feature:2aa38db8-34b0-4f3e-a480-857266032c5e",
+                "viewport": {
+                  "x": -5.242718446601941,
+                  "y": -3.635922330097088,
+                  "zoom": 1.174757281553398
+                },
+                "positions": []
+              }
+            ]
+          }
+        },
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.186Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.217Z",
+        "ok": true
+      },
+      {
+        "action": "saveDraft",
+        "at": "2026-10-20T00:14:08.247Z",
+        "ok": true
+      },
+      {
+        "action": "saveSpec",
+        "at": "2026-10-20T00:14:27.251Z",
+        "ok": true
+      }
+    ]
+  }
+]

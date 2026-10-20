@@ -239,7 +239,15 @@ const observationChange=document.getElementById('observation-change');if(observa
       }
       const payload = JSON.parse(body);
       if (url.pathname === prefix + "/client-error") {
-        clientErrors.push(payload);
+        clientErrors.push({
+          ...payload,
+          at: new Date().toISOString(),
+          recentRequests: requests.slice(-5),
+        });
+        await writeFile(
+          resolve(directory, "client-errors.json"),
+          JSON.stringify(clientErrors, null, 2) + "\n",
+        );
         return send(200, {});
       }
       if (url.pathname === prefix + "/observation-change") {

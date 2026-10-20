@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Story } from "../../src/components/Story";
+import { ReadingView } from "./ReadingView";
+import { RuleWorkbench } from "./RuleWorkbench";
+import { BeginnerWorkspace } from "./BeginnerWorkspace";
 import { MapView } from "../../src/components/MapView";
 import { ScenarioLab } from "../../src/components/ScenarioLab";
 import { Terminology } from "../../src/components/Terminology";
@@ -9,14 +11,18 @@ import { EditorProblems } from "./EditorProblems";
 import { LocalAssistant } from "./LocalAssistant";
 import { ProjectChecks } from "./ProjectChecks";
 import type { ScenarioReport } from "../../src/core/scenarioModel";
-import type { Lang, Rule, Simulation } from "../../src/core/types";
-import type { PatchSummary, ViewState } from "../src/protocol";
+import type { Lang, Rule, Simulation, Words } from "../../src/core/types";
+import type { FormatSummary, PatchSummary, ViewState } from "../src/protocol";
 import { host, request } from "./bridge";
 import "./style.css";
+import "./journey.css";
 
 type Tab = "story" | "rules" | "checks" | "map" | "local";
 function App() {
-  const saved = host.getState() as { lang?: Lang } | undefined;
+  const saved = host.getState() as
+    | { lang?: Lang; beginner?: boolean }
+    | undefined;
+  const [beginner, setBeginner] = useState(saved?.beginner !== false);
   const [lang, setLang] = useState<Lang>(saved?.lang === "en" ? "en" : "ko");
   const [state, setState] = useState<ViewState>({
     contextId: "",
@@ -27,8 +33,12 @@ function App() {
     busy: false,
   });
   const [tab, setTab] = useState<Tab>("story");
+  const [assistantFocus, setAssistantFocus] = useState<{
+    context: string;
+    id: string;
+  }>();
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState<Words>();
   const [help, setHelp] = useState(false);
   const [working, setWorking] = useState(false);
   const [edit, setEdit] = useState<Rule>();
@@ -39,9 +49,12 @@ function App() {
   const [args, setArgs] = useState("[50000]");
   const [simulation, setSimulation] = useState<Simulation>();
   const context = useRef("");
+  const draftRevision = useRef(0);
   const editorRef = useRef<HTMLDivElement>(null);
   const patchRef = useRef<HTMLElement>(null);
   const simulationRef = useRef<HTMLElement>(null);
+  const noticeRef = useRef<HTMLDivElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const ko = lang === "ko",
     a = state.analysis;
   const disabled = working || state.busy || !a;
@@ -54,6 +67,8 @@ function App() {
       if (e.data?.type !== "state") return;
       const next = e.data.state as ViewState;
       if (context.current !== next.contextId) {
+        draftRevision.current++;
+        setNotice(undefined);
         setPatch(undefined);
         setEdit(undefined);
         setSimulation(undefined);
@@ -62,20 +77,31 @@ function App() {
         context.current = next.contextId;
       }
       setState(next);
-      if (next.tab === "map") setTab("map");
-      if (next.tab === "local") setTab("local");
+      if (next.tab === "map") {
+        setTab("map");
+        setBeginner(false);
+      }
+      if (next.tab === "local") {
+        setTab("local");
+        setBeginner(false);
+      }
     };
     window.addEventListener("message", receive);
     void request("ready").catch((e) => setError(e.message));
     return () => window.removeEventListener("message", receive);
   }, []);
   useEffect(() => {
-    host.setState({ lang });
-  }, [lang]);
+    host.setState({ lang, beginner });
+    document.documentElement.lang = beginner ? "ko" : lang;
+  }, [lang, beginner]);
+  useEffect(() => {
+    if (error || state.error) errorRef.current?.focus();
+    else if (notice) noticeRef.current?.focus();
+  }, [error, state.error, notice]);
   async function action(job: () => Promise<void>) {
     setWorking(true);
     setError("");
-    setNotice("");
+    setNotice(undefined);
     try {
       await job();
     } catch (e) {
@@ -85,6 +111,7 @@ function App() {
     }
   }
   function selectRule(rule: Rule) {
+    draftRevision.current++;
     setEdit(rule);
     setValue(String(rule.value));
     setPatch(undefined);
@@ -103,21 +130,58 @@ function App() {
   }
   async function prepare(payload: Record<string, unknown>) {
     const id = context.current;
+    const draft = draftRevision.current;
     const result = await request<PatchSummary>("prepare", payload, id);
-    if (id === context.current) {
+    if (id === context.current && draft === draftRevision.current) {
       setPatch(result);
-      requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
         patchRef.current?.scrollIntoView({
           behavior: "smooth",
           block: "center",
-        }),
-      );
+        });
+        patchRef.current?.focus({ preventScroll: true });
+      });
     }
+  }
+  async function format(functionId: string) {
+    const id = context.current,
+      draft = ++draftRevision.current;
+    setPatch(undefined);
+    setEdit(undefined);
+    const result = await request<FormatSummary>(
+      "formatFunction",
+      { functionId },
+      id,
+    );
+    if (id !== context.current || draft !== draftRevision.current) return;
+    if ("unchanged" in result) {
+      setNotice(result.description);
+      return;
+    }
+    setPatch(result);
+    setTab("rules");
+    requestAnimationFrame(() => {
+      patchRef.current?.scrollIntoView({ block: "center" });
+      patchRef.current?.focus({ preventScroll: true });
+    });
   }
   const source = (line: number) =>
     void action(() => request("source", { line }, state.contextId));
+  if (beginner)
+    return (
+      <BeginnerWorkspace
+        state={state}
+        advanced={(next = "story") => {
+          setTab(next);
+          setBeginner(false);
+        }}
+      />
+    );
   return (
     <div className="app">
+      <button className="beginner-return" onClick={() => setBeginner(true)}>
+        ← 쉬운 화면으로 돌아가기
+      </button>
       <header className="app-header">
         <div className="brand">
           <span className="brand-icon">풀</span>
@@ -154,12 +218,11 @@ function App() {
           <span className="pill">
             {state.busy
               ? t("설명 업데이트 중…", "Updating…")
-              : a?.kind === "text"
-                ? t(
-                    "로컬 AI로 설명 요청 가능",
-                    "Local AI explanation available",
-                  )
-                : t("내 컴퓨터에서 분석", "Analyzed locally")}
+              : !a
+                ? t("지원 파일을 기다리는 중", "Waiting for a supported file")
+                : a.kind === "text"
+                  ? t("문법 기반 설명 미제공", "No built-in syntax explanation")
+                  : t("내 컴퓨터에서 분석", "Analyzed locally")}
           </span>
           {state.path && (
             <span>
@@ -168,12 +231,22 @@ function App() {
                 : t("저장된 내용", "Saved content")}
             </span>
           )}
-          {a && a.kind !== "text" && (
+          {a?.web ? (
+            <span>
+              {a.web.nodes} {t("개 원문 항목", "source entries")} ·{" "}
+              {a.rules.length} {t("개 수정 가능", "editable values")}
+            </span>
+          ) : a && a.kind === "json" ? (
+            <span>
+              {a.data?.fields.length ?? 0} {t("개 데이터 항목", "data entries")}{" "}
+              · {a.rules.length} {t("개 수정 가능", "editable values")}
+            </span>
+          ) : a && a.kind === "script" ? (
             <span>
               {a.functions.length} {t("개 기능", "functions")} ·{" "}
               {a.rules.length} {t("개 규칙", "rules")}
             </span>
-          )}
+          ) : null}
           <button
             disabled={working || state.busy}
             onClick={() => void action(() => request("refresh"))}
@@ -191,29 +264,44 @@ function App() {
         </p>
       )}
       {(error || state.error) && (
-        <p className="banner error" role="alert">
+        <p className="banner error" role="alert" ref={errorRef} tabIndex={-1}>
           {error || state.error}
         </p>
       )}
       {notice && (
-        <p className="banner success" role="status">
-          {notice}
-        </p>
+        <div
+          className="banner success"
+          role="status"
+          ref={noticeRef}
+          tabIndex={-1}
+        >
+          <p>{notice[lang]}</p>
+          <button onClick={() => setTab("checks")}>
+            {t("확인하기로 이동 →", "Go to Check →")}
+          </button>
+        </div>
       )}
-      {state.path && state.diagnostics && (
-        <button className="diagnostic-summary" onClick={() => setTab("checks")}>
-          <span>{t("편집기 알림", "Editor reports")}</span>
-          <strong>
-            {t("오류", "Errors")} {state.diagnostics.errors} ·{" "}
-            {t("경고", "Warnings")} {state.diagnostics.warnings}
-          </strong>
-          <span>
-            {state.diagnostics.status === "edited"
-              ? t("코드 변경 후 갱신 대기", "Awaiting reports after edit")
-              : t("내용 확인 →", "Review →")}
-          </span>
-        </button>
-      )}
+      {state.path &&
+        state.diagnostics &&
+        (state.diagnostics.errors > 0 ||
+          state.diagnostics.warnings > 0 ||
+          state.diagnostics.status === "edited") && (
+          <button
+            className="diagnostic-summary"
+            onClick={() => setTab("checks")}
+          >
+            <span>{t("편집기 알림", "Editor reports")}</span>
+            <strong>
+              {t("오류", "Errors")} {state.diagnostics.errors} ·{" "}
+              {t("경고", "Warnings")} {state.diagnostics.warnings}
+            </strong>
+            <span>
+              {state.diagnostics.status === "edited"
+                ? t("코드 변경 후 갱신 대기", "Awaiting reports after edit")
+                : t("내용 확인 →", "Review →")}
+            </span>
+          </button>
+        )}
       {!a && !state.busy ? (
         <section className="empty card">
           <h2>
@@ -224,8 +312,8 @@ function App() {
           </h2>
           <p>
             {t(
-              "JavaScript 또는 TypeScript 파일을 열면 기능, 조건, 바꿀 수 있는 값을 보여 드립니다. JSON 파일도 읽을 수 있습니다.",
-              "Open a JavaScript, TypeScript or JSON file to explore its logic and editable values.",
+              "프로젝트의 파일을 열면 설명이 나타나요. 처음이라면 작은 예제로 이해하기 → 바꾸기 → 확인하기를 따라가 보세요.",
+              "Open a project file to read it. New here? Try a small example and follow Understand → Change → Check.",
             )}
           </p>
           <button
@@ -236,8 +324,8 @@ function App() {
           </button>
           <p className="muted">
             {t(
-              "외부 AI 서비스와 API 키 없이 작동합니다.",
-              "No external AI service or API key required.",
+              "기본 설명에는 API 키가 필요 없어요. AI 도움은 원할 때 따로 사용할 수 있습니다.",
+              "Built-in explanations need no API key. AI help is an optional separate tool.",
             )}
           </p>
         </section>
@@ -246,19 +334,24 @@ function App() {
           <nav className="tabs" aria-label={t("설명 보기 방식", "Views")}>
             {(
               [
-                ["story", "문장으로 읽기", "Story"],
-                ["rules", "규칙 바꾸기", "Rules"],
-                ["checks", "검토할 부분", "Review"],
-                ["map", "연결 지도", "Map"],
-                ["local", "로컬 AI", "Local AI"],
+                ["story", "이해하기", "Understand"],
+                ["rules", "바꾸기", "Change"],
+                ["checks", "확인하기", "Check"],
+                ["map", "연결 지도", "Connections"],
+                ["local", "AI 도움", "AI help"],
               ] as const
-            ).map(([key, korean, english]) => (
+            ).map(([key, korean, english], index) => (
               <button
                 key={key}
                 aria-pressed={tab === key}
-                className={tab === key ? "selected" : ""}
+                className={`${tab === key ? "selected" : ""} ${index > 2 ? "tool-nav" : "journey-nav"}`}
                 onClick={() => setTab(key)}
               >
+                {index < 3 && (
+                  <span className="nav-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                )}
                 {t(korean, english)}
                 {key === "checks" && !!a?.issues.length && (
                   <span className="count">{a.issues.length}</span>
@@ -267,19 +360,93 @@ function App() {
             ))}
           </nav>
           <main aria-busy={state.busy}>
+            {state.language === "go" && state.busy ? (
+              <p role="status">
+                {t(
+                  "Go 구문을 읽고 있습니다. 처음 사용할 때는 설치된 Go로 읽기 도구를 준비해 시간이 더 걸릴 수 있습니다.",
+                  "Reading Go syntax. The first use may take longer while the installed Go SDK builds the reader.",
+                )}
+              </p>
+            ) : null}
+            {state.language === "java" && state.busy ? (
+              <p role="status">
+                {t(
+                  "Java 구문을 읽고 있습니다. 처음 사용할 때는 설치된 JDK로 읽기 도구를 준비합니다.",
+                  "Reading Java syntax. The first use prepares the reader with the installed JDK.",
+                )}
+              </p>
+            ) : null}
+            {state.language === "csharp" && state.busy ? (
+              <p role="status">
+                {t(
+                  "C# 구문을 읽고 있습니다. 처음 사용할 때는 설치된 .NET SDK로 읽기 도구를 준비합니다.",
+                  "Reading C# syntax. The first use prepares the reader with the installed .NET SDK.",
+                )}
+              </p>
+            ) : null}
+            {state.pythonNotice ||
+            state.goNotice ||
+            state.javaNotice ||
+            state.csharpNotice ||
+            state.rustNotice ? (
+              <section className="card" role="status">
+                <p>
+                  {state.pythonNotice ||
+                    state.goNotice ||
+                    state.javaNotice ||
+                    state.csharpNotice ||
+                    state.rustNotice}
+                </p>
+                {state.csharpNotice ? (
+                  <p>
+                    {t(
+                      ".NET SDK 8 이상을 설치하세요. 런타임만으로는 부족합니다. 필요하면 pureobom.analysisDotnet에 dotnet 실행 파일의 절대 경로를 지정하고 새로 읽기를 누르세요. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install .NET SDK 8 or later; a runtime alone is insufficient. Optionally set the absolute dotnet executable in pureobom.analysisDotnet and refresh. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
+                {state.javaNotice ? (
+                  <p>
+                    {t(
+                      "JDK 21 이상을 설치하세요. 필요한 경우 pureobom.analysisJavaHome에 JDK 폴더의 절대 경로를 지정할 수 있습니다. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install JDK 21 or later. Optionally set the absolute JDK directory in pureobom.analysisJavaHome. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
+                {state.goNotice ? (
+                  <p>
+                    {t(
+                      "Go SDK 설치 후 pureobom.analysisGo 설정에서 실행 파일 경로를 지정할 수 있습니다. 로컬 데스크톱 작업 공간에서 사용하세요.",
+                      "Install a Go SDK and optionally set its executable path in pureobom.analysisGo. Use a local desktop workspace.",
+                    )}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
             {a && tab === "local" && (
               <>
-                <LocalAssistant state={state} lang={lang} />
+                <LocalAssistant
+                  state={state}
+                  lang={lang}
+                  initialFocus={assistantFocus}
+                />
                 <ProjectChecks state={state} lang={lang} />
               </>
             )}
             {a?.kind === "text" && tab !== "local" && (
               <section className="card">
                 <p>
-                  {t(
-                    "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
-                    "Syntax-grounded explanation is not available for this language yet. Local AI can propose explanations and changes for the current file.",
-                  )}
+                  {["python", "go", "java", "csharp", "rust"].includes(
+                    state.language || "",
+                  )
+                    ? t(
+                        "구문 읽기 도구를 사용할 수 없습니다. 위 안내를 확인하거나 로컬 AI에서 설명을 요청할 수 있습니다.",
+                        "The syntax reader is unavailable. Check the notice above or request a local AI explanation.",
+                      )
+                    : t(
+                        "이 언어의 문법 기반 설명은 아직 제공하지 않습니다. 로컬 AI에서 현재 파일의 설명이나 변경을 요청할 수 있습니다.",
+                        "Syntax-grounded explanation is not available for this language yet. Local AI can propose explanations and changes for the current file.",
+                      )}
                 </p>
                 <button onClick={() => setTab("local")}>
                   {t("로컬 AI 열기", "Open local AI")}
@@ -287,285 +454,195 @@ function App() {
               </section>
             )}
             {a && tab === "story" && (
-              <>
-                <Terminology
-                  key={a.path}
-                  terms={a.terms || []}
-                  lang={lang}
-                  disabled={disabled}
-                  onSource={source}
-                  onSave={async (symbolId, label) => {
-                    await request(
-                      "term",
-                      { symbolId, label, lang },
+              <ReadingView
+                key={a.path}
+                analysis={a}
+                lang={lang}
+                disabled={disabled}
+                editDisabled={disabled || !state.trusted}
+                onSource={source}
+                onEdit={selectRule}
+                onRules={() => setTab("rules")}
+                onChecks={() => setTab("checks")}
+                onMap={() => setTab("map")}
+                onExplain={(id) => {
+                  setAssistantFocus({ context: state.contextId, id });
+                  setTab("local");
+                }}
+                onFormat={
+                  state.language &&
+                  [
+                    "javascript",
+                    "javascriptreact",
+                    "typescript",
+                    "typescriptreact",
+                  ].includes(state.language)
+                    ? (functionId) => void action(() => format(functionId))
+                    : undefined
+                }
+                terminology={
+                  <Terminology
+                    key={a.path}
+                    terms={a.terms || []}
+                    lang={lang}
+                    disabled={disabled}
+                    onSource={source}
+                    onSave={async (symbolId, label) => {
+                      await request(
+                        "term",
+                        { symbolId, label, lang },
+                        state.contextId,
+                      );
+                      setNotice({
+                        ko: "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
+                        en: "Your term is now used in explanations. Source names are unchanged.",
+                      });
+                    }}
+                  />
+                }
+                onSqlDialect={(dialect) =>
+                  void action(() =>
+                    request(
+                      "sqlDialect",
+                      { dialect: dialect || "" },
                       state.contextId,
-                    );
-                    setNotice(
-                      t(
-                        "내 용어를 설명에 반영했습니다. 원본 코드 이름은 유지됩니다.",
-                        "Your term is now used in explanations. Source names are unchanged.",
-                      ),
-                    );
-                  }}
-                />
-                <Story
-                  analysis={a}
-                  lang={lang}
-                  onSource={source}
-                  onEdit={selectRule}
-                  onSimulate={(name) => {
-                    setFn(name);
-                    setSimulation(undefined);
-                    setArgs("[]");
-                    requestAnimationFrame(() =>
-                      simulationRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      }),
-                    );
-                  }}
-                />
-              </>
+                    ),
+                  )
+                }
+                onSimulate={(name) => {
+                  setFn(name);
+                  setTab("checks");
+                  setSimulation(undefined);
+                  setArgs("[]");
+                }}
+              />
             )}
             {a && tab === "rules" && (
-              <>
-                <div className="section-heading">
-                  <div>
-                    <span className="eyebrow">EDIT THE RULES</span>
-                    <h2>
-                      {t(
-                        "원하는 동작에 맞게 값을 바꾸세요",
-                        "Adjust the rules",
-                      )}
-                    </h2>
-                  </div>
-                </div>
-                <p className="muted">
-                  {t(
-                    "상수, 문구, 참·거짓과 비교 방식을 수정할 수 있습니다. 자유로운 변경 제안은 로컬 AI 탭에서 요청하세요.",
-                    "Edit constants, text, booleans and comparisons. Request broader changes in the local AI tab.",
-                  )}
-                </p>
-                <form
-                  className="sentence"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    void action(() => prepare({ request: sentence }));
-                  }}
-                >
-                  <label htmlFor="sentence">
-                    {t("문장으로 변경 요청", "Request a change")}
-                  </label>
-                  <div className="input-row">
-                    <input
-                      id="sentence"
-                      value={sentence}
-                      onChange={(e) => setSentence(e.target.value)}
-                      placeholder={t(
-                        "무료 배송 기준을 70000으로 변경",
-                        "Change freeShippingThreshold to 70000",
-                      )}
-                    />
-                    <button
-                      disabled={
-                        disabled ||
-                        !state.trusted ||
-                        !sentence.trim() ||
-                        !a.syntaxValid
+              <RuleWorkbench
+                key={a.path}
+                analysis={a}
+                lang={lang}
+                disabled={disabled}
+                trusted={state.trusted}
+                edit={edit}
+                value={value}
+                patch={patch}
+                sentence={sentence}
+                onSelect={selectRule}
+                onValue={(next) => {
+                  draftRevision.current++;
+                  setValue(next);
+                  setPatch(undefined);
+                }}
+                onSentence={(next) => {
+                  draftRevision.current++;
+                  setSentence(next);
+                  setPatch(undefined);
+                }}
+                onPrepare={(payload) => void action(() => prepare(payload))}
+                onClose={() => {
+                  draftRevision.current++;
+                  setEdit(undefined);
+                  setPatch(undefined);
+                }}
+                onSource={source}
+                editorRef={editorRef}
+                patchRef={patchRef}
+                onPreview={() =>
+                  void action(async () => {
+                    const reviewing = patch!;
+                    await request(
+                      "preview",
+                      { id: reviewing.id, lang },
+                      state.contextId,
+                    );
+                    setPatch((current) =>
+                      current?.id === reviewing.id
+                        ? { ...current, reviewed: true }
+                        : current,
+                    );
+                  })
+                }
+                onApply={() =>
+                  void action(async () => {
+                    await request("apply", { id: patch!.id }, state.contextId);
+                    setPatch(undefined);
+                    setNotice({
+                      ko: "편집기에 적용했어요. Ctrl+Z로 되돌릴 수 있습니다. 확인하기에서 결과를 살펴보세요.",
+                      en: "Applied to the editor. Undo with Ctrl+Z. Review the result in Check.",
+                    });
+                  })
+                }
+                comparison={
+                  patch && scenarioFn ? (
+                    <ScenarioLab
+                      key={`${state.contextId}:${patch.id}:${scenarioFn.name}`}
+                      fn={scenarioFn}
+                      rules={a.rules}
+                      lang={lang}
+                      revision={`${state.contextId}:${patch.id}`}
+                      change={patch}
+                      disabled={disabled}
+                      run={(scenarios) =>
+                        request<ScenarioReport>(
+                          "compare",
+                          {
+                            name: scenarioFn.name,
+                            scenarios,
+                            patchId: patch.id,
+                          },
+                          state.contextId,
+                        )
                       }
-                    >
-                      {t("변경안 만들기", "Preview change")}
-                    </button>
-                  </div>
-                  <small>
-                    {t(
-                      "아래 표의 규칙 이름과 새 값 하나를 적어 주세요. 7만 → 70000, 15% → 0.15",
-                      "Use one rule name and one new value. Write 70000 or 0.15 without units.",
-                    )}
-                  </small>
-                </form>
-                <div className="table-scroll card">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>{t("규칙", "Rule")}</th>
-                        <th>{t("현재 값", "Value")}</th>
-                        <th>{t("위치", "Location")}</th>
-                        <th>{t("수정", "Edit")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {a.rules.map((rule) => (
-                        <tr key={rule.id}>
-                          <td>
-                            <strong>{rule.label[lang]}</strong>
-                            <small className="mono">{rule.name}</small>
-                          </td>
-                          <td className="mono">{String(rule.value)}</td>
-                          <td>
-                            <button
-                              className="line-link"
-                              onClick={() => source(rule.line)}
-                            >
-                              L{rule.line}
-                            </button>
-                          </td>
-                          <td>
-                            <button
-                              disabled={
-                                disabled || !state.trusted || !a.syntaxValid
-                              }
-                              onClick={() => selectRule(rule)}
-                            >
-                              {t("바꾸기", "Edit")}
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {a.rules.length === 0 && (
-                    <p className="empty">
-                      {t(
-                        "이 파일에서 지원되는 편집 규칙을 찾지 못했습니다.",
-                        "No supported editable rules in this file.",
-                      )}
-                    </p>
-                  )}
-                </div>
-                {edit && (
-                  <div className="card rule-editor" ref={editorRef}>
-                    <h3>{edit.label[lang]}</h3>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void action(() => prepare({ ruleId: edit.id, value }));
-                      }}
-                    >
-                      <label htmlFor="rule-value">
-                        {t("새 값", "New value")}
-                      </label>
-                      <div className="input-row">
-                        {edit.type === "boolean" || edit.type === "operator" ? (
-                          <select
-                            id="rule-value"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                          >
-                            {(edit.type === "boolean"
-                              ? ["true", "false"]
-                              : [">=", ">", "<=", "<", "===", "!==", "==", "!="]
-                            ).map((v) => (
-                              <option key={v} value={v}>
-                                {v}
-                              </option>
-                            ))}
-                          </select>
-                        ) : edit.type === "string" ? (
-                          <textarea
-                            id="rule-value"
-                            value={value}
-                            rows={3}
-                            onChange={(e) => setValue(e.target.value)}
-                          />
-                        ) : (
-                          <input
-                            id="rule-value"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                          />
-                        )}
-                        <button
-                          className="primary"
-                          disabled={disabled || !state.trusted}
-                        >
-                          {t("변경안 만들기", "Preview change")}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEdit(undefined);
-                            setPatch(undefined);
-                          }}
-                        >
-                          {t("닫기", "Close")}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                )}
-                {patch && (
-                  <section
-                    className="card patch"
-                    ref={patchRef}
-                    aria-label={t("변경 미리보기", "Change preview")}
-                  >
-                    <span className="eyebrow">
-                      {t("적용 전 확인", "REVIEW BEFORE APPLYING")}
-                    </span>
-                    <h3>{patch.description[lang]}</h3>
-                    <div className="diff">
-                      <div>
-                        <small>{t("현재", "Before")}</small>
-                        <code>{patch.oldText}</code>
-                      </div>
-                      <span>→</span>
-                      <div>
-                        <small>{t("변경 후", "After")}</small>
-                        <code>{patch.newText}</code>
-                      </div>
-                    </div>
-                    <p>
-                      {t(
-                        "문법 검사를 통과했습니다. 이 변경안의 타입과 실제 동작은 아직 확인하지 않았습니다. 적용 뒤 편집기 알림도 살펴보세요.",
-                        "Syntax checked. Types and runtime behavior of this proposal are not verified. Review editor reports after applying it.",
-                      )}
-                    </p>
-                    <div className="actions">
-                      <button
-                        disabled={disabled}
-                        onClick={() =>
-                          void action(() =>
-                            request(
-                              "preview",
-                              { id: patch.id },
-                              state.contextId,
-                            ),
-                          )
-                        }
-                      >
-                        {t("VS Code에서 차이 비교", "Compare in VS Code")}
-                      </button>
-                      <button
-                        className="primary"
-                        disabled={disabled || !state.trusted}
-                        onClick={() =>
-                          void action(async () => {
-                            await request(
-                              "apply",
-                              { id: patch.id },
-                              state.contextId,
-                            );
-                            setPatch(undefined);
-                            setNotice(
-                              t(
-                                "편집기에 적용했습니다. Ctrl+Z로 취소하고, Ctrl+S로 저장하세요.",
-                                "Applied to the editor. Undo with Ctrl+Z; save with Ctrl+S.",
-                              ),
-                            );
-                          })
-                        }
-                      >
-                        {t("편집기에 적용", "Apply to editor")}
-                      </button>
-                    </div>
-                  </section>
-                )}
-              </>
+                      exportReport={(content) =>
+                        request<void>("report", { content }, state.contextId)
+                      }
+                    />
+                  ) : undefined
+                }
+              />
             )}
             {a && tab === "checks" && (
               <>
-                <ProjectChecks state={state} lang={lang} />
+                <div className="journey-heading">
+                  <span className="eyebrow">
+                    {t("의도한 대로 바뀌었는지", "CHECK YOUR INTENT")}
+                  </span>
+                  <h2>
+                    {t(
+                      "결과와 근거를 함께 확인하세요",
+                      "Check results alongside the evidence",
+                    )}
+                  </h2>
+                  <p>
+                    {t(
+                      "편집기가 알려준 문제부터 읽고, 예시 입력과 프로젝트 검사로 동작을 확인해 보세요.",
+                      "Start with editor reports, then try sample inputs and project checks.",
+                    )}
+                  </p>
+                </div>
+                {fn && scenarioFn && (
+                  <section ref={simulationRef} className="example-check">
+                    <ScenarioLab
+                      key={`${state.contextId}:${scenarioFn.name}`}
+                      fn={scenarioFn}
+                      rules={a.rules}
+                      lang={lang}
+                      revision={state.contextId}
+                      disabled={disabled}
+                      run={(scenarios) =>
+                        request<ScenarioReport>(
+                          "compare",
+                          { name: scenarioFn.name, scenarios },
+                          state.contextId,
+                        )
+                      }
+                      exportReport={(content) =>
+                        request<void>("report", { content }, state.contextId)
+                      }
+                    />
+                  </section>
+                )}
                 {state.diagnostics && (
                   <EditorProblems
                     snapshot={state.diagnostics}
@@ -615,6 +692,15 @@ function App() {
                     )}
                   </p>
                 )}
+                <details className="disclosure">
+                  <summary>
+                    {t(
+                      "프로젝트 검사와 성능 측정",
+                      "Project checks and performance",
+                    )}
+                  </summary>
+                  <ProjectChecks state={state} lang={lang} />
+                </details>
               </>
             )}
             {tab === "map" && (
@@ -650,29 +736,11 @@ function App() {
           </main>
         </>
       )}
-      {a && scenarioFn && (patch || fn) && (
-        <ScenarioLab
-          key={`${state.contextId}:${patch?.id}:${scenarioFn.name}`}
-          fn={scenarioFn}
-          rules={a.rules}
-          lang={lang}
-          revision={`${state.contextId}:${patch?.id}`}
-          change={patch}
-          disabled={disabled}
-          run={(scenarios) =>
-            request<ScenarioReport>(
-              "compare",
-              { name: scenarioFn.name, scenarios, patchId: patch?.id },
-              state.contextId,
-            )
-          }
-          exportReport={(content) =>
-            request<void>("report", { content }, state.contextId)
-          }
-        />
-      )}
-      {fn && (
-        <section ref={simulationRef} className="card simulation">
+      {fn && tab === "checks" && (
+        <details className="disclosure simulation">
+          <summary>
+            {t("고급: JSON 인자로 직접 확인", "Advanced: enter JSON arguments")}
+          </summary>
           <div className="section-heading">
             <h2>
               {t("값을 넣어 확인", "Try inputs")} · <code>{fn}</code>
@@ -743,12 +811,12 @@ function App() {
               </ol>
             </>
           )}
-        </section>
+        </details>
       )}
       <footer className="app-footer">
         {t(
-          "기본 설명은 JS/TS 구문과 사전을 사용합니다. 선택형 로컬 AI의 설명·수정은 모델의 제안이며 의미·동작·성능 검토가 필요합니다.",
-          "Built-in explanations use JS/TS syntax and a glossary. Optional local AI output is a model proposal; review its meaning, behavior and performance.",
+          "기본 읽기는 지원되는 구문과 원문에 기반합니다. 선택형 로컬 AI의 설명·수정은 모델의 제안이며 의미·동작·성능 검토가 필요합니다.",
+          "Built-in reading uses supported syntax and source text. Optional local AI output is a model proposal; review its meaning, behavior and performance.",
         )}
       </footer>
       {help && (

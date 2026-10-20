@@ -3,7 +3,9 @@ import { label, operators, particle } from "./labels";
 import { normalizeGlossary, type GlossaryEntry } from "./glossary";
 import { terminology } from "./terminology";
 import { analyzeInterface } from "./jsx";
-import { readJsonStructure } from "./jsonData";
+import { describeJsonData } from "./jsonData";
+import { readWebSource } from "./webSource";
+import { readSqlSource } from "./sqlSource";
 import {
   words,
   type Anchor,
@@ -174,8 +176,8 @@ export function expression(
       : `create ${n.expression.getText(sf)} (${n.arguments?.map(e).join(", ") || ""})`;
   if (ts.isArrowFunction(n) || ts.isFunctionExpression(n))
     return ko
-      ? "전달받아 나중에 실행할 기능 (아래 기능 설명 참조)"
-      : "a function to run later (see function details)";
+      ? "함수 값 (본문은 아래 기능 설명 참조, 호출 시점은 호출하는 코드에 따름)"
+      : "a function value (see its body below; the calling code determines when it runs)";
   if (
     ts.isJsxElement(n) ||
     ts.isJsxSelfClosingElement(n) ||
@@ -205,23 +207,42 @@ export function analyzeFile(
     syntaxValid: true,
   };
   const zero = { start: 0, end: 0, line: 1, endLine: 1 };
+  if (/\.sql$/i.test(file.path)) {
+    readSqlSource(file.content, file.sqlDialect, out);
+    return out;
+  }
+  if (/\.(?:html?|css)$/i.test(file.path)) {
+    readWebSource(
+      file.content,
+      /\.css$/i.test(file.path) ? "css" : "html",
+      out,
+    );
+    return out;
+  }
   if (/\.jsonc?$/i.test(file.path)) {
     out.kind = "json";
     try {
-      const data = readJsonStructure(file.content, /\.jsonc$/i.test(file.path));
+      const {
+        facts: data,
+        rules,
+        steps,
+      } = describeJsonData(file.content, /\.jsonc$/i.test(file.path));
+      out.data = data;
+      out.rules = rules;
       out.steps = [
         {
           ...zero,
           id: "json",
           kind: "data",
           text: words(
-            `이 파일은 ${data.type === "array" ? "목록" : data.type === "object" ? data.entries + "개 항목의 설정" : "하나의 값"}을 담습니다. 실행되는 기능은 없습니다.`,
-            `This file contains JSON/JSONC data, not executable functions.`,
+            `이 파일의 최상위 데이터는 ${data.type === "array" ? data.entries + "개 항목의 목록" : data.type === "object" ? data.entries + "개 항목의 객체" : "하나의 값"}입니다. 실행 조건이나 값의 사용 방식은 소비 코드를 확인해야 합니다.`,
+            `The root is ${data.type === "array" ? "an array with " + data.entries + " entries" : data.type === "object" ? "an object with " + data.entries + " entries" : "a single value"}. Execution conditions and the use of these values depend on the consuming code.`,
           ),
           children: [],
           supported: true,
         },
       ];
+      out.steps.push(...steps);
     } catch {
       out.syntaxValid = false;
       out.issues.push({

@@ -1,0 +1,23 @@
+{
+  "overlappingSuites": true,
+  "reports": [
+    {
+      "report": "host-regression.json",
+      "passed": 5,
+      "failed": 0,
+      "success": true
+    },
+    {
+      "report": "protocol-reading.json",
+      "passed": 14,
+      "failed": 0,
+      "success": true
+    },
+    {
+      "report": "reading-regression.json",
+      "passed": 18,
+      "failed": 0,
+      "success": true
+    }
+  ]
+}

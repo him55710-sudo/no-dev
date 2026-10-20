@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import type { Lang } from "../../src/core/types";
+import type { Lang, Words } from "../../src/core/types";
 import {
   assistantLanguages,
   assistantLimits,
+  supportsWhitespaceConstraint,
   type AssistantTask,
 } from "../../src/core/localAssistant";
 import type { AssistantResult } from "../src/localAssistantController";
-import type { LocalModel } from "../src/ollama";
+import type { InferenceProcessor, LocalModel } from "../src/ollama";
 import type { ViewState } from "../src/protocol";
 import { request } from "./bridge";
 import "./local-assistant.css";
@@ -14,20 +15,32 @@ import "./local-assistant.css";
 export function LocalAssistant({
   state,
   lang,
+  initialFocus,
 }: {
   state: ViewState;
   lang: Lang;
+  initialFocus?: { context: string; id: string };
 }) {
   const [models, setModels] = useState<LocalModel[]>([]);
   const [model, setModel] = useState("");
+  const [processor, setProcessor] = useState<InferenceProcessor>("auto");
   const [origin, setOrigin] = useState("");
   const [task, setTask] = useState<AssistantTask>("explain");
+  const [focusChoice, setFocusChoice] = useState(initialFocus);
+  const focusedFunction =
+    task === "explain" && focusChoice?.context === state.contextId
+      ? state.analysis?.functions.find((f) => f.id === focusChoice.id)
+      : undefined;
+  const [whitespaceOnly, setWhitespaceOnly] = useState(false);
   const [instruction, setInstruction] = useState("");
   const [busy, setBusy] = useState(false);
+  const [generationStarted, setGenerationStarted] = useState<number>();
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [notice, setNotice] = useState<Words>();
   const [generated, setGenerated] = useState<{
     context: string;
+    lang: Lang;
     result: AssistantResult;
   }>();
   const [reviewed, setReviewed] = useState(false);
@@ -37,34 +50,63 @@ export function LocalAssistant({
     output = useRef<HTMLElement>(null);
   const activeContext = useRef(state.contextId);
   activeContext.current = state.contextId;
+  const activeLanguage = useRef(lang);
+  activeLanguage.current = lang;
   const result =
-    generated?.context === state.contextId ? generated.result : undefined;
+    generated?.context === state.contextId && generated.lang === lang
+      ? generated.result
+      : undefined;
   const t = (ko: string, en: string) => (lang === "ko" ? ko : en);
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
-      void request("localCancel").catch(() => {});
     };
   }, []);
+  useEffect(
+    () => () => {
+      void request("localCancel").catch(() => {});
+    },
+    [lang],
+  );
   useEffect(() => {
     if (result) output.current?.focus();
   }, [result]);
-  async function run(job: () => Promise<void>) {
+  useEffect(() => {
+    if (generationStarted === undefined) return;
+    const timer = window.setInterval(
+      () =>
+        setElapsedSeconds(Math.floor((Date.now() - generationStarted) / 1000)),
+      1000,
+    );
+    return () => window.clearInterval(timer);
+  }, [generationStarted]);
+  async function run(job: () => Promise<void>, generating = false) {
     if (operation.current) return;
     operation.current = true;
     setBusy(true);
     setError("");
-    setNotice("");
+    setNotice(undefined);
+    if (generating) {
+      setElapsedSeconds(0);
+      setGenerationStarted(Date.now());
+    }
     const context = state.contextId;
     try {
       await job();
     } catch (e) {
-      if (mounted.current && activeContext.current === context)
+      if (
+        mounted.current &&
+        activeContext.current === context &&
+        activeLanguage.current === lang
+      )
         setError(e instanceof Error ? e.message : String(e));
     } finally {
       operation.current = false;
-      if (mounted.current) setBusy(false);
+      if (mounted.current) {
+        setBusy(false);
+        setGenerationStarted(undefined);
+      }
     }
   }
   const eligible =
@@ -73,6 +115,8 @@ export function LocalAssistant({
     !!state.language &&
     Object.hasOwn(assistantLanguages, state.language) &&
     (state.sourceBytes ?? Infinity) <= assistantLimits.sourceBytes;
+  const canConstrainWhitespace =
+    task === "edit" && supportsWhitespaceConstraint(state.language || "");
   function clearProposal() {
     setGenerated(undefined);
     setReviewed(false);
@@ -141,14 +185,14 @@ export function LocalAssistant({
               setModel(next.models[0]?.name || "");
               setNotice(
                 next.models.length
-                  ? t(
-                      "로컬 전용 설정을 확인했습니다.",
-                      "Local-only mode confirmed.",
-                    )
-                  : t(
-                      "설치된 로컬 텍스트 모델이 없습니다.",
-                      "No installed local text model found.",
-                    ),
+                  ? {
+                      ko: "로컬 전용 설정을 확인했습니다.",
+                      en: "Local-only mode confirmed.",
+                    }
+                  : {
+                      ko: "설치된 로컬 텍스트 모델이 없습니다.",
+                      en: "No installed local text model found.",
+                    },
               );
             })
           }
@@ -176,6 +220,30 @@ export function LocalAssistant({
           </label>
         ) : null}
         <label>
+          {t("연산 장치", "Processor")}
+          <select
+            value={processor}
+            aria-label={t("연산 장치", "Processor")}
+            aria-describedby="local-processor-description"
+            disabled={busy}
+            onChange={(event) => {
+              setProcessor(event.target.value as InferenceProcessor);
+              clearProposal();
+            }}
+          >
+            <option value="auto">
+              {t("Ollama 자동 선택", "Ollama automatic")}
+            </option>
+            <option value="cpu">{t("CPU 사용 요청", "Request CPU")}</option>
+          </select>
+          <span className="muted" id="local-processor-description">
+            {t(
+              "응답이 느리면 CPU 요청과 비교해 보세요. 이 요청의 실행 옵션이며, 속도는 PC와 모델에 따라 다릅니다.",
+              "If responses are slow, compare a CPU request. This is an option for this request; speed depends on your PC and model.",
+            )}
+          </span>
+        </label>
+        <label>
           {t("하고 싶은 작업", "Task")}
           <select
             value={task}
@@ -196,6 +264,41 @@ export function LocalAssistant({
             </option>
           </select>
         </label>
+        {task === "explain" && !!state.analysis?.functions.length && (
+          <label>
+            {t("설명할 범위", "Explanation focus")}
+            <select
+              value={focusedFunction?.id || ""}
+              aria-label={t("설명할 범위", "Explanation focus")}
+              aria-describedby={
+                focusedFunction ? "local-focus-description" : undefined
+              }
+              disabled={busy || state.busy}
+              onChange={(event) => {
+                setFocusChoice({
+                  context: state.contextId,
+                  id: event.target.value,
+                });
+                clearProposal();
+              }}
+            >
+              <option value="">{t("현재 파일", "Current file")}</option>
+              {state.analysis.functions.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.name} · L{f.line}
+                </option>
+              ))}
+            </select>
+            {focusedFunction && (
+              <span className="muted" id="local-focus-description">
+                {t(
+                  "이 기능의 역할·입력·실제 검사와 호출자가 지킬 조건을 설명합니다. 같은 파일의 관련 코드를 참고하도록 현재 파일 전체를 보냅니다.",
+                  "Explain its purpose, inputs, actual checks and caller preconditions. The entire current file is sent as context for related code.",
+                )}
+              </span>
+            )}
+          </label>
+        )}
         <label>
           {t(
             "요청 (설명은 비워도 됩니다)",
@@ -210,15 +313,42 @@ export function LocalAssistant({
               setInstruction(e.target.value);
               clearProposal();
             }}
-            placeholder={t(
-              "예: 배송비 기준을 바꾸고 영향을 설명해 줘",
-              "Example: change the shipping threshold and explain the effect",
-            )}
+            placeholder={
+              task === "explain"
+                ? t(
+                    "예: 하는 일과 입력 조건을 설명해 줘. 실제 검사와 호출자가 지킬 전제를 구분해 줘.",
+                    "Example: explain its purpose and inputs. Distinguish actual checks from caller preconditions.",
+                  )
+                : t(
+                    "예: 배송비 기준을 바꾸고 영향을 설명해 줘",
+                    "Example: change the shipping threshold and explain the effect",
+                  )
+            }
           />
         </label>
+        {canConstrainWhitespace ? (
+          <label className="local-ack">
+            <input
+              type="checkbox"
+              disabled={busy}
+              checked={whitespaceOnly}
+              onChange={(event) => {
+                setWhitespaceOnly(event.target.checked);
+                clearProposal();
+              }}
+            />
+            {t(
+              "공백과 줄바꿈만 바꾸기 — 코드·문자열·주석·구조 변경은 적용하지 않기",
+              "Only change spacing and line breaks — block changes to code, literals, comments or structure",
+            )}
+          </label>
+        ) : null}
         {state.busy ? (
           <p role="status">
-            {t("현재 파일을 다시 읽는 중입니다…", "Refreshing the current file…")}
+            {t(
+              "현재 파일을 다시 읽는 중입니다…",
+              "Refreshing the current file…",
+            )}
           </p>
         ) : !eligible ? (
           <p className="banner">
@@ -242,15 +372,32 @@ export function LocalAssistant({
                 clearProposal();
                 const response = await request<AssistantResult>(
                   "localGenerate",
-                  { model, task, instruction, lang },
+                  {
+                    model,
+                    processor,
+                    task,
+                    instruction,
+                    lang,
+                    ...(focusedFunction
+                      ? { focusFunctionId: focusedFunction.id }
+                      : {}),
+                    ...(canConstrainWhitespace && whitespaceOnly
+                      ? { editConstraint: "whitespace-only" }
+                      : {}),
+                  },
                   state.contextId,
                 );
                 if (
                   mounted.current &&
-                  activeContext.current === state.contextId
+                  activeContext.current === state.contextId &&
+                  activeLanguage.current === lang
                 )
-                  setGenerated({ context: state.contextId, result: response });
-              })
+                  setGenerated({
+                    context: state.contextId,
+                    lang,
+                    result: response,
+                  });
+              }, true)
             }
           >
             {t("현재 파일로 요청하기", "Send current file")}
@@ -267,10 +414,22 @@ export function LocalAssistant({
         </div>
         {busy ? (
           <p role="status">
-            {t(
-              "로컬 모델이 작업 중입니다. 파일을 바꾸면 요청이 취소됩니다.",
-              "Local model is working. Changing the file cancels the request.",
-            )}
+            {generationStarted !== undefined
+              ? t(
+                  "로컬 모델 응답을 기다리고 있습니다. PC와 모델에 따라 몇 분이 걸릴 수 있습니다. 취소하거나 파일을 바꾸면 요청이 중단됩니다.",
+                  "Waiting for the local model. This can take minutes depending on your PC and model. Cancel or change the file to stop the request.",
+                )
+              : t(
+                  "요청한 작업을 처리하고 있습니다.",
+                  "Processing the requested action.",
+                )}
+            {generationStarted !== undefined ? (
+              <span role="timer" aria-live="off">
+                {" "}
+                · {elapsedSeconds}
+                {t("초 경과", "s elapsed")}
+              </span>
+            ) : null}
           </p>
         ) : null}
         {error ? (
@@ -280,10 +439,18 @@ export function LocalAssistant({
         ) : null}
         {notice ? (
           <p role="status" className="banner">
-            {notice}
+            {notice[lang]}
           </p>
         ) : null}
       </div>
+      {generated?.context === state.contextId && generated.lang !== lang ? (
+        <p role="status" className="banner">
+          {t(
+            "이전 응답은 영어로 생성됐습니다. 한국어 설명은 다시 요청해 주세요.",
+            "The previous response was generated in Korean. Send a new request for an English explanation.",
+          )}
+        </p>
+      ) : null}
       {result ? (
         <section
           className="card local-result"
@@ -292,9 +459,19 @@ export function LocalAssistant({
           aria-label={t("로컬 AI 결과", "Local AI result")}
         >
           <h2>{t("모델의 설명과 제안", "Model explanation and proposal")}</h2>
+          {result.focus && (
+            <p>
+              {t("설명 대상", "Explanation focus")}:{" "}
+              <code>{result.focus.name}</code> · L{result.focus.line}–
+              {result.focus.endLine}
+            </p>
+          )}
           <p className="muted">
             {result.model} · {(result.elapsedMs / 1000).toFixed(1)}s ·{" "}
-            {t("추론 결과 · 검토 필요", "Model inference · review required")}
+            {result.processor === "cpu"
+              ? t("CPU 요청", "CPU requested")
+              : t("Ollama 자동 설정", "Ollama automatic")}{" "}
+            · {t("추론 결과 · 검토 필요", "Model inference · review required")}
           </p>
           <p className="local-summary">{result.summary}</p>
           <h3>{t("원문에서 확인", "Check against the source")}</h3>
@@ -362,6 +539,91 @@ export function LocalAssistant({
               >
                 {result.validation.detail}
               </p>
+              {result.constraint ? (
+                <p
+                  className={
+                    result.constraint.status === "passed"
+                      ? "banner"
+                      : "banner error"
+                  }
+                >
+                  {result.constraint.status === "passed"
+                    ? t(
+                        "선택한 공백·줄바꿈 제한을 확인했습니다. 요청 전체를 충족했는지는 차이에서 확인해 주세요.",
+                        "The selected spacing-only restriction passed. Review the diff to check the full request was fulfilled.",
+                      )
+                    : result.constraint.status === "failed"
+                      ? t(
+                          "선택한 공백·줄바꿈 제한을 벗어나 적용할 수 없습니다. 차이를 확인하고 다시 요청해 주세요.",
+                          "The proposal exceeds your spacing-only restriction and cannot be applied. Review the diff and request again.",
+                        )
+                      : t(
+                          "공백·줄바꿈 제한을 확인할 수 없어 적용할 수 없습니다.",
+                          "The spacing-only restriction could not be verified, so this proposal cannot be applied.",
+                        )}
+                </p>
+              ) : null}
+              {result.validation.changeFacts ? (
+                <div className="banner">
+                  <strong>
+                    {t(
+                      "원문과 직접 비교한 결과",
+                      "Compared directly with the source",
+                    )}
+                  </strong>
+                  {result.validation.changeFacts.status === "available" ? (
+                    <>
+                      <p>
+                        {result.validation.changeFacts.whitespaceOnly
+                          ? t(
+                              "공백·줄바꿈만 달라졌고, 파서가 읽은 코드 구조와 주석은 같습니다.",
+                              "Only spacing or line breaks differ; the parsed code structure and comment text match.",
+                            )
+                          : result.validation.changeFacts.codeTokensChanged ||
+                              result.validation.changeFacts
+                                .parseStructureChanged
+                            ? t(
+                                "코드 내용이나 구조도 달라졌습니다. 공백·들여쓰기만 바꾼 제안이 아닙니다.",
+                                "Code content or structure also changed. This proposal changes more than spacing or indentation.",
+                              )
+                            : t(
+                                "파서가 읽은 코드는 같지만 주석 등 원문 차이가 있습니다.",
+                                "The parsed code matches, but comments or other source text differ.",
+                              )}
+                      </p>
+                      {result.validation.changeFacts.braces.before !==
+                      result.validation.changeFacts.braces.after ? (
+                        <p>
+                          {t("중괄호 수", "Curly braces")}:{" "}
+                          {result.validation.changeFacts.braces.before} →{" "}
+                          {result.validation.changeFacts.braces.after}
+                        </p>
+                      ) : null}
+                      {result.validation.changeFacts.commentsChanged ? (
+                        <p>
+                          {t(
+                            "주석 내용도 바뀌었습니다.",
+                            "Comment text also changed.",
+                          )}
+                        </p>
+                      ) : null}
+                      <p className="muted">
+                        {t(
+                          "JS/TS 원문 비교입니다. 요청을 지켰는지, 실행 결과가 같은지는 별도 검토와 프로젝트 검사가 필요합니다.",
+                          "This is a JS/TS source comparison. Request compliance and runtime equivalence still need review and project checks.",
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    <p>
+                      {t(
+                        "원본 또는 변경안에 문법 오류가 있어 구조를 비교할 수 없습니다.",
+                        "A syntax error in the original or proposal prevents a structural comparison.",
+                      )}
+                    </p>
+                  )}
+                </div>
+              ) : null}
               <button
                 disabled={busy}
                 onClick={() =>
@@ -395,7 +657,8 @@ export function LocalAssistant({
                   !state.trusted ||
                   !reviewed ||
                   !acknowledged ||
-                  result.validation.status === "syntax-failed"
+                  result.validation.status === "syntax-failed" ||
+                  (!!result.constraint && result.constraint.status !== "passed")
                 }
                 onClick={() =>
                   void run(async () => {
@@ -406,12 +669,10 @@ export function LocalAssistant({
                     );
                     if (mounted.current) {
                       clearProposal();
-                      setNotice(
-                        t(
-                          "적용했습니다. 편집기의 실행 취소로 되돌릴 수 있습니다.",
-                          "Applied. Use editor undo to revert.",
-                        ),
-                      );
+                      setNotice({
+                        ko: "적용했습니다. 편집기의 실행 취소로 되돌릴 수 있습니다.",
+                        en: "Applied. Use editor undo to revert.",
+                      });
                     }
                   })
                 }

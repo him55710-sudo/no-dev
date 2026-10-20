@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-10-16",
+  "vscode": "1.96.4",
+  "platform": "Windows x64",
+  "java": {
+    "version": "25.0.4.1+1-LTS",
+    "truncated": false
+  },
+  "installedVsixSha256": "bb0aa7ec96674888cd2403c816b1d9160be94c474047347ea8f48bf01fe1857d",
+  "extensionMode": 1,
+  "extensionModeName": "production",
+  "method": "Native Windows input and screenshots of the installed product; separate test-driver extension launches the fixture. No model inference.",
+  "source": "examples/local-ai/Shipping.java",
+  "sourceDiskPreserved": true,
+  "sourceSha256": "c8fb3498fdb1e10b504120d705971e5f75086b57bea8ce8f62c23d637fa9a6ca",
+  "checks": [
+    "Korean and English method/negative exception/conditional-expression explanation",
+    "Click L3 selects actual source line 3",
+    "Original return-only literals produce zero directly editable assigned values",
+    "Manual temporary fixture adds threshold=50000 and shippingFee=3000 fields; unsaved reanalysis lists two rules",
+    "Rule edit threshold 50000 to 70000, review and native Java diff",
+    "Explicit apply changes editor and refreshed rule to 70000",
+    "Native undo restores threshold=50000; second undo restores original sample and clean buffer"
+  ],
+  "limitations": [
+    "English webview native diff title still contains Korean",
+    "Direct value edits currently require assignment/initializer; original Shipping return literals are not listed",
+    "At 1024x768 the split editor clips long code lines and lower narrative needs scrolling; this is not a complete responsive-layout audit",
+    "No Java language server was installed; zero editor diagnostics are not proof of type correctness",
+    "No Java performance or model-quality claim"
+  ],
+  "images": [
+    {
+      "file": "java-source-applied.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "b4abc62a4678d6cb76044f904060a49b29b848d98c41e0754c2ba410f98c211a",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "file": "java-source-diff.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "d290fd60b322c23bfcaee6c64e69b2d30f5b107c0cfc4e9ec9a2a26c827a7b13",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "file": "java-source-en.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "08f9d2163337a9123d64d6681719718a8c13ebbcf6a4d5304dbe0f89cdcf008e",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "file": "java-source-ko.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "2073a023a52525dda02d56391e5f092a2d64a2f71ba76ec1675a7c82bf87738a",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "file": "java-source-undo.jpg",
+      "width": 1536,
+      "height": 816,
+      "sha256": "9e5d7d4955124ff9f22ea5b29e9f43b2f0c392bcede34d7d1abe5a702b15abec",
+      "mimeType": "image/jpeg"
+    }
+  ],
+  "metadataCorrection": "2026-10-17: original bytes were JPEG, not PNG. Corrected filenames, MIME type and frame dimensions without modifying image bytes or hashes."
+}

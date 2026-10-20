@@ -1,0 +1,328 @@
+.project-reader {
+  --pr-accent: var(--vscode-button-background, #28665d);
+  max-width: 900px;
+  margin: auto;
+  padding: 28px 38px 70px;
+  font: 15px/1.8 var(--vscode-font-family, system-ui);
+  color: var(--vscode-editor-foreground);
+  overflow-wrap: anywhere;
+}
+.project-reader * {
+  box-sizing: border-box;
+}
+.project-reader button,
+.project-reader textarea {
+  font: inherit;
+}
+.project-reader button {
+  cursor: pointer;
+  border: 1px solid var(--vscode-panel-border, #8885);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: inherit;
+  background: var(--vscode-editor-background);
+}
+.project-reader button:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+.project-reader button:focus-visible,
+.project-reader summary:focus-visible,
+.project-reader textarea:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 3px;
+}
+.project-reader .pr-primary {
+  background: var(--pr-accent);
+  color: var(--vscode-button-foreground, white);
+  border-color: transparent;
+  font-weight: 650;
+}
+.project-reader .pr-link {
+  border: 0;
+  background: none;
+  padding: 4px;
+  color: var(--vscode-textLink-foreground);
+}
+.pr-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+.pr-brand {
+  font-size: 21px;
+  font-weight: 750;
+  margin-right: 20px;
+}
+.pr-project {
+  opacity: 0.65;
+}
+.pr-journey {
+  display: flex;
+  gap: 25px;
+  border-bottom: 1px solid var(--vscode-panel-border, #8884);
+  font-size: 12px;
+  opacity: 0.6;
+  padding: 20px 0;
+  margin-bottom: 36px;
+}
+.pr-intro {
+  padding: 26px 0 50px;
+}
+.pr-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--vscode-textLink-foreground);
+  font-weight: 600;
+}
+.project-reader h1 {
+  font-size: 32px;
+  line-height: 1.45;
+  letter-spacing: -0.04em;
+  font-weight: 650;
+  margin: 12px 0 20px;
+}
+.project-reader h2 {
+  font-size: 20px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+.project-reader h3 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+.pr-lead,
+.pr-intro > p {
+  font-size: 18px;
+  line-height: 1.9;
+  max-width: 740px;
+}
+.project-reader .pr-caption {
+  font-size: 12px;
+  opacity: 0.7;
+  line-height: 1.7;
+}
+.pr-intro .pr-primary {
+  margin: 14px 0 8px;
+}
+.project-reader section {
+  margin-bottom: 35px;
+}
+.project-reader summary {
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 14px;
+}
+.project-reader details {
+  border-bottom: 1px solid var(--vscode-panel-border, #8883);
+}
+.project-reader pre {
+  white-space: pre-wrap;
+  font: 12px/1.7 var(--vscode-editor-font-family, monospace);
+  background: var(--vscode-textCodeBlock-background);
+  padding: 14px;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow: auto;
+}
+.pr-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.pr-parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.project-reader .pr-part {
+  text-align: left;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: start;
+}
+.pr-part strong {
+  font-size: 17px;
+}
+.pr-part span {
+  font-size: 13px;
+  opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pr-part-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.project-reader .pr-part-tabs .pr-part {
+  padding: 8px 13px;
+}
+.pr-part-tabs .pr-part strong {
+  font-size: 12px;
+}
+.pr-part small {
+  margin-top: auto;
+  color: var(--vscode-textLink-foreground);
+}
+.pr-part:hover,
+.pr-part.selected {
+  border-color: var(--vscode-focusBorder);
+  background: var(--vscode-list-hoverBackground);
+}
+.pr-details {
+  margin-top: 24px;
+  padding: 18px 24px;
+  border-left: 3px solid var(--pr-accent);
+  background: var(--vscode-textBlockQuote-background);
+}
+.pr-details > details > summary {
+  font-weight: 650;
+  font-size: 16px;
+}
+.pr-file li {
+  margin-bottom: 10px;
+}
+.pr-edit {
+  border: 1px solid var(--vscode-panel-border, #8885);
+  border-radius: 12px;
+  padding: 24px;
+}
+.pr-edit label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.project-reader textarea {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border, #8885);
+  border-radius: 8px;
+  resize: vertical;
+  line-height: 1.8;
+}
+.pr-edit-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-top: 16px;
+}
+.pr-edit-footer p {
+  font-size: 12px;
+  max-width: 440px;
+  opacity: 0.7;
+}
+.pr-edit-footer button {
+  flex-shrink: 0;
+}
+.pr-progress,
+.pr-notice,
+.pr-error,
+.pr-success {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--vscode-textBlockQuote-background);
+  border-left: 3px solid var(--vscode-textLink-foreground);
+}
+.pr-error {
+  border-color: var(--vscode-errorForeground);
+  color: var(--vscode-errorForeground);
+  margin-bottom: 20px;
+}
+.pr-progress progress {
+  width: 100%;
+  display: block;
+  margin: 15px 0;
+}
+.pr-comparisons article {
+  border: 1px solid var(--vscode-panel-border, #8885);
+  border-radius: 10px;
+  margin: 14px 0;
+  padding: 18px;
+}
+.pr-before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.pr-before-after > div {
+  padding: 14px;
+  background: var(--vscode-textBlockQuote-background);
+  border-radius: 6px;
+}
+.pr-before-after > div + div {
+  border-left: 3px solid var(--pr-accent);
+}
+.pr-before-after span {
+  font-weight: 700;
+  font-size: 12px;
+}
+.pr-confirm {
+  margin: 20px 0;
+}
+.pr-confirm label {
+  display: block;
+  padding: 8px 0;
+  font-size: 13px;
+}
+.pr-confirm small {
+  display: block;
+  opacity: 0.65;
+  margin-left: 24px;
+}
+.pr-confirm input {
+  margin-right: 8px;
+}
+.pr-confirm button {
+  margin-top: 18px;
+}
+.pr-flow li {
+  padding: 8px 0;
+}
+.pr-unknown {
+  margin-top: 18px;
+}
+.project-reader footer {
+  margin-top: 40px;
+  opacity: 0.8;
+  font-size: 12px;
+}
+.project-reader footer button {
+  margin: 5px;
+}
+.pr-job > details {
+  margin-top: 20px;
+}
+@media (max-width: 640px) {
+  .project-reader {
+    padding: 20px 18px;
+  }
+  .pr-parts,
+  .pr-before-after {
+    grid-template-columns: 1fr;
+  }
+  .pr-journey {
+    gap: 10px;
+    font-size: 10px;
+  }
+  .project-reader h1 {
+    font-size: 26px;
+  }
+  .pr-edit-footer {
+    display: block;
+  }
+  .pr-project {
+    display: none;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  // Retry settings
+  "retryLimit": 3,
+  "backoffMs": 250,
+  "enabled": false,
+}

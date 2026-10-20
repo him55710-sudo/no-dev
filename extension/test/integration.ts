@@ -1,8 +1,19 @@
 import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
+import { createHash } from "node:crypto";
+import { relative, isAbsolute } from "node:path";
 import type { Controller } from "../src/controller";
 import { localAssistantChecks } from "./localAssistant";
 import { projectChecks } from "./projectChecks";
+import { benchmarkChecks } from "./benchmarks";
+import { pythonSourceChecks } from "./pythonSource";
+import { goSourceChecks } from "./goSource";
+import { javaSourceChecks } from "./javaSource";
+import { csharpSourceChecks } from "./csharpSource";
+import { rustSourceChecks } from "./rustSource";
+import { webSourceChecks } from "./webSource";
+import { sqlSourceChecks } from "./sqlSource";
+import { functionFormatChecks } from "./formatFunction";
 const reports: string[] = [];
 async function until(
   check: () => boolean,
@@ -19,10 +30,49 @@ export async function run() {
   const extension = vscode.extensions.getExtension<{
     controller: Controller;
     openPanel: () => Promise<void>;
+    runtimeMode: vscode.ExtensionMode;
   }>("pureobom-local.pureobom");
-  assert.ok(extension, "extension installed in development host");
+  assert.ok(extension, "Pureobom is available in this VS Code instance");
+  let installation: Record<string, unknown> | undefined;
+  if (process.env.PUREOBOM_EXPECTED_INSTALL) {
+    const expected = JSON.parse(process.env.PUREOBOM_EXPECTED_INSTALL) as {
+      version: string;
+      vsixSha256: string;
+      extensionsPath: string;
+      files: Record<string, string>;
+    };
+    const location = relative(expected.extensionsPath, extension.extensionPath);
+    assert.ok(
+      location && !location.startsWith("..") && !isAbsolute(location),
+      "loads the isolated installed VSIX, not the source checkout",
+    );
+    assert.equal(extension.packageJSON.version, expected.version);
+    for (const [path, digest] of Object.entries(expected.files)) {
+      const bytes = await vscode.workspace.fs.readFile(
+        vscode.Uri.joinPath(extension.extensionUri, path),
+      );
+      assert.equal(
+        createHash("sha256").update(bytes).digest("hex"),
+        digest,
+        `Installed artifact matches VSIX: ${path}`,
+      );
+    }
+    installation = {
+      kind: "installed-vsix",
+      version: expected.version,
+      vsixSha256: expected.vsixSha256,
+      verifiedFiles: expected.files,
+      extensionMode: "production",
+    };
+  }
   const api = await extension.activate(),
     c = api.controller;
+  if (installation)
+    assert.equal(
+      api.runtimeMode,
+      vscode.ExtensionMode.Production,
+      "installed product runs in production extension mode",
+    );
   const root = vscode.workspace.workspaceFolders![0].uri;
   const uri = vscode.Uri.joinPath(root, "shipping.ts");
   const doc = await vscode.workspace.openTextDocument(uri);
@@ -40,6 +90,30 @@ export async function run() {
     }
   };
   await ready();
+  if (process.env.PUREOBOM_ONLY_BENCHMARK === "1") {
+    await benchmarkChecks(c, ready, reports);
+    await vscode.workspace.fs.writeFile(
+      vscode.Uri.file(process.env.PUREOBOM_INTEGRATION_REPORT!),
+      Buffer.from(
+        JSON.stringify(
+          {
+            vscode: vscode.version,
+            checks: reports,
+            passed: reports.length,
+            timestamp: new Date().toISOString(),
+          },
+          null,
+          2,
+        ),
+      ),
+    );
+    console.log(
+      "PUREOBOM BENCHMARK INTEGRATION PASSED",
+      JSON.stringify(reports),
+    );
+    c.dispose();
+    return;
+  }
   const firstTerm = c.state.analysis!.terms!.find(
     (term) => term.name === "freeShippingThreshold",
   )!;
@@ -254,10 +328,19 @@ export async function run() {
   );
   await vscode.commands.executeCommand("pureobom.interfaceExample");
   await until(
-    () => !c.state.busy && !!c.state.analysis?.interface,
-    "React example analysis",
+    () =>
+      !c.state.busy &&
+      !!c.state.analysis?.interface &&
+      vscode.window.tabGroups.activeTabGroup.activeTab?.input instanceof
+        vscode.TabInputWebview,
+    "React example analysis with its reading view focused",
   );
-  const screen = vscode.window.activeTextEditor!.document;
+  // Opening the beginner reader intentionally focuses its Webview. Resolve the
+  // analyzed source independently; the source action below must focus it again.
+  const screen = vscode.workspace.textDocuments.find(
+    (document) => vscode.workspace.asRelativePath(document.uri) === c.state.path,
+  );
+  assert.ok(screen, "the reader retains its analyzed source document");
   assert.equal(screen.languageId, "typescriptreact");
   const screenBefore = screen.getText();
   const phrase = c.state.analysis!.rules.find(
@@ -507,7 +590,17 @@ export async function run() {
     typedDoc.getText(vscode.window.activeTextEditor!.selection),
     "shippingFee",
   );
+  // Diagnostic navigation deliberately preserves panel focus. Undo is an
+  // editor command, so focus the source before exercising its undo stack.
+  await vscode.window.showTextDocument(typedDoc, {
+    viewColumn: vscode.ViewColumn.One,
+    preserveFocus: false,
+  });
   await vscode.commands.executeCommand("undo");
+  assert.equal(
+    typedDoc.getText(),
+    "export const shippingFee: 3000 | 5000 = 3000;\n",
+  );
   await until(
     () =>
       c.state.diagnostics?.items.every(
@@ -519,6 +612,11 @@ export async function run() {
   reports.push(
     "built-in TypeScript reports an actual 2322 error after a rule edit; source selection and undo clear it",
   );
+  await pythonSourceChecks(c, ready, reports);
+  await goSourceChecks(c, ready, reports);
+  await javaSourceChecks(c, ready, reports);
+  await csharpSourceChecks(c, ready, reports);
+  await rustSourceChecks(c, ready, reports);
   await localAssistantChecks(c, ready, reports);
   const jsoncSource =
     '{ // 정책\n "url": "https://example.com/path", "fee": 3000,\n}';
@@ -526,10 +624,7 @@ export async function run() {
     language: "jsonc",
     content: jsoncSource,
   });
-  const jsoncEditor = await vscode.window.showTextDocument(
-    jsoncDoc,
-    vscode.ViewColumn.One,
-  );
+  await vscode.window.showTextDocument(jsoncDoc, vscode.ViewColumn.One);
   await c.setDocument(jsoncDoc);
   await ready();
   assert.equal(c.state.analysis!.kind, "json");
@@ -539,8 +634,79 @@ export async function run() {
     "untitled JSONC preserves its language for the worker",
   );
   assert.ok(c.state.analysis!.steps[0].text.ko.includes("2개 항목"));
+  assert.equal(c.state.analysis!.data!.fields.length, 2);
+  const jsonFee = c.state.analysis!.rules.find((r) => r.name === '$["fee"]')!;
+  assert.equal(jsonFee.value, "3000");
+  assert.equal(jsonFee.syntax, "json");
+  assert.ok(
+    c.state.analysis!.steps.some(
+      (step) => step.text.en === '$["fee"] stores number 3000',
+    ),
+  );
+  assert.ok(
+    c.state.analysis!.steps.some(
+      (step) => step.text.ko === '$["fee"]에 숫자 3000 저장',
+    ),
+  );
+  await c.source(c.state.contextId, jsonFee.line);
+  assert.equal(vscode.window.activeTextEditor!.selection.active.line, 1);
+  const jsonContext = c.state.contextId;
+  const jsonPatch = await c.prepare(jsonContext, {
+    ruleId: jsonFee.id,
+    value: "9007199254740993",
+  });
+  assert.equal(jsonPatch.newText, "9007199254740993");
+  const jsonPreview = await c.preview(jsonPatch.id, jsonContext);
+  const jsonBefore = await vscode.workspace.openTextDocument(
+    vscode.Uri.parse(jsonPreview.before),
+  );
+  const jsonAfter = await vscode.workspace.openTextDocument(
+    vscode.Uri.parse(jsonPreview.after),
+  );
+  assert.equal(jsonBefore.languageId, "jsonc");
+  assert.equal(jsonAfter.languageId, "jsonc");
+  assert.equal(jsonBefore.getText(), jsoncSource);
+  assert.equal(
+    jsonAfter.getText(),
+    jsoncSource.replace("3000", "9007199254740993"),
+  );
+  assert.equal(
+    jsoncDoc.getText(),
+    jsoncSource,
+    "JSONC preview must not mutate source",
+  );
+  await c.apply(jsonPatch.id, jsonContext);
+  await ready();
+  assert.equal(jsoncDoc.getText(), jsonAfter.getText());
+  assert.equal(
+    c.state.analysis!.rules.find((r) => r.name === '$["fee"]')!.value,
+    "9007199254740993",
+  );
+  await vscode.window.showTextDocument(jsoncDoc, vscode.ViewColumn.One);
+  await vscode.commands.executeCommand("undo");
+  await until(
+    () =>
+      !c.state.busy &&
+      c.state.analysis?.rules.some(
+        (r) => r.name === '$["fee"]' && r.value === "3000",
+      ) === true,
+    "JSONC literal undo refreshes source facts",
+  );
+  assert.equal(jsoncDoc.getText(), jsoncSource);
+  await assert.rejects(
+    c.apply(jsonPatch.id, jsonContext),
+    "a used JSON patch cannot be reapplied",
+  );
+  const staleJson = await c.prepare(c.state.contextId, {
+    request: 'change $["fee"] to 4000',
+  });
+  const staleContext = c.state.contextId;
   const feeStart = jsoncSource.indexOf("3000");
-  await jsoncEditor.edit((builder) =>
+  const currentJsonEditor = await vscode.window.showTextDocument(
+    jsoncDoc,
+    vscode.ViewColumn.One,
+  );
+  await currentJsonEditor.edit((builder) =>
     builder.delete(
       new vscode.Range(
         jsoncDoc.positionAt(feeStart),
@@ -552,6 +718,10 @@ export async function run() {
     () => !c.state.busy && c.state.analysis?.syntaxValid === false,
     "invalid JSONC is reported after unsaved edits",
   );
+  await assert.rejects(
+    c.apply(staleJson.id, staleContext),
+    "edited JSON document invalidates a pending literal patch",
+  );
   await vscode.commands.executeCommand("undo");
   await until(
     () => !c.state.busy && c.state.analysis?.syntaxValid === true,
@@ -561,8 +731,16 @@ export async function run() {
   reports.push(
     "JSONC untitled document: comments, trailing comma and URL preserved; invalid unsaved edit reported and undo restores valid worker analysis",
   );
+  reports.push(
+    "JSONC source facts in Korean/English, source navigation, model-free numeric edit, native JSONC diff, exact unsafe-integer spelling, apply/undo and stale edit rejection",
+  );
+  await webSourceChecks(c, ready, reports);
+  await sqlSourceChecks(c, ready, reports);
+  await functionFormatChecks(c, ready, reports);
   await projectChecks(c, ready, reports);
+  await benchmarkChecks(c, ready, reports);
   const report = {
+    installation,
     vscode: vscode.version,
     checks: reports,
     passed: reports.length,

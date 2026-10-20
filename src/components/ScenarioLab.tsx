@@ -18,6 +18,7 @@ type Props = {
   run: (rows: Scenario[]) => Promise<ScenarioReport>;
   exportReport: (markdown: string) => Promise<void> | void;
   disabled?: boolean;
+  hideExport?: boolean;
 };
 
 export function ScenarioLab({
@@ -29,6 +30,7 @@ export function ScenarioLab({
   run,
   exportReport,
   disabled,
+  hideExport,
 }: Props) {
   const ko = lang === "ko",
     id = useId();
@@ -43,6 +45,7 @@ export function ScenarioLab({
   const [notice, setNotice] = useState("");
   const current = useRef(revision);
   const requestId = useRef(0);
+  const resultRef = useRef<HTMLDivElement>(null);
   current.current = revision;
   useEffect(() => {
     requestId.current++;
@@ -50,6 +53,9 @@ export function ScenarioLab({
     setError("");
     setBusy(false);
   }, [revision]);
+  useEffect(() => {
+    if (result) resultRef.current?.focus({ preventScroll: true });
+  }, [result]);
   useEffect(
     () => () => {
       requestId.current++;
@@ -91,7 +97,9 @@ export function ScenarioLab({
     <section className="scenario-lab" aria-labelledby={`${id}-title`}>
       <div className="scenario-heading">
         <div>
-          <span className="eyebrow">WHAT CHANGES?</span>
+          <span className="eyebrow">
+            {t("변경 전후 비교", "WHAT CHANGES?")}
+          </span>
           <h3 id={`${id}-title`}>
             {t("어떤 경우에 결과가 달라질까요?", "Which cases change?")}
           </h3>
@@ -260,7 +268,12 @@ export function ScenarioLab({
         </p>
       )}
       {result && (
-        <div className="scenario-results">
+        <div
+          className="scenario-results"
+          ref={resultRef}
+          tabIndex={-1}
+          aria-label={t("입력별 계산 결과", "Results by input")}
+        >
           <div className="scenario-summary" role="status">
             <strong>
               {
@@ -320,31 +333,38 @@ export function ScenarioLab({
               </tbody>
             </table>
           </div>
-          <button
-            type="button"
-            className="scenario-export"
-            onClick={async () => {
-              try {
-                await exportReport(scenarioMarkdown(result, lang));
-                setNotice(
-                  t(
-                    "비교 설명서를 준비했습니다.",
-                    "Comparison report prepared.",
-                  ),
-                );
-              } catch (e) {
-                setError(String(e));
-              }
-            }}
-          >
-            {t("비교 설명서 만들기 (.md)", "Create comparison report (.md)")}
-          </button>
-          <p className="scenario-hint">
-            {t(
-              "위에 보이는 파일명·입력·출력만 담습니다. 공유 전에 확인하세요. 자동 공개하지 않습니다.",
-              "Contains the displayed file name, inputs and outputs. Review before sharing. Nothing is auto-published.",
-            )}
-          </p>
+          {!hideExport && (
+            <>
+              <button
+                type="button"
+                className="scenario-export"
+                onClick={async () => {
+                  try {
+                    await exportReport(scenarioMarkdown(result, lang));
+                    setNotice(
+                      t(
+                        "비교 설명서를 준비했습니다.",
+                        "Comparison report prepared.",
+                      ),
+                    );
+                  } catch (e) {
+                    setError(String(e));
+                  }
+                }}
+              >
+                {t(
+                  "비교 설명서 만들기 (.md)",
+                  "Create comparison report (.md)",
+                )}
+              </button>
+              <p className="scenario-hint">
+                {t(
+                  "위에 보이는 파일명·입력·출력만 담습니다. 공유 전에 확인하세요. 자동 공개하지 않습니다.",
+                  "Contains the displayed file name, inputs and outputs. Review before sharing. Nothing is auto-published.",
+                )}
+              </p>
+            </>
+          )}
         </div>
       )}
       {notice && <p role="status">{notice}</p>}

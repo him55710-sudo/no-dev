@@ -46,6 +46,7 @@ import "./design.css";
 export type DesignActions = DraftActions &
   NavigationActions &
   ExecutionActions & {
+    readProject?: () => void;
     refresh: () => Promise<unknown>;
     source: (id: string, index: number) => Promise<unknown>;
     save: (
@@ -546,6 +547,9 @@ export function DesignWorkspaceView({
                 ? `${graph.files.length}개 파일 연결됨`
                 : "분석 대기"}
         </span>
+        {actions.readProject ? (
+          <button onClick={actions.readProject}>프로젝트 설명 읽기</button>
+        ) : null}
         <button onClick={() => perform(actions.refresh)} disabled={state.busy}>
           구조 새로 읽기
         </button>

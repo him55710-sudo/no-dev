@@ -1,6 +1,56 @@
 # 로컬 AI 검증 자료 · 2026-10-16
 
+2026-10-20 CPU 후속: [같은 실제 과제의 원문 구분·CPU 요청](focused-context-cpu.md). 세 번 완성 응답을 받았으나 인용 또는 의미 검토에서 모두 실패했다. 인용 통과와 설명 정확성을 분리한다. 한국어/영어 CPU 선택과 이전 결과 해제를 확인했으며, 기존 timeout과 포매터 성공은 그대로 보존한다.
+
+CPU 옵션 제품 커밋 `954d6cf`의 [Windows·Ubuntu CI](focused-context-cpu-ci.json): 각 핵심 **260개**, 개발/설치 각 **55개**, production 모드·파일 11개 해시·추출 도구 검사를 통과했다. 실제 사용자 코드의 모델 응답은 별도 평가이며 이 CI의 통과 수에 넣지 않는다.
+
+2026-10-20 함수 설명 후속: [함수 선택·원문 인용·실제 프로젝트 시도](focused-explanation.md). 실제 사용자 코드의 두 생성 요청은 각각 180초 시간 초과로, 설명 품질은 미확인이다. [개발 호스트 55개](focused-explanation-development-integration.json), [설치본 55개](focused-explanation-installed-integration.json), [핵심 검사 실패를 포함한 실행 기록](focused-explanation-verification.json), [한국어](focused-explanation-ko.jpg)/[영어](focused-explanation-en.jpg) 화면은 서로 다른 증거다. [사용 방법과 전달 범위](../../FOCUSED_EXPLANATIONS.md). 비공개 원문·응답은 공개하지 않는다.
+
+함수 선택 제품 소스 `9758dac`의 [Windows·Ubuntu CI](focused-explanation-ci.json)는 각 핵심 **259개**, 개발/production 설치 각 **55개**, 설치 파일 11개 해시와 추출 도구 검사를 통과했다. 같은 흐름을 실행 환경 수만큼 새 기능으로 합산하지 않는다. 로컬 timeout 기록과 실제 모델 실패는 유지한다.
+
+2026-10-20 Rust 후속: [humantime 실제 편집기·기존 테스트](rust-source-project.md)에서 42 pass → 상수 변경으로 8 fail → native undo 후 42 pass와 원본 복구를 확인했다. 환경 준비 실패도 별도로 보존한다. [최종 소스 Windows·Ubuntu CI](rust-source-ci.json)는 각 핵심 258개·개발/설치 각 54개·파일 11개 해시·추출 WASM 실행을 통과했다. [구현 범위](../../RUST_SOURCE.md), [이전 개발](rust-source-development-integration.json), [이전 설치](rust-source-installed-integration.json), [한국어 화면](rust-source-reading-ko.jpg), [영어 변경안](rust-source-review-en.jpg). 실제 모델 의미 정확도·최적화 성과는 미검증이다.
+
+2026-10-20 C# 후속: [GuardClauses 실제 편집기·기존 테스트 연결](csharp-source-project.md)에서 959 pass → 검증용 경계값 변경으로 7 fail → native undo 후 959 pass와 원본 복구를 확인했다. 첫 실행의 BOM 위치 오류와 수정도 공개한다. 이는 회귀 검출 연동 검사이며 AI 품질이나 실제 사용자 과제의 성공은 별도다.
+
+2026-10-20 후속: [모델 없는 JS/TS 함수 서식 정리](function-format.md). 사용자 지정 실제 프로젝트의 기존 테스트 **8→8→8 통과**, native 적용·undo·원본 복구를 확인했다. 전체 핵심 242개·개발 호스트 51개, 한국어/영어 실제 UI 검증을 별도 기록한다. 이전 AI 요청 실패나 설명 품질·성능 최적화 성공으로 재분류하지 않는다.
+
+[SQLite 원문 읽기·값 수정](../../SQL_SOURCE.md), [개발 43개](sql-source-development-integration.json), [설치 43개](sql-source-installed-integration.json), [외부 sqlc 예제](sql-source-project.md)를 추가했다. 명시적 방언·정확한 수정·diff·undo와 실제 재생성/Go 테스트 1 pass → 고정 오류 1 fail → 복구 1 pass를 확인한다. 개발 기록은 마지막 SQL 위치 보정 전이며 설치/CI는 별도 버전 근거를 따른다. 모델 의미 정확도·쿼리 최적화·전체 sqlc 테스트 성공으로 합산하지 않는다.
+
+SQLite 소스 `3b1aa4d`의 [Windows·Ubuntu CI 원자료](sql-source-ci.json): 각 핵심 **217개**, 개발/설치 각 **43개**, production 모드·런타임 8개 해시·추출 도구 5종 성공. [SQL 실제 화면](sql-source-native.md)은 한국어/영어 읽기, 한국어 값 수정·diff·적용·Ctrl+Z와 원문 복구, 남은 화면·진단 제약을 별도로 기록한다.
+
+화면에서 발견한 문구와 diff 제목 언어 수정 후 [별도 설치본 43개](sql-source-localization-installed.json)와 [한국어/영어 VS Code 탭 제목](sql-source-localization-titles.json)을 확인했다. 앞선 수동 화면·기능 CI와 후속 수정본의 해시를 구분한다.
+
+Java 기능·CI 설정 소스 `3ecae6e`의 [Windows·Ubuntu CI 원자료](java-source-ci.json): 각 핵심 **208개**, 개발/설치 각 **41개**, production 모드·런타임 8개 해시·추출 도구 5종 성공. [Java 실제 화면](java-source-native.md)은 한국어/영어·원문 이동·값 수정·diff·적용·undo와 남은 사용성 제약을 별도로 기록한다.
+
+[Java 원문 파서](../../JAVA_SOURCE.md)의 [개발 41개](java-source-development-integration.json)·[설치 41개](java-source-installed-integration.json), production 모드·런타임 8개 해시를 추가했다. [외부 minimal-json](java-source-project.md)은 원본 452 pass → 고정 오류 13 fail → undo 후 452 pass와 정확한 파일 복구를 확인했다. 최신 JDK에서 원래 테스트 도구를 실행하기 위한 호환 설정과 준비 실패도 보존했다. 모델 정확성·최적화 성공 점수로 합산하지 않는다.
+
+외부 검증 도구·기록 소스 `493cd04`의 [Windows·Ubuntu CI 원자료](web-project-ci.json): 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·추출 도구 실행 성공. 아래 외부 Chrome 검사는 이 CI의 집계에 포함되지 않는다.
+
+[외부 modern-normalize HTML/CSS 검증](web-source-project.md)을 추가했다. 실제 VS Code에서 CSS 값 하나 변경 후 Chrome 실패 7→9→undo 후 7을 확인했다. 원본 실패 7개와 assertion 없는 TODO 8개, 브라우저 연결 실패 두 번, 실행기 종료 코드·프로필 격리 보강도 원자료에 보존한다. 전체 upstream 통과나 최적화 성공 사례는 아니다.
+
+HTML/CSS 기능 소스 `20de714`의 [Windows·Ubuntu CI](web-source-ci.json)는 각 핵심 **200개**, 개발/설치 각 **38개**, production 모드·런타임 7개 해시·패키지 도구 실행에 성공했다. [실제 화면](web-source-native.md), 로컬 설치본과 외부 웹 프로젝트 검증은 별도 기록이다.
+
+[HTML/CSS 파서 읽기·값 수정](../../HTML_CSS_SOURCE.md)의 [개발 38개](web-source-development-integration.json), [설치 38개](web-source-installed-integration.json), [실제 화면](web-source-native.md)을 추가했다. API/모델 없이 원문 값과 diff·적용·undo를 확인한 자료이며, 실제 모델 응답 수나 외부 페이지 동작 검증 수에 합치지 않는다. 마지막 주석/식별자 수정 전 화면 설치본과 이후 검증은 구분한다.
+
+마지막 CSS 주석/식별자 수정 후 [새 설치본 38개](web-source-final-installed-integration.json)도 통과했다. VSIX `88761109…`, production 모드와 런타임 7개 해시를 대조했다. 이전 설치/화면의 VSIX `109782f6…`와 같은 파일로 취급하지 않는다.
+
+Go 기능 소스 `5b9e5f0`의 [Windows·Ubuntu CI 원자료](go-source-ci.json): 각 핵심 **185개**, 개발/설치 각 **36개**, production 모드·런타임 7개 해시·패키지 도구 4종 성공. [네이티브 Go 화면](go-source-native.md)과 [외부 프로젝트](go-source-project.md)는 별도 증거다.
+
+[Go AST 읽기·수정](../../GO_SOURCE.md)과 [Google UUID 외부 프로젝트 원자료](go-source-project.md)를 추가했다. 설치된 표준 파서와 실제 편집기/task로 201 pass·1 skip → 고정 오류의 TestUUID 실패 → undo 후 복구를 확인한다. 모델 없이 수행한 검사이며 모델 정확도나 최적화 성공 점수에 합치지 않는다.
+
 현재 자료는 자동 연결 검사, 실제 모델 응답, 외부 프로젝트 연동과 성능 측정을 구별한다. 공개 소스와 합성 예제만 사용했다. 사용자 비공개 코드·키·개인정보는 포함하지 않았다.
+
+[Python AST의 모델 없는 읽기·수정](../../PYTHON_SOURCE.md)도 추가했다. [외부 itsdangerous 원자료와 재현](python-source-project.md)은 실제 VS Code에서 원문 값 하나를 바꾸고 upstream 테스트 **297개 통과→38개 실패→undo 후 297개 통과**를 확인한다. 모델 의미 정확성이나 성능 개선으로 집계하지 않는다.
+
+Python 기능 `583c805`의 [Windows·Ubuntu CI 원자료](python-source-ci.json): 각 핵심 **178개**, 개발 호스트·설치본 각각 **33개**, production 모드·런타임 6개 해시와 추출한 도구 3종 실행 성공. [네이티브 화면](python-source-native.md)은 한국어/영어 설명·값 수정·diff·적용·원문 이동·undo를 확인한 별도 기록이다.
+
+JSONC의 소비 동작 추측에 대응해 [모델 없는 데이터 읽기·수정](../../JSON_DATA.md)을 추가했다. 파서가 확인한 키·값과 모델 해석을 구별하며, 실제 VS Code의 원문 보존·diff·큰 정수 수정·undo를 검사한다. 모델의 의미 정확성 개선 점수로 세지 않는다.
+
+`2b0235e`의 [Windows·Ubuntu CI](json-facts-ci.json): 각 핵심 169개·개발/설치 각 31개, production 모드·런타임 해시와 추출한 Worker 검사 성공. [로컬 설치본](json-facts-installed-integration.json)과 [브라우저 실제 조작·제약](../../JSON_DATA.md)은 별도 기록이다. 네이티브 JSON 화면 조작의 추가 시도는 대상 창을 찾지 못해 성공으로 세지 않았다.
+
+추가 자료: [분기·경계·데이터 의미의 모델 비교](semantic-review.md), [외부 JavaScript clsx 검사 연결](clsx-review.md). 모델 비교에는 실패와 누락을 보존하고, clsx에는 Node 24 준비 실패와 호환 런타임에서의 실제 32개 검사·고정 오류 발견·undo 복구를 함께 공개한다.
+
+기능 소스 `a184b68`의 [Windows·Ubuntu CI](semantic-ci.json)는 각각 핵심 162개·개발 실행 30개·설치 실행 30개·추출 Worker 검사를 확인한다. [로컬 설치본 원자료](semantic-installed-integration.json)와 실제 설명 60회(한국어 50, 영어 10)는 서로 다른 검증이다. 둘을 합쳐 모델 정확도 점수로 쓰지 않는다.
 
 | 자료 | 실제 확인 내용 | 해석 한계 |
 | --- | --- | --- |
@@ -23,6 +73,16 @@
 환경: Windows, Python 3.12.10, VS Code 1.96.4, Ollama 0.40.5, RAM 약 32GB, NVIDIA MX450 2GB. 모델 digest는 각 보고서에 있다. 소요 시간에는 모델 로드 상태에 따른 차이가 있을 수 있다. pytest 전체 소요 시간은 함수 최적화 수치로 사용하지 않는다.
 
 ## 재현
+
+새 [설치본 상태 검증](installed-ui-states.md)은 한국어/영어 안내, 생성 중 언어 변경과 취소, 완료 응답 숨김, 큰 파일과 미지원 파일을 네이티브 화면에서 확인한다. 실제 3B 응답의 누락도 기록했다. 별도의 [설치 VSIX 통합 검사](installed-vsix-integration.json)는 제품 경로·production 모드·파일 해시를 검증하고 실제 VS Code 흐름을 실행한다. 실제 모델/화면/제어된 HTTP 검사를 혼합해 정확도 점수로 세지 않는다.
+
+[설치 검증의 Windows·Ubuntu CI](installed-ci.json): `b1743a6`에서 각 핵심 161개·개발 실행 30개·설치 실행 30개와 추출한 Worker 검사 성공. 개발/설치의 30개는 같은 흐름을 다른 배포 방식에서 실행한 것이다. 네이티브 기록에는 이후 실제 미실행 포트의 연결 실패와 빈 모델 폴더를 사용하는 별도 Ollama의 안내·요청 차단도 추가했다.
+
+측정 기능 커밋 `d819c49`의 [Windows·Ubuntu CI 증거](benchmark-ci.json)는 각 161개 핵심 검사·30개 실제 VS Code 통합 흐름·추출한 분석 및 Python 측정 Worker 실행 성공을 기록한다. 통합 검사의 로컬 AI 응답은 제어된 fixture이며 실제 Ollama 응답 자료와 구별한다. 새 측정 화면을 설치본에서 클릭·키보드로 모두 검증했다는 뜻은 아니다.
+
+사용자용 전후 측정 기능의 실제 자료도 추가했다. [최초 설정 실패](itsdangerous-command-benchmark-setup-failure.json), [실행기 메모리를 잘못 해석할 수 있었던 첫 측정](itsdangerous-command-benchmark-before-memory-fix.json), [실행기 메모리 제외 후 재측정](itsdangerous-command-benchmark.json). 전후·복구 후 pytest 각 297개를 확인했고 같은 제안의 실행 시간은 두 차례 모두 늘었다(약 14.1%, 21.1%). 최종 기록은 Windows 가상환경 실행기 때문에 메모리 비교가 없다. 이 숫자는 전체 명령·프로세스 시작을 포함하며 앞선 함수 단위 교대 측정과 다르다. [측정 방식](../../BENCHMARKS.md).
+
+같은 고정 외부 저장소와 Python 환경에서 `node scripts/test-local-project.mjs --benchmark-only`로 재현한다. Ollama는 필요 없으며 이미 검토한 특정 변경 한 건만 재현한다. tasks.json은 없을 때만 VS Code 시작 전에 생성하고 검증 종료 후 제거한다. 다른 파일은 덮어쓰지 않는다.
 
 1. 프로젝트의 Node/pnpm 의존성과 Ollama를 설치한다. `OLLAMA_NO_CLOUD=1`, `OLLAMA_HOST=127.0.0.1:11435`로 Ollama를 실행하고 `qwen2.5-coder:3b`를 내려받는다. 기본 포트를 쓴다면 아래 검증 스크립트의 `PUREOBOM_PROJECT_PORT` 환경 변수를 지정한다.
 2. `git clone --depth 1 --branch 2.2.0 https://github.com/pallets/itsdangerous.git test-results/projects/itsdangerous` 후 위 커밋인지 확인한다. 스크립트도 커밋과 깨끗한 작업 트리를 확인한다.
