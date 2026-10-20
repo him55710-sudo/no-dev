@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-19T20:19:39.290Z",
+  "run": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-failure-demo-qSGir9",
+  "source": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-failure-demo-qSGir9\\project",
+  "candidateJob": "29da2265-df2a-4efc-b630-bc4f458f7d8a",
+  "provider": "Controlled deterministic stdio fault peer; NOT AI",
+  "guardsOmitted": {
+    "path": "app/(login)/actions.ts",
+    "goodHash": "bcc6ea871829fb11fe14e4cab11d056c50c9af4f80798fcd4e91e00db4e9a18e",
+    "faultHash": "401c23583fcbad63be192f0b53fe026be2256e670ab7af0df369305dc83232f9",
+    "count": 2
+  },
+  "originalHashes": {
+    ".env.example": "974285113c1ad8e1293d114ac00b35f36d425c2c68fa839e3943118e517a2c04",
+    ".gitignore": "43d2afb3e486c6a5debe8d5a3d0a7d874345fb09e5fba3018964fd4e251b1fdf",
+    "LICENSE": "b44c87f36db2fb9515086cd4cda151287e3c36fc0a48650ec9554f22b3571d3e",
+    "README.md": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+    "app/(dashboard)/dashboard/activity/loading.tsx": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+    "app/(dashboard)/dashboard/activity/page.tsx": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+    "app/(dashboard)/dashboard/general/page.tsx": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+    "app/(dashboard)/dashboard/layout.tsx": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+    "app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "app/(dashboard)/dashboard/security/page.tsx": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+    "app/(dashboard)/layout.tsx": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+    "app/(dashboard)/page.tsx": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+    "app/(dashboard)/pricing/page.tsx": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+    "app/(dashboard)/pricing/submit-button.tsx": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+    "app/(dashboard)/terminal.tsx": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+    "app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "app/(login)/login.tsx": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+    "app/(login)/sign-in/page.tsx": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+    "app/(login)/sign-up/page.tsx": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+    "app/api/stripe/checkout/route.ts": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+    "app/api/stripe/webhook/route.ts": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+    "app/api/team/route.ts": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+    "app/api/user/route.ts": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+    "app/favicon.ico": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+    "app/globals.css": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+    "app/layout.tsx": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+    "app/not-found.tsx": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+    "components.json": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+    "components/ui/avatar.tsx": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+    "components/ui/button.tsx": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+    "components/ui/card.tsx": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+    "components/ui/dropdown-menu.tsx": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+    "components/ui/input.tsx": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+    "components/ui/label.tsx": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+    "components/ui/radio-group.tsx": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+    "drizzle.config.ts": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+    "lib/auth/middleware.ts": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+    "lib/auth/session.ts": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+    "lib/db/drizzle.ts": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+    "lib/db/migrations/0000_soft_the_anarchist.sql": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+    "lib/db/migrations/meta/0000_snapshot.json": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+    "lib/db/migrations/meta/_journal.json": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+    "lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "lib/db/seed.ts": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+    "lib/db/setup.ts": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+    "lib/payments/actions.ts": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+    "lib/payments/stripe.ts": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+    "lib/utils.ts": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+    "middleware.ts": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+    "next.config.ts": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "postcss.config.mjs": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "tsconfig.json": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a"
+  },
+  "events": [
+    {
+      "at": "2026-10-19T20:19:39.298Z",
+      "phase": "preparing",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:19:42.720Z",
+      "phase": "running",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:19:43.484Z",
+      "phase": "approval",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:21:08.590Z",
+      "phase": "running",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:21:09.615Z",
+      "phase": "checking",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:21:24.991Z",
+      "phase": "repairing",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n ❯ pureobom-validation/permissions.test.tsx (9 tests | 2 failed) 3900ms\n     × member direct server-action invitation is denied without database or audit mutation 63ms\n     × member direct removal is denied without database or audit mutation 34ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct server-action invitation is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:105:28\n    103|   it('member direct server-action invitation is denied without databas…\n    104|     const before = await snapshot();\n    105|     expect(await invite()).toHaveProperty('error');\n       |                            ^\n    106|     expect(await snapshot()).toEqual(before);\n    107|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct removal is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:110:29\n    108|   it('member direct removal is denied without database or audit mutati…\n    109|     const before = await snapshot();\n    110|     expect(await remove(3)).toHaveProperty('error');\n       |                             ^\n    111|     expect(await snapshot()).toEqual(before);\n    112|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 7 passed (9)\n   Start at  05:21:10\n   Duration  4.30s (transform 308ms, setup 0ms, import 139ms, tests 3.90s, environment 0ms)\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "elapsedMs": 7944
+        },
+        {
+          "name": "typecheck",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ tsc --noEmit\n",
+          "elapsedMs": 7431
+        }
+      ]
+    },
+    {
+      "at": "2026-10-19T20:21:25.393Z",
+      "phase": "approval",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n ❯ pureobom-validation/permissions.test.tsx (9 tests | 2 failed) 3900ms\n     × member direct server-action invitation is denied without database or audit mutation 63ms\n     × member direct removal is denied without database or audit mutation 34ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct server-action invitation is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:105:28\n    103|   it('member direct server-action invitation is denied without databas…\n    104|     const before = await snapshot();\n    105|     expect(await invite()).toHaveProperty('error');\n       |                            ^\n    106|     expect(await snapshot()).toEqual(before);\n    107|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct removal is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:110:29\n    108|   it('member direct removal is denied without database or audit mutati…\n    109|     const before = await snapshot();\n    110|     expect(await remove(3)).toHaveProperty('error');\n       |                             ^\n    111|     expect(await snapshot()).toEqual(before);\n    112|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 7 passed (9)\n   Start at  05:21:10\n   Duration  4.30s (transform 308ms, setup 0ms, import 139ms, tests 3.90s, environment 0ms)\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "elapsedMs": 7944
+        },
+        {
+          "name": "typecheck",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ tsc --noEmit\n",
+          "elapsedMs": 7431
+        }
+      ]
+    },
+    {
+      "at": "2026-10-19T20:24:06.634Z",
+      "phase": "running",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n ❯ pureobom-validation/permissions.test.tsx (9 tests | 2 failed) 3900ms\n     × member direct server-action invitation is denied without database or audit mutation 63ms\n     × member direct removal is denied without database or audit mutation 34ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct server-action invitation is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:105:28\n    103|   it('member direct server-action invitation is denied without databas…\n    104|     const before = await snapshot();\n    105|     expect(await invite()).toHaveProperty('error');\n       |                            ^\n    106|     expect(await snapshot()).toEqual(before);\n    107|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct removal is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:110:29\n    108|   it('member direct removal is denied without database or audit mutati…\n    109|     const before = await snapshot();\n    110|     expect(await remove(3)).toHaveProperty('error');\n       |                             ^\n    111|     expect(await snapshot()).toEqual(before);\n    112|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 7 passed (9)\n   Start at  05:21:10\n   Duration  4.30s (transform 308ms, setup 0ms, import 139ms, tests 3.90s, environment 0ms)\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "elapsedMs": 7944
+        },
+        {
+          "name": "typecheck",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ tsc --noEmit\n",
+          "elapsedMs": 7431
+        }
+      ]
+    },
+    {
+      "at": "2026-10-19T20:24:07.726Z",
+      "phase": "checking",
+      "checks": []
+    },
+    {
+      "at": "2026-10-19T20:24:56.847Z",
+      "phase": "review",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n ❯ pureobom-validation/permissions.test.tsx (9 tests | 2 failed) 21848ms\n     × member direct server-action invitation is denied without database or audit mutation 141ms\n     × member direct removal is denied without database or audit mutation 70ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct server-action invitation is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:105:28\n    103|   it('member direct server-action invitation is denied without databas…\n    104|     const before = await snapshot();\n    105|     expect(await invite()).toHaveProperty('error');\n       |                            ^\n    106|     expect(await snapshot()).toEqual(before);\n    107|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct removal is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:110:29\n    108|   it('member direct removal is denied without database or audit mutati…\n    109|     const before = await snapshot();\n    110|     expect(await remove(3)).toHaveProperty('error');\n       |                             ^\n    111|     expect(await snapshot()).toEqual(before);\n    112|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 7 passed (9)\n   Start at  05:24:14\n   Duration  24.65s (transform 1.44s, setup 0ms, import 664ms, tests 21.85s, environment 0ms)\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "elapsedMs": 34132
+        },
+        {
+          "name": "typecheck",
+          "status": "passed",
+          "exitCode": 0,
+          "output": "$ tsc --noEmit\n",
+          "elapsedMs": 14384
+        }
+      ]
+    }
+  ],
+  "scope": "Actual implementation manager, actual locked external-app tests, failed-check apply rejection, restored-candidate positive control. CLI harness, not a new browser or native Webview run.",
+  "job": {
+    "id": "6427c6f8-1f57-4c5d-82b7-5d12069f47f7",
+    "specId": "feature:830df5e6-b08f-4d20-adb6-ca998db17d83",
+    "specRevision": 1,
+    "phase": "review",
+    "startedAt": "2026-10-19T20:19:39.297Z",
+    "message": "실제 검사 실패를 전달해 수정을 요청합니다.\nControlled fault kept the recorded UI restrictions but omitted two server guards. Deliberately repeats the fault on the repair attempt; no model ran.\n검사가 통과하지 못했습니다. 변경을 검토할 수 있지만 원본에 반영할 수 없습니다.",
+    "checks": [
+      {
+        "name": "test",
+        "status": "failed",
+        "exitCode": 1,
+        "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n ❯ pureobom-validation/permissions.test.tsx (9 tests | 2 failed) 21848ms\n     × member direct server-action invitation is denied without database or audit mutation 141ms\n     × member direct removal is denied without database or audit mutation 70ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct server-action invitation is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:105:28\n    103|   it('member direct server-action invitation is denied without databas…\n    104|     const before = await snapshot();\n    105|     expect(await invite()).toHaveProperty('error');\n       |                            ^\n    106|     expect(await snapshot()).toEqual(before);\n    107|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\n\n FAIL  pureobom-validation/permissions.test.tsx > external Next.js team permissions — locked acceptance > member direct removal is denied without database or audit mutation\nAssertionError: expected { Object (success) } to have property \"error\"\n ❯ pureobom-validation/permissions.test.tsx:110:29\n    108|   it('member direct removal is denied without database or audit mutati…\n    109|     const before = await snapshot();\n    110|     expect(await remove(3)).toHaveProperty('error');\n       |                             ^\n    111|     expect(await snapshot()).toEqual(before);\n    112|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\n\n\n Test Files  1 failed (1)\n      Tests  2 failed | 7 passed (9)\n   Start at  05:24:14\n   Duration  24.65s (transform 1.44s, setup 0ms, import 664ms, tests 21.85s, environment 0ms)\n\n[ELIFECYCLE] Test failed. See above for more details.\n",
+        "elapsedMs": 34132
+      },
+      {
+        "name": "typecheck",
+        "status": "passed",
+        "exitCode": 0,
+        "output": "$ tsc --noEmit\n",
+        "elapsedMs": 14384
+      }
+    ],
+    "files": [
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "kind": "modified"
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "kind": "modified"
+      },
+      {
+        "path": "lib/auth/team-permissions.ts",
+        "kind": "added"
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "kind": "modified"
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "kind": "modified"
+      },
+      {
+        "path": "tests/team-permissions.test.tsx",
+        "kind": "added"
+      },
+      {
+        "path": "tests/vitest.config.mts",
+        "kind": "added"
+      }
+    ],
+    "approvals": [],
+    "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\5e452026e7428732\\6427c6f8-1f57-4c5d-82b7-5d12069f47f7",
+    "provider": "Pureobom controlled missing-server-guards fixture; NOT AI",
+    "reviewId": "421006eedd7275eec0db6e90539df3050e7a6459001e20522d3b08e0424fe2e4",
+    "assessment": {
+      "jobId": "6427c6f8-1f57-4c5d-82b7-5d12069f47f7",
+      "reviewId": "421006eedd7275eec0db6e90539df3050e7a6459001e20522d3b08e0424fe2e4",
+      "files": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "outsideScope": false
+        },
+        {
+          "path": "app/(login)/actions.ts",
+          "outsideScope": false
+        },
+        {
+          "path": "lib/auth/team-permissions.ts",
+          "outsideScope": true
+        },
+        {
+          "path": "lib/db/queries.ts",
+          "outsideScope": false
+        },
+        {
+          "path": "lib/db/schema.ts",
+          "outsideScope": true
+        },
+        {
+          "path": "tests/team-permissions.test.tsx",
+          "outsideScope": true,
+          "verification": "test"
+        },
+        {
+          "path": "tests/vitest.config.mts",
+          "outsideScope": true,
+          "verification": "test"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "acceptance:0",
+          "kind": "acceptance",
+          "text": "일반 member는 실제 팀 API에서 자기 팀 명단을 조회한다."
+        },
+        {
+          "id": "acceptance:1",
+          "kind": "acceptance",
+          "text": "일반 member의 직접 초대·제거 요청은 실패하며 SQL 데이터와 성공 활동 기록을 변경하지 않는다."
+        },
+        {
+          "id": "acceptance:2",
+          "kind": "acceptance",
+          "text": "현재 팀 owner의 초대·FormData 제거가 동작한다. 계정 전역 member 표시는 이를 막지 않는다."
+        },
+        {
+          "id": "acceptance:3",
+          "kind": "acceptance",
+          "text": "다른 팀의 owner 권한이나 제거 대상 memberId로 현재 팀 경계를 넘지 못한다."
+        },
+        {
+          "id": "acceptance:4",
+          "kind": "acceptance",
+          "text": "팀 member 화면은 초대·제거를 막고 이유를 표시하며 팀 owner 화면은 정상 편집을 허용한다."
+        },
+        {
+          "id": "acceptance:5",
+          "kind": "acceptance",
+          "text": "고정한 독립 인수 검사 9개와 typecheck를 실제로 통과한다."
+        },
+        {
+          "id": "invariant:0",
+          "kind": "invariant",
+          "text": "인증·결제·계정 변경의 기존 동작을 유지한다. 배포·push·외부 서비스 요청을 하지 않는다."
+        },
+        {
+          "id": "invariant:1",
+          "kind": "invariant",
+          "text": "pureobom-validation/permissions.test.tsx와 vitest.config.mts, package.json의 test/typecheck 명령과 pnpm-lock.yaml을 바꾸거나 삭제하지 않는다. 검사 무효화나 skip으로 통과시키지 않는다."
+        },
+        {
+          "id": "invariant:2",
+          "kind": "invariant",
+          "text": "의존성은 이 작업 복사본에서 pnpm install --offline --frozen-lockfile --ignore-scripts로 설치한다. 원본이나 다른 프로젝트 node_modules를 연결하지 않는다."
+        }
+      ]
+    }
+  },
+  "protected": {
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8"
+  },
+  "uiHash": "c3a2d48c8c08ddc2f0a84d9b0e4d7e6a787de4ea3d4988b9e44f09ab6134204c",
+  "applyRejection": "검사가 통과한 뒤 반영할 수 있습니다.",
+  "positiveControl": {
+    "name": "test",
+    "status": "passed",
+    "exitCode": 0,
+    "output": "$ vitest run --config pureobom-validation/vitest.config.mts\n\n RUN  v4.1.11 C:/Users/user/.pureobom/worktrees/5e452026e7428732/6427c6f8-1f57-4c5d-82b7-5d12069f47f7\n\n\n Test Files  1 passed (1)\n      Tests  9 passed (9)\n   Start at  05:25:00\n   Duration  30.71s (transform 2.51s, setup 0ms, import 318ms, tests 29.52s, environment 0ms)\n\n",
+    "elapsedMs": 36571
+  },
+  "restoredCandidateHashes": {
+    "app/(dashboard)/dashboard/page.tsx": "c3a2d48c8c08ddc2f0a84d9b0e4d7e6a787de4ea3d4988b9e44f09ab6134204c",
+    "app/(login)/actions.ts": "bcc6ea871829fb11fe14e4cab11d056c50c9af4f80798fcd4e91e00db4e9a18e",
+    "lib/auth/team-permissions.ts": "f67f6628954065442aa4faaf1df39d98832a809b4a5cb12d0f355b7f85d34853",
+    "lib/db/queries.ts": "d8317d7d3051396cf6fe36da48451d3aae5b27e74bfd6615f483786b6f76b561",
+    "lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "tests/team-permissions.test.tsx": "3d20095d8004aeb3c6574f26d9e4e677fbc0f37deba86d6235d9a33d5711365e",
+    "tests/vitest.config.mts": "daf26fc47781e1c414dc56ebed58b973b02075e3df15393fdf6ac3b91d5ea5b6"
+  },
+  "originalRestored": true,
+  "finishedAt": "2026-10-19T20:25:34.118Z"
+}

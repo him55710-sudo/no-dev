@@ -1,0 +1,22 @@
+[
+  {
+    "className": "react-flow__node react-flow__node-structure nopan selected selectable draggable",
+    "style": "z-index: 1000; transform: translate(67px, 3px); pointer-events: all; visibility: visible; width: 220px; height: 116px;",
+    "tag": "DIV"
+  },
+  {
+    "className": "react-flow__nodes",
+    "style": "position: absolute; width: 100%; height: 100%; top: 0px; left: 0px;",
+    "tag": "DIV"
+  },
+  {
+    "className": "react-flow__viewport xyflow__viewport react-flow__container",
+    "style": "transform: translate(157.5px, 75.5px) scale(1.25);",
+    "tag": "DIV"
+  },
+  {
+    "className": "react-flow__pane draggable",
+    "style": "position: absolute; width: 100%; height: 100%; top: 0px; left: 0px;",
+    "tag": "DIV"
+  }
+]

@@ -1,0 +1,126 @@
+{
+  "success": true,
+  "total": 22,
+  "passed": 22,
+  "failed": 0,
+  "pending": 0,
+  "startTime": 1792209041315,
+  "files": [
+    {
+      "name": "tests/team-permissions.test.tsx",
+      "status": "passed",
+      "assertions": [
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId null without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \" \" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"0\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"-2\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"2.5\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"2x\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"2e0\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"0x2\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"2147483648\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects invalid FormData memberId \"9007199254740993\" without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects a file supplied as memberId without database changes",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions does not log success for an unknown member or a repeated removal",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects a foreign membership ID even when its user is in the current team",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions denies a member inviting an owner despite their global and other-team owner roles",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions invites into the selected team and audits that team despite a forged teamId",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions keeps API and action current-team selection aligned after membership row updates",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions denies missing membership and unrecognized roles without mutations",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions rejects unauthenticated removal without mutations",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions allows owner removal controls for a two-member team, independent of list position",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions disables both removal buttons and invitation role choices with explanatory text",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "team membership permission regressions fails closed when the shared policy receives another team or no membership",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    }
+  ]
+}

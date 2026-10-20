@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T08:43:08.214Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "node": "v24.19.0",
+  "artifact": {
+    "version": "0.7.0",
+    "vsixSha256": "0513e49fcbcb418eae7d36a3b9063aa4109efbaf367fb881d86c9b6d8fb451fd",
+    "files": {
+      "out/extension.cjs": "013213be18290addb634547e175d8f2ee8f937af52bf3e9a591456f4f9893935",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "98ce086a41ca00eb9062a2101bbefb1dd15f68f6b32f142096afffaff56c71c9",
+      "media/design.css": "3fb9212cd6e60565e1d1187878d6607be9ceed92bd8a55738e57eff7ef7ed3b2",
+      "THIRD_PARTY_NOTICES.txt": "160717d2962ebbbc30eec21debdc00ae32720e5d78ac588b88e617d096110f3c"
+    }
+  },
+  "scope": "Installed VSIX in Production extension mode across five separate VS Code launches. Calls use the same validated request dispatcher as the Webview; this is not pointer/keyboard UI automation or model-quality evidence.",
+  "provider": "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
+  "dependencyEnvironment": "Synthetic repository outside the host checkout with no third-party dependencies. Checks use Node's built-in test runner through the real package-manager verification path.",
+  "phases": [
+    {
+      "phase": "prepare-review",
+      "extensionHostPid": 3236,
+      "checkedAt": "2026-10-16T08:42:45.218Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged",
+        "implementation does not modify the original source or index"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "fd635bd4cdefef5661343c7ac768693ace296c9025d807763c5782471dcbcf26"
+        }
+      ]
+    },
+    {
+      "phase": "review-and-apply",
+      "extensionHostPid": 4516,
+      "checkedAt": "2026-10-16T08:42:51.358Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "review restored after VS Code restart",
+        "native diff opened",
+        "same-revision manual design changes block apply",
+        "dirty editor blocks apply",
+        "original project passes the acceptance tests after apply"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "fd635bd4cdefef5661343c7ac768693ace296c9025d807763c5782471dcbcf26"
+        }
+      ]
+    },
+    {
+      "phase": "undo-after-restart",
+      "extensionHostPid": 28440,
+      "checkedAt": "2026-10-16T08:42:57.984Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "applied record survives another restart",
+        "undo preserves subsequent user edits",
+        "undo restores exact original bytes and staged/unstaged status",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "9f46a705962f8a7e593a78797cb07f76db8fffb24458245e76c03ebc25c74dc7"
+        }
+      ]
+    },
+    {
+      "phase": "crash-during-apply",
+      "extensionHostPid": 12788,
+      "checkedAt": "2026-10-16T08:43:02.586Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "product apply journal exists",
+        "at least one original file changed",
+        "test extension host terminated while transaction is incomplete"
+      ]
+    },
+    {
+      "phase": "recover-after-crash",
+      "extensionHostPid": 24796,
+      "checkedAt": "2026-10-16T08:43:08.019Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "interrupted apply is detected after a fresh VS Code launch",
+        "recovery reconciles actual file bytes",
+        "recovery restores the original source and preserves the Git index"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "9f46a705962f8a7e593a78797cb07f76db8fffb24458245e76c03ebc25c74dc7"
+        }
+      ]
+    }
+  ],
+  "crash": {
+    "journalState": "applying",
+    "afterFiles": 1,
+    "beforeFiles": 2,
+    "progressEntries": 0,
+    "termination": "SIGKILL of this test extension-host process during apply",
+    "hostExit": {
+      "code": 1,
+      "signal": null
+    }
+  },
+  "restoredOriginalFiles": [
+    "policy.js",
+    "service.js",
+    "ui.js",
+    "test.js",
+    "app-server",
+    "package.json"
+  ],
+  "preserved": [
+    "staged user changes",
+    "unstaged user changes",
+    "acceptance tests",
+    "source HEAD and index"
+  ]
+}

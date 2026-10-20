@@ -1,33 +1,67 @@
-# First-use observation protocol
+# 시스템 설계 워크스페이스 사용자 관찰 계획
 
-This is a prepared protocol, not a completed study. There are no enrolled participants or measured results yet. The goal is to test whether nondevelopers can understand a small code change and carry it into their own work. Product decisions and threshold targets remain in [PRODUCT.md](PRODUCT.md).
+2026-10-20 준비본. **참가자·측정 결과는 아직 0건이다.** 자동 실행·에이전트 시연·CI 성공을 사용자 결과로 세지 않는다. [원래 기획](SYSTEM_WORKSPACE_PLAN.md)의 수정 위치 탐색, 영향 설명, 잘못된 변경 승인, 도움 요청, 실제 프로젝트 재사용을 평가한다. 이전 배송비·버튼 과제는 [0.6 기록](user-study/LEGACY_0_6.md)에 보존했다.
 
-## Recruit and prepare
+## 비교 조건과 대상
 
-Start with five consenting people who have used AI to create a JS/TS app but do not regularly read source code. Explain that the product is being tested, not the participant. They may stop at any time. Use an anonymous participant ID; do not put names, contact details, private code or recordings in this public repository.
+| 사용자군                                                    | 기존 에이전트만 | 풀어봄 + 같은 에이전트 |
+| ----------------------------------------------------------- | --------------- | ---------------------- |
+| 비개발 빌더: AI로 앱을 만들지만 소스를 정기적으로 읽지 않음 | 초기 계획 2명   | 초기 계획 2명          |
+| 숙련 개발자: 업무에서 코드를 읽고 변경 검토를 수행함        | 초기 계획 2명   | 초기 계획 2명          |
 
-Offer one browser example first. Record which example was used and any help provided. Do not show the expected answer or tell participants where to click before they attempt the task. Observers should avoid interpreting a hesitant “yes” as understanding.
+총 8명은 관찰 절차를 점검하기 위한 모집 계획이며 효과를 입증하는 표본 크기가 아니다. 경력·VS Code/에이전트/풀어봄 친숙도를 익명으로 기록하고 사용자군 안에서 조건을 무작위 배정한다. 같은 사람이 같은 권한 과제를 반복하면 정답 학습이 섞이므로 첫 비교는 참가자 간 설계로 한다. 공통 검토 과제의 A/B 제시 순서는 각 조건 안에서 번갈아 배정한다. 실제 배정표와 중도 중단을 모두 보존한다.
 
-## Task A: a shipping rule
+두 조건 모두 같은 VS Code, OS, 화면 크기, 앱 baseline, 에이전트 버전·모델·설정·실행 권한·시간 한도를 사용한다. 조건 A는 일반 편집기·검색·diff·터미널과 에이전트, 조건 B는 여기에 풀어봄 구조·설계 화면을 추가한다. 조건별 기본 조작 안내는 같은 시간 제공하되 과제의 파일 위치나 해결책을 미리 보여주지 않는다. 모델 지연과 생성 결과는 달라질 수 있으므로 사용자 조작 시간과 모델 대기 시간을 분리한다. 두 조건을 통제할 수 없는 환경은 비교 제외 사유를 기록하고 단독 관찰로 보고한다.
 
-Prompt: “Orders of 50,000 or more currently ship free. Change the rule so that free shipping starts at 70,000. Before applying, explain what happens to an order of 60,000 and one of 70,000. Apply the change and return to the original rule.”
+## 동의와 준비
 
-Observer checks: the participant identifies the correct rule; predicts 60,000 changes from 0 to 3,000 and 70,000 stays 0; checks the displayed comparison; applies; undoes. Record each check separately, the time from the task prompt, help count and the participant's explanation in their own words. A correct final number alone does not prove understanding.
+제품을 시험하며 참가자 능력을 평가하는 자리가 아님을 알리고 중단을 허용한다. 익명 ID를 사용한다. 녹화·외부 모델로의 코드 전송·7일 뒤 연락은 각각 동의를 기록한다. 사적 코드·연락처·원본 녹화·인증값은 공개 저장소에 넣지 않는다. 참가자 연락과 커뮤니티 게시를 자동 실행하지 않는다.
 
-## Task B: a React button
+1. [설치 안내](WORKSPACE_ONBOARDING.md)에 따라 현재 VSIX를 새 프로필에 설치하고 버전·SHA-256을 기록한다. 브라우저로 대체한 UI 검증을 참가자의 네이티브 VS Code 조작으로 간주하지 않는다.
+2. [외부 앱 준비 절차](../validation/next-saas-starter/README.md)로 Next.js SaaS Starter `6e33e58b1e553a41fe22e6b941a7229a002de361`의 독립 Git 복제본을 만든다. 참가자마다 새 복제본을 사용하며 실제 계정·DB·결제를 연결하지 않는다.
+3. 고정 인수 검사와 의존성을 준비한 baseline 커밋·잠금 파일·검사 파일 해시를 보관한다. 기존 준비 기록은 독립 검사 9개 중 5개 통과·4개 실패다. 새 준비 실행의 결과를 직접 확인한다. 준비 오류를 참가자 실패로 기록하지 않는다. 준비된 테스트는 upstream에 원래 있던 테스트가 아님을 밝힌다.
+4. 동의와 도구 구성이 확인되지 않으면 구현 단계는 `not-attempted`로 남긴다. 읽기 관찰만 진행한 결과를 전체 구현 성공으로 세지 않는다. 설치에 든 시간과 지원은 과제 시간과 별도로 기록한다.
 
-Prompt: “Change the sign-up button from ‘무료로 시작하기’ to ‘14일 무료 체험’. Explain which membership condition chooses this button, inspect the proposed source change, apply it and undo it.”
+## 과제 1: 구조에서 실제 권한 변경까지
 
-Observer checks: the participant locates the non-member/falsy branch, finds the button text, understands that the displayed tree is source structure rather than a running screen, reviews the string-expression diff and can undo. Do not count use of the shortcut alone as finding the condition independently.
+참가자에게 다음 요구만 전달한다. 관찰자용 파일 정답과 채점표는 보여주지 않는다.
 
-## Then try a real task
+> 이 앱의 팀 구성원 관리 권한을 바꿔 주세요. 현재 팀의 owner만 구성원을 초대하거나 제거할 수 있고, member는 명단을 읽고 제한 이유를 볼 수 있어야 합니다. 화면을 우회한 직접 요청도 같은 정책을 따라야 합니다. 다른 팀의 권한과 계정 전체의 역할 때문에 현재 팀의 권한이 달라지면 안 됩니다. 기존 인증·계정·결제 동작과 고정 검사는 유지해 주세요. 먼저 바뀌어야 할 부분과 영향을 설명하고, 구현·검사를 거친 변경을 검토해 반영 여부를 판단해 주세요. 반영했다면 변경 후 구조를 확인하고 원래 코드로 되돌려 주세요.
 
-Invite the participant to choose one small change in a project they are allowed to use. They may work on their own device without sharing the source. Record the intended change, whether the language/construct is supported, where they stop, and whether the participant can explain what changed. Keep this result separate from example-task completion. No real task chosen is “not attempted,” not a failure or success.
+요구를 다 읽은 시각부터 측정한다. 처음 5분은 탐색과 영향 설명에 사용한다. 일찍 준비되면 구현으로 넘어가며 찾지 못했으면 `not-found`와 관찰 중단 시각을 남긴다. 위치를 알려주기 전의 독립 탐색 결과를 보존한다. 구현·검토까지 기본 한도는 총 30분이며 제공자 대기 시간과 휴식도 별도 기록한다. 사전에 정한 연장 규칙을 두 조건에 동일하게 적용하고 사후에 빠른 사례만 남기지 않는다.
 
-Ask: “What was confusing?”, “What would you do next without this tool?”, and “Would you choose it again for a specific task?” If they agree to a follow-up, ask after seven days whether they used it again and for what. Do not substitute an intention to return for actual reuse.
+풀어봄 조건에서는 기능/규칙 선택 → 관측된 구현과 목표 구분 → 설계 편집 → 저장하고 구현 → 여러 파일의 변경·검사 검토 → 반영/구조 갱신/되돌리기를 관찰한다. 일반 에이전트 조건에서는 같은 요구로 대응 작업을 수행한다. 채팅 추가 지시 횟수와 관찰자 도움은 구분한다. 성공을 강제하지 않고 멈춘 위치와 이유를 기록한다. 검사가 실패한 후보를 시험을 위해 강제로 반영하지 않는다.
 
-## Record and decide
+| 지표                  | 관찰·채점 기준                                                                                                                                                                                                        |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 올바른 수정 위치 탐색 | UI 제한 위치, 서버의 초대·제거 권한 판단, 현재 팀 역할 조회라는 **세 책임**을 모두 소스 근거와 함께 가리킨 첫 시각. 일부만 찾으면 책임별 도달 여부와 도움 전/후를 기록한다.                                           |
+| 영향 설명 정확성      | 구현 전 설명을 그대로 기록한 후 다음 5개 기준으로 각 0/1점: member 읽기 유지, owner 편집 유지, UI와 직접 서버 요청 모두 제한, 현재 팀 역할·다른 팀 경계, 고정 검사 유지 및 미검증 범위 인정. 도움 후 설명과 분리한다. |
+| 잘못된 변경 승인      | 알려진 실패/미충족을 가진 후보를 반영하겠다고 결정했는지. **의사와 실제 반영·제품 차단을 별도 기록**한다. 실패 후보가 없었던 세션은 실패 판별 기회가 없었던 것이며 0회 오승인으로 처리하지 않는다.                    |
+| 도움 요청             | 참가자가 요청한 횟수와 관찰자가 먼저 개입한 횟수. 접근성·설치 지원, 위치 힌트, 정책 설명, 조작 대행을 구분한다. 에이전트 업무 지시 수는 별도다.                                                                       |
+| 전체 흐름             | 구현 시작, 검사, 기준별 검토, 반영, 구조 갱신, 되돌리기를 각각 `completed / stuck / unsupported / not-attempted`로 기록한다. 모델 실패를 사용자 이해 실패와 합치지 않는다.                                            |
 
-Use the empty [observation sheet](user-study-observations.csv). Keep completed, stuck, unsupported and not-attempted outcomes explicit. Add evidence or an observer note for each result. With five people, report counts and examples; do not generalize percentages to the market or claim causality.
+관찰자 소스 기준: `app/(dashboard)/dashboard/page.tsx`, `app/(login)/actions.ts`, `lib/db/queries.ts` 및 연결된 정책·스키마. 특정 새 helper 이름이나 파일 수를 강제하지 않는다. UI만 고치거나 `users.role`만 읽은 해결은 요구 충족이 아니다. 정확한 대체 구현도 소스와 실행 근거가 있으면 인정한다.
 
-The first decision is the most frequent blocking step: comprehension, finding a rule, reviewing changes, installation, unsupported syntax or applying to a real project. Fix that step before broadening language support. Community posting and participant outreach require the maintainer's explicit choice of destination; the prepared [launch text](LAUNCH.md) has not been sent automatically.
+## 과제 2: 동일한 기록으로 변경 승인 판단
+
+`pnpm study:package`로 `release/user-study-review.zip`을 만든다. 관찰자 자료와 해시 보고서는 ZIP 밖의 `release/user-study-evidence.json` 및 [채점 안내](user-study/OBSERVER_REVIEW.md)에 둔다. 참가자에게 ZIP과 [과제 문구](user-study/PARTICIPANT_REVIEW.md)만 전달한다. 후보마다 최대 4분, A→B 또는 B→A의 정해진 순서로 진행한다.
+
+자료는 실제 기록에서 복원한 두 후보의 변경 전후 소스, 요구, 검사 출력이다. 두 조건 모두 같은 자료를 볼 수 있다. **저장된 작업을 제품에 가져오는 기능은 없으며**, 이를 새 모델 실행이나 네이티브 검토 화면의 비교로 보고하지 않는다. 일반 파일 검토 결과는 근거를 읽는 능력에 대한 보조 관찰이다. 실시간 작업과 분리해 보고하며 이 과제만으로 풀어봄의 효과를 주장하지 않는다.
+
+각 후보의 첫 결정(`approve / reject / need-more-evidence`), 이유, 근거 경로, 시간, 도움을 기록한 뒤 정답을 공개한다. 후보 A는 기록된 서버 검사 누락을 해시로 복원한 제어된 실패이며, B는 실제 모델 후보다. 제시 순서와 이 매핑은 미리 알리지 않는다. 통과한 테스트가 미확인 유지 조건까지 증명하지 않으므로 B를 보류하는 판단도 타당할 수 있다. 승인 횟수 자체가 성과가 아니다.
+
+## 실제 프로젝트와 후속 재사용
+
+원하는 사람에게 사용할 권한이 있는 프로젝트에서 의미 있는 변경 하나를 선택하게 한다. 자신의 장치에서 원문을 공유하지 않고 진행해도 된다. 별도 15분 관찰의 대상 언어/구조, 목표, 지원 여부, 검토·반영·복원과 멈춘 이유를 기록한다. 예제 완료와 별도로 집계하며 프로젝트를 고르지 않은 경우 `not-attempted`다.
+
+후속 연락에 동의한 사람에게 7일 뒤 실제 재사용 여부와 작업 내용을 확인한다. 의향, 다운로드, GitHub 별을 실제 사용으로 대체하지 않는다. 참가자 진술과 확인 가능한 비식별 실행 근거를 구분한다. 응답 없음은 `unknown`, 답변했지만 사용하지 않음은 `no`다. 연락처는 공개 CSV에 저장하지 않는다.
+
+## 기록과 판단
+
+[실시간 관찰 CSV](user-study-observations.csv)는 참가자·과제당 한 행, [공통 검토 CSV](user-study-review-observations.csv)는 참가자·후보당 한 행이다. 둘 다 현재 헤더뿐이다. 도구 구성·baseline/VSIX/검사 해시·시간별 사건·설명 원문·단계별 결과는 비식별 세션 기록에 두고 `evidence_ref`로 연결한다. 익명화 검토 전 원본 기록을 공개 저장소에 커밋하지 않는다.
+
+CSV 값: `cohort=builder/developer`, `condition=agent-only/workspace-agent`, `task=permissions/own-project`, 상태는 `completed/stuck/unsupported/not-attempted`, 관측하지 않은 값은 빈 칸이다. `location_outcome=found/not-found/assisted/not-attempted`; `location_seconds`는 찾은 시각까지, 못 찾았으면 `location_observed_seconds`에 관찰한 시간을 쓰고 성공 시간으로 합치지 않는다. `impact_score_0_5`는 원문과 다섯 항목 채점이 있을 때만 채운다. `known_failed_candidate=yes/no/unknown`; `review_intent=approve/reject/need-more-evidence/not-attempted`. `apply_blocked=yes/no/not-attempted`와 실제 반영 상태는 따로 적는다. 불리한 결과도 삭제하지 않는다.
+
+사용자군·조건별 원시 건수와 개별 사례를 먼저 보고한다. 완료한 사람의 시간만으로 전체가 빨라졌다고 주장하지 않고 미완료·도움받은 사례와 모델 대기를 함께 보여준다. 오승인은 알려진 실패 후보를 실제로 본 횟수를 분모로 하되 이 규모에서 시장 수치나 인과 효과로 일반화하지 않는다. 여러 관찰자가 있으면 설명을 조건 정보 없이 따로 채점하고 불일치와 합의 과정을 기록한다.
+
+다음 구현은 반복 관찰된 막힘을 근거로 정한다. 기술 시험 통과, 사용자 이해, 자기 프로젝트 성공, 실제 재사용은 각각 다른 증거다. 이 문서와 ZIP 생성만으로 어느 것도 달성했다고 표시하지 않는다.

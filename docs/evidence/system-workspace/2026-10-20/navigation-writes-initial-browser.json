@@ -1,0 +1,25 @@
+{
+  "emptySearchAfterReload": "",
+  "before": {
+    "nodes": [
+      {
+        "id": "symbol:policy.js:canEdit",
+        "style": "z-index: 1000; transform: translate(35px, 35px); pointer-events: all; visibility: visible; width: 220px; height: 116px;"
+      }
+    ],
+    "viewport": "transform: translate(186.667px, 93.8333px) scale(1.04167);",
+    "search": "canEdit"
+  },
+  "restartError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     message: 'ResizeObserver loop completed with undelivered notifications.'\n+   }\n+ ]\n- []",
+  "artifact": {
+    "vsixSha256": "b3299a1970f1a1bdaf591a0f7069a7ece3ea8ccada9093b9cb3439b61fba6444",
+    "files": {
+      "out/extension.cjs": "055b869642c34e2d056076d6a3a216490376e6ec5098b38b878b09938a27232f",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "edc0c2effe482fd4e8adecf8a6569665cace77b3b164b01a4ee821bb7f595fa8",
+      "media/design.js": "b1dbaadddcaa2c5ab66579357e61265034d5c88cf99baeaff47b6e12e29bc698",
+      "media/design.css": "e09a7b37d8a461a015a9b5ab90796617670f7a476f80dabd837546cc35fd33d1"
+    }
+  },
+  "outcome": "Failed at restart gate: one browser ResizeObserver error; no host restoration result. This run is not counted as passed."
+}

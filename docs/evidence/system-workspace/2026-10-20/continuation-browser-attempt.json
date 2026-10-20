@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-10-19T20:09:58.042Z",
+  "status": "unverified",
+  "attempts": [
+    {
+      "action": "create background tab at production sign-in URL",
+      "result": "Browser webview attachment timed out",
+      "count": 2
+    },
+    {
+      "action": "bind existing validation tab",
+      "result": "Browser security policy denied page observation authority; URL protocol policy did not grant access"
+    }
+  ],
+  "scope": "No browser login, invitation, removal, DOM verification or screenshot succeeded for this candidate. Existing older browser evidence is not reused as proof. No alternate browser or protocol workaround was attempted."
+}

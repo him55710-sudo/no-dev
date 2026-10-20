@@ -1,0 +1,827 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T23:02:12.702Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "27f87bb1156e4f4dee84c177a4ebcfb95add79aaead8b4312a17cbdb1423f337",
+    "files": {
+      "out/extension.cjs": "9960b317d56bcb8942c4b798175236350e4a128340126e6c2a37bb48c3126840",
+      "out/worker.cjs": "a4ed85cc892d60ac537139d67cbd5b67f79913fbd6d621a12da4c348b9cbe293",
+      "out/agent-host.cjs": "b4474e2be86fe5eefeb8d8f251ccb83978c168491bfcb1f6f20de9e1c58d52fe",
+      "media/design.js": "5462bc4c5f0ce26dfe226d03647967ad5e1c69253736af84c85b098d3940a087",
+      "media/design.css": "d754959d6acd4baa9928a1a6fead70201866e1d6e1e2134e2f2b2b76da12182d"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "Explicit deterministic stdio fixture; no external inference.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-19T22:59:31.867Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T22:59:37.768Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T22:59:40.873Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T22:59:46.400Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T22:59:46.447Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T22:59:46.485Z",
+      "ok": true
+    },
+    {
+      "action": "checkConnection",
+      "at": "2026-10-19T22:59:46.585Z",
+      "ok": true
+    },
+    {
+      "action": "saveExecution",
+      "at": "2026-10-19T23:00:05.898Z",
+      "ok": true
+    },
+    {
+      "action": "implement",
+      "at": "2026-10-19T23:00:09.001Z",
+      "ok": true,
+      "job": {
+        "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+        "specId": "symbol:policy.js:canEdit",
+        "specRevision": 1,
+        "phase": "preparing",
+        "startedAt": "2026-10-19T23:00:09.086Z",
+        "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+        "checks": [],
+        "files": [],
+        "approvals": []
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "symbol:policy.js:canEdit",
+            "targetIds": [
+              "symbol:policy.js:canEdit"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "공유 권한 실패 근거 검토",
+              "purpose": "",
+              "desired": "viewer는 조회만 하고 화면과 서버에서 수정을 막는다. owner와 editor는 기존처럼 수정한다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": [
+                "viewer의 직접 수정 요청은 403으로 거절하고 데이터를 보존한다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "95c92c3c35726183fcac5010b1b729d2ccc1ede0ab4e6bda0e519763f2b2bd97",
+              "observed": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    },
+                    "evidenceHash": "6b75da20958cbd13c439fdfe667d356a7fbbe4d37963bbd63bbbc3f1b6d13bcd"
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    },
+                    "evidenceHash": "52d6639f072d1a9e4feb4a64284900cf2280416bc2ce71c2e5bb9888da3e4a12"
+                  }
+                ],
+                "notices": [],
+                "totals": {
+                  "facts": 1,
+                  "relations": 2,
+                  "notices": 0
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T23:00:09.034Z"
+          }
+        ]
+      },
+      "graph": {
+        "files": [
+          {
+            "path": "package.json",
+            "hash": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+            "supported": false
+          },
+          {
+            "path": "policy.js",
+            "hash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+            "supported": true
+          },
+          {
+            "path": "README.md",
+            "hash": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+            "supported": false
+          },
+          {
+            "path": "service.js",
+            "hash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+            "supported": true
+          },
+          {
+            "path": "test.js",
+            "hash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+            "supported": true
+          },
+          {
+            "path": "ui.js",
+            "hash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+            "supported": true
+          }
+        ],
+        "revision": "95c92c3c35726183fcac5010b1b729d2ccc1ede0ab4e6bda0e519763f2b2bd97"
+      },
+      "observations": [
+        {
+          "id": "symbol:policy.js:canEdit",
+          "status": "unchanged"
+        }
+      ]
+    },
+    {
+      "action": "decideJob",
+      "at": "2026-10-19T23:00:24.996Z",
+      "ok": true
+    },
+    {
+      "action": "decideJob",
+      "at": "2026-10-19T23:00:42.237Z",
+      "ok": true
+    },
+    {
+      "action": "reviewJob",
+      "at": "2026-10-19T23:01:30.731Z",
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T23:02:03.607Z",
+      "ok": true
+    }
+  ],
+  "jobs": [
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "preparing",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "message": "현재 파일을 별도 Git 작업 공간에 복사합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "message": "Codex 실행기에 연결하고 로그인 상태를 확인합니다.",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "approval",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61"
+        }
+      ]
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\n",
+      "checks": [],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "checking",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "Codex가 설계를 구현하고 있습니다.\nControlled fixture changed three files. No external model ran.",
+      "checks": [],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": false,
+          "checks": []
+        }
+      ],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "repairing",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "검사 실패 수정을 위해 Codex 실행기에 다시 연결합니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+          "outputTruncated": false,
+          "elapsedMs": 3482
+        }
+      ],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        }
+      ],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "approval",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "실제 검사 실패를 전달해 수정을 요청합니다.\n",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+          "outputTruncated": false,
+          "elapsedMs": 3482
+        }
+      ],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        }
+      ],
+      "files": [],
+      "approvals": [
+        {
+          "id": "fixture-file-approval",
+          "kind": "file",
+          "reason": "CONTROLLED TEST: update only policy.js, service.js and ui.js in the synthetic worktree.",
+          "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61"
+        }
+      ]
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "running",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "실제 검사 실패를 전달해 수정을 요청합니다.\n",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+          "outputTruncated": false,
+          "elapsedMs": 3482
+        }
+      ],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        }
+      ],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "checking",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "실제 검사 실패를 전달해 수정을 요청합니다.\nControlled fixture changed three files. No external model ran.",
+      "checks": [],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "completed": false,
+          "checks": []
+        }
+      ],
+      "files": [],
+      "approvals": []
+    },
+    {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "review",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "실제 검사 실패를 전달해 수정을 요청합니다.\nControlled fixture changed three files. No external model ran.\n검사가 통과하지 못했습니다. 변경을 검토할 수 있지만 원본에 반영할 수 없습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n✔ alice retains editing (0.308ms)\n✔ bob retains editing (0.1623ms)\n✖ membership in another project does not grant access (0.2742ms)\n✔ viewer controls are disabled with an explanation (1.1293ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 110.0912\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2742ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "outputTruncated": false,
+          "elapsedMs": 3645
+        }
+      ],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n✔ alice retains editing (0.308ms)\n✔ bob retains editing (0.1623ms)\n✖ membership in another project does not grant access (0.2742ms)\n✔ viewer controls are disabled with an explanation (1.1293ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 110.0912\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2742ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n",
+              "outputTruncated": false,
+              "elapsedMs": 3645
+            }
+          ]
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "fd26a84e078a5459acfbbd7ac3787501c4b0f46acb692654e9e3a145a8aaed50",
+      "assessment": {
+        "jobId": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+        "reviewId": "fd26a84e078a5459acfbbd7ac3787501c4b0f46acb692654e9e3a145a8aaed50",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer의 직접 수정 요청은 403으로 거절하고 데이터를 보존한다."
+          }
+        ]
+      },
+      "approvals": []
+    }
+  ],
+  "verificationWitness": {
+    "job": {
+      "id": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "specId": "symbol:policy.js:canEdit",
+      "specRevision": 1,
+      "phase": "review",
+      "startedAt": "2026-10-19T23:00:09.086Z",
+      "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\6cc1b882343f5df6\\aeab2361-1aad-40d1-84c7-b758e0684a61",
+      "provider": "Pureobom deterministic installed-recovery protocol fixture",
+      "message": "실제 검사 실패를 전달해 수정을 요청합니다.\nControlled fixture changed three files. No external model ran.\n검사가 통과하지 못했습니다. 변경을 검토할 수 있지만 원본에 반영할 수 없습니다.",
+      "checks": [
+        {
+          "name": "test",
+          "status": "failed",
+          "exitCode": 1,
+          "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n✔ alice retains editing (0.308ms)\n✔ bob retains editing (0.1623ms)\n✖ membership in another project does not grant access (0.2742ms)\n✔ viewer controls are disabled with an explanation (1.1293ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 110.0912\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2742ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n",
+          "outputTruncated": false,
+          "elapsedMs": 3645
+        }
+      ],
+      "verificationAttempts": [
+        {
+          "attempt": 1,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n✔ alice retains editing (0.2042ms)\n✔ bob retains editing (0.1267ms)\n✖ membership in another project does not grant access (0.2287ms)\n✔ viewer controls are disabled with an explanation (0.8155ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 92.0749\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (2.2107ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2287ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n[WARN]  Local package.json exists, but node_modules missing, did you mean to install?\n",
+              "outputTruncated": false,
+              "elapsedMs": 3482
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "completed": true,
+          "checks": [
+            {
+              "name": "test",
+              "status": "failed",
+              "exitCode": 1,
+              "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n✔ alice retains editing (0.308ms)\n✔ bob retains editing (0.1623ms)\n✖ membership in another project does not grant access (0.2742ms)\n✔ viewer controls are disabled with an explanation (1.1293ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 110.0912\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (3.3362ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.2742ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/6cc1b882343f5df6/aeab2361-1aad-40d1-84c7-b758e0684a61/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n",
+              "outputTruncated": false,
+              "elapsedMs": 3645
+            }
+          ]
+        }
+      ],
+      "files": [
+        {
+          "path": "policy.js",
+          "kind": "modified"
+        },
+        {
+          "path": "ui.js",
+          "kind": "modified"
+        }
+      ],
+      "reviewId": "fd26a84e078a5459acfbbd7ac3787501c4b0f46acb692654e9e3a145a8aaed50",
+      "assessment": {
+        "jobId": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+        "reviewId": "fd26a84e078a5459acfbbd7ac3787501c4b0f46acb692654e9e3a145a8aaed50",
+        "files": [
+          {
+            "path": "policy.js",
+            "outsideScope": false
+          },
+          {
+            "path": "ui.js",
+            "outsideScope": false
+          }
+        ],
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "kind": "acceptance",
+            "text": "viewer의 직접 수정 요청은 403으로 거절하고 데이터를 보존한다."
+          }
+        ]
+      },
+      "reviewDecision": {
+        "jobId": "aeab2361-1aad-40d1-84c7-b758e0684a61",
+        "reviewId": "fd26a84e078a5459acfbbd7ac3787501c4b0f46acb692654e9e3a145a8aaed50",
+        "approvedScopePaths": [],
+        "reviewedVerificationPaths": [],
+        "acceptUnverified": false,
+        "criteria": [
+          {
+            "id": "acceptance:0",
+            "outcome": "failed",
+            "note": "test에서 viewer 요청의 403 검증이 실패했다. 5개 중 2개 실패로 데이터 보존까지 통과했다고 판단할 수 없다.",
+            "checkNames": [
+              "test"
+            ]
+          }
+        ]
+      },
+      "approvals": []
+    },
+    "reviewAndHistoryRestored": true,
+    "failedApplyRejected": true,
+    "scope": "UI creates and saves the failed review; finish assertions restore it and directly invoke the shared handler to verify rejection. No external model ran."
+  },
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "symbol:policy.js:canEdit",
+        "targetIds": [
+          "symbol:policy.js:canEdit"
+        ],
+        "revision": 1,
+        "content": {
+          "title": "공유 권한 실패 근거 검토",
+          "purpose": "",
+          "desired": "viewer는 조회만 하고 화면과 서버에서 수정을 막는다. owner와 editor는 기존처럼 수정한다.",
+          "policies": "",
+          "inputsOutputs": "",
+          "failures": "",
+          "invariants": [],
+          "acceptance": [
+            "viewer의 직접 수정 요청은 403으로 거절하고 데이터를 보존한다."
+          ]
+        },
+        "baseline": {
+          "graphRevision": "95c92c3c35726183fcac5010b1b729d2ccc1ede0ab4e6bda0e519763f2b2bd97",
+          "observed": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+          "sources": [
+            {
+              "path": "policy.js",
+              "symbol": "canEdit",
+              "start": 0,
+              "end": 102,
+              "line": 1,
+              "endLine": 3,
+              "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+              "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+            }
+          ],
+          "observations": {
+            "schemaVersion": 1,
+            "facts": [
+              {
+                "id": "symbol:policy.js:canEdit",
+                "kind": "symbol",
+                "label": "canEdit",
+                "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "from": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 102,
+                  "end": 134,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                },
+                "evidenceHash": "6b75da20958cbd13c439fdfe667d356a7fbbe4d37963bbd63bbbc3f1b6d13bcd"
+              },
+              {
+                "from": {
+                  "id": "symbol:ui.js:editControls.editable",
+                  "label": "editable"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 95,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                },
+                "evidenceHash": "52d6639f072d1a9e4feb4a64284900cf2280416bc2ce71c2e5bb9888da3e4a12"
+              }
+            ],
+            "notices": [],
+            "totals": {
+              "facts": 1,
+              "relations": 2,
+              "notices": 0
+            }
+          }
+        },
+        "updatedAt": "2026-10-19T23:00:09.034Z"
+      }
+    ]
+  },
+  "finalNavigation": {
+    "generation": 0,
+    "revision": 3,
+    "view": {
+      "selection": "symbol:policy.js:canEdit",
+      "scopeTrail": [
+        "system"
+      ],
+      "included": [],
+      "connections": [],
+      "expanded": [
+        "system",
+        "file:policy.js:"
+      ],
+      "search": "",
+      "focus": false,
+      "canvases": [
+        {
+          "scopeId": "system",
+          "viewport": {
+            "x": 2.2222222222222285,
+            "y": 79.37037037037038,
+            "zoom": 0.25925925925925924
+          },
+          "positions": []
+        }
+      ]
+    }
+  },
+  "originalRestored": true
+}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-16T09:35:08.9910000+00:00",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "command": "pnpm test --reporter=default --reporter=json --outputFile=test-results/ipc-lease-regression.json",
+  "passed": 190,
+  "failed": 0,
+  "scope": "Full local unit suite plus real Git/process integration. Selected cases below cover project leases, apply/undo/recovery and actual verification process descendants. No live AI inference.",
+  "selectedTests": [
+    {
+      "file": "agent-recovery.test.ts",
+      "status": "passed",
+      "checks": [
+        {
+          "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery excludes a second writer until its lease is released",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery excludes another process and releases the lease after its owner is killed",
+          "status": "passed"
+        },
+        {
+          "name": "durable implementation recovery can acquire an IPC lease while an unrelated service holds the former TCP port",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "agent-verification.test.ts",
+      "status": "passed",
+      "checks": [
+        {
+          "name": "independent implementation verification records real exits, refuses missing or replaced scripts, and terminates timed-out commands",
+          "status": "passed"
+        },
+        {
+          "name": "independent implementation verification cancels a running check only after its actual child and descendant stop",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "agent-workspace.test.ts",
+      "status": "passed",
+      "checks": [
+        {
+          "name": "isolated implementation and review preserves staged/unstaged work, raw CRLF and assets without copying excluded secrets",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review refuses changes when any original input or the reviewed proposal changes",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review rolls back a partial multi-file application and records the actual result",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review does not overwrite subsequent user edits during undo",
+          "status": "passed"
+        },
+        {
+          "name": "isolated implementation and review rejects new source files added while implementation was running",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}

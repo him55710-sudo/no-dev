@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-19T23:39:46.262Z",
+  "scope": "Prepared common file-review exercise from historical records. No new test, model, native UI or participant run. Not a product-effect comparison by itself.",
+  "archive": "user-study-review.zip",
+  "archiveSha256": "86d9b263ec8782ed0ab29fe4739046ff2ec4945fe5ef28e0c7007327f5b5cb4a",
+  "archiveBytes": 45691,
+  "sourceHashes": {
+    "docs/evidence/system-workspace/2026-10-20/installed-next-candidate.json": "24bd96964a7c2126933135cbcf58625daf57331a470d65edb89cb6f7570d8b7c",
+    "docs/evidence/system-workspace/2026-10-20/missing-server-guards.json": "7b58cf714c30886035ae373826c383cdc9cdbbf27cb92604ead580b98f47b7de",
+    "docs/evidence/system-workspace/2026-10-20/installed-next-verification.json": "8ef4781910ac776c54a8bd492e587bd30f08538b1f3edd0cf145f0467c2d8202"
+  },
+  "candidates": {
+    "A": {
+      "kind": "controlled-missing-server-guards",
+      "jobId": "6427c6f8-1f57-4c5d-82b7-5d12069f47f7",
+      "guardsOmitted": {
+        "path": "app/(login)/actions.ts",
+        "goodHash": "bcc6ea871829fb11fe14e4cab11d056c50c9af4f80798fcd4e91e00db4e9a18e",
+        "faultHash": "401c23583fcbad63be192f0b53fe026be2256e670ab7af0df369305dc83232f9",
+        "count": 2
+      },
+      "passed": 7,
+      "failed": 2
+    },
+    "B": {
+      "kind": "recorded-real-model-candidate",
+      "jobId": "29da2265-df2a-4efc-b630-bc4f458f7d8a",
+      "passed": 9,
+      "failed": 0,
+      "unverifiedInvariants": [
+        "invariant:0",
+        "invariant:2"
+      ]
+    }
+  },
+  "files": {
+    "README.md": "b2813a246b80afc0a96437bccb1a0500d046f5e8650de2ee015e2b6f927113cb",
+    "requirements.json": "c7c640240ef89f2e46ee20af4c096fc835eaf9f13620491c3f5644842c8726ab",
+    "LICENSE.next-saas-starter.txt": "20ea571df8e6868cf80e0c5262f535cc3d854f1416ae33f856f15544ebc65512",
+    "LICENSE.pureobom.txt": "2c0a5f6bffe2511ca86754d8573e7d505e4c86b0809c2a0e9617daff5108e9d9",
+    "candidate-A/files.json": "022bfe2a5078e42ca2c8d29fc6dca7b8f59108dc16e49559723db5d90c76dd20",
+    "candidate-A/checks.json": "e0778ad50218f11aacd2afdf5eaad76c3af9d13d31cdd376319823aa1cc2b2d4",
+    "candidate-A/checks.txt": "40c414f29dd9e9e596393a171e0199fbd972e9aa3a2396ac5b7f713e4ce4b1a2",
+    "candidate-A/before/app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "candidate-A/after/app/(dashboard)/dashboard/page.tsx": "c3a2d48c8c08ddc2f0a84d9b0e4d7e6a787de4ea3d4988b9e44f09ab6134204c",
+    "candidate-A/before/app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "candidate-A/after/app/(login)/actions.ts": "401c23583fcbad63be192f0b53fe026be2256e670ab7af0df369305dc83232f9",
+    "candidate-A/after/lib/auth/team-permissions.ts": "f67f6628954065442aa4faaf1df39d98832a809b4a5cb12d0f355b7f85d34853",
+    "candidate-A/before/lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "candidate-A/after/lib/db/queries.ts": "d8317d7d3051396cf6fe36da48451d3aae5b27e74bfd6615f483786b6f76b561",
+    "candidate-A/before/lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "candidate-A/after/lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "candidate-A/after/tests/team-permissions.test.tsx": "3d20095d8004aeb3c6574f26d9e4e677fbc0f37deba86d6235d9a33d5711365e",
+    "candidate-A/after/tests/vitest.config.mts": "daf26fc47781e1c414dc56ebed58b973b02075e3df15393fdf6ac3b91d5ea5b6",
+    "candidate-B/files.json": "7e404baee06473779eef5f751a8aa6fa9c1ca50219936cbb6b8f67d367f73ebe",
+    "candidate-B/checks.json": "afd0f3e234ae70de187e30a6998b59fdd080a4c7746af85d5da014993d9c42d1",
+    "candidate-B/checks.txt": "45112b9a96f1bdfdd7aa04f536fefa5997a8b3bd98a68419492434dbe7f8b38b",
+    "candidate-B/before/app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "candidate-B/after/app/(dashboard)/dashboard/page.tsx": "c3a2d48c8c08ddc2f0a84d9b0e4d7e6a787de4ea3d4988b9e44f09ab6134204c",
+    "candidate-B/before/app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "candidate-B/after/app/(login)/actions.ts": "bcc6ea871829fb11fe14e4cab11d056c50c9af4f80798fcd4e91e00db4e9a18e",
+    "candidate-B/after/lib/auth/team-permissions.ts": "f67f6628954065442aa4faaf1df39d98832a809b4a5cb12d0f355b7f85d34853",
+    "candidate-B/before/lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "candidate-B/after/lib/db/queries.ts": "d8317d7d3051396cf6fe36da48451d3aae5b27e74bfd6615f483786b6f76b561",
+    "candidate-B/before/lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "candidate-B/after/lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "candidate-B/after/tests/team-permissions.test.tsx": "3d20095d8004aeb3c6574f26d9e4e677fbc0f37deba86d6235d9a33d5711365e",
+    "candidate-B/after/tests/vitest.config.mts": "daf26fc47781e1c414dc56ebed58b973b02075e3df15393fdf6ac3b91d5ea5b6"
+  }
+}

@@ -259,6 +259,18 @@ export class ManagedImplementationJobs {
     await this.connect(root);
     return this.call<ImplementationJob>({ action: "restore", workspaceId });
   }
+  async resume(
+    root: string,
+    jobId: string,
+    options: Parameters<ImplementationJobs["resume"]>[1],
+  ) {
+    await this.connect(root);
+    return this.call<ImplementationJob>({
+      action: "resume",
+      jobId,
+      options: { ...options, allowExternal: options.allowExternal as true },
+    });
+  }
   private jobId() {
     if (!this.state) throw Error("구현 작업이 없습니다.");
     return this.state.id;

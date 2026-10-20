@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-19T19:19:45.155Z",
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "artifact": {
+    "vsixSha256": "9cfe5d48885014dda678789edce4ac5f5803b54bce98dd44318947df7dcfe124",
+    "files": {
+      "out/extension.cjs": "055b869642c34e2d056076d6a3a216490376e6ec5098b38b878b09938a27232f",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "edc0c2effe482fd4e8adecf8a6569665cace77b3b164b01a4ee821bb7f595fa8",
+      "media/design.js": "81cdd018d88ea0ea4f293015740b42fb1397fdd02a5e5d2a3124d43c1b066e42",
+      "media/design.css": "e09a7b37d8a461a015a9b5ab90796617670f7a476f80dabd837546cc35fd33d1"
+    }
+  },
+  "requests": 23,
+  "navigationWrites": 14,
+  "clientErrors": 0,
+  "implementationJobs": 0,
+  "hostPids": [
+    32520,
+    16224
+  ],
+  "originalFileHashes": {
+    ".gitignore": "09731bf5c4cc06322d98762703b30bb697b92075b7ef327ac87121e3e3c994d1",
+    "README.md": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+    "app-server": "1a3b8da0d84fbaf1dbe696d0c27f214eb63edf9e9ef92320003ed59a4c1c790d",
+    "package.json": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+    "policy.js": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+    "service.js": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+    "test.js": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+    "ui.js": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2"
+  },
+  "originalGitStatePreserved": true,
+  "savedSpecsPreserved": true,
+  "domRestored": true,
+  "sourceSha256": {
+    "src/workspace/navigation.ts": "47a195296d2a1017d61438db553acc076349e059924073179d8113e6468f2f88",
+    "src/workspace/navigationWriter.ts": "b68deaa68a8a3fe96672bb640e7c8e3ecacc53415fb6e58c5870a6a634bec4c4",
+    "src/workspace/useWorkspaceNavigation.ts": "b48845a386083816acb61765375fbdaa958e07c31a9c95b586a10a4d60c765bf",
+    "src/workspace/StructureCanvas.tsx": "51e4b2ea19c8eac1d630199d9f8cd0551208727a4944722e5d7924e221f3fbfb",
+    "extension/src/designWorkspace.ts": "da3133a2da467718c6a30937477dc038d682248f4f7ac1ee876cdbc41e8f88b8",
+    "extension/src/navigationStore.ts": "9d250f8a194588a69f05b91ba8d77b54cc1e085bb5ed1a6e1afbc492b025fc2c",
+    "extension/test/designWorkspace.ts": "0836cf29df7880d4a19f2386b6800f3bffb4b4a00dc605f8427b5915ea366680",
+    "extension/test/installedDesignUI.ts": "b474d33f5754d076db9aafe67374a16625dcea0760c7c63f2d6d00c4840bb2f0",
+    "tests/navigation-writer.test.ts": "a74b73226de605ec79d4bedfc2f8dd4381e574fe87618d2b96d0dfc0ddb4bf73",
+    "tests/workspace-navigation.test.ts": "0ea6f0c17cc0ad5954830f8e8d0fe67c4997fc9968fe973f8b2fa7f9743c8ab2"
+  },
+  "fullGoalComplete": false,
+  "initialFailure": "navigation-writes-initial-browser.json",
+  "limitations": [
+    "Native VS Code Webview pointer delivery is not verified.",
+    "No model implementation was requested in this navigation scenario.",
+    "An initial browser ResizeObserver error is retained; a subsequent pass does not establish every possible cause of that error."
+  ],
+  "regression": {
+    "passed": 241,
+    "failed": 0,
+    "files": 29,
+    "report": "navigation-writes-regression.json"
+  },
+  "hostChecks": 34
+}

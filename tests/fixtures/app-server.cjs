@@ -99,6 +99,9 @@ readline
           send({ id: 11, method: "item/tool/requestUserInput", params: {} });
         else if (scenario !== "hang") done();
       }
+    } else if (message.method === "fixture/complete") {
+      send({ id: message.id, result: {} });
+      done();
     } else if (message.method === "fixture/resolve") {
       send({ id: message.id, result: {} });
       send({ method: "serverRequest/resolved", params: { requestId: 10 } });

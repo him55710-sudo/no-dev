@@ -1,0 +1,297 @@
+<style>
+  #result-first-app {
+    --pb-bg: light-dark(#f5f5f2, #1c201e);
+    --pb-surface: light-dark(#ffffff, #252a27);
+    --pb-soft: light-dark(#eeefeb, #303733);
+    --pb-ink: light-dark(#25352c, #ecf0eb);
+    --pb-muted: light-dark(#647168, #b4beb6);
+    --pb-line: light-dark(#dce1da, #454e47);
+    --pb-green: light-dark(#275c42, #b6d9bf);
+    --pb-on-green: light-dark(#ffffff, #183423);
+    --pb-tint: light-dark(#e5eee4, #354638);
+    --pb-error: light-dark(#9c3e2f, #ffb5a6);
+    color: var(--pb-ink);
+    font: 14px/1.6 "Segoe UI", "Malgun Gothic", sans-serif;
+    width: 100%;
+  }
+  #result-first-app * { box-sizing: border-box; }
+  #result-first-app [hidden] { display: none !important; }
+  #result-first-app button, #result-first-app input, #result-first-app textarea, #result-first-app select { font: inherit; }
+  #result-first-app button { color: inherit; }
+  #result-first-app button:disabled { opacity: .45; cursor: default; }
+  #result-first-app .pb-window { background: var(--pb-bg); border: 1px solid var(--pb-line); border-radius: 16px; overflow: clip; }
+  #result-first-app .pb-chrome { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 18px 106px 18px 22px; background: var(--pb-surface); border-bottom: 1px solid var(--pb-line); }
+  #result-first-app .pb-brand { display: flex; align-items: center; gap: 7px; color: var(--pb-green); font-size: 17px; font-weight: 600; }
+  #result-first-app .pb-project { color: var(--pb-muted); padding-left: 12px; border-left: 1px solid var(--pb-line); }
+  #result-first-app .pb-demo { margin: 0; padding: 9px 22px; font-size: 12px; color: var(--pb-muted); border-bottom: 1px solid var(--pb-line); }
+  #result-first-app .pb-heading { padding: 24px 24px 18px; }
+  #result-first-app h2 { margin: 0 0 5px; font-size: 23px; font-weight: 600; letter-spacing: -.8px; line-height: 1.4; }
+  #result-first-app .pb-heading p { margin: 0; color: var(--pb-muted); }
+  #result-first-app .pb-workspace { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(255px, 1fr); gap: 20px; padding: 0 24px 24px; align-items: start; }
+  #result-first-app .pb-left, #result-first-app .pb-assistant { min-width: 0; }
+  #result-first-app .pb-preview-tools { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  #result-first-app .pb-page-name { font-weight: 500; }
+  #result-first-app .pb-switch { display: flex; flex-wrap: wrap; gap: 3px; padding: 3px; border-radius: 8px; background: var(--pb-soft); }
+  #result-first-app .pb-switch button { background: transparent; border: 0; border-radius: 6px; padding: 5px 10px; font-size: 12px; }
+  #result-first-app .pb-switch button[aria-pressed="true"] { background: var(--pb-surface); color: var(--pb-green); }
+  #result-first-app .pb-preview { background: var(--pb-surface); border: 1px solid var(--pb-line); border-radius: 12px; }
+  #result-first-app .garden-nav { padding: 17px 24px; border-bottom: 1px solid var(--pb-line); display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--pb-muted); }
+  #result-first-app .garden-nav strong { color: var(--pb-green); font-size: 14px; letter-spacing: 2px; font-weight: 500; }
+  #result-first-app .garden-content { padding: 26px 24px; }
+  #result-first-app .garden-eyebrow { color: var(--pb-green); font-size: 11px; letter-spacing: 2px; margin: 0 0 8px; }
+  #result-first-app h3 { font-size: 25px; font-weight: 500; letter-spacing: -1px; line-height: 1.35; margin: 0 0 12px; }
+  #result-first-app .garden-intro { color: var(--pb-muted); margin: 0 0 24px; }
+  #result-first-app .garden-label { display: block; font-size: 12px; color: var(--pb-muted); margin-bottom: 7px; }
+  #result-first-app fieldset { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
+  #result-first-app legend { padding: 0; }
+  #result-first-app .garden-dates { display: flex; flex-wrap: wrap; gap: 8px; }
+  #result-first-app .garden-date { flex: 1 1 130px; padding: 10px; border: 1px solid var(--pb-line); border-radius: 7px; background: var(--pb-surface); text-align: left; }
+  #result-first-app .garden-date[aria-pressed="true"] { background: var(--pb-tint); border-color: var(--pb-green); color: var(--pb-green); }
+  #result-first-app .garden-date small { display: block; font-size: 11px; color: var(--pb-muted); }
+  #result-first-app .garden-people { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 20px; }
+  #result-first-app select { border: 1px solid var(--pb-line); border-radius: 6px; padding: 5px 10px; background: var(--pb-surface); color: var(--pb-ink); }
+  #result-first-app .garden-price { min-height: 68px; border-top: 1px solid var(--pb-line); padding: 12px 0; }
+  #result-first-app .garden-price-line { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+  #result-first-app .garden-price strong { font-size: 21px; font-weight: 500; }
+  #result-first-app .garden-price small { color: var(--pb-muted); font-size: 11px; }
+  #result-first-app .garden-old-price { margin: 7px 0; color: var(--pb-muted); font-size: 12px; }
+  #result-first-app .garden-submit, #result-first-app .pb-primary { width: 100%; border: 0; border-radius: 8px; background: var(--pb-green); color: var(--pb-on-green); padding: 11px 14px; font-weight: 500; }
+  #result-first-app .garden-help { margin: 7px 0 0; text-align: center; color: var(--pb-muted); font-size: 11px; }
+  #result-first-app .garden-response { padding: 10px 12px; margin: 12px 0 0; border-radius: 6px; background: var(--pb-soft); font-size: 12px; }
+  #result-first-app .garden-response[data-kind="error"] { color: var(--pb-error); }
+  #result-first-app .pb-focus { outline: 2px solid var(--pb-green); outline-offset: 5px; border-radius: 5px; }
+  #result-first-app .pb-preview-caption { margin: 9px 0 0; font-size: 11px; color: var(--pb-muted); }
+  #result-first-app .pb-assistant { background: var(--pb-surface); border: 1px solid var(--pb-line); border-radius: 12px; margin-top: 46px; padding: 20px; }
+  #result-first-app .pb-ai-label { color: var(--pb-green); display: flex; align-items: center; gap: 7px; font-size: 12px; }
+  #result-first-app .pb-assistant h4 { font-size: 18px; line-height: 1.5; font-weight: 500; letter-spacing: -.4px; margin: 10px 0 18px; }
+  #result-first-app .pb-issue { display: block; width: 100%; border: 0; border-top: 1px solid var(--pb-line); padding: 14px 0; background: transparent; text-align: left; }
+  #result-first-app .pb-issue[aria-pressed="true"] { color: var(--pb-green); }
+  #result-first-app .pb-issue strong { display: block; font-size: 13px; font-weight: 500; }
+  #result-first-app .pb-issue span { display: block; margin-top: 4px; color: var(--pb-muted); font-size: 12px; }
+  #result-first-app .pb-primary { margin-top: 10px; }
+  #result-first-app .pb-secondary { width: 100%; border: 1px solid var(--pb-line); border-radius: 8px; padding: 9px 12px; background: var(--pb-surface); margin-top: 8px; font-size: 12px; }
+  #result-first-app .pb-status { font-size: 12px; color: var(--pb-muted); margin: 11px 0 0; }
+  #result-first-app .pb-request { margin-top: 18px; }
+  #result-first-app .pb-request label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 500; }
+  #result-first-app .pb-compose { background: var(--pb-surface); border: 1px solid var(--pb-line); border-radius: 10px; padding: 11px; }
+  #result-first-app textarea { display: block; width: 100%; min-height: 55px; resize: vertical; border: 0; background: transparent; color: var(--pb-ink); padding: 0; font-size: 13px; }
+  #result-first-app textarea::placeholder { color: var(--pb-muted); }
+  #result-first-app .pb-compose-foot { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 8px; }
+  #result-first-app .pb-compose-foot span { font-size: 11px; color: var(--pb-muted); }
+  #result-first-app .pb-request-button { border: 0; background: var(--pb-soft); border-radius: 6px; padding: 6px 10px; font-size: 12px; }
+  @media (max-width: 800px) {
+    #result-first-app .pb-workspace { grid-template-columns: minmax(0, 1fr); }
+    #result-first-app .pb-assistant { margin-top: 0; }
+    #result-first-app .pb-heading { padding: 20px 18px 16px; }
+    #result-first-app .pb-workspace { padding: 0 18px 18px; gap: 16px; }
+  }
+  @media (max-width: 400px) {
+    #result-first-app .pb-chrome { padding-left: 14px; gap: 6px; }
+    #result-first-app .pb-project { border: 0; padding: 0; font-size: 12px; }
+    #result-first-app .pb-demo { padding: 9px 14px; }
+    #result-first-app .pb-workspace { padding: 0 12px 14px; }
+    #result-first-app .garden-content, #result-first-app .garden-nav { padding: 18px; }
+    #result-first-app .pb-preview-tools { align-items: start; }
+    #result-first-app h3 { font-size: 22px; }
+  }
+  @media (pointer: coarse) {
+    #result-first-app button, #result-first-app select { min-height: 44px; }
+    #result-first-app textarea { font-size: 16px; }
+  }
+</style>
+<div id="result-first-app" lang="ko">
+  <section class="pb-window" aria-label="풀어봄 앱의 제안 화면">
+    <header class="pb-chrome">
+      <span class="pb-brand"><i data-lucide="sprout" aria-hidden="true"></i>풀어봄</span>
+      <span class="pb-project">느린정원</span>
+    </header>
+    <p class="pb-demo">눌러볼 수 있는 화면 예시 · 가상의 앱이며, 실제 코드 분석·수정은 실행하지 않습니다.</p>
+    <div class="pb-heading">
+      <h2>예약 화면을 더 편하게.</h2>
+      <p>AI가 먼저 다듬고, 원하는 부분만 더 바꿔보세요.</p>
+    </div>
+    <div class="pb-workspace">
+      <div class="pb-left">
+        <div class="pb-preview-tools">
+          <span class="pb-page-name" id="pb-preview-label">현재 모습</span>
+          <div class="pb-switch" role="group" aria-label="변경 전후 비교">
+            <button type="button" id="pb-before" class="cursor-interaction" aria-pressed="true">기존 화면</button>
+            <button type="button" id="pb-after" class="cursor-interaction" aria-pressed="false" disabled>바뀐 화면</button>
+          </div>
+        </div>
+        <section class="pb-preview" aria-label="예약 화면 예시">
+          <div class="garden-nav"><strong>느린정원</strong><span>작은 쉼을 심는 시간</span></div>
+          <div class="garden-content">
+            <p class="garden-eyebrow">WEEKEND GARDENING</p>
+            <h3>나만의 작은 정원,<br>함께 만들어볼까요?</h3>
+            <p class="garden-intro">식물을 처음 키워도 괜찮아요.<br>작은 화분 하나와 느긋한 오후를 준비했어요.</p>
+            <fieldset>
+              <legend class="garden-label">날짜 고르기</legend>
+              <div class="garden-dates">
+                <button type="button" class="garden-date cursor-interaction" data-date="10월 24일" aria-pressed="false">10월 24일<small>오후 2시 · 90분</small></button>
+                <button type="button" class="garden-date cursor-interaction" data-date="10월 31일" aria-pressed="false">10월 31일<small>오후 2시 · 90분</small></button>
+              </div>
+            </fieldset>
+            <div class="garden-people"><label for="pb-people">함께할 인원</label><select id="pb-people"><option value="1">1명</option><option value="2" selected>2명</option><option value="3">3명</option></select></div>
+            <div class="garden-price" id="pb-price-area">
+              <p class="garden-old-price" id="pb-old-price">금액은 다음 단계에서 확인할 수 있어요.</p>
+              <div id="pb-new-price" hidden>
+                <div class="garden-price-line"><span>총 예약 금액</span><strong id="pb-price">96,000원</strong></div>
+                <small id="pb-price-detail">1인 48,000원 × 2명 · 재료비 포함</small>
+              </div>
+            </div>
+            <div id="pb-cta-area">
+              <button type="button" id="pb-book" class="garden-submit cursor-interaction">다음</button>
+              <p class="garden-help" id="pb-book-help" hidden>예약 내용을 확인한 뒤 결제해요.</p>
+            </div>
+            <p class="garden-response" id="pb-book-response" aria-live="polite" hidden></p>
+          </div>
+        </section>
+        <p class="pb-preview-caption" id="pb-preview-caption">날짜를 고르지 않고 ‘다음’을 눌러 안내를 확인할 수 있어요.</p>
+        <form class="pb-request" id="pb-request-form">
+          <label for="pb-request">더 바꾸고 싶은 게 있나요?</label>
+          <div class="pb-compose">
+            <textarea id="pb-request" maxlength="600" placeholder="예: 날짜를 달력에서 고를 수 있게 해줘"></textarea>
+            <div class="pb-compose-foot"><span>원하는 결과만 말해주세요.</span><button type="button" id="pb-request-button" class="pb-request-button cursor-interaction">요청 남기기</button></div>
+          </div>
+          <p class="pb-status" id="pb-request-status" aria-live="polite" hidden></p>
+        </form>
+      </div>
+      <aside class="pb-assistant" aria-label="AI의 개선 제안">
+        <div class="pb-ai-label"><i data-lucide="sparkles" aria-hidden="true"></i><span>AI의 제안 · 예시</span></div>
+        <h4 id="pb-ai-title">이 세 곳부터<br>다듬어볼게요.</h4>
+        <button type="button" class="pb-issue cursor-interaction" data-issue="price" aria-pressed="false"><strong id="pb-issue-price-title">금액이 보이지 않아요</strong><span id="pb-issue-price-detail">예약 전에 총금액을 알 수 있게 할게요.</span></button>
+        <button type="button" class="pb-issue cursor-interaction" data-issue="cta" aria-pressed="false"><strong id="pb-issue-cta-title">다음 단계가 모호해요</strong><span id="pb-issue-cta-detail">누르면 무엇을 하는지 버튼에 적을게요.</span></button>
+        <button type="button" class="pb-issue cursor-interaction" data-issue="error" aria-pressed="false"><strong id="pb-issue-error-title">오류 안내가 막연해요</strong><span id="pb-issue-error-detail">무엇을 해야 하는지 쉽게 알려줄게요.</span></button>
+        <button type="button" id="pb-main-action" class="pb-primary cursor-interaction">다듬은 모습 보기</button>
+        <button type="button" id="pb-undo" class="pb-secondary cursor-interaction" hidden>이전 모습으로 되돌리기</button>
+        <p class="pb-status" id="pb-work-status" aria-live="polite">제안을 누르면 해당 부분을 볼 수 있어요.</p>
+      </aside>
+    </div>
+  </section>
+</div>
+<script>
+(() => {
+  const root = document.getElementById("result-first-app");
+  const get = (id) => root.querySelector("#" + id);
+  const knownIssues = ["price", "cta", "error"];
+  let state = { stage: "initial", view: "before", issue: null, date: null, people: 2, request: "" };
+  let bookingAttempted = false;
+  const improved = () => state.stage !== "initial" && state.view === "after";
+  function restore(saved) {
+    const value = saved?.privateContent;
+    if (!value || value.version !== 1) return;
+    state.stage = ["initial", "draft", "applied"].includes(value.stage) ? value.stage : "initial";
+    state.view = state.stage !== "initial" && value.view === "after" ? "after" : "before";
+    state.issue = knownIssues.includes(value.issue) ? value.issue : null;
+    state.date = ["10월 24일", "10월 31일"].includes(value.date) ? value.date : null;
+    state.people = [1, 2, 3].includes(value.people) ? value.people : 2;
+    state.request = typeof value.request === "string" ? value.request.slice(0, 600) : "";
+    get("pb-request").value = state.request;
+    render();
+  }
+  function save() {
+    if (!window.openai?.setWidgetState) return;
+    window.openai.setWidgetState({
+      modelContent: { experience: "결과를 보며 AI에게 수정을 맡기는 화면 예시", stage: state.stage, selectedImprovement: state.issue, request: state.request },
+      privateContent: { version: 1, ...state }
+    }).catch(() => {});
+  }
+  function bookingMessage() {
+    const response = get("pb-book-response");
+    response.hidden = !bookingAttempted && state.issue !== "error";
+    if (response.hidden) return;
+    response.dataset.kind = state.date ? "success" : "error";
+    response.textContent = state.date
+      ? `${state.date} · ${state.people}명 예약 내용을 확인하는 단계예요. 이 예시에서는 실제 예약·결제를 하지 않아요.`
+      : improved() ? "날짜를 먼저 골라주세요. 위에서 원하는 날짜를 선택하면 돼요." : "ERROR: invalid input";
+  }
+  function render() {
+    const after = improved();
+    const draft = state.stage !== "initial";
+    get("pb-before").setAttribute("aria-pressed", String(!after));
+    get("pb-after").setAttribute("aria-pressed", String(after));
+    get("pb-after").disabled = !draft;
+    get("pb-preview-label").textContent = after ? (state.stage === "applied" ? "선택한 모습 · 예시" : "AI가 다듬은 모습 · 예시") : "현재 모습";
+    get("pb-old-price").hidden = after;
+    get("pb-new-price").hidden = !after;
+    get("pb-price").textContent = (48000 * state.people).toLocaleString("ko-KR") + "원";
+    get("pb-price-detail").textContent = `1인 48,000원 × ${state.people}명 · 재료비 포함`;
+    get("pb-people").value = String(state.people);
+    get("pb-book").textContent = after ? "예약 내용 확인하기" : "다음";
+    get("pb-book-help").hidden = !after;
+    get("pb-ai-title").textContent = !draft ? "이 세 곳부터 다듬어볼게요." : state.stage === "applied" ? "이 모습으로 골랐어요." : "이렇게 바뀌었어요.";
+    const content = after ? {
+      price: ["예약 전에 금액을 알 수 있어요", "인원을 바꾸면 총금액도 함께 바뀌어요."],
+      cta: ["누르면 무엇을 하는지 보여요", "‘예약 내용 확인하기’로 다음 단계를 알려줘요."],
+      error: ["막혔을 때 할 일을 알려줘요", "‘날짜를 먼저 골라주세요’라고 안내해요."]
+    } : {
+      price: ["금액이 보이지 않아요", "예약 전에 총금액을 알 수 있게 할게요."],
+      cta: ["다음 단계가 모호해요", "누르면 무엇을 하는지 버튼에 적을게요."],
+      error: ["오류 안내가 막연해요", "무엇을 해야 하는지 쉽게 알려줄게요."]
+    };
+    for (const issue of knownIssues) {
+      get(`pb-issue-${issue}-title`).textContent = content[issue][0];
+      get(`pb-issue-${issue}-detail`).textContent = content[issue][1];
+    }
+    root.querySelectorAll("[data-issue]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.issue === state.issue)));
+    root.querySelectorAll("[data-date]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.date === state.date)));
+    root.querySelectorAll(".pb-focus").forEach(element => element.classList.remove("pb-focus"));
+    const targets = { price: "pb-price-area", cta: "pb-cta-area", error: "pb-book-response" };
+    if (state.issue) get(targets[state.issue]).classList.add("pb-focus");
+    get("pb-main-action").textContent = !draft ? "다듬은 모습 보기" : state.stage === "applied" ? "이 모습 선택됨" : "이 모습 사용하기";
+    get("pb-main-action").disabled = state.stage === "applied";
+    get("pb-undo").hidden = !draft;
+    get("pb-work-status").textContent = !draft
+      ? "제안을 누르면 해당 부분을 볼 수 있어요."
+      : state.stage === "applied"
+        ? "화면 예시에만 반영했어요. 언제든 되돌릴 수 있어요."
+        : "기존 화면과 비교해보세요. 실제 AI 작업·검사는 실행하지 않은 예시예요.";
+    get("pb-preview-caption").textContent = after
+      ? "인원 변경과 날짜 선택을 직접 눌러볼 수 있어요."
+      : "날짜를 고르지 않고 ‘다음’을 눌러 안내를 확인할 수 있어요.";
+    bookingMessage();
+  }
+  get("pb-main-action").addEventListener("click", () => {
+    if (state.stage === "applied") return;
+    state.stage = state.stage === "initial" ? "draft" : "applied";
+    state.view = "after";
+    render(); save();
+  });
+  get("pb-undo").addEventListener("click", () => {
+    state.stage = "initial"; state.view = "before";
+    render(); save();
+  });
+  for (const view of ["before", "after"]) get("pb-" + view).addEventListener("click", () => {
+    if (view === "after" && state.stage === "initial") return;
+    state.view = view; render(); save();
+  });
+  root.querySelectorAll("[data-issue]").forEach(button => button.addEventListener("click", () => {
+    state.issue = state.issue === button.dataset.issue ? null : button.dataset.issue;
+    render(); save();
+  }));
+  root.querySelectorAll("[data-date]").forEach(button => button.addEventListener("click", () => {
+    state.date = state.date === button.dataset.date ? null : button.dataset.date;
+    render(); save();
+  }));
+  get("pb-people").addEventListener("change", event => {
+    state.people = Number(event.target.value); render(); save();
+  });
+  get("pb-book").addEventListener("click", () => { bookingAttempted = true; bookingMessage(); });
+  function submitRequest() {
+    state.request = get("pb-request").value.trim().slice(0, 600);
+    get("pb-request-status").hidden = false;
+    get("pb-request-status").textContent = state.request
+      ? "요청을 이 예시에 남겼어요. 실제 AI 수정은 아직 연결되지 않았어요."
+      : "바꾸고 싶은 내용을 적어주세요.";
+    save();
+  }
+  get("pb-request-button").addEventListener("click", submitRequest);
+  get("pb-request-form").addEventListener("submit", event => { event.preventDefault(); submitRequest(); });
+  restore(window.openai?.widgetState);
+  window.addEventListener("openai:set_globals", event => {
+    if (event.detail?.globals?.widgetState) restore(event.detail.globals.widgetState);
+  });
+  render();
+})();
+</script>

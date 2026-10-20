@@ -130,14 +130,19 @@ export function validateReviewDecision(
     if (
       new Set(item.checkNames).size !== item.checkNames.length ||
       item.checkNames.some(
+        (name) => checks.filter((check) => check.name === name).length !== 1,
+      )
+    )
+      throw Error("현재 변경의 검사 기록을 중복 없이 연결해 주세요.");
+    if (
+      item.outcome === "confirmed" &&
+      item.checkNames.some(
         (name) =>
-          !checks.some(
-            (check) => check.name === name && check.status === "passed",
-          ),
+          checks.find((check) => check.name === name)?.status !== "passed",
       )
     )
       throw Error(
-        "현재 변경에서 실제 통과한 검사만 근거로 연결할 수 있습니다.",
+        "확인 완료 기준에는 실제 통과한 검사만 근거로 연결할 수 있습니다. 실패·미완료 기록은 실패 또는 미확인 기준에 연결해 주세요.",
       );
   }
   for (const [paths, expected] of [

@@ -51,6 +51,31 @@ async function expectTreeStopped(root: string) {
 }
 // Includes separate manager startups and Windows descendant-process termination.
 describe("independent implementation verification", { timeout: 120000 }, () => {
+  it("marks omitted output while retaining the tail and real failing exit", async () => {
+    const parent = resolve("test-results/agent-checks");
+    await mkdir(parent, { recursive: true });
+    const root = await mkdtemp(resolve(parent, "output-"));
+    await writeFile(
+      resolve(root, "package.json"),
+      JSON.stringify({ private: true, scripts: { test: "node output.cjs" } }),
+    );
+    await writeFile(
+      resolve(root, "output.cjs"),
+      "process.stdout.write('FIRST_MARKER' + 'x'.repeat(26000) + 'LAST_MARKER'); process.exitCode=7;",
+    );
+    const result = await verifyWorkspace(
+      root,
+      "test",
+      new AbortController().signal,
+      30000,
+    );
+    expect(result.status).toBe("failed");
+    expect(result.exitCode).not.toBe(0);
+    expect(result.output.length).toBeLessThanOrEqual(24000);
+    expect(result.output).toContain("LAST_MARKER");
+    expect(result.output).not.toContain("FIRST_MARKER");
+    expect(result.outputTruncated).toBe(true);
+  });
   it("records real exits, refuses missing or replaced scripts, and terminates timed-out commands", async () => {
     const parent = resolve("test-results/agent-checks");
     await mkdir(parent, { recursive: true });
@@ -78,6 +103,7 @@ describe("independent implementation verification", { timeout: 120000 }, () => {
     const passed = await verifyWorkspace(root, "test", signal, 30000);
     expect(passed.status).toBe("passed");
     expect(passed.output).toContain("123");
+    expect(passed.outputTruncated).toBe(false);
     expect((await verifyWorkspace(root, "check", signal, 30000)).status).toBe(
       "failed",
     );
@@ -108,9 +134,22 @@ describe("independent implementation verification", { timeout: 120000 }, () => {
         )
       ).output,
     ).toContain("명령이 구현 도중 바뀌었");
-    expect((await verifyWorkspace(root, "build", signal, 5000)).status).toBe(
-      "timeout",
+    // A slow package-manager startup can consume five seconds before the fixture
+    // starts. Observe both processes before claiming the timeout killed them.
+    const timeoutController = new AbortController();
+    const timed = verifyWorkspace(
+      root,
+      "build",
+      timeoutController.signal,
+      30000,
     );
+    try {
+      await vi.waitFor(() => readTree(root), { timeout: 15000, interval: 50 });
+      expect((await timed).status).toBe("timeout");
+    } finally {
+      timeoutController.abort();
+      await timed.catch(() => {});
+    }
     await expectTreeStopped(root);
   });
   it("cancels a running check only after its actual child and descendant stop", async () => {

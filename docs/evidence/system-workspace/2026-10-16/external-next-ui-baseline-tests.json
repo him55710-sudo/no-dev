@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-10-16T12:02:42.785Z",
+  "source": "Prepared pinned external Next.js SaaS Starter clone; app source unchanged.",
+  "total": 9,
+  "passed": 5,
+  "failed": 4,
+  "skipped": 0,
+  "tests": [
+    {
+      "name": "external Next.js team permissions — locked acceptance member reads the real team endpoint and its SQL-backed member list",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance member direct server-action invitation is denied without database or audit mutation",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected { Object (success) } to have property \"error\"\n    at C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/pureobom-validation/permissions.test.tsx:105:28\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      ]
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance member direct removal is denied without database or audit mutation",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance team owner can invite even when the account-wide role is member",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance team owner can remove a member using real browser FormData",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected { Object (error) } to have property \"success\"\n    at C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/pureobom-validation/permissions.test.tsx:120:29\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      ]
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance owner of another team cannot remove a member from this team or record a successful mutation",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance unauthenticated direct action cannot invite",
+      "status": "passed",
+      "failures": []
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance member UI disables invitation and removal despite owning another team and the global owner label",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected '<input type=\"email\" data-slot=\"input\"…' to match /\\bdisabled(?:=|\\s|>)/\n    at C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/pureobom-validation/permissions.test.tsx:140:19\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      ]
+    },
+    {
+      "name": "external Next.js team permissions — locked acceptance team owner UI enables invitation despite the global member label",
+      "status": "failed",
+      "failures": [
+        "AssertionError: expected '<input type=\"email\" data-slot=\"input\"…' not to match /\\bdisabled(?:=|\\s|>)/\n    at C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/pureobom-validation/permissions.test.tsx:149:23\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at file:///C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/project/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+      ]
+    }
+  ]
+}

@@ -15,32 +15,43 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: "24"
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.27.2'
+          go-version: "1.27.2"
           cache: false
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '10.0.402'
+          dotnet-version: "10.0.402"
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
           # Adoptium API SemVer for the JDK reporting 25.0.4.1+1-LTS.
-          java-version: '25.0.4+101.0.LTS'
+          java-version: "25.0.4+101.0.LTS"
       - run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+      - run: pnpm test --reporter=default --reporter=json --outputFile=test-results/unit-tests.json
+      - run: pnpm demo:record
+      - run: pnpm study:package
       - run: pnpm build
+      - run: pnpm pages:package
       - run: pnpm extension:build
       - run: xvfb-run -a pnpm extension:test
         if: runner.os == 'Linux'
       - run: pnpm extension:test
         if: runner.os == 'Windows'
+      - run: xvfb-run -a pnpm extension:design-test
+        if: runner.os == 'Linux'
+      - run: pnpm extension:design-test
+        if: runner.os == 'Windows'
       - run: pnpm extension:package
+      - run: xvfb-run -a pnpm extension:recovery-test
+        if: runner.os == 'Linux'
+      - run: pnpm extension:recovery-test
+        if: runner.os == 'Windows'
       - run: xvfb-run -a pnpm extension:test:installed
         if: runner.os == 'Linux'
       - run: pnpm extension:test:installed
@@ -51,6 +62,36 @@ jobs:
         with:
           name: pureobom-${{ runner.os }}
           path: release/*.vsix
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: system-design-site
+          path: |
+            release/*-site.zip
+            release/site-evidence.json
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: user-study-review
+          path: |
+            release/user-study-review.zip
+            release/user-study-evidence.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-tests-${{ runner.os }}
+          path: |
+            test-results/unit-tests.json
+            test-results/agent-host/observations.json
+            test-results/verification-history/repaired.json
+            test-results/verification-history/failed.json
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-recovery-${{ runner.os }}
+          path: test-results/installed-recovery.json
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: integration-evidence-${{ runner.os }}

@@ -7,6 +7,8 @@ out/design-integration.cjs
 out/project-reader-integration.cjs
 out/bundle-inputs.json
 out/real-project.cjs
+out/design-integration.cjs
+out/bundle-inputs.json
 node_modules/**
 **/*.map
 .DS_Store

@@ -5,7 +5,11 @@ import {
   observeSpec,
   type LivingSpec,
 } from "../../src/workspace/spec";
-import type { FileStory } from "../../src/workspace/narrative";
+import {
+  readingChangeContext,
+  type CodeBlock,
+} from "../../src/workspace/codeReading";
+import { CodeReading } from "./CodeReading";
 import { jobIsActive } from "../../src/workspace/job";
 import { request, host } from "./bridge";
 import "./projectReader.css";
@@ -20,6 +24,13 @@ export function ProjectReader({
   const saved = (host.getState() ?? {}) as Record<string, unknown>;
   const [part, setPart] = useState<number | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [selectedBlock, setSelectedBlock] = useState<{
+    path: string;
+    sourceHash: string;
+    startLine: number;
+  } | null>(null);
+  const wantedInput = useRef<HTMLTextAreaElement>(null);
   const [drafts, setDrafts] = useState<Record<string, string>>(() =>
     saved.projectKey === state.projectKey &&
     saved.readerDrafts &&
@@ -48,9 +59,24 @@ export function ProjectReader({
       (file) => !selected || selected.paths.includes(file.path),
     ) ?? [];
   const file = files.find((file) => file.path === selectedFile);
-  const title = file?.title ?? selected?.title ?? "프로젝트 전체";
+  const reading =
+    state.fileReading?.path === file?.path ? state.fileReading : undefined;
+  const readingCurrent =
+    !!reading && reading.revision === graph?.revision && !state.stale;
+  const block =
+    reading &&
+    selectedBlock?.path === reading.path &&
+    selectedBlock.sourceHash === reading.sourceHash
+      ? reading.blocks.find(
+          (block) => block.startLine === selectedBlock.startLine,
+        )
+      : undefined;
+  const title =
+    block?.title ?? file?.title ?? selected?.title ?? "프로젝트 전체";
   const draftKey =
-    file?.path ??
+    (block && reading
+      ? `${reading.path}#${reading.sourceHash}:${block.startLine}`
+      : file?.path) ??
     (selected ? selected.paths.slice().sort().join("|") : "system");
   const wanted = drafts[draftKey] ?? "";
   const setWanted = (text: string) =>
@@ -59,7 +85,8 @@ export function ProjectReader({
     working ||
     jobIsActive(job) ||
     !!state.storyProgress ||
-    state.changeStoryBusy;
+    !!state.fileReadingProgress ||
+    !!state.changeStoryBusy;
   const active =
     !!job &&
     [
@@ -77,6 +104,7 @@ export function ProjectReader({
   useEffect(() => {
     setPart(null);
     setSelectedFile(null);
+    setSelectedBlock(null);
   }, [story?.revision]);
   const execute = async (work: () => Promise<unknown>) => {
     setError("");
@@ -121,10 +149,36 @@ export function ProjectReader({
         revision: graph?.revision,
       }),
     );
+  const readFile = (path: string) =>
+    execute(() =>
+      request("readFile", {
+        projectKey: state.projectKey,
+        revision: graph?.revision,
+        path,
+      }),
+    );
+  const editBlock = (block: CodeBlock, suggested?: string) => {
+    if (!reading || !readingCurrent) return;
+    setSelectedBlock({
+      path: reading.path,
+      sourceHash: reading.sourceHash,
+      startLine: block.startLine,
+    });
+    if (suggested) {
+      const key = `${reading.path}#${reading.sourceHash}:${block.startLine}`;
+      setDrafts((current) => ({ ...current, [key]: suggested }));
+    }
+    requestAnimationFrame(() => {
+      wantedInput.current?.scrollIntoView({ block: "center" });
+      wantedInput.current?.focus();
+    });
+  };
   const implement = () =>
     execute(async () => {
       if (!graph || !state.execution || !current)
         throw Error("현재 코드를 먼저 읽어 주세요.");
+      if (block && !readingCurrent)
+        throw Error("선택한 코드의 설명을 새로 읽은 뒤 수정해 주세요.");
       const paths = file ? [file.path] : selected?.paths;
       const targetIds = paths
         ? graph.nodes
@@ -157,7 +211,10 @@ export function ProjectReader({
         content: {
           ...spec.content,
           title: title.slice(0, 160),
-          purpose: file?.summary ?? selected?.summary ?? story?.summary ?? "",
+          purpose:
+            block && reading
+              ? `${file?.summary ?? ""}\n${readingChangeContext(reading, block)}`
+              : (file?.summary ?? selected?.summary ?? story?.summary ?? ""),
           desired: wanted,
           acceptance: [wanted.slice(0, 2000)],
         },
@@ -167,6 +224,17 @@ export function ProjectReader({
           profileRevision: state.execution.profile.revision,
           allowExternal: true,
         },
+        ...(block && reading
+          ? {
+              readingAnchor: {
+                path: reading.path,
+                revision: reading.revision,
+                sourceHash: reading.sourceHash,
+                startLine: block.startLine,
+                endLine: block.endLine,
+              },
+            }
+          : {}),
       });
     });
   const apply = () =>
@@ -214,6 +282,7 @@ export function ProjectReader({
             {state.projectName || "내 프로젝트"}
           </span>
         </div>
+        <button onClick={onAdvanced}>구조와 고급 도구</button>
         <button
           className="pr-link"
           disabled={busy}
@@ -255,16 +324,16 @@ export function ProjectReader({
             어떻게 움직일까요?
           </h1>
           <p>
-            전체 내용을 쉬운 한국어로 읽고,
+            각 코드의 역할과 읽는 순서,
             <br />
-            궁금한 부분을 눌러 자세히 살펴보세요.
+            바꿀 수 있는 부분을 쉬운 말로 살펴보세요.
           </p>
           <button
             className="pr-primary"
             disabled={!state.trusted || !graph || busy || state.busy}
             onClick={() => void read()}
           >
-            AI로 프로젝트 읽기
+            내 코드를 쉬운 말로 읽기
           </button>
           <p className="pr-caption">
             연결된 Codex 계정으로 프로젝트의 코드와 문서를 읽습니다. 첫 읽기는
@@ -313,24 +382,21 @@ export function ProjectReader({
           </section>
           <section className="pr-explore">
             <div className="pr-section-title">
-              <h2>
-                {selected
-                  ? "궁금한 부분을 살펴보세요"
-                  : "어느 부분이 궁금하세요?"}
-              </h2>
+              <h2>궁금한 내용을 골라 읽어보세요</h2>
               {selected && (
                 <button
                   className="pr-link"
                   onClick={() => {
                     setPart(null);
                     setSelectedFile(null);
+                    setSelectedBlock(null);
                   }}
                 >
                   전체로 돌아가기
                 </button>
               )}
             </div>
-            <div className={selected ? "pr-part-tabs" : "pr-parts"}>
+            <div className="pr-part-tabs">
               {story.parts.map((item, i) => (
                 <button
                   key={item.title + i}
@@ -339,46 +405,118 @@ export function ProjectReader({
                   onClick={() => {
                     setPart(part === i ? null : i);
                     setSelectedFile(null);
+                    setSelectedBlock(null);
                   }}
                 >
                   <strong>{item.title}</strong>
-                  {!selected && (
-                    <>
-                      <span>{item.summary}</span>
-                      <small>자세히 보기 →</small>
-                    </>
-                  )}
                 </button>
               ))}
             </div>
-            {selected && (
-              <div className="pr-details">
-                <h2>{selected.title}</h2>
-                <p>{selected.summary}</p>
-                {files.map((item) => (
-                  <details
+            <label className="pr-search-label" htmlFor="pr-search">
+              읽고 싶은 내용 찾기
+            </label>
+            <input
+              id="pr-search"
+              className="pr-search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="예: 배송비, 로그인, 저장"
+              type="search"
+            />
+            <div className="pr-file-list" aria-label="코드별 설명">
+              {files
+                .filter((item) =>
+                  `${item.title} ${item.summary} ${item.path}`
+                    .toLocaleLowerCase()
+                    .includes(search.toLocaleLowerCase().trim()),
+                )
+                .map((item) => (
+                  <button
                     key={item.path}
-                    open={selectedFile === item.path}
-                    onToggle={(event) => {
-                      if (event.currentTarget.open) setSelectedFile(item.path);
-                      else if (selectedFile === item.path)
-                        setSelectedFile(null);
+                    className="pr-file-choice"
+                    aria-pressed={item.path === file?.path}
+                    disabled={busy}
+                    onClick={() => {
+                      setSelectedFile(item.path);
+                      setSelectedBlock(null);
+                      if (
+                        current &&
+                        !(
+                          state.fileReading?.path === item.path &&
+                          state.fileReading.revision === graph?.revision
+                        )
+                      )
+                        void readFile(item.path);
                     }}
                   >
-                    <summary>{item.title}</summary>
-                    <FileExplanation file={item} />
-                    <button
-                      className="pr-link"
-                      onClick={() => {
-                        setSelectedFile(item.path);
-                        document.getElementById("pr-wanted")?.focus();
-                      }}
-                    >
-                      이 부분 수정하기
-                    </button>
-                  </details>
+                    <strong>{item.title}</strong>
+                    <span>{item.summary}</span>
+                    <small>{item.path}</small>
+                  </button>
                 ))}
-              </div>
+              {!files.some((item) =>
+                `${item.title} ${item.summary} ${item.path}`
+                  .toLocaleLowerCase()
+                  .includes(search.toLocaleLowerCase().trim()),
+              ) && (
+                <p role="status">
+                  일치하는 설명이 없습니다. 다른 말로 찾아보세요.
+                </p>
+              )}
+            </div>
+            {file && (
+              <section
+                className="pr-file-detail"
+                aria-label={`${file.title}의 코드 해석`}
+              >
+                <header>
+                  <h2>{file.title}</h2>
+                  <p>{file.summary}</p>
+                </header>
+                {state.fileReadingProgress?.path === file.path && (
+                  <div className="pr-progress" role="status">
+                    <strong>{state.fileReadingProgress.message}</strong>
+                    <progress
+                      max={state.fileReadingProgress.total || 1}
+                      value={state.fileReadingProgress.completed}
+                    />
+                    <button onClick={() => void request("cancelExplanation")}>
+                      읽기 멈추기
+                    </button>
+                  </div>
+                )}
+                {state.fileReadingError?.path === file.path && (
+                  <p className="pr-error" role="alert">
+                    {readableError(state.fileReadingError.message)}
+                  </p>
+                )}
+                {reading ? (
+                  <CodeReading
+                    key={`${reading.path}:${reading.sourceHash}`}
+                    reading={reading}
+                    current={readingCurrent}
+                    disabled={busy}
+                    onEdit={editBlock}
+                  />
+                ) : (
+                  !state.fileReadingProgress && (
+                    <p>
+                      이 코드의 모든 부분을 읽어 역할·동작·수정 방법을
+                      연결합니다.
+                    </p>
+                  )
+                )}
+                {(!readingCurrent ||
+                  state.fileReadingError?.path === file.path) &&
+                  !state.fileReadingProgress && (
+                    <button
+                      disabled={busy || !current || !state.trusted}
+                      onClick={() => void readFile(file.path)}
+                    >
+                      코드 내용 차근차근 읽기
+                    </button>
+                  )}
+              </section>
             )}
             {!!story.unknowns.length && (
               <details className="pr-unknown">
@@ -396,11 +534,26 @@ export function ProjectReader({
           <section className="pr-edit">
             <span className="pr-eyebrow">원하는 모습 적기</span>
             <h2>{title}에서 무엇을 바꿀까요?</h2>
+            {block && (
+              <p className="pr-caption">
+                위에서 읽은 ‘{block.title}’의 코드와 설명이 요청에 함께
+                연결됩니다.{" "}
+                <button
+                  className="pr-link"
+                  disabled={active}
+                  onClick={() => setSelectedBlock(null)}
+                >
+                  이 파일 전체로 바꾸기
+                </button>
+              </p>
+            )}
             <label htmlFor="pr-wanted">
-              동작이나 구조를 평소 쓰는 말로 적어 주세요.
+              원하는 결과를 평소 쓰는 말로 적어 주세요. 준비된 요청도 자유롭게
+              고칠 수 있어요.
             </label>
             <textarea
               id="pr-wanted"
+              ref={wantedInput}
               value={wanted}
               maxLength={12000}
               disabled={active}
@@ -417,6 +570,7 @@ export function ProjectReader({
                 className="pr-primary"
                 disabled={
                   !current ||
+                  (!!block && !readingCurrent) ||
                   !state.trusted ||
                   busy ||
                   !wanted.trim() ||
@@ -708,8 +862,7 @@ export function ProjectReader({
           </button>{" "}
           <button onClick={() => void request("executionSettings")}>
             연결 설정
-          </button>{" "}
-          <button onClick={onAdvanced}>구조 지도와 고급 도구</button>
+          </button>
           {!!state.notices.length && (
             <ul>
               {state.notices.map((notice, index) => (
@@ -739,53 +892,6 @@ export function ProjectReader({
         </details>
       </footer>
     </main>
-  );
-}
-function FileExplanation({ file }: { file: FileStory }) {
-  return (
-    <div className="pr-file">
-      <p>{file.summary}</p>
-      {!!file.steps.length && (
-        <>
-          <h3>이렇게 움직여요</h3>
-          <ol>
-            {file.steps.map((text, i) => (
-              <li key={i}>{text}</li>
-            ))}
-          </ol>
-        </>
-      )}
-      {!!file.rules.length && (
-        <>
-          <h3>지키는 규칙</h3>
-          <ul>
-            {file.rules.map((text, i) => (
-              <li key={i}>{text}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      {!!file.unknowns.length && (
-        <>
-          <h3>코드만으로 확실하지 않은 점</h3>
-          <ul>
-            {file.unknowns.map((text, i) => (
-              <li key={i}>{text}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      <details>
-        <summary>설명의 근거 보기</summary>
-        <small>{file.path}</small>
-        {file.evidence.map((evidence, i) => (
-          <div key={i}>
-            <p>{evidence.meaning}</p>
-            <pre>{evidence.quote}</pre>
-          </div>
-        ))}
-      </details>
-    </div>
   );
 }
 function readableError(value: string) {

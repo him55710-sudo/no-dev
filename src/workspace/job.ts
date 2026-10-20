@@ -12,8 +12,24 @@ export type VerificationResult = {
   status: "passed" | "failed" | "timeout" | "missing";
   exitCode?: number;
   output: string;
+  /** True when the beginning of the captured output was omitted. Absent in older records. */
+  outputTruncated?: boolean;
   elapsedMs: number;
 };
+const checksSchema = z
+  .array(
+    z
+      .object({
+        name: z.string().max(100),
+        status: z.enum(["passed", "failed", "timeout", "missing"]),
+        exitCode: z.number().int().optional(),
+        output: z.string().max(24000),
+        outputTruncated: z.boolean().optional(),
+        elapsedMs: z.number().nonnegative(),
+      })
+      .strict(),
+  )
+  .max(4);
 export type ImplementationJob = {
   id: string;
   specId: string;
@@ -34,10 +50,18 @@ export type ImplementationJob = {
     | "recovery"
     | "failed";
   startedAt: string;
+  continuedFrom?: string;
   worktree?: string;
   provider?: string;
   message: string;
   checks: VerificationResult[];
+  previousChecks?: VerificationResult[];
+  /** Historical attempts never authorize applying the current candidate. */
+  verificationAttempts?: {
+    attempt: 1 | 2;
+    completed: boolean;
+    checks: VerificationResult[];
+  }[];
   files: { path: string; kind: "added" | "modified" | "deleted" }[];
   reviewId?: string;
   assessment?: ReviewAssessment;
@@ -73,22 +97,24 @@ export const jobSchema = z
       "recovery",
     ]),
     startedAt: z.string().datetime(),
+    continuedFrom: z.string().uuid().optional(),
     worktree: z.string().max(4096).optional(),
     provider: z.string().max(4096).optional(),
     message: z.string().max(32000),
-    checks: z
+    checks: checksSchema,
+    previousChecks: checksSchema.optional(),
+    verificationAttempts: z
       .array(
         z
           .object({
-            name: z.string().max(100),
-            status: z.enum(["passed", "failed", "timeout", "missing"]),
-            exitCode: z.number().int().optional(),
-            output: z.string().max(24000),
-            elapsedMs: z.number().nonnegative(),
+            attempt: z.union([z.literal(1), z.literal(2)]),
+            completed: z.boolean(),
+            checks: checksSchema,
           })
           .strict(),
       )
-      .max(4),
+      .max(2)
+      .optional(),
     files: z
       .array(
         z

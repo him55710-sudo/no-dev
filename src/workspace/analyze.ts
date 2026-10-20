@@ -1,6 +1,9 @@
 import ts from "typescript";
 import type { SourceFile } from "../core/types";
 import { analyzeFile } from "../core/analyze";
+import { connectionSite } from "./connectionSite";
+import { symbolDescription } from "./symbolDescription";
+import { routeCandidates } from "./routeCandidates";
 import {
   relativePath,
   sha256,
@@ -167,6 +170,19 @@ export async function analyzeStructure(
   const declarations = new Map<ts.Node, StructureNode>();
   const sourceFiles = new Map<string, ts.SourceFile>();
   const hashTasks: Promise<void>[] = [];
+  const nodeHashes = new WeakMap<ts.Node, Promise<string>>();
+  const printer = ts.createPrinter({ removeComments: true });
+  const contentHash = (node: ts.Node) => {
+    let hash = nodeHashes.get(node);
+    if (!hash) {
+      hash = sha256(
+        printer.printNode(ts.EmitHint.Unspecified, node, node.getSourceFile()),
+      );
+      nodeHashes.set(node, hash);
+    }
+    return hash;
+  };
+  const siteHashes = new Map<StructureEdge, Promise<string>[]>();
   const ref = (node: ts.Node, symbol = ""): SourceRef => {
     const sf = node.getSourceFile();
     const start = node.getStart(sf),
@@ -181,11 +197,8 @@ export async function analyzeStructure(
       fileHash: hashes.get(sourcePath(sf))!,
       contentHash: "",
     };
-    const printed = ts
-      .createPrinter({ removeComments: true })
-      .printNode(ts.EmitHint.Unspecified, node, sf);
     hashTasks.push(
-      sha256(printed).then((hash) => {
+      contentHash(node).then((hash) => {
         reference.contentHash = hash;
       }),
     );
@@ -258,6 +271,9 @@ export async function analyzeStructure(
         message: ts.flattenDiagnosticMessageText(error.messageText, " "),
       });
     const explained = analyzeFile(file);
+    const explainedFunctions = new Map(
+      explained.functions.map((fn) => [fn.start, fn]),
+    );
     const names = new Map<string, number>();
     const visit = (node: ts.Node, owner: StructureNode, qualified: string) => {
       let current = owner,
@@ -268,19 +284,20 @@ export async function analyzeStructure(
         const count = names.get(scope) ?? 0;
         names.set(scope, count + 1);
         const key = count ? `${scope}#${count}` : scope;
-        const fn = explained.functions.find(
-          (fn) => fn.start === node.getStart(sf),
+        const description = symbolDescription(
+          node,
+          explainedFunctions,
+          checker,
+          roleOf(node),
         );
         current = addNode({
           id: idFor("symbol", file.path, key),
           parentId: owner.id,
           kind: "symbol",
           origin: "syntax",
-          role: roleOf(node),
+          role: description.role,
           label: name,
-          summary: fn
-            ? fn.steps.map((step) => step.text.ko).join("\n")
-            : `${roleOf(node)} 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.`,
+          summary: description.summary,
           sources: [ref(node, key)],
           syntaxValid: fileNode.syntaxValid,
         });
@@ -339,6 +356,8 @@ export async function analyzeStructure(
     kind: StructureEdge["kind"],
     label: string,
     location: ts.Node,
+    signature?: ts.SignatureDeclaration,
+    candidateDetail?: ReturnType<typeof connectionSite>,
   ) => {
     if (edges.length >= structureLimits.edges)
       throw Error("구조가 분석 연결 한도를 초과했습니다.");
@@ -346,19 +365,72 @@ export async function analyzeStructure(
       (edge) =>
         edge.source === source && edge.target === target && edge.kind === kind,
     );
-    if (existing) existing.sources.push(ref(location));
-    else
-      edges.push({
-        id: `edge:${edges.length}:${source}:${target}`,
-        source,
-        target,
-        kind,
-        label,
-        sources: [ref(location)],
-        evidence: "compiler",
-      });
+    const edge: StructureEdge = existing ?? {
+      id: `edge:${edges.length}:${source}:${target}`,
+      source,
+      target,
+      kind,
+      label,
+      sources: [],
+      sites: [],
+      evidence: kind === "routes" ? "framework" : "compiler",
+    };
+    if (!existing) edges.push(edge);
+    edge.sources.push(ref(location));
+    const detail = candidateDetail ?? connectionSite(kind, location, signature);
+    edge.sites!.push(detail.site);
+    const pending = siteHashes.get(edge) ?? [];
+    pending.push(
+      Promise.all(
+        detail.evidence.map((part) =>
+          typeof part === "string" ? part : contentHash(part),
+        ),
+      ).then((parts) => sha256(JSON.stringify(parts))),
+    );
+    siteHashes.set(edge, pending);
   };
   for (const [path, sf] of sourceFiles) {
+    // A function value passed to a hook/form is a dependency, not a call at
+    // this location. Resolve its symbol and call signature through the same
+    // in-memory compiler; never match an unrelated declaration by name.
+    const passedFunction = (expression: ts.Expression) => {
+      let value = expression;
+      while (
+        ts.isParenthesizedExpression(value) ||
+        ts.isAsExpression(value) ||
+        ts.isTypeAssertionExpression(value) ||
+        ts.isNonNullExpression(value) ||
+        ts.isSatisfiesExpression(value)
+      )
+        value = value.expression;
+      if (
+        ts.isArrowFunction(value) ||
+        ts.isFunctionExpression(value) ||
+        ts.isCallExpression(value) ||
+        ts.isNewExpression(value)
+      )
+        return; // Inline bodies/calls are visited separately; returned values are unknown.
+      const type = checker.getNonNullableType(checker.getTypeAtLocation(value));
+      if (!checker.getSignaturesOfType(type, ts.SignatureKind.Call).length)
+        return;
+      const target = resolveSymbol(value),
+        owner = ownerFor(expression);
+      if (target && owner)
+        addEdge(
+          owner.id,
+          target.id,
+          "passes",
+          "함수 값을 인수 또는 화면 속성으로 전달",
+          expression,
+        );
+      else
+        notices.push({
+          path,
+          line:
+            sf.getLineAndCharacterOfPosition(expression.getStart()).line + 1,
+          message: `전달된 함수 값의 구현을 정적으로 확인하지 못했습니다: ${expression.getText(sf)}`,
+        });
+    };
     const visit = (node: ts.Node) => {
       if (
         (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
@@ -392,6 +464,7 @@ export async function analyzeStructure(
           });
       }
       if (ts.isCallExpression(node) || ts.isNewExpression(node)) {
+        for (const argument of node.arguments ?? []) passedFunction(argument);
         const signature = checker.getResolvedSignature(node);
         const target =
           (signature?.declaration && declarations.get(signature.declaration)) ||
@@ -404,6 +477,9 @@ export async function analyzeStructure(
             "calls",
             node.expression.getText(sf),
             node,
+            signature?.declaration?.kind === ts.SyntaxKind.JSDocSignature
+              ? undefined
+              : signature?.declaration,
           );
         else if (
           ts.isIdentifier(node.expression) &&
@@ -439,18 +515,51 @@ export async function analyzeStructure(
             node,
           );
       }
+      if (
+        ts.isJsxAttribute(node) &&
+        node.initializer &&
+        ts.isJsxExpression(node.initializer) &&
+        node.initializer.expression
+      )
+        passedFunction(node.initializer.expression);
       ts.forEachChild(node, visit);
     };
     visit(sf);
   }
+  // Append convention-based candidates after compiler edges to preserve their IDs.
+  const routes = routeCandidates(input, sourceFiles, checker);
+  notices.push(...routes.notices);
+  for (const match of routes.matches) {
+    const owner = ownerFor(match.call);
+    const target = nodes.find(
+      (node) => node.id === idFor("file", match.targetPath),
+    );
+    if (owner?.syntaxValid && target?.syntaxValid)
+      addEdge(
+        owner.id,
+        target.id,
+        "routes",
+        "요청 경로 후보",
+        match.call,
+        undefined,
+        match.detail,
+      );
+  }
+  for (const [edge, pending] of siteHashes)
+    hashTasks.push(
+      Promise.all(pending).then(async (hashes) => {
+        edge.evidenceHash = await sha256(JSON.stringify(hashes));
+      }),
+    );
   await Promise.all(hashTasks);
   return {
     schemaVersion: 1,
     revision: await sha256(
-      [...hashes.entries()]
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([p, h]) => `${p}:${h}`)
-        .join("\n"),
+      "static-structure:5:route-candidates\n" +
+        [...hashes.entries()]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([p, h]) => `${p}:${h}`)
+          .join("\n"),
     ),
     nodes,
     edges,

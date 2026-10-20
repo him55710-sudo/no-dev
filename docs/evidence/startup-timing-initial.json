@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-10-19T22:05:22.661Z",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "scope": "Instrumented current process-scope source; synthetic Node child only. Does not reproduce or explain every prior timeout.",
+  "results": [
+    {
+      "label": "first",
+      "code": 0,
+      "elapsedMs": 3195,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 603
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 799
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 910
+        }
+      ]
+    },
+    {
+      "label": "second",
+      "code": 0,
+      "elapsedMs": 2862,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 340
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 473
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 559
+        }
+      ]
+    },
+    {
+      "label": "concurrent-1",
+      "code": 0,
+      "elapsedMs": 2975,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 421
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 576
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 675
+        }
+      ]
+    },
+    {
+      "label": "concurrent-2",
+      "code": 0,
+      "elapsedMs": 2967,
+      "stages": [
+        {
+          "name": "scope-start",
+          "elapsedMs": 420
+        },
+        {
+          "name": "scope-compiled",
+          "elapsedMs": 568
+        },
+        {
+          "name": "target-ready",
+          "elapsedMs": 668
+        }
+      ]
+    }
+  ]
+}

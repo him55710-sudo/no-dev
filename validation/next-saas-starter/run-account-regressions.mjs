@@ -1,0 +1,26 @@
+// Invoke only on a disposable standalone clone; never on the active agent worktree.
+import assert from 'node:assert/strict';
+import { lstat, mkdir, copyFile, writeFile, readFile } from 'node:fs/promises';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
+import { createRequire } from 'node:module';
+const source = resolve(process.argv[2] ?? '');
+assert.ok(process.argv[2] && process.env.PUREOBOM_TEST_POSTGRES_BIN, 'Pass a disposable source clone and PUREOBOM_TEST_POSTGRES_BIN.');
+assert.ok((await lstat(resolve(source, '.git'))).isDirectory(), 'Use a standalone clone, not a linked agent worktree.');
+const fixture = resolve(source, 'pureobom-regression');
+const here = dirname(fileURLToPath(import.meta.url));
+await mkdir(fixture, { recursive: true });
+for (const name of ['account-regressions.test.mjs', 'database.mjs']) await copyFile(resolve(here, name), resolve(fixture, name));
+await writeFile(resolve(fixture, 'vitest.config.mts'), `import { defineConfig } from 'vitest/config';
+import { resolve } from 'node:path';
+export default defineConfig({ resolve: { alias: { '@': resolve('.') } }, test: { include: ['pureobom-regression/account-regressions.test.mjs'], testTimeout: 20000, hookTimeout: 60000, fileParallelism: false } });
+`);
+const fromSource = createRequire(resolve(source, 'package.json'));
+const vitestPackage = fromSource.resolve('vitest/package.json');
+const vitestMetadata = JSON.parse(await readFile(vitestPackage, 'utf8'));
+const bin = typeof vitestMetadata.bin === 'string' ? vitestMetadata.bin : vitestMetadata.bin.vitest;
+const output = resolve(source, '../account-regressions.json');
+const child = spawn(process.execPath, [resolve(dirname(vitestPackage), bin), 'run', '--config', resolve(fixture, 'vitest.config.mts'), '--reporter=default', '--reporter=json', `--outputFile=${output}`], { cwd: source, env: process.env, windowsHide: true, stdio: 'inherit' });
+child.once('error', error => { throw error; });
+child.once('exit', code => { process.exitCode = code ?? 1; });

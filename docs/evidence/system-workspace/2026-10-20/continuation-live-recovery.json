@@ -1,0 +1,723 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-19T20:08:52.380Z",
+  "failedReport": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-qMIjrU\\continuation-runs\\run-hqQw7I\\report.json",
+  "previousId": "acc7e12c-ca3f-4f88-a486-c5b6c8ea9db2",
+  "resumedId": "f7fe4327-8044-44bd-9ffa-0213c103aee4",
+  "artifact": {
+    "vsixSha256": "3361845dccb2c09c6dc004ba64c5b477bba345ce3dac8df9ba3d9867b82c85b4",
+    "hostSha256": "1fc847b9803cd0a6c2153035e1da0558bd89b49e197ad305af845c5f59f48ee5"
+  },
+  "scope": "Reattach to the same already-applied job, restore saved business features in validation analysis, verify applied bytes, and undo. No provider restart or new implementation.",
+  "appliedHashes": {
+    "app/(dashboard)/dashboard/page.tsx": "4468d31ccc3b9b41de8cfd31466234788db3f215fb8e93ad3ed132f265deef2e",
+    "app/(login)/actions.ts": "d1703279ea19b9ff9fa8f5f83fe54b870f995e05a6831c595398dd80e5e6f8a8",
+    "lib/auth/team-permissions.ts": "18b9597bdcce566e09dce6ee78e1ed05d1a2b14dc6291d55c2c0d849ffe1aa6e",
+    "lib/db/queries.ts": "a050a4b403b10bb9d84c1990848ce984a751a41849b72d7ac28d88d4cc5ff89f",
+    "lib/db/schema.ts": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+    "tests/team-permissions.test.tsx": "3cf67d0510613bd2953815b102c29b99aba7f904b129f2f0438d13f623716e99",
+    "tests/vitest.config.mts": "0292863412bf0f92d2455e78b0db4052b0fc88425872cc7e4c95c3656372f7ba"
+  },
+  "applied": {
+    "files": [
+      {
+        "path": "README.md",
+        "hash": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+        "supported": false
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/loading.tsx",
+        "hash": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/page.tsx",
+        "hash": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "hash": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "hash": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "hash": "4468d31ccc3b9b41de8cfd31466234788db3f215fb8e93ad3ed132f265deef2e",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "hash": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "hash": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/page.tsx",
+        "hash": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/pricing/page.tsx",
+        "hash": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/pricing/submit-button.tsx",
+        "hash": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "hash": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "hash": "d1703279ea19b9ff9fa8f5f83fe54b870f995e05a6831c595398dd80e5e6f8a8",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "hash": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/sign-in/page.tsx",
+        "hash": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/sign-up/page.tsx",
+        "hash": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+        "supported": true
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "hash": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+        "supported": true
+      },
+      {
+        "path": "app/api/stripe/webhook/route.ts",
+        "hash": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+        "supported": true
+      },
+      {
+        "path": "app/api/team/route.ts",
+        "hash": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+        "supported": true
+      },
+      {
+        "path": "app/api/user/route.ts",
+        "hash": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+        "supported": true
+      },
+      {
+        "path": "app/globals.css",
+        "hash": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+        "supported": false
+      },
+      {
+        "path": "app/layout.tsx",
+        "hash": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+        "supported": true
+      },
+      {
+        "path": "app/not-found.tsx",
+        "hash": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+        "supported": true
+      },
+      {
+        "path": "components.json",
+        "hash": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+        "supported": false
+      },
+      {
+        "path": "components/ui/avatar.tsx",
+        "hash": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+        "supported": true
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "hash": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+        "supported": true
+      },
+      {
+        "path": "components/ui/card.tsx",
+        "hash": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+        "supported": true
+      },
+      {
+        "path": "components/ui/dropdown-menu.tsx",
+        "hash": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+        "supported": true
+      },
+      {
+        "path": "components/ui/input.tsx",
+        "hash": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+        "supported": true
+      },
+      {
+        "path": "components/ui/label.tsx",
+        "hash": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+        "supported": true
+      },
+      {
+        "path": "components/ui/radio-group.tsx",
+        "hash": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+        "supported": true
+      },
+      {
+        "path": "drizzle.config.ts",
+        "hash": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+        "supported": true
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "hash": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+        "supported": true
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "hash": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+        "supported": true
+      },
+      {
+        "path": "lib/auth/team-permissions.ts",
+        "hash": "18b9597bdcce566e09dce6ee78e1ed05d1a2b14dc6291d55c2c0d849ffe1aa6e",
+        "supported": true
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "hash": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+        "supported": true
+      },
+      {
+        "path": "lib/db/migrations/0000_soft_the_anarchist.sql",
+        "hash": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+        "supported": false
+      },
+      {
+        "path": "lib/db/migrations/meta/0000_snapshot.json",
+        "hash": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+        "supported": false
+      },
+      {
+        "path": "lib/db/migrations/meta/_journal.json",
+        "hash": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+        "supported": false
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "hash": "a050a4b403b10bb9d84c1990848ce984a751a41849b72d7ac28d88d4cc5ff89f",
+        "supported": true
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "hash": "79f3787f2c7965a0c347c64a72283b682444b3ceca66ba545fc6e78060883782",
+        "supported": true
+      },
+      {
+        "path": "lib/db/seed.ts",
+        "hash": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+        "supported": true
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "hash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+        "supported": true
+      },
+      {
+        "path": "lib/payments/actions.ts",
+        "hash": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+        "supported": true
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "hash": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+        "supported": true
+      },
+      {
+        "path": "lib/utils.ts",
+        "hash": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+        "supported": true
+      },
+      {
+        "path": "middleware.ts",
+        "hash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+        "supported": true
+      },
+      {
+        "path": "next.config.ts",
+        "hash": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+        "supported": true
+      },
+      {
+        "path": "package.json",
+        "hash": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+        "supported": false
+      },
+      {
+        "path": "postcss.config.mjs",
+        "hash": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+        "supported": true
+      },
+      {
+        "path": "pureobom-validation/permissions.test.tsx",
+        "hash": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+        "supported": true
+      },
+      {
+        "path": "pureobom-validation/vitest.config.mts",
+        "hash": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+        "supported": true
+      },
+      {
+        "path": "tests/team-permissions.test.tsx",
+        "hash": "3cf67d0510613bd2953815b102c29b99aba7f904b129f2f0438d13f623716e99",
+        "supported": true
+      },
+      {
+        "path": "tests/vitest.config.mts",
+        "hash": "0292863412bf0f92d2455e78b0db4052b0fc88425872cc7e4c95c3656372f7ba",
+        "supported": true
+      },
+      {
+        "path": "tsconfig.json",
+        "hash": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a",
+        "supported": false
+      }
+    ],
+    "observation": {
+      "status": "changed",
+      "sources": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "symbol": "",
+          "start": 0,
+          "end": 10095,
+          "line": 1,
+          "endLine": 313,
+          "fileHash": "4468d31ccc3b9b41de8cfd31466234788db3f215fb8e93ad3ed132f265deef2e",
+          "contentHash": "3646a8d3b6511f5ce28d9a90746fb264a0acba11dfdc71d3c0f6fece2e08e30c"
+        },
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 12451,
+          "line": 1,
+          "endLine": 478,
+          "fileHash": "d1703279ea19b9ff9fa8f5f83fe54b870f995e05a6831c595398dd80e5e6f8a8",
+          "contentHash": "b0861d6e4ec27099aa9445ee9150bc5d0b64551216d3f033846fc7d5c67a4600"
+        },
+        {
+          "path": "app/api/team/route.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 159,
+          "line": 1,
+          "endLine": 7,
+          "fileHash": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+          "contentHash": "767de53746fff836adcd983bce2972caed6738fdf2b75e2ec0a5d9570a56915b"
+        },
+        {
+          "path": "lib/db/queries.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 3267,
+          "line": 1,
+          "endLine": 135,
+          "fileHash": "a050a4b403b10bb9d84c1990848ce984a751a41849b72d7ac28d88d4cc5ff89f",
+          "contentHash": "f80fb2a224be2c8295f7c5333c2ef8c47ee02613125a5391750dca61867fadf3"
+        }
+      ],
+      "details": [
+        "app/(dashboard)/dashboard/page.tsx : 근거 코드가 바뀌었습니다. 목표 충족 여부를 다시 확인해야 합니다.",
+        "app/(login)/actions.ts : 근거 코드가 바뀌었습니다. 목표 충족 여부를 다시 확인해야 합니다.",
+        "lib/db/queries.ts : 근거 코드가 바뀌었습니다. 목표 충족 여부를 다시 확인해야 합니다."
+      ]
+    }
+  },
+  "originalHashes": {
+    ".env.example": "974285113c1ad8e1293d114ac00b35f36d425c2c68fa839e3943118e517a2c04",
+    ".gitignore": "43d2afb3e486c6a5debe8d5a3d0a7d874345fb09e5fba3018964fd4e251b1fdf",
+    "LICENSE": "b44c87f36db2fb9515086cd4cda151287e3c36fc0a48650ec9554f22b3571d3e",
+    "README.md": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+    "app/(dashboard)/dashboard/activity/loading.tsx": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+    "app/(dashboard)/dashboard/activity/page.tsx": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+    "app/(dashboard)/dashboard/general/page.tsx": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+    "app/(dashboard)/dashboard/layout.tsx": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+    "app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "app/(dashboard)/dashboard/security/page.tsx": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+    "app/(dashboard)/layout.tsx": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+    "app/(dashboard)/page.tsx": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+    "app/(dashboard)/pricing/page.tsx": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+    "app/(dashboard)/pricing/submit-button.tsx": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+    "app/(dashboard)/terminal.tsx": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+    "app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "app/(login)/login.tsx": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+    "app/(login)/sign-in/page.tsx": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+    "app/(login)/sign-up/page.tsx": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+    "app/api/stripe/checkout/route.ts": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+    "app/api/stripe/webhook/route.ts": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+    "app/api/team/route.ts": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+    "app/api/user/route.ts": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+    "app/favicon.ico": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+    "app/globals.css": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+    "app/layout.tsx": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+    "app/not-found.tsx": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+    "components.json": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+    "components/ui/avatar.tsx": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+    "components/ui/button.tsx": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+    "components/ui/card.tsx": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+    "components/ui/dropdown-menu.tsx": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+    "components/ui/input.tsx": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+    "components/ui/label.tsx": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+    "components/ui/radio-group.tsx": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+    "drizzle.config.ts": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+    "lib/auth/middleware.ts": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+    "lib/auth/session.ts": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+    "lib/db/drizzle.ts": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+    "lib/db/migrations/0000_soft_the_anarchist.sql": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+    "lib/db/migrations/meta/0000_snapshot.json": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+    "lib/db/migrations/meta/_journal.json": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+    "lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "lib/db/seed.ts": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+    "lib/db/setup.ts": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+    "lib/payments/actions.ts": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+    "lib/payments/stripe.ts": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+    "lib/utils.ts": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+    "middleware.ts": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+    "next.config.ts": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "postcss.config.mjs": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "tsconfig.json": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a"
+  },
+  "undone": {
+    "files": [
+      {
+        "path": "README.md",
+        "hash": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+        "supported": false
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/loading.tsx",
+        "hash": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/activity/page.tsx",
+        "hash": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/general/page.tsx",
+        "hash": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/layout.tsx",
+        "hash": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "hash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/dashboard/security/page.tsx",
+        "hash": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/layout.tsx",
+        "hash": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/page.tsx",
+        "hash": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/pricing/page.tsx",
+        "hash": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/pricing/submit-button.tsx",
+        "hash": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+        "supported": true
+      },
+      {
+        "path": "app/(dashboard)/terminal.tsx",
+        "hash": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/actions.ts",
+        "hash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/login.tsx",
+        "hash": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/sign-in/page.tsx",
+        "hash": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+        "supported": true
+      },
+      {
+        "path": "app/(login)/sign-up/page.tsx",
+        "hash": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+        "supported": true
+      },
+      {
+        "path": "app/api/stripe/checkout/route.ts",
+        "hash": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+        "supported": true
+      },
+      {
+        "path": "app/api/stripe/webhook/route.ts",
+        "hash": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+        "supported": true
+      },
+      {
+        "path": "app/api/team/route.ts",
+        "hash": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+        "supported": true
+      },
+      {
+        "path": "app/api/user/route.ts",
+        "hash": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+        "supported": true
+      },
+      {
+        "path": "app/globals.css",
+        "hash": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+        "supported": false
+      },
+      {
+        "path": "app/layout.tsx",
+        "hash": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+        "supported": true
+      },
+      {
+        "path": "app/not-found.tsx",
+        "hash": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+        "supported": true
+      },
+      {
+        "path": "components.json",
+        "hash": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+        "supported": false
+      },
+      {
+        "path": "components/ui/avatar.tsx",
+        "hash": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+        "supported": true
+      },
+      {
+        "path": "components/ui/button.tsx",
+        "hash": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+        "supported": true
+      },
+      {
+        "path": "components/ui/card.tsx",
+        "hash": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+        "supported": true
+      },
+      {
+        "path": "components/ui/dropdown-menu.tsx",
+        "hash": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+        "supported": true
+      },
+      {
+        "path": "components/ui/input.tsx",
+        "hash": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+        "supported": true
+      },
+      {
+        "path": "components/ui/label.tsx",
+        "hash": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+        "supported": true
+      },
+      {
+        "path": "components/ui/radio-group.tsx",
+        "hash": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+        "supported": true
+      },
+      {
+        "path": "drizzle.config.ts",
+        "hash": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+        "supported": true
+      },
+      {
+        "path": "lib/auth/middleware.ts",
+        "hash": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+        "supported": true
+      },
+      {
+        "path": "lib/auth/session.ts",
+        "hash": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+        "supported": true
+      },
+      {
+        "path": "lib/db/drizzle.ts",
+        "hash": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+        "supported": true
+      },
+      {
+        "path": "lib/db/migrations/0000_soft_the_anarchist.sql",
+        "hash": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+        "supported": false
+      },
+      {
+        "path": "lib/db/migrations/meta/0000_snapshot.json",
+        "hash": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+        "supported": false
+      },
+      {
+        "path": "lib/db/migrations/meta/_journal.json",
+        "hash": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+        "supported": false
+      },
+      {
+        "path": "lib/db/queries.ts",
+        "hash": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+        "supported": true
+      },
+      {
+        "path": "lib/db/schema.ts",
+        "hash": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+        "supported": true
+      },
+      {
+        "path": "lib/db/seed.ts",
+        "hash": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+        "supported": true
+      },
+      {
+        "path": "lib/db/setup.ts",
+        "hash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+        "supported": true
+      },
+      {
+        "path": "lib/payments/actions.ts",
+        "hash": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+        "supported": true
+      },
+      {
+        "path": "lib/payments/stripe.ts",
+        "hash": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+        "supported": true
+      },
+      {
+        "path": "lib/utils.ts",
+        "hash": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+        "supported": true
+      },
+      {
+        "path": "middleware.ts",
+        "hash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+        "supported": true
+      },
+      {
+        "path": "next.config.ts",
+        "hash": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+        "supported": true
+      },
+      {
+        "path": "package.json",
+        "hash": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+        "supported": false
+      },
+      {
+        "path": "postcss.config.mjs",
+        "hash": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+        "supported": true
+      },
+      {
+        "path": "pureobom-validation/permissions.test.tsx",
+        "hash": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+        "supported": true
+      },
+      {
+        "path": "pureobom-validation/vitest.config.mts",
+        "hash": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+        "supported": true
+      },
+      {
+        "path": "tsconfig.json",
+        "hash": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a",
+        "supported": false
+      }
+    ],
+    "observation": {
+      "status": "unchanged",
+      "sources": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "symbol": "",
+          "start": 0,
+          "end": 8983,
+          "line": 1,
+          "endLine": 288,
+          "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+          "contentHash": "20cbe76faf189bc0ff22155399ca4b18d1a00849125e4435d845cf7ce83eaffc"
+        },
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 11780,
+          "line": 1,
+          "endLine": 460,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "fb593652707be07851ecd2f24cc18d54461a1ab3f92650864c442785737ef8b2"
+        },
+        {
+          "path": "app/api/team/route.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 159,
+          "line": 1,
+          "endLine": 7,
+          "fileHash": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+          "contentHash": "767de53746fff836adcd983bce2972caed6738fdf2b75e2ec0a5d9570a56915b"
+        },
+        {
+          "path": "lib/db/queries.ts",
+          "symbol": "",
+          "start": 0,
+          "end": 3030,
+          "line": 1,
+          "endLine": 131,
+          "fileHash": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+          "contentHash": "1d56ec582d6c5c208cd040f99f9e82fa78cab56bcf69dc97a48b7b5cb9714b58"
+        }
+      ],
+      "details": []
+    }
+  },
+  "originalRestored": true,
+  "previousPartialPreserved": true,
+  "savedDesignPreserved": true,
+  "finishedAt": "2026-10-19T20:09:01.911Z"
+}

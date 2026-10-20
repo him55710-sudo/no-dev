@@ -1,4 +1,8 @@
-# 풀어봄 — 코드가, 말이 되다
+# 풀어봄 — 코드가 하는 일을 이해하고, 원하는 수정을 말하세요
+
+**코드 읽기 · 0.7 개발판:** [현재 제품 기준](docs/CODE_READING_PRODUCT.md) · [검증 범위와 남은 작업](docs/SYSTEM_WORKSPACE_STATUS.md) · [설치하고 시작하기](docs/SYSTEM_WORKSPACE_START.md). 각 파일의 실제 코드를 쉬운 말로 풀어 목적·조건·처리 순서·결과·수정 방법을 보여줍니다. 설명 옆에서 원문을 확인하고, 바꾸고 싶은 부분을 골라 평소 쓰는 말로 수정 요청을 작성합니다. 공개 0.6.0 설치본과 브라우저 데모에는 이 기능이 없습니다.
+
+현재 구현은 VS Code 확장이며 읽기 화면을 기본으로 엽니다. GitHub 링크·폴더를 가져오는 독립 앱은 아직 남아 있습니다. 앞서 제안한 앱 미리보기 중심 시안은 사용자에게 거절됐으며 현재 제품 기준으로 삼지 않습니다.
 
 **0.7 개발 증분:** [HTML/CSS 원문 읽기·값 수정](docs/HTML_CSS_SOURCE.md)은 브라우저와 VS Code에 포함된 파서로 동작합니다. 태그·문구·선택자·선언을 원문에서 읽고 일부 값의 변경안·적용·undo를 지원합니다. API나 모델은 필요 없으며 실제 화면과 동작은 별도 확인해야 합니다.
 
@@ -6,7 +10,35 @@
 
 **제품 우선 개발:** [상세 완성 계획](docs/PRODUCT_COMPLETION.md) · [언어별 지원·검증 표](docs/LANGUAGE_SUPPORT.md) · [에이전트 작업 기록](docs/AGENT_WORKLOG.md). 0.7 개발 소스에 선택형 [Ollama 로컬 설명·수정](docs/LOCAL_AI.md)을 추가했습니다. 실제 Python 프로젝트 검증과, 성능이 느려져 채택하지 않은 제안도 공개합니다. 공개 0.6.0 설치본과 브라우저 데모에는 로컬 AI가 없습니다.
 
-[English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub](https://github.com/him55710-sudo/pureobom)
+## 코드를 읽고 수정 요청하기
+
+개발판에서 **풀어봄: 시스템 설계 워크스페이스 열기**를 실행하고 Codex를 연결해 프로젝트를 읽으세요. 쉬운 제목으로 파일을 고르면 코드의 역할, 받는 정보와 결과, 읽는 순서, 작성 이유, 수정 예시가 나타납니다. **코드와 나란히 보기**로 실제 원문을 함께 볼 수 있습니다. **이 요청으로 수정 준비하기**를 누른 뒤 요청을 자유롭게 고쳐 변경안을 만듭니다.
+
+원문의 모든 줄을 설명과 연결하고 인용을 검사하지만, 이 사실만으로 AI 해석의 정확성이 보장되지는 않습니다. 코드에 적힌 이유와 추정·미확인 사항을 구분합니다. 실제 변경은 별도 작업 공간에서 검사하고 검토·반영·되돌리기로 이어집니다.
+
+## 구조와 설계를 더 자세히 다루기
+
+**[실제 설계 변경 따라 보기](docs/SYSTEM_WORKSPACE_DEMO.md)** — 외부 앱의 7개 파일 변경·검사·반영·복원과, 서버 권한 검사가 빠지면 반영이 차단되는 별도 실패 재현을 확인하세요. `pnpm build`와 `node scripts/serve.mjs` 실행 후 `/workspace-demo.html`에서 볼 수 있습니다. 소스·데모 ZIP에 포함하며 hosted 배포는 별도입니다. [지원 환경](docs/SYSTEM_WORKSPACE_SUPPORT.md).
+
+이 브랜치에서 개발판 VSIX를 빌드해 설치하고, 로컬 TypeScript·React Git 프로젝트에서 **풀어봄: 시스템 설계 워크스페이스 열기**를 실행하세요. 구조를 선택하거나 여러 파일을 하나의 업무 기능으로 연결한 뒤, 코드 근거와 현재 구현을 읽고 원하는 동작·유지 조건·완료 기준을 작성합니다.
+
+[저장한 구현과 현재 코드 비교](docs/WORKSPACE_OBSERVATIONS.md)에서 바뀐 조건·선언·호출 위치를 확인할 수 있습니다. 코드가 바뀌어도 설계 목표를 덮어쓰지 않으며, 실제 목표 충족은 별도 검사와 검토로 확인합니다.
+
+**구조 탐색 → 설계 수정 → 저장하고 구현 → 변경과 검사 검토 → 반영 → 구조 갱신**으로 이어집니다. `설계만 저장`은 명세를 저장하고, `저장하고 구현`은 선택한 Codex와 검사 명령을 별도 Git 작업 공간에서 실행합니다. 실제 diff와 검사 결과를 확인한 뒤 반영하며, 되돌리기는 코드를 복원하고 설계 목표는 보존합니다.
+
+구조 분석은 모델 없이 로컬에서 동작합니다. 구현에는 외부 코드 전달 선택과 Codex 연결이 필요합니다. Git 작업 복사본은 변경을 분리하는 장치이며 운영체제 보안 격리를 뜻하지 않습니다. 현재 시스템 설계 화면은 한국어로 제공하며 이전 읽기 화면은 한국어·영어를 지원합니다.
+
+첫 검증 과제는 React 화면·서버 액션/API·공통 정책을 함께 바꾸는 권한 변경입니다. [외부 Next.js 팀 권한 검증](validation/next-saas-starter/README.md)에 성공한 검사와 실패한 실행을 함께 남깁니다. [별도 관리 프로세스](docs/MANAGED_AGENT_HOST.md)가 창 종료 뒤에도 구현과 승인 요청을 유지하며 같은 프로젝트를 열면 다시 연결합니다. [Windows의 실제 Codex 승인 재연결](docs/MANAGED_LIVE_CODEX.md)부터 반영·되돌리기까지 확인했습니다. 창을 닫아도 취소되지 않으므로 중지하려면 `작업 취소`를 선택하세요. 네이티브 Webview 전체 조작과 종료된 실행 세션의 복구 등 남은 항목은 [상태 표](docs/SYSTEM_WORKSPACE_STATUS.md)에서 확인하세요. 아직 개발판입니다.
+
+[실제 모델과 설치 화면의 전체 실행 기록](docs/INSTALLED_NEXT_FLOW.md): 외부 앱의 7개 파일 변경, 독립 검사, 실제 앱 브라우저·SQL 확인, 검토·반영·새 파일 분석·되돌리기를 완료했습니다. 확인하지 못한 유지 조건은 기록에 남겼습니다.
+
+[설치와 첫 작업](docs/SYSTEM_WORKSPACE_START.md) · [실행 설정](docs/EXECUTION_SETTINGS.md) · [변경 검토·반영](docs/IMPLEMENTATION_REVIEW.md) · [복구](docs/AGENT_IMPLEMENTATION.md)
+
+## 이전 단일 파일 시제품 — 공개 0.6.0
+
+아래 영상·브라우저 체험·기능 안내는 이전 공개판에 해당합니다. 위의 시스템 설계 흐름을 시연한 자료는 아닙니다.
+
+[English](README.md) · [제품 전략](docs/PRODUCT.md) · [공개 출시 계획](docs/LAUNCH.md) · [기여하기](CONTRIBUTING.md) · [GitHub 개발 브랜치](https://github.com/him55710-sudo/no-dev/tree/codex/system-design-workspace)
 
 **[30초 소개 영상](https://him55710-sudo.github.io/pureobom/demo.html?lang=ko)** — 원문 → 설명 → 변경안 → 주문별 비교 → 적용 → 되돌리기를 실제 공개 화면으로 보여줍니다. 한국어·영어 자막과 텍스트 설명을 제공합니다. [MP4 받기](https://him55710-sudo.github.io/pureobom/media/pureobom-30s.mp4).
 

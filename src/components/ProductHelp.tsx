@@ -121,8 +121,8 @@ export function ProductHelp({
             <ol className="product-steps">
               <li>
                 {t(
-                  "릴리스에서 .vsix 설치 파일을 받습니다.",
-                  "Download the .vsix installer from Releases.",
+                  "개발판 설치 안내에 따라 소스에서 .vsix 파일을 빌드합니다.",
+                  "Follow the development installation guide to build a .vsix from source.",
                 )}
               </li>
               <li>
@@ -143,14 +143,14 @@ export function ProductHelp({
                 className="help-primary"
                 onClick={() => void open("install")}
               >
-                {t("VS Code 설치 파일 받기 ↗", "Get the VS Code extension ↗")}
+                {t("개발판 설치 안내 ↗", "Development installation guide ↗")}
               </button>
               <button onClick={() => void open("repository")}>GitHub ↗</button>
             </div>
             <p className="product-help-note">
               {t(
-                "현재 배포는 GitHub의 설치 파일로 제공합니다. Marketplace에는 아직 게시하지 않았습니다. 코드 분석은 기기 안에서 처리합니다.",
-                "Install from the GitHub release; a Marketplace listing is not available yet. Code analysis runs on your device.",
+                "0.7 개발판은 소스에서 빌드해 설치합니다. 공개 0.6.0에는 시스템 설계 화면이 없으며 Marketplace에는 아직 게시하지 않았습니다. 코드 분석은 기기 안에서 처리합니다.",
+                "Build and install the 0.7 development version from source. The public 0.6.0 release has no system design workspace; a Marketplace listing is not available yet. Code analysis runs on your device.",
               )}
             </p>
             <div className="product-first-task">

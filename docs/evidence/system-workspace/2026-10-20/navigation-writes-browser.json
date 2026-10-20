@@ -1,0 +1,26 @@
+{
+  "searchAfterReload": "canEdit",
+  "emptySearchAfterReload": "",
+  "focusAfterReload": true,
+  "before": {
+    "nodes": [
+      {
+        "id": "symbol:policy.js:canEdit",
+        "style": "z-index: 1000; transform: translate(35px, 35px); pointer-events: all; visibility: visible; width: 220px; height: 116px;"
+      }
+    ],
+    "viewport": "transform: translate(186.667px, 93.8333px) scale(1.04167);",
+    "search": "canEdit"
+  },
+  "after": {
+    "nodes": [
+      {
+        "id": "symbol:policy.js:canEdit",
+        "style": "z-index: 1000; transform: translate(35px, 35px); pointer-events: all; visibility: visible; width: 220px; height: 116px;"
+      }
+    ],
+    "viewport": "transform: translate(186.667px, 93.8333px) scale(1.04167);",
+    "search": "canEdit"
+  },
+  "domRestored": true
+}

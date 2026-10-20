@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-10-19T18:30:47.681Z",
+  "reloadedAfterSourceRestore": false,
+  "missingFactVisible": true,
+  "factCards": 15,
+  "missingRelationVisible": true,
+  "missingRelationText": "현재 관측되지 않은 연결\n저장할 때\n\nupdateProject → audit · 호출 1곳\n\nservice.js:4\n\n정적 연결을 찾지 못했습니다. 실제 실행 경로가 제거됐다는 판정은 아닙니다."
+}

@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-19T15:28:52.830Z",
+  "connection": {
+    "userAgent": "Codex Desktop/0.163.0-alpha.10.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0)"
+  },
+  "inferenceRun": false,
+  "effectiveThread": {
+    "cwd": "C:\\Users\\user\\.pureobom\\worktrees\\3da1e996fe09a323\\acc7e12c-ca3f-4f88-a486-c5b6c8ea9db2",
+    "approvalPolicy": "on-request",
+    "sandbox": {
+      "type": "workspaceWrite",
+      "writableRoots": [],
+      "networkAccess": false,
+      "excludeTmpdirEnvVar": false,
+      "excludeSlashTmp": false
+    }
+  },
+  "scope": "Read-only command/exec using the same cwd and workspaceWrite policy as the failed installed turn. An ephemeral thread was created without starting inference to inspect its effective policy. No sandbox fallback or permission changes requested by this probe.",
+  "result": {
+    "exitCode": 0,
+    "stdout": "\r\nPath\r\n----\r\nC:\\Users\\user\\.pureobom\\worktrees\\3da1e996fe09a323\\acc7e12c-ca3f-4f88-a486-c5b6c8ea9db2\r\n{\r\n  \"private\": true,\r\n  \"scripts\": {\r\n    \"dev\": \"next dev --turbopack\",\r\n    \"build\": \"next build\",\r\n\r\n",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T23:45:44.969Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "node": "v24.19.0",
+  "artifact": {
+    "version": "0.7.0",
+    "vsixSha256": "0fad84f815e10fb2239f6d147dea1e190b5f3ce9d425b038587a7b7a49165685",
+    "files": {
+      "out/extension.cjs": "f13ce356a025ddff33d5ac192a766b3b595666574d3e2142b6c51ec031cb49c0",
+      "out/worker.cjs": "a4ed85cc892d60ac537139d67cbd5b67f79913fbd6d621a12da4c348b9cbe293",
+      "out/agent-host.cjs": "b4474e2be86fe5eefeb8d8f251ccb83978c168491bfcb1f6f20de9e1c58d52fe",
+      "media/design.js": "5462bc4c5f0ce26dfe226d03647967ad5e1c69253736af84c85b098d3940a087",
+      "media/design.css": "d754959d6acd4baa9928a1a6fead70201866e1d6e1e2134e2f2b2b76da12182d",
+      "THIRD_PARTY_NOTICES.txt": "160717d2962ebbbc30eec21debdc00ae32720e5d78ac588b88e617d096110f3c",
+      "media/view.js": "efc29f1ac0419786715c5f063496fb67deb5fee4c15e5a7289ae2cfda8eb75a1",
+      "media/view.css": "7ae601b365e506af57752ded788ece38fd4e932d4b0c15d0e64812cfef2e443b",
+      "package.nls.json": "b7b6bb988714f5d1f285fe1c4f99e56709f1089f524bc5cf79daca1e7410ede8",
+      "package.nls.ko.json": "20b7f4eb33170de5a541c942a4c3c679e1e8bd6b96be611067a17a0c6923dc58",
+      "readme.md": "a47df63a0ccdb328205fce71ac4de1e3bafa7283728ebdc16e47c680aae2e7e8",
+      "media/start/explore.md": "9a003d1af497870746c4ecb5d02c7ff7aafccdf6358bd511d6b6f42194ccb2ac",
+      "media/start/design.md": "6ad06e1c7c4437851fa0b5d60a7cc1d1468f45342f49f4623ec3388db4768a70",
+      "media/start/implement.md": "3ea8324fbcb1d4e7b963a58034039a3c4298526a32b50057e851c435b56774f2",
+      "media/start/review.md": "6cfadf3b3428f5981e47a20dc4974ca23c82a944e48e9abdf699a08d4c313cd5"
+    }
+  },
+  "scope": "Installed VSIX in Production extension mode across six separate VS Code launches. The first phase observes actual native Webview boot, graph/navigation messages and close/reopen without replacing its HTML/CSP or JS. Remaining recovery operations call the validated host dispatcher directly. A pending approval survives the first window exit; a managed file transaction continues after the extension host is killed. This is not pointer/keyboard UI automation, visual verification, managed-worker crash recovery, or model-quality evidence.",
+  "provider": "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
+  "dependencyEnvironment": "Synthetic repository outside the host checkout with no third-party dependencies. Checks use Node's built-in test runner through the real package-manager verification path.",
+  "phases": [
+    {
+      "phase": "prepare-review",
+      "extensionHostPid": 12620,
+      "checkedAt": "2026-10-19T23:44:49.305Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "unmodified native Webview boots, exchanges graph/navigation state, and reopens without implementation",
+        "bundled walkthrough command opens editor (Welcome) without starting a job or changing designs",
+        "connection check uses the real stdio adapter without starting an implementation or changing design",
+        "overlapping connection requests start only one peer",
+        "project execution approval is saved in local extension storage",
+        "implementation begins from a saved cross-file business feature",
+        "window exits with a live unapproved request; no approval is synthesized",
+        "unfinished local draft is durable without changing the confirmed design or starting another agent",
+        "implementation does not modify the original source or index"
+      ],
+      "nativeWebviewStartup": {
+        "scope": "Unmodified installed native VS Code Webview boot and protocol round trip, observed through its existing host dispatcher. No DOM injection, browser replacement, pointer/keyboard input, visual assertion or model execution.",
+        "viewType": "mainThreadWebview-pureobom.design",
+        "events": [
+          {
+            "id": "1",
+            "action": "ready",
+            "elapsedMs": 1012,
+            "completed": true
+          },
+          {
+            "id": "2",
+            "action": "saveNavigation",
+            "elapsedMs": 1658,
+            "projectKey": "155188c9465b240eff5c90bbf960ddab06bd2e96b5e869558ed08b814e339581",
+            "generation": 0,
+            "canvasCount": 1,
+            "completed": true
+          },
+          {
+            "id": "1",
+            "action": "ready",
+            "elapsedMs": 1999,
+            "completed": true
+          }
+        ],
+        "closedAndReopened": true,
+        "navigationPreserved": true,
+        "designPreserved": true,
+        "implementationJobsStarted": 0
+      },
+      "verification": []
+    },
+    {
+      "phase": "resume-review",
+      "extensionHostPid": 9972,
+      "checkedAt": "2026-10-19T23:45:00.593Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "project execution settings survive an independent installed extension launch",
+        "passing checks do not auto-confirm criteria; explicit review preserves unverified criteria",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged",
+        "fresh installed extension attaches to the same live job and original approval without starting another turn"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "d10a1cd54a1dc901aef84d62e8db84582c1c55875b4455144b6a734e88997381"
+        }
+      ]
+    },
+    {
+      "phase": "review-and-apply",
+      "extensionHostPid": 27332,
+      "checkedAt": "2026-10-19T23:45:12.778Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "project execution settings survive an independent installed extension launch",
+        "unfinished draft restores after a fresh VS Code launch without auto-confirmation or execution",
+        "saved review decisions restore with their exact proposal after restart without claiming criterion completion",
+        "changing feature membership blocks an old implementation review",
+        "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+        "review restored after VS Code restart",
+        "native diff opened",
+        "same-revision manual design changes block apply",
+        "dirty editor blocks apply",
+        "original project passes the acceptance tests after apply"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "d10a1cd54a1dc901aef84d62e8db84582c1c55875b4455144b6a734e88997381"
+        }
+      ]
+    },
+    {
+      "phase": "undo-after-restart",
+      "extensionHostPid": 26072,
+      "checkedAt": "2026-10-19T23:45:31.726Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "project execution settings survive an independent installed extension launch",
+        "draft keeps its original context across baseline changes and explicit discard preserves confirmed design",
+        "applied record survives another restart",
+        "undo preserves subsequent user edits",
+        "undo restores exact original bytes and staged/unstaged status",
+        "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+        "passing checks do not auto-confirm criteria; explicit review preserves unverified criteria",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged",
+        "next implementation uses the explicitly accepted baseline"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "b4cc110608461dc5a4408a3458261bf5a872582ff98f22e187bdb5f7b680aabf"
+        }
+      ]
+    },
+    {
+      "phase": "crash-during-apply",
+      "extensionHostPid": 28644,
+      "checkedAt": "2026-10-19T23:45:38.480Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "project execution settings survive an independent installed extension launch",
+        "product apply journal exists",
+        "at least one original file changed",
+        "test extension host terminated while transaction is incomplete"
+      ]
+    },
+    {
+      "phase": "continue-after-crash",
+      "extensionHostPid": 24288,
+      "checkedAt": "2026-10-19T23:45:44.669Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "project execution settings survive an independent installed extension launch",
+        "managed apply completes despite the extension-host exit",
+        "newly attached window reconciles actual file bytes",
+        "explicit undo restores the original source and preserves the Git index"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "b4cc110608461dc5a4408a3458261bf5a872582ff98f22e187bdb5f7b680aabf"
+        }
+      ]
+    }
+  ],
+  "crash": {
+    "journalState": "applying",
+    "afterFiles": 1,
+    "beforeFiles": 2,
+    "progressEntries": 0,
+    "termination": "SIGKILL of this test extension-host process during apply",
+    "hostExit": {
+      "code": 1,
+      "signal": null
+    }
+  },
+  "restoredOriginalFiles": [
+    "policy.js",
+    "service.js",
+    "ui.js",
+    "test.js",
+    "app-server",
+    "package.json"
+  ],
+  "preserved": [
+    "staged user changes",
+    "unstaged user changes",
+    "acceptance tests",
+    "source HEAD and index"
+  ]
+}

@@ -2,6 +2,8 @@
 
 Checked **2026-10-16 05:50 Asia/Seoul** against the public repository, release, CI, Pages run and local observation sheet. This is a dated readiness audit, not a completed demand study. [Machine-readable public evidence](launch-status-2026-10-16.json).
 
+Historical note (2026-10-20): the five-person protocol below is preserved in [the 0.6 archive](user-study/LEGACY_0_6.md). The current [system-design comparison protocol](USER_STUDY.md) supersedes it. The links and counts below describe the dated 0.6 audit, not a new study or current distribution status.
+
 ## What is ready, and what is unproven
 
 | Requirement                             | Evidence                                                                                                                                                                                                       | Status                                          |

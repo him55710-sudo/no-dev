@@ -1,0 +1,529 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-19T19:49:04.913Z",
+  "source": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-production-b18e6beac6\\project",
+  "label": "baseline-controlled-build",
+  "head": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "before": {
+    ".env.example": "974285113c1ad8e1293d114ac00b35f36d425c2c68fa839e3943118e517a2c04",
+    ".gitignore": "43d2afb3e486c6a5debe8d5a3d0a7d874345fb09e5fba3018964fd4e251b1fdf",
+    "LICENSE": "b44c87f36db2fb9515086cd4cda151287e3c36fc0a48650ec9554f22b3571d3e",
+    "README.md": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+    "app/(dashboard)/dashboard/activity/loading.tsx": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+    "app/(dashboard)/dashboard/activity/page.tsx": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+    "app/(dashboard)/dashboard/general/page.tsx": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+    "app/(dashboard)/dashboard/layout.tsx": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+    "app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "app/(dashboard)/dashboard/security/page.tsx": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+    "app/(dashboard)/layout.tsx": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+    "app/(dashboard)/page.tsx": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+    "app/(dashboard)/pricing/page.tsx": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+    "app/(dashboard)/pricing/submit-button.tsx": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+    "app/(dashboard)/terminal.tsx": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+    "app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "app/(login)/login.tsx": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+    "app/(login)/sign-in/page.tsx": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+    "app/(login)/sign-up/page.tsx": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+    "app/api/stripe/checkout/route.ts": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+    "app/api/stripe/webhook/route.ts": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+    "app/api/team/route.ts": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+    "app/api/user/route.ts": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+    "app/favicon.ico": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+    "app/globals.css": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+    "app/layout.tsx": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+    "app/not-found.tsx": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+    "components.json": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+    "components/ui/avatar.tsx": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+    "components/ui/button.tsx": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+    "components/ui/card.tsx": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+    "components/ui/dropdown-menu.tsx": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+    "components/ui/input.tsx": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+    "components/ui/label.tsx": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+    "components/ui/radio-group.tsx": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+    "drizzle.config.ts": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+    "lib/auth/middleware.ts": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+    "lib/auth/session.ts": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+    "lib/db/drizzle.ts": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+    "lib/db/migrations/0000_soft_the_anarchist.sql": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+    "lib/db/migrations/meta/0000_snapshot.json": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+    "lib/db/migrations/meta/_journal.json": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+    "lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "lib/db/seed.ts": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+    "lib/db/setup.ts": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+    "lib/payments/actions.ts": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+    "lib/payments/stripe.ts": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+    "lib/utils.ts": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+    "middleware.ts": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+    "next.config.ts": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "postcss.config.mjs": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "tsconfig.json": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a"
+  },
+  "beforeStatus": "",
+  "requests": [
+    {
+      "phase": "sdk-probe",
+      "method": "GET",
+      "path": "/v1/prices"
+    },
+    {
+      "phase": "sdk-probe",
+      "method": "GET",
+      "path": "/v1/products"
+    },
+    {
+      "phase": "next-build",
+      "method": "GET",
+      "path": "/v1/prices"
+    },
+    {
+      "phase": "next-build",
+      "method": "GET",
+      "path": "/v1/products"
+    }
+  ],
+  "scope": "Unmodified app code and actual Next production compiler/prerenderer. Real disposable PostgreSQL. Only Stripe GET prices/products responses use a local fixture; no live payment integration or production deployment. Google font downloads may use the normal Next build path.",
+  "database": {
+    "kind": "PostgreSQL",
+    "version": "postgres (PostgreSQL) 18.6",
+    "directory": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-pg-data-idnqYp",
+    "port": 58552
+  },
+  "sdkProbe": "Real Stripe SDK received both local pricing responses",
+  "command": [
+    "C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-production-b18e6beac6\\project\\node_modules\\.pnpm\\next@15.6.0-canary.59_react_4a6bd33c06d067053554ee20197f74c7\\node_modules\\next\\dist\\bin\\next",
+    "build"
+  ],
+  "exitCode": 0,
+  "after": {
+    ".env.example": "974285113c1ad8e1293d114ac00b35f36d425c2c68fa839e3943118e517a2c04",
+    ".gitignore": "43d2afb3e486c6a5debe8d5a3d0a7d874345fb09e5fba3018964fd4e251b1fdf",
+    "LICENSE": "b44c87f36db2fb9515086cd4cda151287e3c36fc0a48650ec9554f22b3571d3e",
+    "README.md": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+    "app/(dashboard)/dashboard/activity/loading.tsx": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+    "app/(dashboard)/dashboard/activity/page.tsx": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+    "app/(dashboard)/dashboard/general/page.tsx": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+    "app/(dashboard)/dashboard/layout.tsx": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+    "app/(dashboard)/dashboard/page.tsx": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+    "app/(dashboard)/dashboard/security/page.tsx": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+    "app/(dashboard)/layout.tsx": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+    "app/(dashboard)/page.tsx": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+    "app/(dashboard)/pricing/page.tsx": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+    "app/(dashboard)/pricing/submit-button.tsx": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+    "app/(dashboard)/terminal.tsx": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+    "app/(login)/actions.ts": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+    "app/(login)/login.tsx": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+    "app/(login)/sign-in/page.tsx": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+    "app/(login)/sign-up/page.tsx": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+    "app/api/stripe/checkout/route.ts": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+    "app/api/stripe/webhook/route.ts": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+    "app/api/team/route.ts": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+    "app/api/user/route.ts": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+    "app/favicon.ico": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+    "app/globals.css": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+    "app/layout.tsx": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+    "app/not-found.tsx": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+    "components.json": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+    "components/ui/avatar.tsx": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+    "components/ui/button.tsx": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+    "components/ui/card.tsx": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+    "components/ui/dropdown-menu.tsx": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+    "components/ui/input.tsx": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+    "components/ui/label.tsx": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+    "components/ui/radio-group.tsx": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+    "drizzle.config.ts": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+    "lib/auth/middleware.ts": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+    "lib/auth/session.ts": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+    "lib/db/drizzle.ts": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+    "lib/db/migrations/0000_soft_the_anarchist.sql": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+    "lib/db/migrations/meta/0000_snapshot.json": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+    "lib/db/migrations/meta/_journal.json": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+    "lib/db/queries.ts": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+    "lib/db/schema.ts": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+    "lib/db/seed.ts": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+    "lib/db/setup.ts": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+    "lib/payments/actions.ts": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+    "lib/payments/stripe.ts": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+    "lib/utils.ts": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+    "middleware.ts": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+    "next.config.ts": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "postcss.config.mjs": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+    "tsconfig.json": "f95dddaf052ab9cf862971a3a323e7fd44c6712c533de246000edb744278a617"
+  },
+  "afterStatus": " M tsconfig.json\n",
+  "automaticSourceChanges": [
+    "tsconfig.json"
+  ],
+  "buildId": "HXnWfOH76pYk6UkgVi1Wi",
+  "prerender": {
+    "version": 4,
+    "routes": {
+      "/_global-error": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/_global-error",
+        "dataRoute": "/_global-error.rsc",
+        "prefetchDataRoute": "/_global-error.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/_not-found": {
+        "initialStatus": 404,
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/_not-found",
+        "dataRoute": "/_not-found.rsc",
+        "prefetchDataRoute": "/_not-found.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/dashboard/activity": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/dashboard/activity",
+        "dataRoute": "/dashboard/activity.rsc",
+        "prefetchDataRoute": "/dashboard/activity.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/dashboard/general": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/dashboard/general",
+        "dataRoute": "/dashboard/general.rsc",
+        "prefetchDataRoute": "/dashboard/general.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/dashboard": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/dashboard",
+        "dataRoute": "/dashboard.rsc",
+        "prefetchDataRoute": "/dashboard.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/dashboard/security": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/dashboard/security",
+        "dataRoute": "/dashboard/security.rsc",
+        "prefetchDataRoute": "/dashboard/security.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/",
+        "dataRoute": "/index.rsc",
+        "prefetchDataRoute": "/index.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/pricing": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": 3600,
+        "initialExpireSeconds": 31536000,
+        "srcRoute": "/pricing",
+        "dataRoute": "/pricing.rsc",
+        "prefetchDataRoute": "/pricing.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/sign-in": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/sign-in",
+        "dataRoute": "/sign-in.rsc",
+        "prefetchDataRoute": "/sign-in.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/sign-up": {
+        "renderingMode": "PARTIALLY_STATIC",
+        "experimentalPPR": true,
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          },
+          {
+            "type": "header",
+            "key": "user-agent",
+            "value": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/sign-up",
+        "dataRoute": "/sign-up.rsc",
+        "prefetchDataRoute": "/sign-up.prefetch.rsc",
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      },
+      "/favicon.ico": {
+        "initialHeaders": {
+          "cache-control": "public, max-age=0, must-revalidate",
+          "content-type": "image/x-icon",
+          "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico"
+        },
+        "renderingMode": "STATIC",
+        "experimentalBypassFor": [
+          {
+            "type": "header",
+            "key": "next-action"
+          },
+          {
+            "type": "header",
+            "key": "content-type",
+            "value": "multipart/form-data;.*"
+          }
+        ],
+        "initialRevalidateSeconds": false,
+        "srcRoute": "/favicon.ico",
+        "dataRoute": null,
+        "prefetchDataRoute": null,
+        "allowHeader": [
+          "host",
+          "x-matched-path",
+          "x-prerender-revalidate",
+          "x-prerender-revalidate-if-generated",
+          "x-next-revalidated-tags",
+          "x-next-revalidate-tag-token"
+        ]
+      }
+    },
+    "dynamicRoutes": {},
+    "notFoundRoutes": []
+  },
+  "finishedAt": "2026-10-19T19:49:30.253Z",
+  "omitted": "Ephemeral Next preview tokens from this disposable build were omitted; build ID, route manifest and request evidence are retained."
+}

@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-10-16T10:49:29.317Z",
+  "kind": "actual-next-dev-http",
+  "upstreamCommit": "6e33e58b1e553a41fe22e6b941a7229a002de361",
+  "nextVersion": "15.6.0-canary.59",
+  "host": "127.0.0.1",
+  "port": 57953,
+  "method": "GET",
+  "path": "/api/team",
+  "status": 200,
+  "teamId": 1,
+  "members": [
+    { "userId": 1, "role": "owner" },
+    { "userId": 2, "role": "member" }
+  ],
+  "authentication": "Fixture JWT signed with a synthetic local secret; actual Next cookie accessor and application verification/query code",
+  "database": "PGlite 0.5.10 over pglite-socket 0.2.13 loopback TCP with actual upstream SQL migration",
+  "cleanup": "Runner exited 0; no listener remained on port 57953. Next-generated tracked tsconfig changes were inspected and restored to the exact implementation baseline SHA-256; Git source status clean.",
+  "limitations": [
+    "Synthetic SQL records and synthetic session, no actual user account",
+    "Read HTTP route only; direct action mutation tests are a separate harness",
+    "Development server, not production build",
+    "No payment calls, production PostgreSQL, browser pointer or installed Webview verification"
+  ]
+}

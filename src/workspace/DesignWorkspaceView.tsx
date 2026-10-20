@@ -20,14 +20,19 @@ import { useDesignDrafts, type DraftActions } from "./useDesignDrafts";
 import { draftMatches } from "./drafts";
 import { DraftNotice } from "./DraftNotice";
 import {
-  featureNodeId,
   type Feature,
   type FeatureRequest,
   type RemoveFeatureRequest,
 } from "./features";
 import type { DesignWorkspaceState } from "./state";
 import { StructureCanvas } from "./StructureCanvas";
+import {
+  scopeHighlights,
+  scopeMarkerLabels,
+  type ScopeHighlights,
+} from "./scopeHighlight";
 import { ObservationComparison } from "./ObservationComparison";
+import { ConnectionEvidence } from "./ConnectionEvidence";
 import { enterScope, type WorkspaceNavigation } from "./navigation";
 import {
   useWorkspaceNavigation,
@@ -46,6 +51,7 @@ import "./design.css";
 export type DesignActions = DraftActions &
   NavigationActions &
   ExecutionActions & {
+    readProject?: () => void;
     refresh: () => Promise<unknown>;
     source: (id: string, index: number) => Promise<unknown>;
     save: (
@@ -87,6 +93,7 @@ function StructureTree({
   onEnter,
   expanded,
   onExpanded,
+  highlights,
 }: {
   graph: StructureGraph;
   selectedId: string;
@@ -94,6 +101,7 @@ function StructureTree({
   onEnter: (id: string) => void;
   expanded: string[];
   onExpanded: (ids: string[]) => void;
+  highlights: ScopeHighlights;
 }) {
   const children = useMemo(() => {
     const result = new Map<string, StructureNode[]>();
@@ -113,7 +121,7 @@ function StructureTree({
       return (
         <li key={node.id}>
           <div
-            className={`design-tree-row ${selectedId === node.id ? "selected" : ""}`}
+            className={`design-tree-row ${highlights.nodes.has(node.id) ? `scope-${highlights.nodes.get(node.id)}` : ""} ${selectedId === node.id ? "selected" : ""}`}
             style={{ paddingLeft: 10 + depth * 12 }}
           >
             {hasChildren ? (
@@ -142,7 +150,12 @@ function StructureTree({
               onDoubleClick={() => onEnter(node.id)}
             >
               <span className={`tree-dot kind-${node.kind}`} />
-              {node.label}
+              <span className="tree-label">{node.label}</span>
+              {highlights.nodes.has(node.id) ? (
+                <span className="tree-scope-label">
+                  {scopeMarkerLabels[highlights.nodes.get(node.id)!]}
+                </span>
+              ) : null}
             </button>
           </div>
           {open && hasChildren ? <ul>{render(node.id, depth + 1)}</ul> : null}
@@ -183,6 +196,18 @@ function SpecEditor({
 }) {
   const [reviewing, setReviewing] = useState(false);
   const observation = useMemo(() => observeSpec(spec, graph), [spec, graph]);
+  const targetKinds = spec.targetIds.map(
+    (id) => graph.nodes.find((node) => node.id === id)?.kind,
+  );
+  const isRule =
+    targetKinds.length > 0 && targetKinds.every((kind) => kind === "rule");
+  const isImplementation =
+    targetKinds.length > 0 && targetKinds.every((kind) => kind === "symbol");
+  const primaryField = isRule
+    ? "policies"
+    : isImplementation
+      ? "inputsOutputs"
+      : "purpose";
   const fields: [
     keyof Pick<
       SpecContent,
@@ -205,6 +230,29 @@ function SpecEditor({
     ],
     ["failures", "예외와 실패 처리", "실패할 때 사용자가 확인해야 할 동작"],
   ];
+  const primaryFields = [
+    fields.find(([key]) => key === primaryField)!,
+    fields.find(([key]) => key === "desired")!,
+  ];
+  const otherFields = fields.filter(
+    ([key]) => key !== primaryField && key !== "desired",
+  );
+  const renderField = ([key, label, placeholder]: (typeof fields)[number]) => (
+    <label
+      className={`spec-field ${key === "desired" ? "desired-field" : ""}`}
+      key={key}
+    >
+      {label}
+      <textarea
+        value={content[key]}
+        placeholder={placeholder}
+        rows={key === "desired" ? 4 : 2}
+        maxLength={12000}
+        disabled={saving}
+        onChange={(e) => onChange({ ...content, [key]: e.target.value })}
+      />
+    </label>
+  );
   return (
     <div className="spec-editor">
       <div className="spec-heading">
@@ -223,23 +271,28 @@ function SpecEditor({
           onChange={(e) => onChange({ ...content, title: e.target.value })}
         />
       </label>
+      {observation.status !== "unchanged" ? (
+        <div className="observed-block needs-review" role="status">
+          <strong>설계와 구현의 재검토가 필요해요</strong>
+          {observation.details.map((detail, i) => (
+            <p key={i}>{detail}</p>
+          ))}
+          <p>
+            아래 목표는 유지됩니다. 코드 변화만으로 동작의 정합성을 판정하지
+            않습니다.
+          </p>
+        </div>
+      ) : null}
+      {primaryFields.map(renderField)}
       <section
         className={`observed-block ${observation.status !== "unchanged" ? "needs-review" : ""}`}
       >
-        <span className="eyebrow">저장한 구현 기준</span>
-        <p>{spec.baseline.observed || "아직 구현 근거가 없습니다."}</p>
-        {observation.status !== "unchanged" ? (
-          <div role="status">
-            <strong>설계와 구현의 재검토가 필요해요</strong>
-            {observation.details.map((detail, i) => (
-              <p key={i}>{detail}</p>
-            ))}
-            <p>
-              아래 목표는 유지됩니다. 코드 변화만으로 동작의 정합성을 판정하지
-              않습니다.
-            </p>
-          </div>
-        ) : null}
+        <details className="spec-baseline" open={isRule || isImplementation}>
+          <summary>
+            저장한 구현 기준 · {spec.baseline.sources.length}개 근거
+          </summary>
+          <p>{spec.baseline.observed || "아직 구현 근거가 없습니다."}</p>
+        </details>
         <div className="source-pills">
           {spec.targetIds.map((id) => {
             const node = graph.nodes.find((n) => n.id === id);
@@ -301,29 +354,25 @@ function SpecEditor({
           </details>
         ) : null}
       </section>
-      <ObservationComparison
-        spec={spec}
-        graph={graph}
-        content={content}
-        source={onSource}
-        disabled={readOnly || saving}
-      />
-      {fields.map(([key, label, placeholder]) => (
-        <label
-          className={`spec-field ${key === "desired" ? "desired-field" : ""}`}
-          key={key}
-        >
-          {label}
-          <textarea
-            value={content[key]}
-            placeholder={placeholder}
-            rows={key === "desired" ? 4 : 2}
-            maxLength={12000}
-            disabled={saving}
-            onChange={(e) => onChange({ ...content, [key]: e.target.value })}
-          />
-        </label>
-      ))}
+      <details className="spec-evidence">
+        <summary>설계와 코드 관측 비교</summary>
+        <ObservationComparison
+          spec={spec}
+          graph={graph}
+          content={content}
+          source={onSource}
+          disabled={readOnly || saving}
+        />
+      </details>
+      <details className="spec-details" open={isRule || isImplementation}>
+        <summary>
+          세부 설계 · {otherFields.map(([, label]) => label).join(" / ")}
+          <span className="spec-detail-count">
+            {otherFields.filter(([key]) => content[key].trim()).length}개 작성됨
+          </span>
+        </summary>
+        <div>{otherFields.map(renderField)}</div>
+      </details>
       {(
         [
           ["invariants", "유지해야 하는 동작"],
@@ -459,6 +508,20 @@ export function DesignWorkspaceView({
       graph && spec ? implementationScope(graph, spec.targetIds) : undefined,
     [graph, spec],
   );
+  const showScope =
+    !!spec &&
+    (spec.targetIds.some((id) => id !== "system") || !!content?.desired.trim());
+  const highlights = useMemo<ScopeHighlights>(
+    () =>
+      graph && spec && showScope
+        ? scopeHighlights(
+            graph,
+            spec.targetIds,
+            related?.nodes.map((node) => node.id) ?? [],
+          )
+        : { nodes: new Map(), edges: new Set<string>() },
+    [graph, spec, related, showScope],
+  );
   const perform = (work: () => Promise<unknown>) => {
     setFeedback("");
     void work().catch((e) =>
@@ -546,6 +609,9 @@ export function DesignWorkspaceView({
                 ? `${graph.files.length}개 파일 연결됨`
                 : "분석 대기"}
         </span>
+        {actions.readProject ? (
+          <button onClick={actions.readProject}>프로젝트 설명 읽기</button>
+        ) : null}
         <button onClick={() => perform(actions.refresh)} disabled={state.busy}>
           구조 새로 읽기
         </button>
@@ -587,12 +653,22 @@ export function DesignWorkspaceView({
                 {results.map((node) => (
                   <li key={node.id}>
                     <button
+                      className={
+                        highlights.nodes.has(node.id)
+                          ? `scope-${highlights.nodes.get(node.id)}`
+                          : undefined
+                      }
                       onClick={() => {
                         setSelection(node.id);
                         setScope(node.parentId ?? "system");
                       }}
                     >
                       <strong>{node.label}</strong>
+                      {highlights.nodes.has(node.id) ? (
+                        <span>
+                          {scopeMarkerLabels[highlights.nodes.get(node.id)!]}
+                        </span>
+                      ) : null}
                       <span>
                         {typeNames[node.kind]} ·{" "}
                         {node.sources[0]?.path ?? node.label}
@@ -609,6 +685,7 @@ export function DesignWorkspaceView({
                 onEnter={enter}
                 expanded={expanded}
                 onExpanded={(value) => field("expanded", value)}
+                highlights={highlights}
               />
             )
           ) : (
@@ -702,6 +779,21 @@ export function DesignWorkspaceView({
                   "코드에서 시스템으로"}
               </h1>
               <p>선택해서 설계를 읽고, 두 번 눌러 내부 구조로 들어가세요.</p>
+              {showScope ? (
+                <div
+                  className="scope-legend"
+                  aria-label="설계와 연결된 코드 표시"
+                >
+                  <span className="scope-target">설계 대상</span>
+                  <span className="scope-related">
+                    연결 후보 · 대상 포함 {related?.paths.length ?? 0}개 파일
+                  </span>
+                  <p>
+                    코드 연결로 찾은 후보입니다. 실제 수정 여부는 변경 검토에서
+                    확인합니다.
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="design-canvas">
@@ -720,6 +812,7 @@ export function DesignWorkspaceView({
                   ])
                 }
                 selectedId={selectedId}
+                highlights={highlights}
                 onSelect={setSelection}
                 onEnter={enter}
                 onConnection={(ids) => {
@@ -763,23 +856,8 @@ export function DesignWorkspaceView({
                 jobIsActive(state.job) ||
                 state.job?.phase === "recovery"
               }
-              save={async (request) => {
-                const feature = await actions.saveFeature!(request);
-                setIncluded([]);
-                setSelection(featureNodeId(feature.id));
-                setScope("system");
-                return feature;
-              }}
-              remove={
-                actions.removeFeature
-                  ? async (request) => {
-                      await actions.removeFeature!(request);
-                      setIncluded([]);
-                      setSelection("system");
-                      setScope("system");
-                    }
-                  : undefined
-              }
+              save={actions.saveFeature}
+              remove={actions.removeFeature}
               close={() => setEditingFeature(undefined)}
             />
           ) : null}
@@ -806,26 +884,43 @@ export function DesignWorkspaceView({
                     })}
                   </nav>
                 ) : null}
-                <span className="eyebrow">{edge.kind.toUpperCase()}</span>
+                <span className="eyebrow">
+                  {edge.kind === "routes"
+                    ? "요청 경로 후보"
+                    : edge.kind.toUpperCase()}
+                </span>
                 <h2>
                   {graph.nodes.find((node) => node.id === edge.source)?.label} →{" "}
                   {graph.nodes.find((node) => node.id === edge.target)?.label}
                 </h2>
                 <p>
-                  컴파일러가 정적으로 확인한{" "}
+                  {edge.kind === "routes"
+                    ? "주소와 Next.js 파일 규칙을 대조한 "
+                    : "컴파일러가 정적으로 확인한 "}
                   {edge.kind === "calls"
                     ? "호출"
                     : edge.kind === "renders"
                       ? "화면 구성"
-                      : "모듈"}{" "}
-                  연결입니다. 런타임 실행·데이터 계약·실패 처리는 별도 확인이
-                  필요합니다.
+                      : edge.kind === "routes"
+                        ? "요청 경로 후보"
+                        : edge.kind === "passes"
+                          ? "함수 전달"
+                          : "모듈"}{" "}
+                  연결입니다.
                 </p>
-                {edge.sources.map((ref, index) => (
-                  <button key={index} onClick={() => source(edge.id, index)}>
-                    {ref.path}:{ref.line} 원문 ↗
-                  </button>
-                ))}
+                {edge.kind === "routes" ? (
+                  <p>
+                    실제 요청 도착이나 권한 검사를 증명하지 않습니다.
+                    재작성·프록시·배포 경로와 SWR fetcher 동작은 별도 확인이
+                    필요합니다.
+                  </p>
+                ) : null}
+                {edge.kind === "passes" ? (
+                  <p>
+                    함수 값을 전달하는 위치이며, 직접 실행한 호출은 아닙니다.
+                  </p>
+                ) : null}
+                <ConnectionEvidence key={edge.id} edge={edge} source={source} />
                 <button
                   className="primary"
                   onClick={() => {
@@ -949,8 +1044,8 @@ export function DesignWorkspaceView({
                     );
                   })}
                 <p>
-                  호출·화면 연결로 함께 검토할 파일 {related?.paths.length ?? 0}
-                  개
+                  호출·화면·함수 전달·경로 후보로 함께 검토할 파일{" "}
+                  {related?.paths.length ?? 0}개
                 </p>
                 {related?.paths.map((path) => (
                   <small key={path}>{path}</small>
@@ -1117,6 +1212,34 @@ export function DesignWorkspaceView({
             key={state.job.id}
             job={state.job}
             action={(action, payload) => actions.jobAction!(action, payload)}
+            continuation={
+              state.job.worktree &&
+              ["interrupted", "failed", "cancelled"].includes(
+                state.job.phase,
+              ) ? (
+                <ImplementationOptions
+                  key={
+                    state.execution
+                      ? `resume:${state.job.id}:${executionKey(state.execution.context)}:${state.execution.profile.revision}`
+                      : "resume-loading"
+                  }
+                  state={state}
+                  actions={actions}
+                  disabled={
+                    saving || !state.trusted || state.busy || state.stale
+                  }
+                  submitLabel="이 변경으로 이어하기"
+                  onImplement={(execution) =>
+                    perform(() =>
+                      actions.jobAction!("resumeJob", {
+                        jobId: state.job!.id,
+                        execution,
+                      }),
+                    )
+                  }
+                />
+              ) : undefined
+            }
           />
         </fieldset>
       ) : null}

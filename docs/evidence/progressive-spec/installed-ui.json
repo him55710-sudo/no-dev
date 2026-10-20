@@ -1,0 +1,1782 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-20T00:42:20.834Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "34f83c39294e01988ca1784e1af5108bee6998624893a4e1eebcf4e02bc76793",
+    "files": {
+      "out/extension.cjs": "9483652565e0957f8d726b328282b38e4965db91cfdce6684664dbf42ad444ad",
+      "out/worker.cjs": "336c797222355550a408a9bde9ea6d4030ebcee2a912641ed36052c122999dc8",
+      "out/agent-host.cjs": "82802bb317e12fce2f7229c2c46ece741964a33375562ea531b4de846390994d",
+      "media/design.js": "894a0b7001938434f7960bcd29f52741dfddf8d2b1aa8d477287880c377fe9ad",
+      "media/design.css": "88f286ed9d2c40d00812c37f698eacfcc418fd5d70fa3b21625d38cd15bb6012"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "No provider invoked; navigation-only validation.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-20T00:38:31.717Z",
+      "ok": true
+    },
+    {
+      "action": "saveFeature",
+      "at": "2026-10-20T00:38:45.615Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:38:45.953Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 2,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:04.724Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 3,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:04.758Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:04.861Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:04.927Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:05.564Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 5,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:12.072Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:12.114Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:12.158Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:12.198Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-20T00:39:12.239Z",
+      "ok": true
+    },
+    {
+      "action": "saveSpec",
+      "at": "2026-10-20T00:39:15.680Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:40.510Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 6,
+        "view": {
+          "selection": "symbol:service.js:updateProject",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:44.743Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 7,
+        "view": {
+          "selection": "symbol:service.js:updateProject",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "symbol:service.js:updateProject"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:45.578Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 9,
+        "view": {
+          "selection": "symbol:service.js:updateProject",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "symbol:service.js:updateProject"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:39:54.264Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 10,
+        "view": {
+          "selection": "rule:service.js:updateProject%3A%3Acondition%230",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "symbol:service.js:updateProject"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "source",
+      "at": "2026-10-20T00:39:57.999Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:40:04.332Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 11,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "symbol:service.js:updateProject"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:40:05.153Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 12,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ],
+          "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "refresh",
+      "at": "2026-10-20T00:40:33.017Z",
+      "ok": true
+    },
+    {
+      "action": "refresh",
+      "at": "2026-10-20T00:40:58.460Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:41:08.407Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 13,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": [
+                {
+                  "id": "symbol:ui.js:editControls",
+                  "x": 68.30578512396696,
+                  "y": 6.165289256198349
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-20T00:41:12.754Z",
+      "navigation": {
+        "generation": 1,
+        "revision": 14,
+        "view": {
+          "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "scopeTrail": [
+            "system",
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "included": [
+            "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+          ],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 150.28625954198475,
+                "y": -23.045801526717526,
+                "zoom": 1.3015267175572518
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "symbol:service.js:updateProject",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+              "viewport": {
+                "x": 51.047734627831744,
+                "y": 27.886731391585755,
+                "zoom": 0.9789644012944984
+              },
+              "positions": [
+                {
+                  "id": "symbol:ui.js:editControls",
+                  "x": 68.30578512396696,
+                  "y": 6.165289256198349
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-20T00:41:55.299Z",
+      "ok": true
+    }
+  ],
+  "jobs": [],
+  "navigationRestoration": {
+    "before": {
+      "at": "2026-10-20T00:41:22.354Z",
+      "extensionHostPid": 12652,
+      "navigation": {
+        "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+        "scopeTrail": [
+          "system",
+          "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        ],
+        "included": [
+          "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        ],
+        "connections": [],
+        "expanded": [
+          "system"
+        ],
+        "search": "",
+        "focus": false,
+        "canvases": [
+          {
+            "scopeId": "system",
+            "viewport": {
+              "x": 150.28625954198475,
+              "y": -23.045801526717526,
+              "zoom": 1.3015267175572518
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "symbol:service.js:updateProject",
+            "viewport": {
+              "x": 122.5,
+              "y": 53.5,
+              "zoom": 1.5
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "viewport": {
+              "x": 51.047734627831744,
+              "y": 27.886731391585755,
+              "zoom": 0.9789644012944984
+            },
+            "positions": [
+              {
+                "id": "symbol:ui.js:editControls",
+                "x": 68.30578512396696,
+                "y": 6.165289256198349
+              }
+            ]
+          }
+        ],
+        "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "targetIds": [
+              "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "프로젝트 권한 설계",
+              "purpose": "읽기 전용 멤버의 실수와 우회 수정을 방지한다.",
+              "desired": "viewer는 조회만 하고 owner와 editor만 수정한다.",
+              "policies": "프로젝트별 역할을 검사하고 다른 프로젝트의 권한은 인정하지 않는다.",
+              "inputsOutputs": "입력: 프로젝트, 사용자, 제목. 출력: 변경된 프로젝트.",
+              "failures": "권한이 없으면 Forbidden 오류를 반환하며 원본 제목을 유지한다.",
+              "invariants": [
+                "조회는 기존처럼 허용한다.",
+                "owner와 editor의 편집을 유지한다."
+              ],
+              "acceptance": [
+                "viewer의 서버 수정이 거절된다.",
+                "viewer의 화면 편집이 차단된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "88c0eb77a70581c032cd6ab405af143edf79e6b5ae19c87aa965cd77554ae2c5",
+              "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\ncanEdit: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.\n\nupdateProject: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.\n\neditControls: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "updateProject",
+                  "start": 39,
+                  "end": 206,
+                  "line": 2,
+                  "endLine": 6,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "editControls",
+                  "start": 39,
+                  "end": 146,
+                  "line": 2,
+                  "endLine": 5,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "「canEdit」을(를) 호출한 결과를 보관하는 선언입니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    },
+                    "evidenceHash": "6b75da20958cbd13c439fdfe667d356a7fbbe4d37963bbd63bbbc3f1b6d13bcd"
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    },
+                    "evidenceHash": "147a6b4d24ab2162c71fa57cee70e10ff55eb7d8cb96719be687637f4fc765c5"
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    },
+                    "evidenceHash": "6c6c9c48997e60d6e75908f35f16a5306282b0d6f75686f7ce30101591666a76"
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    },
+                    "evidenceHash": "52d6639f072d1a9e4feb4a64284900cf2280416bc2ce71c2e5bb9888da3e4a12"
+                  }
+                ],
+                "notices": [],
+                "totals": {
+                  "facts": 5,
+                  "relations": 4,
+                  "notices": 0
+                }
+              }
+            },
+            "updatedAt": "2026-10-20T00:39:15.686Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "revision": 1,
+            "title": "프로젝트 편집 권한",
+            "description": "화면과 서버에서 읽기 전용 멤버의 수정을 함께 막습니다.",
+            "members": [
+              {
+                "nodeId": "symbol:policy.js:canEdit",
+                "label": "canEdit",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "canEdit",
+                    "start": 0,
+                    "end": 102,
+                    "line": 1,
+                    "endLine": 3,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                  }
+                ]
+              },
+              {
+                "nodeId": "symbol:service.js:updateProject",
+                "label": "updateProject",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "updateProject",
+                    "start": 39,
+                    "end": 206,
+                    "line": 2,
+                    "endLine": 6,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                  }
+                ]
+              },
+              {
+                "nodeId": "symbol:ui.js:editControls",
+                "label": "editControls",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "editControls",
+                    "start": 39,
+                    "end": 146,
+                    "line": 2,
+                    "endLine": 5,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-20T00:38:45.617Z"
+          }
+        ]
+      }
+    },
+    "after": {
+      "at": "2026-10-20T00:41:30.094Z",
+      "extensionHostPid": 27880,
+      "navigation": {
+        "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+        "scopeTrail": [
+          "system",
+          "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        ],
+        "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+        "included": [
+          "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        ],
+        "connections": [],
+        "expanded": [
+          "system"
+        ],
+        "search": "",
+        "focus": false,
+        "canvases": [
+          {
+            "scopeId": "system",
+            "viewport": {
+              "x": 150.28625954198475,
+              "y": -23.045801526717526,
+              "zoom": 1.3015267175572518
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "symbol:service.js:updateProject",
+            "viewport": {
+              "x": 122.5,
+              "y": 53.5,
+              "zoom": 1.5
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "viewport": {
+              "x": 51.047734627831744,
+              "y": 27.886731391585755,
+              "zoom": 0.9789644012944984
+            },
+            "positions": [
+              {
+                "id": "symbol:ui.js:editControls",
+                "x": 68.30578512396696,
+                "y": 6.165289256198349
+              }
+            ]
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "targetIds": [
+              "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "프로젝트 권한 설계",
+              "purpose": "읽기 전용 멤버의 실수와 우회 수정을 방지한다.",
+              "desired": "viewer는 조회만 하고 owner와 editor만 수정한다.",
+              "policies": "프로젝트별 역할을 검사하고 다른 프로젝트의 권한은 인정하지 않는다.",
+              "inputsOutputs": "입력: 프로젝트, 사용자, 제목. 출력: 변경된 프로젝트.",
+              "failures": "권한이 없으면 Forbidden 오류를 반환하며 원본 제목을 유지한다.",
+              "invariants": [
+                "조회는 기존처럼 허용한다.",
+                "owner와 editor의 편집을 유지한다."
+              ],
+              "acceptance": [
+                "viewer의 서버 수정이 거절된다.",
+                "viewer의 화면 편집이 차단된다."
+              ]
+            },
+            "baseline": {
+              "graphRevision": "88c0eb77a70581c032cd6ab405af143edf79e6b5ae19c87aa965cd77554ae2c5",
+              "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\ncanEdit: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.\n\nupdateProject: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.\n\neditControls: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                },
+                {
+                  "path": "service.js",
+                  "symbol": "updateProject",
+                  "start": 39,
+                  "end": 206,
+                  "line": 2,
+                  "endLine": 6,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                },
+                {
+                  "path": "ui.js",
+                  "symbol": "editControls",
+                  "start": 39,
+                  "end": 146,
+                  "line": 2,
+                  "endLine": 5,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  },
+                  {
+                    "id": "symbol:service.js:updateProject",
+                    "kind": "symbol",
+                    "label": "updateProject",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject",
+                      "start": 39,
+                      "end": 206,
+                      "line": 2,
+                      "endLine": 6,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                    }
+                  },
+                  {
+                    "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                    "kind": "rule",
+                    "label": "!canEdit(project.members[userId])",
+                    "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "updateProject::condition#0",
+                      "start": 97,
+                      "end": 161,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls",
+                    "kind": "symbol",
+                    "label": "editControls",
+                    "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls",
+                      "start": 39,
+                      "end": 146,
+                      "line": 2,
+                      "endLine": 5,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                    }
+                  },
+                  {
+                    "id": "symbol:ui.js:editControls.editable",
+                    "kind": "symbol",
+                    "label": "editable",
+                    "summary": "「canEdit」을(를) 호출한 결과를 보관하는 선언입니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "editControls.editable",
+                      "start": 84,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    },
+                    "evidenceHash": "6b75da20958cbd13c439fdfe667d356a7fbbe4d37963bbd63bbbc3f1b6d13bcd"
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 508,
+                      "end": 548,
+                      "line": 14,
+                      "endLine": 14,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                    },
+                    "evidenceHash": "147a6b4d24ab2162c71fa57cee70e10ff55eb7d8cb96719be687637f4fc765c5"
+                  },
+                  {
+                    "from": {
+                      "id": "file:test.js:",
+                      "label": "test.js"
+                    },
+                    "to": {
+                      "id": "symbol:ui.js:editControls",
+                      "label": "editControls"
+                    },
+                    "kind": "calls",
+                    "count": 3,
+                    "source": {
+                      "path": "test.js",
+                      "symbol": "",
+                      "start": 1163,
+                      "end": 1185,
+                      "line": 32,
+                      "endLine": 32,
+                      "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                      "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                    },
+                    "evidenceHash": "6c6c9c48997e60d6e75908f35f16a5306282b0d6f75686f7ce30101591666a76"
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    },
+                    "evidenceHash": "52d6639f072d1a9e4feb4a64284900cf2280416bc2ce71c2e5bb9888da3e4a12"
+                  }
+                ],
+                "notices": [],
+                "totals": {
+                  "facts": 5,
+                  "relations": 4,
+                  "notices": 0
+                }
+              }
+            },
+            "updatedAt": "2026-10-20T00:39:15.686Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+            "revision": 1,
+            "title": "프로젝트 편집 권한",
+            "description": "화면과 서버에서 읽기 전용 멤버의 수정을 함께 막습니다.",
+            "members": [
+              {
+                "nodeId": "symbol:policy.js:canEdit",
+                "label": "canEdit",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "canEdit",
+                    "start": 0,
+                    "end": 102,
+                    "line": 1,
+                    "endLine": 3,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                  }
+                ]
+              },
+              {
+                "nodeId": "symbol:service.js:updateProject",
+                "label": "updateProject",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "updateProject",
+                    "start": 39,
+                    "end": 206,
+                    "line": 2,
+                    "endLine": 6,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                  }
+                ]
+              },
+              {
+                "nodeId": "symbol:ui.js:editControls",
+                "label": "editControls",
+                "kind": "symbol",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "editControls",
+                    "start": 39,
+                    "end": 146,
+                    "line": 2,
+                    "endLine": 5,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-20T00:38:45.617Z"
+          }
+        ]
+      }
+    }
+  },
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+        "targetIds": [
+          "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+        ],
+        "revision": 1,
+        "content": {
+          "title": "프로젝트 권한 설계",
+          "purpose": "읽기 전용 멤버의 실수와 우회 수정을 방지한다.",
+          "desired": "viewer는 조회만 하고 owner와 editor만 수정한다.",
+          "policies": "프로젝트별 역할을 검사하고 다른 프로젝트의 권한은 인정하지 않는다.",
+          "inputsOutputs": "입력: 프로젝트, 사용자, 제목. 출력: 변경된 프로젝트.",
+          "failures": "권한이 없으면 Forbidden 오류를 반환하며 원본 제목을 유지한다.",
+          "invariants": [
+            "조회는 기존처럼 허용한다.",
+            "owner와 editor의 편집을 유지한다."
+          ],
+          "acceptance": [
+            "viewer의 서버 수정이 거절된다.",
+            "viewer의 화면 편집이 차단된다."
+          ]
+        },
+        "baseline": {
+          "graphRevision": "88c0eb77a70581c032cd6ab405af143edf79e6b5ae19c87aa965cd77554ae2c5",
+          "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\ncanEdit: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.\n\nupdateProject: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.\n\neditControls: 함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+          "sources": [
+            {
+              "path": "policy.js",
+              "symbol": "canEdit",
+              "start": 0,
+              "end": 102,
+              "line": 1,
+              "endLine": 3,
+              "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+              "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+            },
+            {
+              "path": "service.js",
+              "symbol": "updateProject",
+              "start": 39,
+              "end": 206,
+              "line": 2,
+              "endLine": 6,
+              "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+              "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+            },
+            {
+              "path": "ui.js",
+              "symbol": "editControls",
+              "start": 39,
+              "end": 146,
+              "line": 2,
+              "endLine": 5,
+              "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+              "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+            }
+          ],
+          "observations": {
+            "schemaVersion": 1,
+            "facts": [
+              {
+                "id": "symbol:policy.js:canEdit",
+                "kind": "symbol",
+                "label": "canEdit",
+                "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              },
+              {
+                "id": "symbol:service.js:updateProject",
+                "kind": "symbol",
+                "label": "updateProject",
+                "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: project, userId, title\n- 이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님\n  - 「Error」 기능 호출 (전달: “Forbidden”): 오류를 발생시키고 현재 흐름을 중단합니다.\n- (「project」의 「title」 에 저장: 「title」)\n- 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "updateProject",
+                  "start": 39,
+                  "end": 206,
+                  "line": 2,
+                  "endLine": 6,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+                }
+              },
+              {
+                "id": "rule:service.js:updateProject%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "!canEdit(project.members[userId])",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "updateProject::condition#0",
+                  "start": 97,
+                  "end": 161,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "26009a2b0a4f667fdcfd1948d30e442a4a222a983a1f6f5647b3ab782dc8755a"
+                }
+              },
+              {
+                "id": "symbol:ui.js:editControls",
+                "kind": "symbol",
+                "label": "editControls",
+                "summary": "함수의 본문입니다. 호출된 경우의 처리 구문을 읽습니다.\n받는 값: role\n- 「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다.\n- 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "editControls",
+                  "start": 39,
+                  "end": 146,
+                  "line": 2,
+                  "endLine": 5,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+                }
+              },
+              {
+                "id": "symbol:ui.js:editControls.editable",
+                "kind": "symbol",
+                "label": "editable",
+                "summary": "「canEdit」을(를) 호출한 결과를 보관하는 선언입니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "editControls.editable",
+                  "start": 84,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "d553a4c15dd5ed82f03f89224e438d08b158f27c1a1395ce4c6a9579f5d20c84"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "from": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 102,
+                  "end": 134,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                },
+                "evidenceHash": "6b75da20958cbd13c439fdfe667d356a7fbbe4d37963bbd63bbbc3f1b6d13bcd"
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "kind": "calls",
+                "count": 3,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 508,
+                  "end": 548,
+                  "line": 14,
+                  "endLine": 14,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "83bb479a7321de6c7180bd37b2e5593c5ebd4221011f75b59eaa58a152b4527b"
+                },
+                "evidenceHash": "147a6b4d24ab2162c71fa57cee70e10ff55eb7d8cb96719be687637f4fc765c5"
+              },
+              {
+                "from": {
+                  "id": "file:test.js:",
+                  "label": "test.js"
+                },
+                "to": {
+                  "id": "symbol:ui.js:editControls",
+                  "label": "editControls"
+                },
+                "kind": "calls",
+                "count": 3,
+                "source": {
+                  "path": "test.js",
+                  "symbol": "",
+                  "start": 1163,
+                  "end": 1185,
+                  "line": 32,
+                  "endLine": 32,
+                  "fileHash": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+                  "contentHash": "43e6de99977affa4e030085f45af8f9f5a8ac09872c37264567740b581aaf3f2"
+                },
+                "evidenceHash": "6c6c9c48997e60d6e75908f35f16a5306282b0d6f75686f7ce30101591666a76"
+              },
+              {
+                "from": {
+                  "id": "symbol:ui.js:editControls.editable",
+                  "label": "editable"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 95,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                },
+                "evidenceHash": "52d6639f072d1a9e4feb4a64284900cf2280416bc2ce71c2e5bb9888da3e4a12"
+              }
+            ],
+            "notices": [],
+            "totals": {
+              "facts": 5,
+              "relations": 4,
+              "notices": 0
+            }
+          }
+        },
+        "updatedAt": "2026-10-20T00:39:15.686Z"
+      }
+    ],
+    "features": [
+      {
+        "id": "8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+        "revision": 1,
+        "title": "프로젝트 편집 권한",
+        "description": "화면과 서버에서 읽기 전용 멤버의 수정을 함께 막습니다.",
+        "members": [
+          {
+            "nodeId": "symbol:policy.js:canEdit",
+            "label": "canEdit",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "policy.js",
+                "symbol": "canEdit",
+                "start": 0,
+                "end": 102,
+                "line": 1,
+                "endLine": 3,
+                "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:service.js:updateProject",
+            "label": "updateProject",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "service.js",
+                "symbol": "updateProject",
+                "start": 39,
+                "end": 206,
+                "line": 2,
+                "endLine": 6,
+                "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                "contentHash": "2ea16d762996b6523e1b84353229173f6a61557fef9e4886303efd636bf68d6a"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:ui.js:editControls",
+            "label": "editControls",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "ui.js",
+                "symbol": "editControls",
+                "start": 39,
+                "end": 146,
+                "line": 2,
+                "endLine": 5,
+                "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                "contentHash": "987417e9f5cbd2de45d696c68ad53131203841c88006a8e0b07fe33425d93874"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-20T00:38:45.617Z"
+      }
+    ]
+  },
+  "finalNavigation": {
+    "generation": 0,
+    "revision": 0,
+    "view": {
+      "selection": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+      "scopeTrail": [
+        "system",
+        "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+      ],
+      "savedSpecId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+      "included": [
+        "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af"
+      ],
+      "connections": [],
+      "expanded": [
+        "system"
+      ],
+      "search": "",
+      "focus": false,
+      "canvases": [
+        {
+          "scopeId": "system",
+          "viewport": {
+            "x": 150.28625954198475,
+            "y": -23.045801526717526,
+            "zoom": 1.3015267175572518
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "symbol:service.js:updateProject",
+          "viewport": {
+            "x": 122.5,
+            "y": 53.5,
+            "zoom": 1.5
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "feature:8ffc326b-7082-4b6e-916d-ab90b7ab82af",
+          "viewport": {
+            "x": 51.047734627831744,
+            "y": 27.886731391585755,
+            "zoom": 0.9789644012944984
+          },
+          "positions": [
+            {
+              "id": "symbol:ui.js:editControls",
+              "x": 68.30578512396696,
+              "y": 6.165289256198349
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "originalRestored": true
+}

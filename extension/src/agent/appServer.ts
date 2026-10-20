@@ -165,7 +165,9 @@ export class CodexAppServer {
       return;
     }
     let end: number;
-    while ((end = this.buffer.indexOf("\n")) !== -1) {
+    // A listener can cancel/close while handling the previous frame. Do not
+    // dispatch approvals or events that arrived in the same transport chunk.
+    while (!this.stopped && (end = this.buffer.indexOf("\n")) !== -1) {
       const line = this.buffer.slice(0, end).trim();
       this.buffer = this.buffer.slice(end + 1);
       if (!line) continue;
@@ -367,6 +369,10 @@ export class CodexAppServer {
         options.signal.throwIfAborted();
       }
       const turn = terminals.get(turnId) ?? (await complete);
+      // A completion frame can resolve the promise just before cancellation.
+      // Rejecting that settled promise cannot revoke its value; check the
+      // signal again before exposing the terminal result to the caller.
+      options.signal.throwIfAborted();
       if (turn.status !== "completed")
         throw Error(
           turn.error ?? `Codex 작업이 ${turn.status} 상태로 끝났습니다.`,

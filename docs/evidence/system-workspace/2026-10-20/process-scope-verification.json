@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-19T18:54:55.555Z",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "libuv": "1.52.1",
+  "tests": {
+    "passed": 233,
+    "failed": 0,
+    "files": 28
+  },
+  "installed": {
+    "phases": 6,
+    "vsixSha256": "6fa7634a706f8d02f371d24a0a0b1b719db11d951a6f7ba0c0997cecde2c975f"
+  },
+  "live": {
+    "realModel": true,
+    "terminalCommands": 1,
+    "proof": {
+      "ok": true
+    }
+  },
+  "sources": {
+    "extension/src/agent/ownedProcess.ts": "3b6e8abdb24ed6b6439f36039a8f15235bac0872d507107bae4a45a2ec5284a1",
+    "extension/src/agent/appServer.ts": "e91222d7c2766ad6ec53b7afb51dbc7dd5d30e1cd2d3ec65a15dde9add6ced63",
+    "extension/src/agent/verify.ts": "74759866a2a6d9acfcd064740973958cd3e652be66cb07d5d2485dd715084b49",
+    "tests/owned-process.test.ts": "3d81deef7720d42e5afad4c3dea78cd557a8b1a5ee65b3b38ea82a58cabb3e0c",
+    "tests/agent-host.test.ts": "c8348857cda2a23eea443c06901ef1b2d75a3909a1b8c5a2b0e9a8e126afe026",
+    "tests/agent-protocol.test.ts": "fe192622ee8859c62e04eaef118c58351b8a51d01e39261cbd7e5dee388ea413",
+    "scripts/test-owned-process-live.mjs": "4f53c39c2a557536c995fdb3a2b1b930f00d2588da2b420e7d2f406365abd4a9"
+  },
+  "earlierFailures": [
+    {
+      "stage": "initial command wrapper",
+      "passed": 10,
+      "failed": 2,
+      "reason": "Quoted cmd.exe switches prevented the fixed verification command from starting; fixed argument escaping and suppressed PowerShell progress protocol."
+    },
+    {
+      "stage": "first managed-host extension",
+      "passed": 4,
+      "failed": 1,
+      "reason": "Test read the writer target before its first write; now creates the target before publishing the marker."
+    },
+    {
+      "stage": "first full suite",
+      "passed": 224,
+      "failed": 9,
+      "reason": "Test read a not-yet-created readiness marker; protocol fixtures used a 2s startup and 5s test limit. Readiness is now awaited, the fixture startup uses the same 15s as the product connection check, and turn budget assertions retain 500/1000ms."
+    }
+  ],
+  "previousCI": {
+    "sha": "5cf14cf1afdac52a06dd305a79470b8cc34891b3",
+    "run": "https://github.com/him55710-sudo/no-dev/actions/runs/39303520105",
+    "linux": "success",
+    "windows": "failed at extension:design-test",
+    "detail": "Decoded job logs retrieved using the GitHub workflow-job-log connector: navigation assertion expected 공유 탐색 but received an empty string (designWorkspace.ts:57). Current local host run passes 33 checks; the remote race is not yet explained or fixed.",
+    "excerpt": "process-scope-previous-ci-excerpt.txt"
+  },
+  "remaining": [
+    "Linux/macOS owner-death containment",
+    "Resume a dead model session explicitly",
+    "Prior-version orphan processes",
+    "Full product completion gates in SYSTEM_WORKSPACE_STATUS.md"
+  ]
+}

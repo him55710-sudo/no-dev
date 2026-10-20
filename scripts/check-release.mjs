@@ -32,12 +32,59 @@ for (const line of (await readFile(`${prefix}-SHA256SUMS.txt`, "utf8"))
 }
 const source = await JSZip.loadAsync(await readFile(`${prefix}-source.zip`));
 for (const file of [
+  "patches/@xyflow__react@12.12.0.patch",
+  "patches/README.md",
+  "pnpm-workspace.yaml",
+])
+  assert.deepEqual(
+    await source.file(file)?.async("nodebuffer"),
+    await readFile(file),
+    `Source dependency patch: ${file}`,
+  );
+for (const file of [
   "LICENSE",
   "README.md",
   "README.ko.md",
   "pnpm-lock.yaml",
   "src/core/scenarios.ts",
   "src/components/ScenarioLab.tsx",
+  "extension/src/agentHost.ts",
+  "extension/src/agent/host.ts",
+  "extension/src/agent/hostProtocol.ts",
+  "extension/src/agent/managedJobs.ts",
+  "tests/agent-host.test.ts",
+  "docs/IMPLEMENTATION_CONTINUATION.md",
+  "scripts/test-live-continuation.mjs",
+  "scripts/recover-live-continuation.mjs",
+  "docs/LIVE_CONTINUATION.md",
+  "docs/SYSTEM_WORKSPACE_DEMO.md",
+  "docs/SYSTEM_WORKSPACE_SUPPORT.md",
+  "scripts/build-system-demo.mjs",
+  "scripts/test-permission-failure.mjs",
+  "validation/next-saas-starter/failure-peer.mjs",
+  "validation/next-saas-starter/README.md",
+  "validation/next-saas-starter/build.mjs",
+  "validation/next-saas-starter/build-stripe-preload.cjs",
+  "validation/next-saas-starter/database.mjs",
+  "validation/next-saas-starter/permissions.fixture.tsx",
+  "extension/src/agent/jobs.ts",
+  "extension/src/agent/gitWorkspace.ts",
+  "tests/agent-recovery.test.ts",
+  "tests/agent-workspace.test.ts",
+  "extension/src/agent/ownedProcess.ts",
+  "tests/owned-process.test.ts",
+  "scripts/test-owned-process-live.mjs",
+  "docs/WINDOWS_PROCESS_SCOPE.md",
+  "extension/src/navigationStore.ts",
+  "src/workspace/navigation.ts",
+  "src/workspace/navigationWriter.ts",
+  "src/workspace/useWorkspaceNavigation.ts",
+  "tests/workspace-navigation.test.ts",
+  "tests/navigation-writer.test.ts",
+  "src/workspace/observations.ts",
+  "src/workspace/ObservationComparison.tsx",
+  "tests/workspace-observations.test.ts",
+  "docs/WORKSPACE_OBSERVATIONS.md",
   "extension/package.nls.json",
   "extension/.vscodeignore",
   ".github/workflows/ci.yml",
@@ -59,6 +106,21 @@ assert.equal(
   version,
 );
 const demo = await JSZip.loadAsync(await readFile(`${prefix}-demo.zip`));
+for (const file of [
+  "workspace-demo.html",
+  "workspace-demo.css",
+  "media/system-workspace/evidence.json",
+  "media/system-workspace/installed-next-applied.jpg",
+  "media/system-workspace/installed-next-undone.jpg",
+  "media/system-workspace/installed-next-member.jpg",
+  "media/system-workspace/installed-next-owner.jpg",
+]) {
+  assert.deepEqual(
+    await demo.file(`dist/${file}`)?.async("nodebuffer"),
+    await readFile(`public/${file}`),
+    `System walkthrough asset: ${file}`,
+  );
+}
 const html = await demo.file("dist/index.html").async("string");
 assert.ok(
   !/(?:src|href)="\/(?!\/)/.test(html),
@@ -77,6 +139,21 @@ const manifest = JSON.parse(
   await vsix.file("extension/package.json").async("string"),
 );
 assert.equal(manifest.version, version);
+for (const walkthrough of manifest.contributes.walkthroughs) {
+  for (const step of walkthrough.steps) {
+    const file = `extension/${step.media.markdown}`;
+    assert.deepEqual(
+      await vsix.file(file)?.async("nodebuffer"),
+      await readFile(file),
+      `Packaged walkthrough: ${file}`,
+    );
+    assert.deepEqual(
+      await source.file(file)?.async("nodebuffer"),
+      await readFile(file),
+      `Source walkthrough: ${file}`,
+    );
+  }
+}
 assert.match(
   await vsix.file("extension/THIRD_PARTY_NOTICES.txt").async("string"),
   /sqlite3-parser 0\.7\.1/,
@@ -84,6 +161,7 @@ assert.match(
 for (const file of [
   "extension/out/extension.cjs",
   "extension/out/worker.cjs",
+  "extension/out/agent-host.cjs",
   "extension/runtime/benchmark.py",
   "extension/runtime/python_source.py",
   "extension/runtime/go_source.go",
@@ -94,6 +172,8 @@ for (const file of [
   "extension/runtime/rust/LICENSE",
   "extension/media/view.js",
   "extension/media/view.css",
+  "extension/media/design.js",
+  "extension/media/design.css",
   "extension/LICENSE.txt",
   "extension/package.nls.ko.json",
 ])
@@ -106,7 +186,11 @@ for (const name of Object.keys(vsix.files).filter((name) =>
   /^extension\/out\/.*\.cjs$/.test(name),
 ))
   assert.ok(
-    ["extension/out/extension.cjs", "extension/out/worker.cjs"].includes(name),
+    [
+      "extension/out/extension.cjs",
+      "extension/out/worker.cjs",
+      "extension/out/agent-host.cjs",
+    ].includes(name),
     `Unexpected runtime bundle: ${name}`,
   );
 // Execute the shipped analysis worker, so an accidentally unbundled dependency

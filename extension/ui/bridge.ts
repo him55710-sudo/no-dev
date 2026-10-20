@@ -38,7 +38,11 @@ export function request<T = void>(
           ),
         );
       },
-      ["explainProject","explainChanges"].includes(action) ? 3600000 : action === "localGenerate" ? 240000 : 60000,
+      ["explainProject", "explainChanges", "readFile"].includes(action)
+        ? 3600000
+        : action === "localGenerate"
+          ? 240000
+          : 60000,
     );
     pending.set(id, { resolve, reject, timer });
     host.postMessage({ id, action, payload, contextId });

@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T09:21:46.564Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "node": "v24.19.0",
+  "artifact": {
+    "version": "0.7.0",
+    "vsixSha256": "9db03cce15a822f13e05eaae03694618f3af265550c4ea2a82250165bcaed02e",
+    "files": {
+      "out/extension.cjs": "51becc5ec42d4316760c7893e5ba16c02595bf0d3ffc97d2de14dcb003a28cb0",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "media/design.js": "352bb626dd21136866e80b8273e012f179778c7f1bda5854e2411acb9f2b158c",
+      "media/design.css": "7509cee8dd4524aea24735e0605bf1a3dff1aec66e49e5eef48784596dd6427d",
+      "THIRD_PARTY_NOTICES.txt": "160717d2962ebbbc30eec21debdc00ae32720e5d78ac588b88e617d096110f3c"
+    }
+  },
+  "scope": "Installed VSIX in Production extension mode across five separate VS Code launches. Calls use the same validated request dispatcher as the Webview; this is not pointer/keyboard UI automation or model-quality evidence.",
+  "provider": "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
+  "dependencyEnvironment": "Synthetic repository outside the host checkout with no third-party dependencies. Checks use Node's built-in test runner through the real package-manager verification path.",
+  "phases": [
+    {
+      "phase": "prepare-review",
+      "extensionHostPid": 8560,
+      "checkedAt": "2026-10-16T09:21:05.861Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "implementation begins from a saved cross-file business feature",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged",
+        "implementation does not modify the original source or index"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "1d3011ab619abd2c7eabba0865013ad68ba2a66c825841d8a0e42e98f6c163c9"
+        }
+      ]
+    },
+    {
+      "phase": "review-and-apply",
+      "extensionHostPid": 23132,
+      "checkedAt": "2026-10-16T09:21:18.682Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "changing feature membership blocks an old implementation review",
+        "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+        "review restored after VS Code restart",
+        "native diff opened",
+        "same-revision manual design changes block apply",
+        "dirty editor blocks apply",
+        "original project passes the acceptance tests after apply"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "1d3011ab619abd2c7eabba0865013ad68ba2a66c825841d8a0e42e98f6c163c9"
+        }
+      ]
+    },
+    {
+      "phase": "undo-after-restart",
+      "extensionHostPid": 27976,
+      "checkedAt": "2026-10-16T09:21:32.423Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "applied record survives another restart",
+        "undo preserves subsequent user edits",
+        "undo restores exact original bytes and staged/unstaged status",
+        "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+        "explicit file approval reaches the peer",
+        "real package-manager checks pass",
+        "three-file review is durable",
+        "acceptance tests are unchanged",
+        "next implementation uses the explicitly accepted baseline"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "1ed6f06482792050b4ba86dda63075e9043097eb2ce4cde2a9ba9c3bb8d23df1"
+        }
+      ]
+    },
+    {
+      "phase": "crash-during-apply",
+      "extensionHostPid": 28576,
+      "checkedAt": "2026-10-16T09:21:39.652Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "product apply journal exists",
+        "at least one original file changed",
+        "test extension host terminated while transaction is incomplete"
+      ]
+    },
+    {
+      "phase": "recover-after-crash",
+      "extensionHostPid": 1700,
+      "checkedAt": "2026-10-16T09:21:46.341Z",
+      "checks": [
+        "installed VSIX bytes match",
+        "Production extension mode",
+        "real workspace command opens analyzed design panel",
+        "business feature persists after restart",
+        "interrupted apply is detected after a fresh VS Code launch",
+        "recovery reconciles actual file bytes",
+        "recovery restores the original source and preserves the Git index"
+      ],
+      "verification": [
+        {
+          "name": "test",
+          "status": "passed",
+          "exitCode": 0,
+          "outputSha256": "1ed6f06482792050b4ba86dda63075e9043097eb2ce4cde2a9ba9c3bb8d23df1"
+        }
+      ]
+    }
+  ],
+  "crash": {
+    "journalState": "applying",
+    "afterFiles": 1,
+    "beforeFiles": 2,
+    "progressEntries": 0,
+    "termination": "SIGKILL of this test extension-host process during apply",
+    "hostExit": {
+      "code": 1,
+      "signal": null
+    }
+  },
+  "restoredOriginalFiles": [
+    "policy.js",
+    "service.js",
+    "ui.js",
+    "test.js",
+    "app-server",
+    "package.json"
+  ],
+  "preserved": [
+    "staged user changes",
+    "unstaged user changes",
+    "acceptance tests",
+    "source HEAD and index"
+  ]
+}

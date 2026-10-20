@@ -59,6 +59,13 @@ export const hostRequestSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("cancel"), jobId: z.string().uuid() }).strict(),
   z
     .object({
+      action: z.literal("resume"),
+      jobId: z.string().uuid(),
+      options: startOptionsSchema,
+    })
+    .strict(),
+  z
+    .object({
       action: z.literal("decide"),
       jobId: z.string().uuid(),
       approvalId: z.string(),

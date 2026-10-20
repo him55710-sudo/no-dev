@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-10-17T03:49:31.1056704Z",
+  "hashes": {
+    "app/(dashboard)/dashboard/page.tsx": "57c7b669768acdb1541383aaeb5a615991b7123f16848785e8d6bfecaf6b218a",
+    "lib/auth/team-permissions.ts": "d11af5919ad3f113ddd9cec666e876ec869a12ba4b4513a861b51b0d3089a237",
+    "lib/db/queries.ts": "885a431fb4dcd69aa2ca96c44f0940916e14264ae90e72f6a49be81857c9b0d3",
+    "tests/team-permissions.test.tsx": "25847741fa5a6da5fdc2e47f6f60677f61b79c109d5395e93112078c14c69b7f",
+    "app/(login)/actions.ts": "457619e2cb777e3f0f5d9eef8f8378fdd645481dccc21b01ac5ce6c3477d8114",
+    "tests/team-permissions.config.mts": "628ee24220c9aa06289651032a168aafdbe3d9259756345a4314897908022517"
+  },
+  "source": "C:/Users/user/AppData/Local/Temp/pureobom-installed-ui-J013kl/profile/User/globalStorage/pureobom-local.pureobom/implementation-jobs/91f8c0ed-9a09-4c82-aa0f-12cdbeff771b/worktree",
+  "target": "C:/Users/user/AppData/Local/Temp/pureobom-next-browser-2c5a1c3898/project",
+  "scope": "These six candidate files match the final saved model worktree and the separately tested app. The model also changed .gitignore and added pnpm-workspace.yaml to repair its long installation path; those installation-only changes were not copied into this browser clone. This evidence does not make the failed installed-host job a success.",
+  "preservedInputs": {
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-10-19T22:57:35.045Z",
+  "provider": "Controlled stdio fixture; no external model",
+  "state": {
+    "id": "ac3bf180-183f-4e32-ac59-963c9fcdd6e3",
+    "specId": "permission",
+    "specRevision": 1,
+    "phase": "review",
+    "startedAt": "2026-10-19T22:57:20.488Z",
+    "message": "실제 검사 실패를 전달해 수정을 요청합니다.\nControlled fixture changed three files. No external model ran.\n선택한 명령이 통과했습니다. 변경 내용과 완료 기준을 검토해 주세요.",
+    "checks": [
+      {
+        "name": "test",
+        "status": "passed",
+        "exitCode": 0,
+        "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (3.3579ms)\n✔ alice retains editing (0.1947ms)\n✔ bob retains editing (0.1351ms)\n✔ membership in another project does not grant access (0.2669ms)\n✔ viewer controls are disabled with an explanation (0.2847ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 138.0681\n",
+        "outputTruncated": false,
+        "elapsedMs": 4083
+      }
+    ],
+    "files": [
+      {
+        "path": "policy.js",
+        "kind": "modified"
+      },
+      {
+        "path": "service.js",
+        "kind": "modified"
+      },
+      {
+        "path": "ui.js",
+        "kind": "modified"
+      }
+    ],
+    "approvals": [],
+    "worktree": "C:\\Users\\user\\.pureobom\\worktrees\\b9994ca5f8a6b034\\ac3bf180-183f-4e32-ac59-963c9fcdd6e3",
+    "provider": "Pureobom deterministic installed-recovery protocol fixture",
+    "verificationAttempts": [
+      {
+        "attempt": 1,
+        "completed": true,
+        "checks": [
+          {
+            "name": "test",
+            "status": "failed",
+            "exitCode": 1,
+            "output": "$ node --test test.js\n✖ viewer reads but cannot edit; denied request preserves data (3.9947ms)\n✔ alice retains editing (0.4074ms)\n✔ bob retains editing (0.2299ms)\n✖ membership in another project does not grant access (0.4151ms)\n✔ viewer controls are disabled with an explanation (1.3464ms)\nℹ tests 5\nℹ suites 0\nℹ pass 3\nℹ fail 2\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 153.46\n\n✖ failing tests:\n\ntest at test.js:9:1\n✖ viewer reads but cannot edit; denied request preserves data (3.9947ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:13:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:14:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:13:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.start (node:internal/test_runner/test:1242:17)\n        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),\n    operator: 'throws',\n    diff: 'simple'\n  }\n\ntest at test.js:23:1\n✖ membership in another project does not grant access (0.4151ms)\n  AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n  \n  Caught error:\n  \n  Error: Forbidden\n      at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:25:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n      at Test.postRun (node:internal/test_runner/test:1522:19)\n      at Test.run (node:internal/test_runner/test:1447:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: Error: Forbidden\n        at updateProject (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/service.js:3:48)\n        at file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:26:11\n        at getActual (node:assert:611:5)\n        at strict.throws (node:assert:759:24)\n        at TestContext.<anonymous> (file:///C:/Users/user/.pureobom/worktrees/b9994ca5f8a6b034/ac3bf180-183f-4e32-ac59-963c9fcdd6e3/test.js:25:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1382:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)\n        at Test.postRun (node:internal/test_runner/test:1522:19)\n        at Test.run (node:internal/test_runner/test:1447:12),\n    operator: 'throws',\n    diff: 'simple'\n  }\n[ELIFECYCLE] Test failed. See above for more details.\n",
+            "outputTruncated": false,
+            "elapsedMs": 4300
+          }
+        ]
+      },
+      {
+        "attempt": 2,
+        "completed": true,
+        "checks": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "output": "$ node --test test.js\n✔ viewer reads but cannot edit; denied request preserves data (3.3579ms)\n✔ alice retains editing (0.1947ms)\n✔ bob retains editing (0.1351ms)\n✔ membership in another project does not grant access (0.2669ms)\n✔ viewer controls are disabled with an explanation (0.2847ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 138.0681\n",
+            "outputTruncated": false,
+            "elapsedMs": 4083
+          }
+        ]
+      }
+    ],
+    "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+    "assessment": {
+      "jobId": "ac3bf180-183f-4e32-ac59-963c9fcdd6e3",
+      "reviewId": "850684d7ec5a396eae32d933af33f13012fc972c5e10490eaa7691564d74ad5c",
+      "files": [
+        {
+          "path": "policy.js",
+          "outsideScope": false
+        },
+        {
+          "path": "service.js",
+          "outsideScope": false
+        },
+        {
+          "path": "ui.js",
+          "outsideScope": false
+        }
+      ],
+      "criteria": [
+        {
+          "id": "acceptance:0",
+          "kind": "acceptance",
+          "text": "Viewer direct update rejects with 403 and preserves data"
+        },
+        {
+          "id": "invariant:0",
+          "kind": "invariant",
+          "text": "Owner and editor keep editing"
+        }
+      ]
+    }
+  },
+  "restoredHistoryEqual": true,
+  "originalGitPreserved": true,
+  "acceptanceTestsUnchanged": true,
+  "failedReviewRestored": false,
+  "applyRejected": true
+}

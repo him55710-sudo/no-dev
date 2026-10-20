@@ -307,9 +307,44 @@ describe("durable implementation recovery", { timeout: 60000 }, () => {
     expect(jobs.state?.phase).toBe("interrupted");
     expect(jobs.state?.approvals).toEqual([]);
     expect(jobs.state?.checks).toEqual([]);
+    expect(jobs.state?.previousChecks?.[0].output).toBe("Fixture only");
     expect(() => jobs.decide("obsolete-approval", "accept")).toThrow();
     await expect(jobs.apply(f.review.id)).rejects.toThrow();
     expect(await git(f.source, "status", "--porcelain")).toBe("");
+    jobs.dispose();
+  });
+  it("keeps an interrupted continuation copy unavailable and points back to the preserved parent", async () => {
+    const f = await fixture();
+    const spec = await persistedJob(f, "running");
+    const child = await createJobWorkspace(f.source, f.storage);
+    const record = JSON.parse(
+      await readFile(resolve(f.workspace.directory, "job.json"), "utf8"),
+    );
+    record.review = undefined;
+    record.state = {
+      ...record.state,
+      id: child.id,
+      phase: "preparing",
+      continuedFrom: f.workspace.id,
+      worktree: undefined,
+      reviewId: undefined,
+      files: [],
+    };
+    await writeRecord(resolve(child.directory, "job.json"), record);
+    const jobs = new ImplementationJobs(f.storage, () => {});
+    await jobs.restore(f.source, child.id);
+    expect(jobs.state?.phase).toBe("interrupted");
+    expect(jobs.state?.worktree).toBeUndefined();
+    expect(jobs.state?.continuedFrom).toBe(f.workspace.id);
+    await expect(
+      jobs.resume(f.source, {
+        allowExternal: true,
+        checks: ["test"],
+        executable: "must-not-run",
+        specSnapshot: spec,
+      }),
+    ).rejects.toThrow(/中断|중단/);
+    expect((await reviewJobWorkspace(f.workspace)).id).toBe(f.review.id);
     jobs.dispose();
   });
   it("invalidates a completed review if its files change after restart", async () => {

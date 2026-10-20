@@ -1,0 +1,1504 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T19:16:29.318Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "9cfe5d48885014dda678789edce4ac5f5803b54bce98dd44318947df7dcfe124",
+    "files": {
+      "out/extension.cjs": "055b869642c34e2d056076d6a3a216490376e6ec5098b38b878b09938a27232f",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "edc0c2effe482fd4e8adecf8a6569665cace77b3b164b01a4ee821bb7f595fa8",
+      "media/design.js": "81cdd018d88ea0ea4f293015740b42fb1397fdd02a5e5d2a3124d43c1b066e42",
+      "media/design.css": "e09a7b37d8a461a015a9b5ab90796617670f7a476f80dabd837546cc35fd33d1"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "No provider invoked; navigation-only validation.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:14:49.128Z",
+      "ok": true
+    },
+    {
+      "action": "saveFeature",
+      "at": "2026-10-19T19:14:56.485Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:14:56.592Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 2,
+        "view": {
+          "selection": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+          "scopeTrail": [
+            "system"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:14:57.416Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 3,
+        "view": {
+          "selection": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:02.319Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 4,
+        "view": {
+          "selection": "file:policy.js:",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:03.148Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 5,
+        "view": {
+          "selection": "file:policy.js:",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:10.989Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 6,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 122.5,
+                "y": 53.5,
+                "zoom": 1.5
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T19:15:11.378Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T19:15:11.402Z",
+      "ok": true
+    },
+    {
+      "action": "saveSpec",
+      "at": "2026-10-19T19:15:11.467Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:11.812Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 7,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 157.5,
+                "y": 75.5,
+                "zoom": 1.25
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:17.004Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 8,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 157.5,
+                "y": 75.5,
+                "zoom": 1.25
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:17.823Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 9,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "can",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:18.655Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 10,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "canEdit",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:15:27.776Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:28.083Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 11,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "지울 검색어",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:28.907Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 12,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:15:29.877Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:49.848Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 13,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "",
+          "focus": true,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:15:50.670Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 14,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "canEdit",
+          "focus": true,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:15:51.665Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T19:16:00.049Z",
+      "navigation": {
+        "generation": 0,
+        "revision": 15,
+        "view": {
+          "selection": "symbol:policy.js:canEdit",
+          "scopeTrail": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "file:policy.js:"
+          ],
+          "included": [
+            "symbol:policy.js:canEdit"
+          ],
+          "connections": [],
+          "expanded": [
+            "system",
+            "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+          ],
+          "search": "canEdit",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 79.37037037037038,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+              "viewport": {
+                "x": -5.242718446601941,
+                "y": -3.635922330097088,
+                "zoom": 1.174757281553398
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:policy.js:",
+              "viewport": {
+                "x": 186.66666666666666,
+                "y": 93.83333333333333,
+                "zoom": 1.0416666666666667
+              },
+              "positions": [
+                {
+                  "id": "symbol:policy.js:canEdit",
+                  "x": 35,
+                  "y": 35
+                }
+              ]
+            }
+          ],
+          "savedSpecId": "symbol:policy.js:canEdit"
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "ready",
+      "at": "2026-10-19T19:16:25.296Z",
+      "ok": true
+    }
+  ],
+  "jobs": [],
+  "navigationRestoration": {
+    "before": {
+      "at": "2026-10-19T19:16:04.755Z",
+      "extensionHostPid": 32520,
+      "navigation": {
+        "selection": "symbol:policy.js:canEdit",
+        "scopeTrail": [
+          "system",
+          "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+          "file:policy.js:"
+        ],
+        "included": [
+          "symbol:policy.js:canEdit"
+        ],
+        "connections": [],
+        "expanded": [
+          "system",
+          "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+        ],
+        "search": "canEdit",
+        "focus": false,
+        "canvases": [
+          {
+            "scopeId": "system",
+            "viewport": {
+              "x": 2.2222222222222285,
+              "y": 79.37037037037038,
+              "zoom": 0.25925925925925924
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "viewport": {
+              "x": -5.242718446601941,
+              "y": -3.635922330097088,
+              "zoom": 1.174757281553398
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "file:policy.js:",
+            "viewport": {
+              "x": 186.66666666666666,
+              "y": 93.83333333333333,
+              "zoom": 1.0416666666666667
+            },
+            "positions": [
+              {
+                "id": "symbol:policy.js:canEdit",
+                "x": 35,
+                "y": 35
+              }
+            ]
+          }
+        ],
+        "savedSpecId": "symbol:policy.js:canEdit"
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "symbol:policy.js:canEdit",
+            "targetIds": [
+              "symbol:policy.js:canEdit"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "공유 권한 탐색 복원",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": []
+            },
+            "baseline": {
+              "graphRevision": "9ad63506134ba66ef67e0d132ef7ed693abfb711dff4fd26349d6e5d38b040fc",
+              "observed": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [],
+                "totals": {
+                  "facts": 1,
+                  "relations": 2,
+                  "notices": 0
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:15:11.471Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "64608b40-69a1-4711-8c3c-62bf5a711516",
+            "revision": 1,
+            "title": "공유·권한",
+            "description": "",
+            "members": [
+              {
+                "nodeId": "file:policy.js:",
+                "label": "policy.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 103,
+                    "line": 1,
+                    "endLine": 4,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:service.js:",
+                "label": "service.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 338,
+                    "line": 1,
+                    "endLine": 11,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:ui.js:",
+                "label": "ui.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 147,
+                    "line": 1,
+                    "endLine": 6,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-19T19:14:56.486Z"
+          }
+        ]
+      }
+    },
+    "after": {
+      "at": "2026-10-19T19:16:08.347Z",
+      "extensionHostPid": 16224,
+      "navigation": {
+        "selection": "symbol:policy.js:canEdit",
+        "scopeTrail": [
+          "system",
+          "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+          "file:policy.js:"
+        ],
+        "savedSpecId": "symbol:policy.js:canEdit",
+        "included": [
+          "symbol:policy.js:canEdit"
+        ],
+        "connections": [],
+        "expanded": [
+          "system",
+          "feature:64608b40-69a1-4711-8c3c-62bf5a711516"
+        ],
+        "search": "canEdit",
+        "focus": false,
+        "canvases": [
+          {
+            "scopeId": "system",
+            "viewport": {
+              "x": 2.2222222222222285,
+              "y": 79.37037037037038,
+              "zoom": 0.25925925925925924
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "feature:64608b40-69a1-4711-8c3c-62bf5a711516",
+            "viewport": {
+              "x": -5.242718446601941,
+              "y": -3.635922330097088,
+              "zoom": 1.174757281553398
+            },
+            "positions": []
+          },
+          {
+            "scopeId": "file:policy.js:",
+            "viewport": {
+              "x": 186.66666666666666,
+              "y": 93.83333333333333,
+              "zoom": 1.0416666666666667
+            },
+            "positions": [
+              {
+                "id": "symbol:policy.js:canEdit",
+                "x": 35,
+                "y": 35
+              }
+            ]
+          }
+        ]
+      },
+      "specs": {
+        "schemaVersion": 1,
+        "specs": [
+          {
+            "id": "symbol:policy.js:canEdit",
+            "targetIds": [
+              "symbol:policy.js:canEdit"
+            ],
+            "revision": 1,
+            "content": {
+              "title": "공유 권한 탐색 복원",
+              "purpose": "",
+              "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+              "policies": "",
+              "inputsOutputs": "",
+              "failures": "",
+              "invariants": [],
+              "acceptance": []
+            },
+            "baseline": {
+              "graphRevision": "9ad63506134ba66ef67e0d132ef7ed693abfb711dff4fd26349d6e5d38b040fc",
+              "observed": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+              "sources": [
+                {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              ],
+              "observations": {
+                "schemaVersion": 1,
+                "facts": [
+                  {
+                    "id": "symbol:policy.js:canEdit",
+                    "kind": "symbol",
+                    "label": "canEdit",
+                    "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                    "summaryTruncated": false,
+                    "syntaxValid": true,
+                    "supported": true,
+                    "source": {
+                      "path": "policy.js",
+                      "symbol": "canEdit",
+                      "start": 0,
+                      "end": 102,
+                      "line": 1,
+                      "endLine": 3,
+                      "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                      "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                    }
+                  }
+                ],
+                "relations": [
+                  {
+                    "from": {
+                      "id": "symbol:service.js:updateProject",
+                      "label": "updateProject"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "service.js",
+                      "symbol": "",
+                      "start": 102,
+                      "end": 134,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                      "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                    }
+                  },
+                  {
+                    "from": {
+                      "id": "symbol:ui.js:editControls.editable",
+                      "label": "editable"
+                    },
+                    "to": {
+                      "id": "symbol:policy.js:canEdit",
+                      "label": "canEdit"
+                    },
+                    "kind": "calls",
+                    "count": 1,
+                    "source": {
+                      "path": "ui.js",
+                      "symbol": "",
+                      "start": 95,
+                      "end": 108,
+                      "line": 3,
+                      "endLine": 3,
+                      "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                      "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                    }
+                  }
+                ],
+                "notices": [],
+                "totals": {
+                  "facts": 1,
+                  "relations": 2,
+                  "notices": 0
+                }
+              }
+            },
+            "updatedAt": "2026-10-19T19:15:11.471Z"
+          }
+        ],
+        "features": [
+          {
+            "id": "64608b40-69a1-4711-8c3c-62bf5a711516",
+            "revision": 1,
+            "title": "공유·권한",
+            "description": "",
+            "members": [
+              {
+                "nodeId": "file:policy.js:",
+                "label": "policy.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "policy.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 103,
+                    "line": 1,
+                    "endLine": 4,
+                    "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                    "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:service.js:",
+                "label": "service.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "service.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 338,
+                    "line": 1,
+                    "endLine": 11,
+                    "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                    "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+                  }
+                ]
+              },
+              {
+                "nodeId": "file:ui.js:",
+                "label": "ui.js",
+                "kind": "file",
+                "sources": [
+                  {
+                    "path": "ui.js",
+                    "symbol": "",
+                    "start": 0,
+                    "end": 147,
+                    "line": 1,
+                    "endLine": 6,
+                    "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                    "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+                  }
+                ]
+              }
+            ],
+            "updatedAt": "2026-10-19T19:14:56.486Z"
+          }
+        ]
+      }
+    }
+  },
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "symbol:policy.js:canEdit",
+        "targetIds": [
+          "symbol:policy.js:canEdit"
+        ],
+        "revision": 1,
+        "content": {
+          "title": "공유 권한 탐색 복원",
+          "purpose": "",
+          "desired": "viewer는 조회만 가능하고 owner와 editor는 편집할 수 있다.",
+          "policies": "",
+          "inputsOutputs": "",
+          "failures": "",
+          "invariants": [],
+          "acceptance": []
+        },
+        "baseline": {
+          "graphRevision": "9ad63506134ba66ef67e0d132ef7ed693abfb711dff4fd26349d6e5d38b040fc",
+          "observed": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+          "sources": [
+            {
+              "path": "policy.js",
+              "symbol": "canEdit",
+              "start": 0,
+              "end": 102,
+              "line": 1,
+              "endLine": 3,
+              "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+              "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+            }
+          ],
+          "observations": {
+            "schemaVersion": 1,
+            "facts": [
+              {
+                "id": "symbol:policy.js:canEdit",
+                "kind": "symbol",
+                "label": "canEdit",
+                "summary": "((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "policy.js",
+                  "symbol": "canEdit",
+                  "start": 0,
+                  "end": 102,
+                  "line": 1,
+                  "endLine": 3,
+                  "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                  "contentHash": "7f8bd5c9c874b199138d23bc59b9e6261cdfb42cb421a18dcfb8d1b537575948"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "from": {
+                  "id": "symbol:service.js:updateProject",
+                  "label": "updateProject"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "service.js",
+                  "symbol": "",
+                  "start": 102,
+                  "end": 134,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                  "contentHash": "0c450dfc157810ef4c1a6c7e4996b5ecf63b60c0b3b84b1f4ce32ca5277c4be0"
+                }
+              },
+              {
+                "from": {
+                  "id": "symbol:ui.js:editControls.editable",
+                  "label": "editable"
+                },
+                "to": {
+                  "id": "symbol:policy.js:canEdit",
+                  "label": "canEdit"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "ui.js",
+                  "symbol": "",
+                  "start": 95,
+                  "end": 108,
+                  "line": 3,
+                  "endLine": 3,
+                  "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                  "contentHash": "35931f91451f4791532ddc136fbd236ede1fe6a488c84955fd9005a37c514592"
+                }
+              }
+            ],
+            "notices": [],
+            "totals": {
+              "facts": 1,
+              "relations": 2,
+              "notices": 0
+            }
+          }
+        },
+        "updatedAt": "2026-10-19T19:15:11.471Z"
+      }
+    ],
+    "features": [
+      {
+        "id": "64608b40-69a1-4711-8c3c-62bf5a711516",
+        "revision": 1,
+        "title": "공유·권한",
+        "description": "",
+        "members": [
+          {
+            "nodeId": "file:policy.js:",
+            "label": "policy.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "policy.js",
+                "symbol": "",
+                "start": 0,
+                "end": 103,
+                "line": 1,
+                "endLine": 4,
+                "fileHash": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+                "contentHash": "a5226a2cc29a42bd15c773957591b5f03a8e2693bcfa94825803a8ae9285c14f"
+              }
+            ]
+          },
+          {
+            "nodeId": "file:service.js:",
+            "label": "service.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "service.js",
+                "symbol": "",
+                "start": 0,
+                "end": 338,
+                "line": 1,
+                "endLine": 11,
+                "fileHash": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+                "contentHash": "146796b9a684722978e721fd453763a4da56709497241a16c95d2be261e0160b"
+              }
+            ]
+          },
+          {
+            "nodeId": "file:ui.js:",
+            "label": "ui.js",
+            "kind": "file",
+            "sources": [
+              {
+                "path": "ui.js",
+                "symbol": "",
+                "start": 0,
+                "end": 147,
+                "line": 1,
+                "endLine": 6,
+                "fileHash": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2",
+                "contentHash": "1cbbacb4daa35d594dc82d10e039ec97b50aa069ff471ca0dbb202360708f3bf"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-19T19:14:56.486Z"
+      }
+    ]
+  },
+  "originalRestored": true
+}

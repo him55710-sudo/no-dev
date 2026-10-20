@@ -1,0 +1,191 @@
+{
+  "commit": "e2daf73eaa7a647de600a0b4eb8e719e72fc196f",
+  "runId": 38873877739,
+  "url": "https://github.com/him55710-sudo/no-dev/actions/runs/38873877739",
+  "jobs": [
+    {
+      "id": 116884160288,
+      "name": "verify (ubuntu-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm install --global pnpm@11.25.0",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm extension:build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run xvfb-run -a pnpm extension:test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm extension:test",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run xvfb-run -a pnpm extension:design-test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm extension:design-test",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run pnpm extension:package",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm release:package",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm release:check",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 116884160613,
+      "name": "verify (windows-latest)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm install --global pnpm@11.25.0",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm extension:build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run xvfb-run -a pnpm extension:test",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run pnpm extension:test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run xvfb-run -a pnpm extension:design-test",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run pnpm extension:design-test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm extension:package",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm release:package",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm release:check",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

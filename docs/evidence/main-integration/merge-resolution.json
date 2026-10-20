@@ -1,0 +1,187 @@
+{
+  "base": "694bc81",
+  "main": "88df675",
+  "branch": "34f2ec4",
+  "files": [
+    {
+      "path": "extension/src/agent/appServer.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": true
+    },
+    {
+      "path": "extension/src/agent/gitWorkspace.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/agent/host.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/agent/hostProtocol.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/agent/jobs.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/agent/managedJobs.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/agent/verify.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/src/designWorkspace.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/test/designWorkspace.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "extension/ui/design.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": true
+    },
+    {
+      "path": "src/workspace/DesignWorkspaceView.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/ImplementationOptions.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/ImplementationReview.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/JobTray.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/ObservationComparison.tsx",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/analyze.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/design.css",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/job.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/model.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/observations.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/review.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/spec.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "src/workspace/state.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": true
+    },
+    {
+      "path": "tests/agent-host.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "tests/agent-protocol.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": true
+    },
+    {
+      "path": "tests/agent-recovery.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "tests/agent-verification.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "tests/agent-workspace.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    },
+    {
+      "path": "tests/fixtures/app-server.cjs",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": false,
+      "branchMatchesCopiedBaseline": true
+    },
+    {
+      "path": "tests/implementation-review.test.ts",
+      "resolved": true,
+      "mainMatchesCopiedBaseline": true,
+      "branchMatchesCopiedBaseline": false
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 {
-  "description": "JS/TS를 한국어 설명·규칙 표·연결 지도로 읽고, 규칙 수정 전후의 결과를 비교하세요.",
+  "description": "JS/TS 프로젝트의 구조와 근거를 탐색하고, 연결된 설계를 수정해 다중 파일 구현·검사 결과를 검토하세요.",
+  "command.getStarted": "풀어봄: 시스템 설계 시작 안내",
   "command.explain": "풀어봄: 현재 파일 설명 열기",
   "command.localAI": "풀어봄: 로컬 AI로 설명·수정",
   "command.map": "풀어봄: 작업 공간 연결 지도",

@@ -1,0 +1,52 @@
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   ▲ Next.js 15.6.0-canary.59 (Turbopack)
+   - Experiments (use with caution):
+     ✓ ppr
+     ✓ rdcForNavigations (enabled by `experimental.ppr`)
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully in 6.1s
+   Running TypeScript ...
+
+   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+   The following mandatory changes were made to your tsconfig.json:
+
+   	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+
+   Collecting page data ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages (0/15) ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages (3/15) 
+   Generating static pages (7/15) 
+   Generating static pages (11/15) 
+ ✓ Generating static pages (15/15) in 1397ms
+   Finalizing page optimization ...
+
+Route (app)               Revalidate  Expire
+┌ ◐ /
+├ ◐ /_not-found
+├ ƒ /api/stripe/checkout
+├ ƒ /api/stripe/webhook
+├ ƒ /api/team
+├ ƒ /api/user
+├ ◐ /dashboard
+├ ◐ /dashboard/activity
+├ ◐ /dashboard/general
+├ ◐ /dashboard/security
+├ ◐ /pricing                      1h      1y
+├ ◐ /sign-in
+└ ◐ /sign-up
+
+
+◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
+ƒ  (Dynamic)            server-rendered on demand
+

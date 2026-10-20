@@ -149,6 +149,17 @@ export async function run() {
 
   await c.scan();
   await ready();
+  assert.ok(
+    c.state.project?.files.some(
+      (file) => file.path === "workspace-1/helper.ts",
+    ),
+  );
+  assert.ok(
+    !c.state.project?.files.some((file) => file.path.includes(".private/")),
+  );
+  reports.push(
+    "workspace scan reads normal files beneath a hidden parent while excluding hidden project contents",
+  );
   const rule = () =>
     c.state.analysis!.rules.find((r) => r.name === "freeShippingThreshold")!;
   const prepared = await c.prepare(c.state.contextId, {
@@ -182,6 +193,7 @@ export async function run() {
   assert.deepEqual(
     comparison.rows.map((r) => r.status),
     ["same", "changed", "same"],
+    JSON.stringify(comparison.rows),
   );
   assert.equal(comparison.rows[1].before.result, 0);
   assert.equal(comparison.rows[1].after?.result, 3000);
@@ -316,10 +328,19 @@ export async function run() {
   );
   await vscode.commands.executeCommand("pureobom.interfaceExample");
   await until(
-    () => !c.state.busy && !!c.state.analysis?.interface,
-    "React example analysis",
+    () =>
+      !c.state.busy &&
+      !!c.state.analysis?.interface &&
+      vscode.window.tabGroups.activeTabGroup.activeTab?.input instanceof
+        vscode.TabInputWebview,
+    "React example analysis with its reading view focused",
   );
-  const screen = vscode.window.activeTextEditor!.document;
+  // Opening the beginner reader intentionally focuses its Webview. Resolve the
+  // analyzed source independently; the source action below must focus it again.
+  const screen = vscode.workspace.textDocuments.find(
+    (document) => vscode.workspace.asRelativePath(document.uri) === c.state.path,
+  );
+  assert.ok(screen, "the reader retains its analyzed source document");
   assert.equal(screen.languageId, "typescriptreact");
   const screenBefore = screen.getText();
   const phrase = c.state.analysis!.rules.find(

@@ -21,6 +21,13 @@ const exec = promisify(execFile);
 const maxBytes = 32 * 1024 * 1024;
 const excluded =
   /(^|\/)(?:\.pureobom|\.env(?:\.[^/]*)?|\.npmrc|\.netrc|\.pypirc|\.aws|\.ssh|[^/]*\.(?:pem|key|p12|pfx))($|\/)/i;
+// Tool-created caches are not proposed source changes. Intentionally tracked
+// files still enter the snapshot and remain subject to review and drift checks.
+const generatedDependency = /(^|\/)(?:node_modules|\.pnpm-store)(\/|$)/i;
+const untrackedExclusions = [
+  "--exclude=node_modules/",
+  "--exclude=.pnpm-store/",
+];
 const hash = (bytes: Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
 export type JobWorkspace = {
@@ -285,6 +292,7 @@ export async function createJobWorkspace(
           "--cached",
           "--others",
           "--exclude-standard",
+          ...untrackedExclusions,
         ])
       )
         .split("\0")
@@ -412,9 +420,19 @@ export async function reviewJobWorkspace(
       "-z",
       "--others",
       "--exclude-standard",
+      ...untrackedExclusions,
     ])
   ).split("\0");
-  const paths = [...new Set([...changed, ...untracked].filter(Boolean))].sort();
+  const paths = [
+    ...new Set(
+      [...changed, ...untracked].filter(
+        (path) =>
+          path &&
+          (workspace.hashes[path] !== undefined ||
+            !generatedDependency.test(path)),
+      ),
+    ),
+  ].sort();
   if (paths.length > 200)
     throw Error("변경 파일이 200개를 초과합니다. 작업을 나눠 주세요.");
   const files: FileProposal[] = [];
@@ -461,6 +479,35 @@ async function assertUnchanged(
     )
       throw Error(`파일이 바뀌어 반영을 중단했습니다: ${file.path}`);
   }
+}
+
+/** Carry a captured candidate into a fresh job; the earlier workspace stays intact. */
+export async function seedJobWorkspace(
+  target: JobWorkspace,
+  previous: JobWorkspace,
+  raw: ChangeReview,
+) {
+  const checkpoint = reviewSchema.parse(raw);
+  if (
+    target.id === previous.id ||
+    target.path === previous.path ||
+    target.source !== previous.source ||
+    checkpoint.workspaceId !== previous.id ||
+    JSON.stringify(Object.entries(target.hashes).sort()) !==
+      JSON.stringify(Object.entries(previous.hashes).sort())
+  )
+    throw Error(
+      "원본 프로젝트가 이전 작업 이후 바뀌었습니다. 구조와 설계를 확인한 뒤 새 작업을 시작해 주세요.",
+    );
+  if (await readApplyJournal(previous))
+    throw Error(
+      "반영 기록이 있는 작업은 이어할 수 없습니다. 파일 복구 상태를 먼저 확인해 주세요.",
+    );
+  await assertUnchanged(target.path, checkpoint.files, "before");
+  for (const file of checkpoint.files)
+    await writeContent(target.path, file, "after");
+  if ((await reviewJobWorkspace(target)).id !== checkpoint.id)
+    throw Error("이전 작업의 변경을 새 작업 복사본으로 옮기지 못했습니다.");
 }
 async function writeContent(
   root: string,
@@ -548,6 +595,7 @@ async function applyReview(
           "--cached",
           "--others",
           "--exclude-standard",
+          ...untrackedExclusions,
         ])
       )
         .split("\0")

@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "total": 9,
+  "passed": 9,
+  "failed": 0,
+  "pending": 0,
+  "startTime": 1792209028814,
+  "files": [
+    {
+      "name": "pureobom-validation/permissions.test.tsx",
+      "status": "passed",
+      "assertions": [
+        {
+          "title": "external Next.js team permissions — locked acceptance member reads the real team endpoint and its SQL-backed member list",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance member direct server-action invitation is denied without database or audit mutation",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance member direct removal is denied without database or audit mutation",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance team owner can invite even when the account-wide role is member",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance team owner can remove a member using real browser FormData",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance owner of another team cannot remove a member from this team or record a successful mutation",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance unauthenticated direct action cannot invite",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance member UI disables invitation and removal despite owning another team and the global owner label",
+          "status": "passed",
+          "failureMessages": []
+        },
+        {
+          "title": "external Next.js team permissions — locked acceptance team owner UI enables invitation despite the global member label",
+          "status": "passed",
+          "failureMessages": []
+        }
+      ]
+    }
+  ]
+}

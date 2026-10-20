@@ -1,0 +1,1299 @@
+{
+  "checkedAt": "2026-10-19T21:20:52.663Z",
+  "sourceHead": "d354e0301617c43870feca3d1e9b2d2982d4163a",
+  "files": [
+    {
+      "path": "README.md",
+      "hash": "5045d1a19a2af97736e086d3f2dbd62d0539b58aa641f73dbe829625921b761c",
+      "supported": false
+    },
+    {
+      "path": "app/(dashboard)/dashboard/activity/loading.tsx",
+      "hash": "dfbd40fcfe7cfbc6a789653f791e4ea9d0a486ccec5509ae0b2dd19074af1e99",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/dashboard/activity/page.tsx",
+      "hash": "a393fc8c8019599e3e338820108fe1c83755240d4e35cd92888ca2d9ce95dbf5",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/dashboard/general/page.tsx",
+      "hash": "8b7b0de542aaecb27f682d61cb1fdd0380da71194e3e33ae33e3ba7441d2809e",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/dashboard/layout.tsx",
+      "hash": "be0564a2f88e65ddd86e10afd41798d94f00f58cc843a0ba94b967a27a6ec685",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/dashboard/page.tsx",
+      "hash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/dashboard/security/page.tsx",
+      "hash": "d2bb9b970539db313cf5cc0e1c5cd1891dd21faf8c9d25d692590b5bc39f976d",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/layout.tsx",
+      "hash": "5179884c370c3f27ff0f3303aa95b22af16496c5375e54b2eefdef3e7651a71f",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/page.tsx",
+      "hash": "0c842c975605d5eccf2b2c87f90269a16f545d6a20dc0124d6715958fde4723d",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/pricing/page.tsx",
+      "hash": "df45bea2704892d609fe2272d8b8a6ae54cb3372541caceb8376a10fb4acdac3",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/pricing/submit-button.tsx",
+      "hash": "a6fef599a2b60748a01c9dd97eba38b5de6744dc68beebeb7ad748f971023267",
+      "supported": true
+    },
+    {
+      "path": "app/(dashboard)/terminal.tsx",
+      "hash": "d94576cedec9751f60b0706e8c2e6e9d9b318d63cef1b17ed68f80f5e1c07519",
+      "supported": true
+    },
+    {
+      "path": "app/(login)/actions.ts",
+      "hash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+      "supported": true
+    },
+    {
+      "path": "app/(login)/login.tsx",
+      "hash": "28963ce1c89a0712dbf832d3dc38ee946753f799bf864b80a744a7cdcf5fb1c5",
+      "supported": true
+    },
+    {
+      "path": "app/(login)/sign-in/page.tsx",
+      "hash": "37745bf35b7c0c660ab241047063940e0b05e1eb281fc0693ec4c1570d94e56e",
+      "supported": true
+    },
+    {
+      "path": "app/(login)/sign-up/page.tsx",
+      "hash": "e3b3f9d45994a0f413a83a70bdbce8158a15f3b4d70c588d1d5c8df59d2277d4",
+      "supported": true
+    },
+    {
+      "path": "app/api/stripe/checkout/route.ts",
+      "hash": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+      "supported": true
+    },
+    {
+      "path": "app/api/stripe/webhook/route.ts",
+      "hash": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+      "supported": true
+    },
+    {
+      "path": "app/api/team/route.ts",
+      "hash": "3c467460dc363a4e8018252df99d7f6981ea313ade7821df471b6221196bc834",
+      "supported": true
+    },
+    {
+      "path": "app/api/user/route.ts",
+      "hash": "01140906b37b5acc0c6a50534bf7cfe2a7fad86cad160c7fe3f11871d1fbf404",
+      "supported": true
+    },
+    {
+      "path": "app/globals.css",
+      "hash": "acb9e446f8f7ded3114de0ce88e84ad9d17807e9274509bbd43cf16618f120b9",
+      "supported": false
+    },
+    {
+      "path": "app/layout.tsx",
+      "hash": "6e22107c3e660d82d89ef5655f19108b838d4f9b29b0e1371dbbc08158b56c1f",
+      "supported": true
+    },
+    {
+      "path": "app/not-found.tsx",
+      "hash": "c7d12729398efeae524797e746140eeb30ddeb6771d8c93b836f0f4fa656dab1",
+      "supported": true
+    },
+    {
+      "path": "components.json",
+      "hash": "0a44576f8fcb082f0a87a222e25491d9536704fc7c6287e11fd978cea657fd6d",
+      "supported": false
+    },
+    {
+      "path": "components/ui/avatar.tsx",
+      "hash": "2320e7a3882ba068e0d5dc5805783b943f2d8d515072093dcd9b16a2525275ef",
+      "supported": true
+    },
+    {
+      "path": "components/ui/button.tsx",
+      "hash": "5030c19d1195be438c425424f3d5b13a30caea08cdc820ee40ac5073483f2fc4",
+      "supported": true
+    },
+    {
+      "path": "components/ui/card.tsx",
+      "hash": "b1b752a483996bbaaf507e1a11050b5255b70b747f61a478c6a77d6cb4dccf8c",
+      "supported": true
+    },
+    {
+      "path": "components/ui/dropdown-menu.tsx",
+      "hash": "19f2314e51524e99f78229af897f260f4077aad2cee30513fb81d5dc18ed62f6",
+      "supported": true
+    },
+    {
+      "path": "components/ui/input.tsx",
+      "hash": "bf4b165a76c81d3cc72014a92fd6f00c06f29302867bcc46c66d95adde72cb03",
+      "supported": true
+    },
+    {
+      "path": "components/ui/label.tsx",
+      "hash": "74f5bdeb648eb47b3d86a40fe6bbcbbec57930222253d880a9ab3e3b05a6a983",
+      "supported": true
+    },
+    {
+      "path": "components/ui/radio-group.tsx",
+      "hash": "ab2bfa4267444130f715a2a8c199166d6422cf8d2fd008e7edf169ad661a4048",
+      "supported": true
+    },
+    {
+      "path": "drizzle.config.ts",
+      "hash": "9969b1846d4a3728a8c6acc6e7999a5bff7e80811c7f3c6f1caf938be5a7c000",
+      "supported": true
+    },
+    {
+      "path": "lib/auth/middleware.ts",
+      "hash": "3f4689b7e1ea24ab5a5b7cc00697c4d849975662d4284ea8adc3e3cd8aeea41d",
+      "supported": true
+    },
+    {
+      "path": "lib/auth/session.ts",
+      "hash": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+      "supported": true
+    },
+    {
+      "path": "lib/db/drizzle.ts",
+      "hash": "7a3b15b547e5e7b35a53c621ea8bea4abcdb842ff70cfbc8f49f08060661f71b",
+      "supported": true
+    },
+    {
+      "path": "lib/db/migrations/0000_soft_the_anarchist.sql",
+      "hash": "b020f29df665100491ecb137f6977927b74bf336772a5035f1b4aa4715540965",
+      "supported": false
+    },
+    {
+      "path": "lib/db/migrations/meta/0000_snapshot.json",
+      "hash": "2fa4f5d769c9a1f96a56304b4b13ca510cf66a6880d0c95fcd018028218f4020",
+      "supported": false
+    },
+    {
+      "path": "lib/db/migrations/meta/_journal.json",
+      "hash": "e11f1688779b2689692fb351421c3e01cecf5b5bd7ed3a069768ab31cc2f2b54",
+      "supported": false
+    },
+    {
+      "path": "lib/db/queries.ts",
+      "hash": "7a00377a47f11c17e70f12f18fd525a2d11eefafa169c2dc5b7ac7dd0b05ffc5",
+      "supported": true
+    },
+    {
+      "path": "lib/db/schema.ts",
+      "hash": "efa055ab39f07fe3c22b656add220ae590f5c0df1561ecd6d52f8857b377a275",
+      "supported": true
+    },
+    {
+      "path": "lib/db/seed.ts",
+      "hash": "19cf3be96d813a4e25a5fef8118ec2b74434ada1626ecbad6509b017fdd75919",
+      "supported": true
+    },
+    {
+      "path": "lib/db/setup.ts",
+      "hash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+      "supported": true
+    },
+    {
+      "path": "lib/payments/actions.ts",
+      "hash": "2ac482d2312bcbb167c40e33353237026d9ea5804db8fe94167d3d5f5256b2b3",
+      "supported": true
+    },
+    {
+      "path": "lib/payments/stripe.ts",
+      "hash": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+      "supported": true
+    },
+    {
+      "path": "lib/utils.ts",
+      "hash": "74a147991a119f1c4cdc25a4d9b22713632fa32eb136e55ab6939b006d71b9d6",
+      "supported": true
+    },
+    {
+      "path": "middleware.ts",
+      "hash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+      "supported": true
+    },
+    {
+      "path": "next.config.ts",
+      "hash": "3ae62c255b66bbc235791e9982486c6abe6a454f3fe9e7a8a5878dd8a0ea3261",
+      "supported": true
+    },
+    {
+      "path": "package.json",
+      "hash": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+      "supported": false
+    },
+    {
+      "path": "postcss.config.mjs",
+      "hash": "c57f173b0b8e2d46219bcd0e8b81e85be28645b078905654e2c3d08f87f87dc0",
+      "supported": true
+    },
+    {
+      "path": "pureobom-validation/permissions.test.tsx",
+      "hash": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+      "supported": true
+    },
+    {
+      "path": "pureobom-validation/vitest.config.mts",
+      "hash": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d",
+      "supported": true
+    },
+    {
+      "path": "tsconfig.json",
+      "hash": "c5ac2b6f5c5df155c5c2f68e09a7d9cff8fc2d6fe9ad2f1c12a6e46a1004f98a",
+      "supported": false
+    }
+  ],
+  "graphRevision": "af01b4a59ceebd301ec2451bb59c90971cd8ec9b447103c8c1c20d2a0503fbdc",
+  "selected": "app/(dashboard)/dashboard/page.tsx",
+  "references": [
+    {
+      "name": "removeTeamMember",
+      "owner": "TeamMembers",
+      "path": "app/(login)/actions.ts",
+      "kind": "passes",
+      "sources": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "symbol": "",
+          "start": 3187,
+          "end": 3203,
+          "line": 101,
+          "endLine": 101,
+          "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+          "contentHash": "d82763ee80e19b3d2d27166e5ced5ddeb0bed46cb6a0e2a7501efda5b4e3a6dc",
+          "text": "removeTeamMember"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "useActionState의 1번째 인수로 함수 값을 넘깁니다.",
+          "code": "useActionState<\r\n    ActionState,\r\n    FormData\r\n  >(removeTeamMember, {})",
+          "inputs": [
+            {
+              "label": "전달하는 함수",
+              "code": "removeTeamMember",
+              "description": "「removeTeamMember」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0
+        }
+      ],
+      "evidenceHash": "55f8834b466cb0a44505de63835ebf8ef706fb43cc6a6f42cc392ed855305916"
+    },
+    {
+      "name": "inviteTeamMember",
+      "owner": "InviteTeamMember",
+      "path": "app/(login)/actions.ts",
+      "kind": "passes",
+      "sources": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "symbol": "",
+          "start": 6173,
+          "end": 6189,
+          "line": 196,
+          "endLine": 196,
+          "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+          "contentHash": "84c6d2c7cab096364906f8604f97bfcde38bba3aa25e26e58b6370ab6c344581",
+          "text": "inviteTeamMember"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "useActionState의 1번째 인수로 함수 값을 넘깁니다.",
+          "code": "useActionState<\r\n    ActionState,\r\n    FormData\r\n  >(inviteTeamMember, {})",
+          "inputs": [
+            {
+              "label": "전달하는 함수",
+              "code": "inviteTeamMember",
+              "description": "「inviteTeamMember」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0
+        }
+      ],
+      "evidenceHash": "8ab2b946758b7e0517cc5131ed61eeb7cd35ec564af7c4c5c9ebb8a539eedc9d"
+    },
+    {
+      "name": "customerPortalAction",
+      "owner": "ManageSubscription",
+      "path": "lib/payments/actions.ts",
+      "kind": "passes",
+      "sources": [
+        {
+          "path": "app/(dashboard)/dashboard/page.tsx",
+          "symbol": "",
+          "start": 2078,
+          "end": 2098,
+          "line": 63,
+          "endLine": 63,
+          "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+          "contentHash": "f437192d2aaccd1cbcf332a9640e3e02639a8d8ce6772a2a62f253dd52e96562",
+          "text": "customerPortalAction"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "action 화면 속성으로 함수 값을 넘깁니다.",
+          "code": "action={customerPortalAction}",
+          "inputs": [
+            {
+              "label": "전달하는 함수",
+              "code": "customerPortalAction",
+              "description": "「customerPortalAction」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0
+        }
+      ],
+      "evidenceHash": "8180a3f9ea749f8d425fd328398bb2a5fab54edd12afe96617cca89d329c072f"
+    }
+  ],
+  "connectionEvidence": [
+    {
+      "from": "removeTeamMember",
+      "to": "logActivity",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 9769,
+          "end": 9871,
+          "line": 384,
+          "endLine": 388,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "bf7c2f19c7b3b8da5a95a19c335383028f92e6371f82d448c4b91f48faf968c4"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "logActivity에 값을 전달해 호출하는 위치입니다.",
+          "code": "logActivity(\r\n      userWithTeam.teamId,\r\n      user.id,\r\n      ActivityType.REMOVE_TEAM_MEMBER\r\n    )",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "userWithTeam.teamId",
+              "description": "「userWithTeam」의 「teamId」"
+            },
+            {
+              "label": "2번째 인수 → userId",
+              "code": "user.id",
+              "description": "사용자의 「id」"
+            },
+            {
+              "label": "3번째 인수 → type",
+              "code": "ActivityType.REMOVE_TEAM_MEMBER",
+              "description": "「ActivityType」의 「REMOVE_TEAM_MEMBER」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "d505a202dc158164e3221300e12564b93859903f8ee618a8ca08ed513b95a0f3"
+    },
+    {
+      "from": "signIn",
+      "to": "createCheckoutSession",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 2414,
+          "end": 2465,
+          "line": 97,
+          "endLine": 97,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "72e6fcd467080bacd539bd8995564d2ee5d071589a057b82ef87c0137cb47dd2"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "createCheckoutSession에 값을 전달해 호출하는 위치입니다.",
+          "code": "createCheckoutSession({ team: foundTeam, priceId })",
+          "inputs": [
+            {
+              "label": "1번째 인수 → {\r\n  team,\r\n  priceId\r\n}",
+              "code": "{ team: foundTeam, priceId }",
+              "description": "묶음 데이터 { team: 「foundTeam」, 「priceId」 }"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "redirectTo === 'checkout'",
+              "line": 95
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 표현의 결과를 현재 함수에서 반환합니다."
+        }
+      ],
+      "evidenceHash": "f0d25b077fd2c625e8c9f67f964d46360d9e275bcb3c91062e223005b66b048c"
+    },
+    {
+      "from": "signUp",
+      "to": "logActivity",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 4174,
+          "end": 4241,
+          "line": 171,
+          "endLine": 171,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "49a8e1848037fb765017f6e4bee49424e251bdae6ac376ff1f7b97f5788479d6"
+        },
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 4906,
+          "end": 4967,
+          "line": 200,
+          "endLine": 200,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "5d9fb36d1b3687877f1dbf59887a6e54ea876f49cb10252ae41bb3fb8f62685a"
+        },
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 5175,
+          "end": 5232,
+          "line": 211,
+          "endLine": 211,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "9ca1596b56c5ebcc6149a36b232f0c52c0b104cb32e450f906acc1a6bdb7efb3"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "logActivity에 값을 전달해 호출하는 위치입니다.",
+          "code": "logActivity(teamId, createdUser.id, ActivityType.ACCEPT_INVITATION)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "teamId",
+              "description": "「teamId」"
+            },
+            {
+              "label": "2번째 인수 → userId",
+              "code": "createdUser.id",
+              "description": "「createdUser」의 「id」"
+            },
+            {
+              "label": "3번째 인수 → type",
+              "code": "ActivityType.ACCEPT_INVITATION",
+              "description": "「ActivityType」의 「ACCEPT_INVITATION」"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "inviteId",
+              "line": 148
+            },
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "invitation",
+              "line": 162
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "logActivity에 값을 전달해 호출하는 위치입니다.",
+          "code": "logActivity(teamId, createdUser.id, ActivityType.CREATE_TEAM)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "teamId",
+              "description": "「teamId」"
+            },
+            {
+              "label": "2번째 인수 → userId",
+              "code": "createdUser.id",
+              "description": "「createdUser」의 「id」"
+            },
+            {
+              "label": "3번째 인수 → type",
+              "code": "ActivityType.CREATE_TEAM",
+              "description": "「ActivityType」의 「CREATE_TEAM」"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 거짓으로 평가되는 else 분기 안입니다.",
+              "code": "inviteId",
+              "line": 148
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "logActivity에 값을 전달해 호출하는 위치입니다.",
+          "code": "logActivity(teamId, createdUser.id, ActivityType.SIGN_UP)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "teamId",
+              "description": "「teamId」"
+            },
+            {
+              "label": "2번째 인수 → userId",
+              "code": "createdUser.id",
+              "description": "「createdUser」의 「id」"
+            },
+            {
+              "label": "3번째 인수 → type",
+              "code": "ActivityType.SIGN_UP",
+              "description": "「ActivityType」의 「SIGN_UP」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0
+        }
+      ],
+      "evidenceHash": "3626ccde62e26a93a5bea8248cd09b962cca14d3e28f51b5f5b9f913a6e2bf06"
+    },
+    {
+      "from": "signUp",
+      "to": "createCheckoutSession",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/(login)/actions.ts",
+          "symbol": "",
+          "start": 5441,
+          "end": 5494,
+          "line": 218,
+          "endLine": 218,
+          "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+          "contentHash": "a8493717b07e85e7907f57abf0b4c8aa8034a87fe6540cb6a6a0da955503531c"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "createCheckoutSession에 값을 전달해 호출하는 위치입니다.",
+          "code": "createCheckoutSession({ team: createdTeam, priceId })",
+          "inputs": [
+            {
+              "label": "1번째 인수 → {\r\n  team,\r\n  priceId\r\n}",
+              "code": "{ team: createdTeam, priceId }",
+              "description": "묶음 데이터 { team: 「createdTeam」, 「priceId」 }"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "redirectTo === 'checkout'",
+              "line": 216
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 표현의 결과를 현재 함수에서 반환합니다."
+        }
+      ],
+      "evidenceHash": "a36777a87fc739ff0ecff80bfc486f24093fe5af67d5558af68d388baf686dd7"
+    },
+    {
+      "from": "GET",
+      "to": "setSession",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/api/stripe/checkout/route.ts",
+          "symbol": "",
+          "start": 2666,
+          "end": 2685,
+          "line": 91,
+          "endLine": 91,
+          "fileHash": "5d15117705dd5bd0254c1aad3d711951f1ac7258369356c51fbe9c4bee8d9eb7",
+          "contentHash": "bec5b2d13e3d7fd8736a18a6c6618eea7fac3d69e58ba8b4f2518531f7fcbe7e"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "setSession에 값을 전달해 호출하는 위치입니다.",
+          "code": "setSession(user[0])",
+          "inputs": [
+            {
+              "label": "1번째 인수 → user",
+              "code": "user[0]",
+              "description": "사용자에서 0 위치의 값"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error('Error handling successful checkout:', error);\r\n    return NextResponse.redirect(new URL('/error', request.url));\r\n  }",
+              "line": 93
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "09395e460ad8cdf4b8fff49eab9e97e49ecab6586000925130c9d9894b04ba8a"
+    },
+    {
+      "from": "POST",
+      "to": "handleSubscriptionChange",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "app/api/stripe/webhook/route.ts",
+          "symbol": "",
+          "start": 920,
+          "end": 958,
+          "line": 27,
+          "endLine": 27,
+          "fileHash": "7966117d20611a5a12cba7bfcf2bf526aec41baf66cbea6b1df22f09cb0af690",
+          "contentHash": "daa6807996c4c6ad36e27901d55448263a7dabf7e8a1c8ee581f86a3cbe295db"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "handleSubscriptionChange에 값을 전달해 호출하는 위치입니다.",
+          "code": "handleSubscriptionChange(subscription)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → subscription",
+              "code": "subscription",
+              "description": "「subscription」"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 값을 분기 대상으로 사용하는 switch 안입니다.",
+              "code": "event.type",
+              "line": 23
+            },
+            {
+              "description": "이 case 절 안입니다. 앞 case에서 내려오는 실행도 있을 수 있습니다.",
+              "code": "'customer.subscription.deleted'",
+              "line": 25
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "5037939ba4d29581520541a3a11111084b301af7cf58982972b6c37559d73abd"
+    },
+    {
+      "from": "checkStripeCLI",
+      "to": "execAsync",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 735,
+          "end": 764,
+          "line": 30,
+          "endLine": 30,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "2e17d01defd1f5841b62d6aa7006f821013965f3c0b21a6ef00a983c068b0707"
+        },
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 883,
+          "end": 916,
+          "line": 35,
+          "endLine": 35,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "c18f0b14d979765263d35b9da23d48c8325a3813c7ecf5c069bf3369c31c3daf"
+        },
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 1531,
+          "end": 1564,
+          "line": 54,
+          "endLine": 54,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "c18f0b14d979765263d35b9da23d48c8325a3813c7ecf5c069bf3369c31c3daf"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('stripe --version')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'stripe --version'",
+              "description": "“stripe --version”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Stripe CLI is not installed. Please install it and try again.'\r\n    );\r\n    console.log('To install Stripe CLI, follow these steps:');\r\n    console.log('1. Visit: https://docs.stripe.com/stripe-cl…",
+              "line": 63
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('stripe config --list')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'stripe config --list'",
+              "description": "“stripe config --list”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Stripe CLI is not installed. Please install it and try again.'\r\n    );\r\n    console.log('To install Stripe CLI, follow these steps:');\r\n    console.log('1. Visit: https://docs.stripe.com/stripe-cl…",
+              "line": 63
+            },
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n      console.log(\r\n        'Stripe CLI is not authenticated or the authentication has expired.'\r\n      );\r\n      console.log('Please run: stripe login');\r\n      const answer = await question(\r\n        'Have you completed t…",
+              "line": 37
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('stripe config --list')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'stripe config --list'",
+              "description": "“stripe config --list”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Stripe CLI is not installed. Please install it and try again.'\r\n    );\r\n    console.log('To install Stripe CLI, follow these steps:');\r\n    console.log('1. Visit: https://docs.stripe.com/stripe-cl…",
+              "line": 63
+            },
+            {
+              "description": "오류를 받은 catch 처리 안입니다.",
+              "code": "error",
+              "line": 37
+            },
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n        console.error(\r\n          'Failed to verify Stripe CLI authentication. Please try again.'\r\n        );\r\n        process.exit(1);\r\n      }",
+              "line": 56
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "d3e7806683266e07f709770c1f6966dc14ec047600338317e29d60ddb665798a"
+    },
+    {
+      "from": "answer",
+      "to": "question",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 1177,
+          "end": 1253,
+          "line": 42,
+          "endLine": 44,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "80c681894baa935d3156f10e15417324059ee5e0ec17c1026ef81ede554555d2"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "question에 값을 전달해 호출하는 위치입니다.",
+          "code": "question(\r\n        'Have you completed the authentication? (y/n): '\r\n      )",
+          "inputs": [
+            {
+              "label": "1번째 인수 → query",
+              "code": "'Have you completed the authentication? (y/n): '",
+              "description": "“Have you completed the authentication? (y/n): ”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Stripe CLI is not installed. Please install it and try again.'\r\n    );\r\n    console.log('To install Stripe CLI, follow these steps:');\r\n    console.log('1. Visit: https://docs.stripe.com/stripe-cl…",
+              "line": 63
+            },
+            {
+              "description": "오류를 받은 catch 처리 안입니다.",
+              "code": "error",
+              "line": 37
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다. 결과를 answer에 담습니다."
+        }
+      ],
+      "evidenceHash": "c8c56fe084fbdf04bd04a4618352d6c27b669cf0498cf2968214242fa8e02da4"
+    },
+    {
+      "from": "getPostgresURL",
+      "to": "setupLocalPostgres",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 2737,
+          "end": 2757,
+          "line": 88,
+          "endLine": 88,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "2177c0e19803ca0ca266b9f5d2468e829a4c125176a1b5c686b0b0b07d1aeaa7"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "setupLocalPostgres에 값을 전달해 호출하는 위치입니다.",
+          "code": "setupLocalPostgres()",
+          "inputs": [],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "dbChoice.toLowerCase() === 'l'",
+              "line": 86
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "da705a3bc7a4b51fc25f59ed92b2f274ca753349afa58d3143d1b70adf3d9b88"
+    },
+    {
+      "from": "getPostgresURL",
+      "to": "question",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 2979,
+          "end": 3016,
+          "line": 94,
+          "endLine": 94,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "d45223575db7c5784d4b1a677aea3bad2364891666bc7f0c26d2a4cd116e5fe7"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "question에 값을 전달해 호출하는 위치입니다.",
+          "code": "question('Enter your POSTGRES_URL: ')",
+          "inputs": [
+            {
+              "label": "1번째 인수 → query",
+              "code": "'Enter your POSTGRES_URL: '",
+              "description": "“Enter your POSTGRES_URL: ”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 거짓으로 평가되는 else 분기 안입니다.",
+              "code": "dbChoice.toLowerCase() === 'l'",
+              "line": 86
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다. 이 표현의 결과를 현재 함수에서 반환합니다."
+        }
+      ],
+      "evidenceHash": "0bd16e35f91a9eee9217e5413e0ff6a526a34ccfc0d0a3ef52860dd91bb7d84d"
+    },
+    {
+      "from": "setupLocalPostgres",
+      "to": "execAsync",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 3141,
+          "end": 3170,
+          "line": 101,
+          "endLine": 101,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "6bd6cf9ef9a8f39f1033a2da9b7dfc5097e08c16642b29147ff17151bd2c5166"
+        },
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 4157,
+          "end": 4190,
+          "line": 140,
+          "endLine": 140,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "797054f22a2c9852c9741ca1ff1990c2931696815aaaa942ee53321bab2392a6"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('docker --version')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'docker --version'",
+              "description": "“docker --version”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Docker is not installed. Please install Docker and try again.'\r\n    );\r\n    console.log(\r\n      'To install Docker, visit: https://docs.docker.com/get-docker/'\r\n    );\r\n    process.exit(1);\r\n  }",
+              "line": 103
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('docker compose up -d')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'docker compose up -d'",
+              "description": "“docker compose up -d”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Failed to start Docker container. Please check your Docker installation and try again.'\r\n    );\r\n    process.exit(1);\r\n  }",
+              "line": 142
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "762d0ff8c1c6c17fd86a22401e1b41c9cfeaa0fd3525bf84c9c13562b46e9ec2"
+    },
+    {
+      "from": "createStripeWebhook",
+      "to": "execAsync",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/db/setup.ts",
+          "symbol": "",
+          "start": 4864,
+          "end": 4905,
+          "line": 161,
+          "endLine": 161,
+          "fileHash": "b164b7cad9a0f10c6787e9da0fe5cff57d72b8fa960becec67c514314e1bb0af",
+          "contentHash": "0a68d484863e01bb165e5c3bf7cb1bfdc44796a388a6fbdc849244d0e3255b0e"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "execAsync에 값을 전달해 호출하는 위치입니다.",
+          "code": "execAsync('stripe listen --print-secret')",
+          "inputs": [
+            {
+              "label": "1번째 인수",
+              "code": "'stripe listen --print-secret'",
+              "description": "“stripe listen --print-secret”"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n    console.error(\r\n      'Failed to create Stripe webhook. Check your Stripe CLI installation and permissions.'\r\n    );\r\n    if (os.platform() === 'win32') {\r\n      console.log(\r\n        'Note: On Windows, you may need to …",
+              "line": 168
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다. 결과를 { stdout }에 담습니다."
+        }
+      ],
+      "evidenceHash": "59851c269b864fbc4ce820b9c2107e1c75efed3702f7be30f2e3be6673aef469"
+    },
+    {
+      "from": "handleSubscriptionChange",
+      "to": "updateTeamSubscription",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "lib/payments/stripe.ts",
+          "symbol": "",
+          "start": 3680,
+          "end": 3906,
+          "line": 133,
+          "endLine": 138,
+          "fileHash": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+          "contentHash": "f9e3e15f642ba7710cbfec38ce55d107b1ef2a46554ec362282188b8c37055f8"
+        },
+        {
+          "path": "lib/payments/stripe.ts",
+          "symbol": "",
+          "start": 3981,
+          "end": 4144,
+          "line": 140,
+          "endLine": 145,
+          "fileHash": "368ec406eba20fb3b5aad4b47c854aae1601d198039822f4be49f597250625f5",
+          "contentHash": "8558e5986fab5a2487b7d86970a67e47c3aad0023f833e74457a8fdd97f31c9f"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "updateTeamSubscription에 값을 전달해 호출하는 위치입니다.",
+          "code": "updateTeamSubscription(team.id, {\r\n      stripeSubscriptionId: subscriptionId,\r\n      stripeProductId: plan?.product as string,\r\n      planName: (plan?.product as Stripe.Product).name,\r\n      subscriptionStatus: status\r\n    })",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "team.id",
+              "description": "「team」의 「id」"
+            },
+            {
+              "label": "2번째 인수 → subscriptionData",
+              "code": "{\r\n      stripeSubscriptionId: subscriptionId,\r\n      stripeProductId: plan?.product as string,\r\n      planName: (plan?.product as Stripe.Product).name,\r\n      subscriptionStatus: status\r\n    }",
+              "description": "묶음 데이터 { stripeSubscriptionId: 「subscriptionId」, stripeProductId: (「plan」의 「product」), planName: ((「plan」의 「product」))의 이름, subscriptionStatus: 상태 }"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "status === 'active' || status === 'trialing'",
+              "line": 131
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        {
+          "summary": "updateTeamSubscription에 값을 전달해 호출하는 위치입니다.",
+          "code": "updateTeamSubscription(team.id, {\r\n      stripeSubscriptionId: null,\r\n      stripeProductId: null,\r\n      planName: null,\r\n      subscriptionStatus: status\r\n    })",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "team.id",
+              "description": "「team」의 「id」"
+            },
+            {
+              "label": "2번째 인수 → subscriptionData",
+              "code": "{\r\n      stripeSubscriptionId: null,\r\n      stripeProductId: null,\r\n      planName: null,\r\n      subscriptionStatus: status\r\n    }",
+              "description": "묶음 데이터 { stripeSubscriptionId: 비어 있는 값, stripeProductId: 비어 있는 값, planName: 비어 있는 값, subscriptionStatus: 상태 }"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 거짓으로 평가되는 else 분기 안입니다.",
+              "code": "status === 'active' || status === 'trialing'",
+              "line": 131
+            },
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "status === 'canceled' || status === 'unpaid'",
+              "line": 139
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "601c64132e203357aa8e2b68b3b1271b9ca487721850ecf77203e3bd58561426"
+    },
+    {
+      "from": "parsed",
+      "to": "verifyToken",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "middleware.ts",
+          "symbol": "",
+          "start": 670,
+          "end": 702,
+          "line": 20,
+          "endLine": 20,
+          "fileHash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+          "contentHash": "30221f229b7d244e8a39378a8aab51b7b0bbbd3b005bc4076d610149b573a217"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "verifyToken에 값을 전달해 호출하는 위치입니다.",
+          "code": "verifyToken(sessionCookie.value)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → input",
+              "code": "sessionCookie.value",
+              "description": "「sessionCookie」의 「value」"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "sessionCookie && request.method === 'GET'",
+              "line": 18
+            },
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n      console.error('Error updating session:', error);\r\n      res.cookies.delete('session');\r\n      if (isProtectedRoute) {\r\n        return NextResponse.redirect(new URL('/sign-in', request.url));\r\n      }\r\n    }",
+              "line": 34
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다. 결과를 parsed에 담습니다."
+        }
+      ],
+      "evidenceHash": "52e0bd0bb9b3aef56b2d07f019c867dd7006b373d1a86016ef887bc0df971f22"
+    },
+    {
+      "from": "middleware",
+      "to": "signToken",
+      "kind": "calls",
+      "sources": [
+        {
+          "path": "middleware.ts",
+          "symbol": "",
+          "start": 854,
+          "end": 949,
+          "line": 25,
+          "endLine": 28,
+          "fileHash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+          "contentHash": "75c3276310bda1da228fd8f8c94dbbfe2f1ecb65eb92084d89c9b3f2fa2db926"
+        }
+      ],
+      "sites": [
+        {
+          "summary": "signToken에 값을 전달해 호출하는 위치입니다.",
+          "code": "signToken({\r\n          ...parsed,\r\n          expires: expiresInOneDay.toISOString()\r\n        })",
+          "inputs": [
+            {
+              "label": "1번째 인수 → payload",
+              "code": "{\r\n          ...parsed,\r\n          expires: expiresInOneDay.toISOString()\r\n        }",
+              "description": "묶음 데이터 { 원문: ...parsed, expires: 「expiresInOneDay」의 「toISOString」 기능 호출 (전달: 없음) }"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "sessionCookie && request.method === 'GET'",
+              "line": 18
+            },
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n      console.error('Error updating session:', error);\r\n      res.cookies.delete('session');\r\n      if (isProtectedRoute) {\r\n        return NextResponse.redirect(new URL('/sign-in', request.url));\r\n      }\r\n    }",
+              "line": 34
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        }
+      ],
+      "evidenceHash": "a403017cf0989f6499d6335ab8d5a50d8e159ff5e6443b70f1459860b5bba410"
+    }
+  ],
+  "scopePaths": [
+    "app/(dashboard)/dashboard/activity/loading.tsx",
+    "app/(dashboard)/dashboard/activity/page.tsx",
+    "app/(dashboard)/dashboard/general/page.tsx",
+    "app/(dashboard)/dashboard/layout.tsx",
+    "app/(dashboard)/dashboard/page.tsx",
+    "app/(dashboard)/dashboard/security/page.tsx",
+    "app/(dashboard)/layout.tsx",
+    "app/(dashboard)/page.tsx",
+    "app/(dashboard)/pricing/page.tsx",
+    "app/(dashboard)/pricing/submit-button.tsx",
+    "app/(dashboard)/terminal.tsx",
+    "app/(login)/actions.ts",
+    "app/(login)/login.tsx",
+    "app/(login)/sign-in/page.tsx",
+    "app/(login)/sign-up/page.tsx",
+    "app/api/stripe/checkout/route.ts",
+    "app/api/team/route.ts",
+    "app/api/user/route.ts",
+    "app/layout.tsx",
+    "components/ui/avatar.tsx",
+    "components/ui/button.tsx",
+    "components/ui/card.tsx",
+    "components/ui/dropdown-menu.tsx",
+    "components/ui/input.tsx",
+    "components/ui/label.tsx",
+    "components/ui/radio-group.tsx",
+    "lib/auth/middleware.ts",
+    "lib/auth/session.ts",
+    "lib/db/queries.ts",
+    "lib/db/seed.ts",
+    "lib/payments/actions.ts",
+    "lib/payments/stripe.ts",
+    "lib/utils.ts",
+    "middleware.ts",
+    "pureobom-validation/permissions.test.tsx"
+  ],
+  "matchedBeforeSnapshot": false,
+  "sourceFilesPreserved": 57,
+  "gitPreserved": true,
+  "provider": "none",
+  "scope": "Read-only compiler analysis and change-scope traversal; not application execution or runtime callback proof. Scope follows static connections and may include shared consumers."
+}

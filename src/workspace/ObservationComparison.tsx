@@ -22,6 +22,8 @@ const relationLabels = {
   imports: "모듈 연결",
   calls: "호출",
   renders: "화면 구성",
+  passes: "함수 전달",
+  routes: "요청 경로 후보",
 };
 
 function EvidenceLink({
@@ -224,8 +226,8 @@ export function ObservationComparison({
       </details>
       <details>
         <summary>
-          호출·모듈·화면 연결 {result.relations.length}개
-          {!result.legacy ? ` · 달라진 관측 ${changedRelations}개` : ""}
+          호출·모듈·화면·함수 전달·경로 후보 {result.relations.length}개
+          {!result.legacy ? ` · 변경·확인 필요 ${changedRelations}개` : ""}
         </summary>
         <div className="observation-list">
           {result.relations.map((item, index) => {
@@ -240,8 +242,23 @@ export function ObservationComparison({
                     ? "현재 연결"
                     : item.status === "unresolved"
                       ? "현재 관측되지 않은 연결"
-                      : labels[item.status]}
+                      : item.status === "unverified"
+                        ? "연결 상세 비교 근거 부족"
+                        : labels[item.status]}
                 </strong>
+                {item.status === "unverified" ? (
+                  <p>
+                    이전 또는 현재 관측에 인수·주변 구문 지문이 없습니다. 호출
+                    횟수가 같아도 상세 내용이 같은지는 판정하지 않습니다.
+                  </p>
+                ) : null}
+                {item.status === "changed" &&
+                item.before?.count === item.current?.count ? (
+                  <p>
+                    연결 횟수는 같지만 전달식 또는 주변 구문의 코드 근거가
+                    달라졌습니다.
+                  </p>
+                ) : null}
                 {item.before && item.status !== "unchanged" ? (
                   <div className="observation-before">
                     <small>저장할 때</small>

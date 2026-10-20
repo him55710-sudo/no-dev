@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-10-19T17:17:03.6095083Z",
+  "source": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-installed-ui-2aflCn\\project",
+  "files": [
+    {
+      "path": "app/(dashboard)/dashboard/page.tsx",
+      "sha256": "4cbfe25e1bd12fe5f63f2d929af1153f0ee80c376bf67ca6459865cc71e2927f"
+    },
+    {
+      "path": "app/(login)/actions.ts",
+      "sha256": "a7c3e342c2a9e15698d82b3cfc7de5225203a2ddebf645a7f7999f073bafbeed"
+    },
+    {
+      "path": "app/api/team/route.ts",
+      "sha256": "e1685e00d3eab220eb43723bafe3338f1dc0b68d5c8b4abf650b479c9df5423b"
+    },
+    {
+      "path": "lib/db/queries.ts",
+      "sha256": "7ab972099b79545d9bd6cdb33d59d1716591194c64cdae30cf1325e16a4169a1"
+    },
+    {
+      "path": "lib/teams/permissions.ts",
+      "sha256": "5ef3d8f11c3af4625070b035182bcbcb0a96b1cc6c42fbef251ad83bd097db7f"
+    },
+    {
+      "path": "pureobom-validation/team-permissions-ui.test.tsx",
+      "sha256": "a94de5c9bfc89b0259de7fa8a57ae32e9fad2350652d245fb38852b69c0af456"
+    },
+    {
+      "path": "pureobom-validation/team-permissions.test.tsx",
+      "sha256": "d6a57cdc490e08dd4cc5dafa3d1cfb1540e9a8b9612796065083d83996e335b4"
+    },
+    {
+      "path": "pureobom-validation/team-permissions.vitest.config.mts",
+      "sha256": "db3902d2e25cdc6c0991f7c1592f6ee404bee796256d4359f2240a0fa741da2f"
+    }
+  ],
+  "jobId": "a3d96794-25a0-4f76-9146-adbbcdf267b1"
+}

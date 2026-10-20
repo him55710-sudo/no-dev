@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-10-19T17:57:29.374Z",
+  "scope": "Installed UI navigation; no model implementation was invoked.",
+  "artifact": {
+    "vsixSha256": "5a27af427a2bfc6c622803d294f065e5f262f5a102f2ceb67d4e0e357594e10e",
+    "files": {
+      "out/extension.cjs": "b0a6f30c943b27539a5589f17d5f8c0a3f2820f565d9dd36a45531ec191a8696",
+      "out/worker.cjs": "f3a022f365a0edc25b182b102ea703c2577ad6e3fcf705a1b9d2e19a33a6f8e1",
+      "out/agent-host.cjs": "14ae65ab6d0a32dfab3ffdd0e3d7aed49868873ae915e26dfda66f5f93c9b83a",
+      "media/design.js": "205e52d19e7403de2318bfffa1ee86227262d3549da524c33fed6d5b01ef499b",
+      "media/design.css": "05ad4e666cdff53e9517be1f2cf087bf3c787f4799e610c9a45102daa01b2566"
+    }
+  },
+  "requests": 27,
+  "navigationWrites": 17,
+  "clientErrors": 0,
+  "jobs": 0,
+  "hostProcesses": [
+    13908,
+    36312
+  ],
+  "navigationAndSpecExactlyRestored": true,
+  "renderedNodeAndViewportStylesEqual": true,
+  "rapidSearchReversalPersisted": true,
+  "keyboardNodeMovementPersisted": true,
+  "searchAndFocusRestoredOnBrowserReload": true,
+  "originalSourceHashes": {
+    ".gitignore": "09731bf5c4cc06322d98762703b30bb697b92075b7ef327ac87121e3e3c994d1",
+    "README.md": "6fde677f634764afb69e3253c2746d1b6ebed6a47454fe590e74d5ddd27d788d",
+    "app-server": "1a3b8da0d84fbaf1dbe696d0c27f214eb63edf9e9ef92320003ed59a4c1c790d",
+    "package.json": "3b3ce26972b8861d282e76a171c06974be181e813a56ca53d7495ea78c6981ae",
+    "policy.js": "53899c7ca116ffafd3064c485f8ae3e424cc58366ea3121d1133b422a6c14bdf",
+    "service.js": "82e6c664c17b107f0246d4233201ef71fde0e9ae98c98f88ed270b28122d21c6",
+    "test.js": "b74d7a9e06d8f9ed8ae59e55d29d1f856ad03a5e518787a6a27f1a8bb4538359",
+    "ui.js": "9a95051b6260b1685cbc114fd64fb2d885307738e56c414e65634e2b3b17d4d2"
+  },
+  "originalHead": "27dbd03fe2ac54bca27b9f043f46287ad11713cd",
+  "originalIndexUnchanged": true,
+  "originalStatusUnchanged": true,
+  "hostIntegrationChecks": 32,
+  "fullRegression": {
+    "passed": 219,
+    "failed": 1,
+    "files": 26,
+    "failures": [
+      {
+        "name": "managed implementation host outlives its original client process and reconnects to the same approval, checks, review, apply and undo",
+        "durationMs": 34238.2586,
+        "message": "Error: Command failed: C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe -e const {ManagedImplementationJobs}=require(process.argv[1]);\n      const [root,storage,runtime,request,options]=JSON.parse(process.argv[2]);\n      const c=new ManagedImplementationJobs(storage,runtime,job=>{if(job?.phase==='approval'){console.log(JSON.stringify(job));process.exit(0)}});\n      c.start(root,request,options).catch(e=>{console.error(e);process.exit(1)}); C:\\Users\\user\\.codex\\worktrees\\system-design-workspace\\비개발자\\test-results\\agent-host\\bundles-72Q268\\client.cjs [\"C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\system-design-workspace\\\\비개발자\\\\test-results\\\\agent-host\\\\run-orBeAW\\\\project\",\"C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\system-design-workspace\\\\비개발자\\\\test-results\\\\agent-host\\\\run-orBeAW\\\\jobs\",\"C:\\\\Users\\\\user\\\\.codex\\\\worktrees\\\\system-design-workspace\\\\비개발자\\\\test-results\\\\agent-host\\\\bundles-72Q268\\\\host.cjs\",{\"id\":\"request\",\"specId\":\"permission\",\"specRevision\":1,\"graphRevision\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"content\":{\"title\":\"Permission\",\"purpose\":\"\",\"desired\":\"Deny viewer writes in UI and server\",\"policies\":\"\",\"inputsOutputs\":\"\",\"failures\":\"\",\"invariants\":[\"Keep reads\"],\"acceptance\":[\"Viewer denied\",\"Owner and editor allowed\"]},\"desired\":\"Deny viewer writes in UI and server\",\"invariants\":[\"Keep reads\"],\"acceptance\":[\"Viewer denied\",\"Owner and editor allowed\"],\"sources\":[],\"scopePaths\":[\"policy.js\",\"service.js\",\"ui.js\"]},{\"executable\":\"C:\\\\Users\\\\user\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\node\\\\bin\\\\node.exe\",\"checks\":[\"test\"],\"allowExternal\":true}]\n\n    at genericNodeError (node:internal/errors:985:15)\n    at wrappedFn (node:internal/errors:539:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:509:28)\n    at maybeClose (node:internal/child_process:1141:16)\n    at Process.ChildProcess._handle.onexit (node:internal/child_process:306:5)"
+      }
+    ]
+  },
+  "isolatedHostRecheck": {
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      {
+        "name": "managed implementation host outlives its original client process and reconnects to the same approval, checks, review, apply and undo",
+        "status": "passed",
+        "durationMs": 17552.5737
+      },
+      {
+        "name": "managed implementation host serializes concurrent windows, rejects stale approval/cancel requests, and cancels through a new connection",
+        "status": "passed",
+        "durationMs": 5183.358099999998
+      },
+      {
+        "name": "managed implementation host refuses unauthenticated clients and restores a dead host as interrupted without repeating inference",
+        "status": "passed",
+        "durationMs": 7871.076800000003
+      },
+      {
+        "name": "managed implementation host does not launch a replacement when an occupied endpoint fails to answer authentication",
+        "status": "passed",
+        "durationMs": 13055.868300000002
+      }
+    ]
+  },
+  "failedFixtureCleanup": {
+    "jobId": "72f21844-04d6-4961-bccc-9dd5d456ec9e",
+    "provider": "Pureobom deterministic installed-recovery protocol fixture",
+    "from": "approval",
+    "to": "cancelled",
+    "remainingApprovals": 0
+  },
+  "caveat": "The full run failed one original-client launch. The child had a 30-second exec timeout and the approval record appeared about 29 seconds after job start. This suggests startup timing but the original error did not record killed/signal, so the cause is not proved. The isolated four-case rerun passed without changing limits. The failed fixture was cancelled through its exact managed-job connection; no process was killed by a broad name or PID guess. Native Webview pointer delivery is not covered."
+}

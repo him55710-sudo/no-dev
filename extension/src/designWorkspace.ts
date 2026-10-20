@@ -61,6 +61,7 @@ import {
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import {
   featureRequestSchema,
+  featureNodeId,
   projectFeatures,
   saveFeature,
   removeFeature,
@@ -75,6 +76,11 @@ import {
   validateChangeStory,
   type ChangeStory,
 } from "../../src/workspace/narrative";
+import {
+  fileReadingRequestSchema,
+  readingAnchorSchema,
+  assertReadingAnchor,
+} from "../../src/workspace/codeReading";
 
 const requestSchema = z
   .object({
@@ -82,6 +88,7 @@ const requestSchema = z
     action: z.enum([
       "ready",
       "explainProject",
+      "readFile",
       "cancelExplanation",
       "explainChanges",
       "refresh",
@@ -108,6 +115,7 @@ const requestSchema = z
       "undoJob",
       "recoverJob",
       "restoreJob",
+      "resumeJob",
       "jobHistory",
     ]),
     payload: z.unknown().optional(),
@@ -360,7 +368,7 @@ export class DesignWorkspace implements vscode.Disposable {
       this.postedState = undefined;
       const panel = (this.panel = vscode.window.createWebviewPanel(
         "pureobom.design",
-        "풀어봄 · 내 프로젝트",
+        "풀어봄 · 시스템 설계",
         vscode.ViewColumn.One,
         {
           enableScripts: true,
@@ -434,6 +442,8 @@ export class DesignWorkspace implements vscode.Disposable {
       this.emit();
     } else if (request.action === "explainProject")
       result = await this.explainProject(request.payload);
+    else if (request.action === "readFile")
+      result = await this.readFile(request.payload);
     else if (request.action === "explainChanges")
       result = await this.explainChanges(request.payload);
     else if (request.action === "cancelExplanation") this.storyAbort?.abort();
@@ -468,6 +478,8 @@ export class DesignWorkspace implements vscode.Disposable {
       result = await this.removeFeature(request.payload);
     else if (request.action === "implement")
       result = await this.implement(request.payload);
+    else if (request.action === "resumeJob")
+      result = await this.resumeJob(request.payload);
     else if (
       request.action === "saveExecution" ||
       request.action === "revokeExecution"
@@ -1023,6 +1035,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.busy || this.state.stale)
       throw Error("구조 분석이 완료된 뒤 기능 묶음을 편집해 주세요.");
     const serial = this.serial;
+    const folder = this.folder;
     const id = request.id ?? randomUUID();
     const next = specDocumentSchema.parse({
       ...this.state.specs,
@@ -1041,6 +1054,7 @@ export class DesignWorkspace implements vscode.Disposable {
           throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
       });
       await this.refresh();
+      await this.finishFeatureEdit(featureNodeId(id), folder);
       return next.features!.find((feature) => feature.id === id)!;
     } finally {
       this.saving = false;
@@ -1061,6 +1075,7 @@ export class DesignWorkspace implements vscode.Disposable {
     if (!graph || this.state.busy || this.state.stale)
       throw Error("구조 분석이 완료된 뒤 기능 묶음을 해제해 주세요.");
     const serial = this.serial;
+    const folder = this.folder;
     const next = specDocumentSchema.parse({
       ...this.state.specs,
       features: removeFeature(this.state.specs.features ?? [], graph, request),
@@ -1073,9 +1088,43 @@ export class DesignWorkspace implements vscode.Disposable {
           throw Error("구조가 바뀌었습니다. 기능 묶음을 다시 열어 주세요.");
       });
       await this.refresh();
+      await this.finishFeatureEdit("system", folder);
     } finally {
       this.saving = false;
     }
+  }
+  private async finishFeatureEdit(
+    selection: string,
+    folder: vscode.WorkspaceFolder | undefined,
+  ) {
+    if (this.disposed || this.folder !== folder) return;
+    if (!this.state.graph?.nodes.some((node) => node.id === selection))
+      throw Error(
+        "저장 후 기능 구성이 바뀌었습니다. 구조를 다시 확인해 주세요.",
+      );
+    // Feature projection can replace navigation while the request is pending.
+    // Commit the selection with the refreshed graph, not through the UI's old
+    // writer. A new generation also rejects delayed pre-save canvas/input writes.
+    const view = this.state.navigation?.view ?? initialNavigation();
+    await this.replaceNavigation({
+      ...view,
+      selection,
+      scopeTrail: ["system"],
+      savedSpecId: undefined,
+      included: [],
+      connections: [],
+      search: "",
+      // The root changes from code folders to feature cards (or back). Fit that
+      // visible result once, retaining node positions and every nested viewport.
+      canvases: view.canvases.map((canvas) =>
+        canvas.scopeId === "system"
+          ? { ...canvas, viewport: undefined }
+          : canvas,
+      ),
+    });
+    if (this.disposed || this.folder !== folder) return;
+    this.state.navigationNotice = undefined;
+    this.emit();
   }
   private async persistDesign(
     next: SpecDocument,
@@ -1233,6 +1282,66 @@ export class DesignWorkspace implements vscode.Disposable {
       if (this.storyAbort === abort) {
         this.storyAbort = undefined;
         this.state.storyProgress = undefined;
+        this.emit();
+      }
+    }
+  }
+  async readFile(raw: unknown) {
+    const payload = fileReadingRequestSchema.parse(raw);
+    this.assertStoryContext({
+      projectKey: payload.projectKey,
+      revision: payload.revision,
+    });
+    const file = this.sourceFiles.find((file) => file.path === payload.path);
+    if (!file) throw Error("현재 프로젝트에서 읽을 수 있는 파일이 아닙니다.");
+    const abort = new AbortController(),
+      folder = this.folder;
+    this.storyAbort = abort;
+    this.state.fileReadingError = undefined;
+    this.state.fileReadingProgress = {
+      path: file.path,
+      completed: 0,
+      total: 1,
+      message: "코드를 차근차근 읽을 준비를 합니다.",
+    };
+    this.emit();
+    try {
+      const reading = await this.narrator().readFile(
+        file,
+        payload.revision,
+        abort.signal,
+        (progress) => {
+          if (this.folder === folder && this.storyAbort === abort) {
+            this.state.fileReadingProgress = { ...progress, path: file.path };
+            this.emit();
+          }
+        },
+      );
+      if (
+        abort.signal.aborted ||
+        this.disposed ||
+        this.folder !== folder ||
+        this.state.graph?.revision !== payload.revision ||
+        this.state.stale
+      )
+        throw Error(
+          "읽는 동안 코드가 바뀌었습니다. 새 내용으로 다시 읽어 주세요.",
+        );
+      this.state.fileReading = reading;
+      return reading;
+    } catch (error) {
+      if (this.folder === folder)
+        this.state.fileReadingError = {
+          path: file.path,
+          message: abort.signal.aborted
+            ? "읽기를 멈췄습니다. 완료된 부분은 다음 읽기에 재사용합니다."
+            : String(error),
+        };
+      throw error;
+    } finally {
+      if (this.storyAbort === abort) {
+        this.storyAbort = undefined;
+        this.state.fileReadingProgress = undefined;
         this.emit();
       }
     }
@@ -1418,6 +1527,7 @@ export class DesignWorkspace implements vscode.Disposable {
     const payload = saveSchema
       .extend({
         execution: executionUseSchema,
+        readingAnchor: readingAnchorSchema.optional(),
       })
       .strict()
       .parse(raw);
@@ -1425,8 +1535,16 @@ export class DesignWorkspace implements vscode.Disposable {
     const folder = this.folder!;
     assertExecutionContext(payload.execution, await this.executionContext());
     const start = async () => {
+      this.assertExecutionReady();
       if (this.executionProfiles !== store)
         throw Error("프로젝트가 바뀌었습니다.");
+      if (payload.readingAnchor)
+        assertReadingAnchor(
+          payload.readingAnchor,
+          this.state.fileReading,
+          this.state.graph!,
+          payload.targetIds,
+        );
       const saved = await this.save({
         specId: payload.specId,
         targetIds: payload.targetIds,
@@ -1439,6 +1557,14 @@ export class DesignWorkspace implements vscode.Disposable {
       const context = await this.executionContext();
       assertExecutionContext(payload.execution, context);
       if (this.folder !== folder) throw Error("프로젝트가 바뀌었습니다.");
+      this.assertExecutionReady();
+      if (payload.readingAnchor)
+        assertReadingAnchor(
+          payload.readingAnchor,
+          this.state.fileReading,
+          this.state.graph!,
+          payload.targetIds,
+        );
       return this.jobs.start(folder.uri.fsPath, change, {
         executable: context.executable,
         model: context.model || undefined,
@@ -1452,6 +1578,59 @@ export class DesignWorkspace implements vscode.Disposable {
       return await store.use(payload.execution, start);
     } finally {
       await this.loadExecution();
+    }
+  }
+  private async resumeJob(raw: unknown) {
+    this.assertExecutionReady();
+    const payload = z
+      .object({ jobId: z.string().uuid(), execution: executionUseSchema })
+      .strict()
+      .parse(raw);
+    const job = this.state.job;
+    if (!job || job.id !== payload.jobId || this.jobs.isRunning)
+      throw Error("현재 중단된 작업을 다시 확인해 주세요.");
+    const store = this.executionProfiles!;
+    const folder = this.folder!;
+    assertExecutionContext(payload.execution, await this.executionContext());
+    try {
+      return await store.use(payload.execution, async () => {
+        await this.loadDesign();
+        await this.refresh();
+        this.assertExecutionReady();
+        if (
+          this.executionProfiles !== store ||
+          this.folder !== folder ||
+          this.state.job?.id !== payload.jobId
+        )
+          throw Error("프로젝트나 선택한 작업이 바뀌었습니다.");
+        const current = this.state.specs.specs.find(
+          (spec) => spec.id === job.specId,
+        );
+        if (
+          !current ||
+          current.revision !== job.specRevision ||
+          JSON.stringify(current) !== this.jobs.savedSpec
+        )
+          throw Error(
+            "이전 작업 이후 설계가 바뀌었습니다. 새 설계로 구현해 주세요.",
+          );
+        if (this.state.busy || this.state.stale || !this.state.graph)
+          throw Error("구조 분석이 갱신된 뒤 이어해 주세요.");
+        prepareChange(current, this.state.graph, "behavior");
+        const context = await this.executionContext();
+        assertExecutionContext(payload.execution, context);
+        return this.jobs.resume(folder.uri.fsPath, payload.jobId, {
+          executable: context.executable,
+          model: context.model || undefined,
+          checks: payload.execution.checks,
+          allowExternal: true,
+          verification: { manager: context.manager, scripts: context.scripts },
+          specSnapshot: current,
+        });
+      });
+    } finally {
+      await this.loadExecution();
+      await this.loadJobHistory();
     }
   }
   async loadJobHistory() {

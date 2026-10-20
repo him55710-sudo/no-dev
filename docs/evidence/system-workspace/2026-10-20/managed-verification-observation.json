@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "platform": "win32",
+  "scope": "Observed local validation outcomes; not a claim that intermittent Windows termination failures are fixed.",
+  "parallelRun": {
+    "startedAt": "2026-10-19T16:37:25+00:00",
+    "command": "pnpm test",
+    "passed": 212,
+    "failed": 1,
+    "failedTest": "tests/agent-verification.test.ts > records real exits, refuses missing or replaced scripts, and terminates timed-out commands",
+    "observation": "taskkill reported descendants terminated, then access denied for the parent; taskkill exit 255, owned child exit 1. Verification rejected after its termination deadline, rather than reporting a passed check.",
+    "followup": "A Get-Process query for the six PIDs named in the taskkill output returned no live processes. No PID was killed or lock removed to bypass the result."
+  },
+  "isolatedRecheck": {
+    "command": "pnpm exec vitest run tests/agent-verification.test.ts",
+    "passed": 2,
+    "failed": 0,
+    "durationSeconds": 10.86
+  },
+  "serialRegression": {
+    "command": "pnpm exec vitest run --maxWorkers=1 --reporter=default --reporter=json --outputFile.json=test-results/managed-host-suite.json",
+    "passed": 214,
+    "failed": 0,
+    "testFiles": 25,
+    "durationSeconds": 81.58,
+    "report": "managed-regression.json"
+  }
+}

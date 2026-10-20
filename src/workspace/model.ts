@@ -47,10 +47,22 @@ export type StructureEdge = {
   id: string;
   source: string;
   target: string;
-  kind: "imports" | "calls" | "renders";
+  kind: "imports" | "calls" | "renders" | "passes" | "routes";
   label: string;
   sources: SourceRef[];
-  evidence: "compiler";
+  evidence: "compiler" | "framework";
+  /** One syntax observation per source occurrence; not a runtime contract. */
+  sites?: ConnectionSite[];
+  evidenceHash?: string;
+};
+export type ConnectionSite = {
+  summary: string;
+  code: string;
+  inputs: { label: string; code: string; description: string }[];
+  contexts: { description: string; code: string; line: number }[];
+  result?: string;
+  omittedInputs: number;
+  omittedContexts: number;
 };
 export type StructureGraph = {
   schemaVersion: 1;
@@ -149,7 +161,7 @@ export function descendantIds(
   return included;
 }
 
-/** Every displayed connection retains actual compiler edge IDs, including overlaps. */
+/** Every displayed connection retains its original evidence edge IDs, including overlaps. */
 export function structureConnections(
   graph: StructureGraph,
   visible: StructureNode[],
@@ -192,7 +204,11 @@ export function structureConnections(
                 ? "모듈 연결"
                 : edge.kind === "calls"
                   ? "호출"
-                  : "화면 구성",
+                  : edge.kind === "routes"
+                    ? "요청 경로 후보"
+                    : edge.kind === "passes"
+                      ? "함수 전달"
+                      : "화면 구성",
             data: { originals: [edge.id] },
             count: 1,
           });

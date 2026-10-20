@@ -1,6 +1,7 @@
 import { jobIsActive, type ImplementationJob } from "./job";
 import { useState } from "react";
 import { ImplementationReview } from "./ImplementationReview";
+import { VerificationEvidence } from "./VerificationEvidence";
 export const phaseNames: Record<ImplementationJob["phase"], string> = {
   preparing: "작업 공간 준비",
   running: "구현 중",
@@ -26,12 +27,15 @@ export type JobAction =
   | "undoJob"
   | "recoverJob"
   | "restoreJob"
+  | "resumeJob"
   | "jobHistory";
 export function JobTray({
   job,
   action: dispatch,
+  continuation,
 }: {
   job: ImplementationJob;
+  continuation?: React.ReactNode;
   action: (
     name: JobAction,
     payload?: Record<string, unknown>,
@@ -78,6 +82,30 @@ export function JobTray({
           </button>
         ) : null}
       </header>
+      {job.continuedFrom ? (
+        <p>
+          중단된 변경을 이어서 진행하는 작업입니다.{" "}
+          <button
+            disabled={jobIsActive(job)}
+            onClick={() =>
+              action("restoreJob", { workspaceId: job.continuedFrom })
+            }
+          >
+            이전 작업 보기
+          </button>
+        </p>
+      ) : null}
+      {continuation ? (
+        <details>
+          <summary>중단된 변경 이어하기</summary>
+          <p>
+            현재 남은 변경을 새 작업 복사본에 가져와 같은 설계로 이어갑니다.
+            이전 작업은 보존하며 새 모델 세션에서 선택한 검사를 모두 다시
+            실행합니다.
+          </p>
+          {continuation}
+        </details>
+      ) : null}
       {jobIsActive(job) ? (
         <p>
           창을 닫아도 작업은 계속됩니다. 같은 프로젝트를 다시 열면 연결됩니다.
@@ -145,13 +173,55 @@ export function JobTray({
               {job.checks.length} 통과
             </summary>
             {job.checks.map((check, i) => (
-              <details key={`${check.name}:${i}`}>
-                <summary>
-                  {check.name} · {check.status} ·{" "}
-                  {(check.elapsedMs / 1000).toFixed(1)}초
-                </summary>
-                <pre>{check.output}</pre>
-              </details>
+              <VerificationEvidence key={`${check.name}:${i}`} check={check} />
+            ))}
+          </details>
+        ) : null}
+        {job.verificationAttempts?.length ? (
+          <details>
+            <summary>
+              검사 실행 이력 · {job.verificationAttempts.length}회
+            </summary>
+            <p>
+              자동 수정 전후의 기록입니다. 이전 검사는 현재 변경의 반영 근거로
+              사용하지 않습니다.
+            </p>
+            {job.verificationAttempts.map((attempt) => (
+              <section
+                key={attempt.attempt}
+                aria-label={`${attempt.attempt}차 검사`}
+              >
+                <h4>
+                  {attempt.attempt}차 검사 ·{" "}
+                  {
+                    attempt.checks.filter((check) => check.status === "passed")
+                      .length
+                  }
+                  /{attempt.checks.length} 통과 ·{" "}
+                  {attempt.completed
+                    ? "선택한 명령 실행 완료"
+                    : "일부 실행 또는 중단"}
+                </h4>
+                {attempt.checks.map((check, index) => (
+                  <VerificationEvidence
+                    key={`${check.name}:${index}`}
+                    check={check}
+                  />
+                ))}
+              </section>
+            ))}
+          </details>
+        ) : null}
+        {job.previousChecks?.length ? (
+          <details>
+            <summary>
+              이전 검사 기록 · 현재 변경의 통과 근거로 사용하지 않음
+            </summary>
+            {job.previousChecks.map((check, index) => (
+              <VerificationEvidence
+                key={`${check.name}:${index}`}
+                check={check}
+              />
             ))}
           </details>
         ) : null}

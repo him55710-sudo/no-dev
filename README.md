@@ -2,13 +2,21 @@
 
 # Pureobom · 풀어봄
 
-### Read it. Change it. Check it.
+### Understand what the code does. Describe what you want to change.
 
-Understand the code AI wrote. Change a rule. See which cases change.
+Read each file as accessible explanations of its purpose, inputs, conditions, execution order and results. See the exact source beside the explanation, choose a possible change, and edit the request in your own words.
 
-**Product-first development:** [Detailed plan](docs/PRODUCT_COMPLETION.md) · [Language support and evidence](docs/LANGUAGE_SUPPORT.md) · [Agent work log](docs/AGENT_WORKLOG.md). The 0.7 development source adds optional [local Ollama explanations and edits](docs/LOCAL_AI.md). Actual Python project evidence includes a rejected, slower optimization. The published 0.6.0 and browser demo do not include local AI.
+**Current product direction:** [Source-linked code reading](docs/CODE_READING_PRODUCT.md). The development VS Code workspace now opens in the reading view; structural tools remain available. A standalone app with folder and GitHub import is still to be built. The earlier result-preview mockup was rejected and is not the product specification.
 
-**VS Code extension · Korean / English · Local processing · MIT**
+**System design workspace · 0.7 development:** [Product requirements](docs/SYSTEM_WORKSPACE_PLAN.md) · [Verified scope and remaining work](docs/SYSTEM_WORKSPACE_STATUS.md) · [Start here](docs/SYSTEM_WORKSPACE_START.md). The published 0.6.0 extension and hosted browser demo are the earlier single-file preview; they do not include this workspace.
+
+**Desktop VS Code extension · Local structure analysis · Optional Codex implementation · MIT**
+
+Structure exploration works without a model. Implementation requires an explicitly selected Codex connection and project checks. The current system design interface is in Korean; the earlier reading interface supports Korean and English.
+
+[한국어](README.ko.md) · [Follow a real design change](docs/SYSTEM_WORKSPACE_DEMO.md) · [Install the development workspace](docs/SYSTEM_WORKSPACE_START.md) · [Supported environments](docs/SYSTEM_WORKSPACE_SUPPORT.md) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
+
+### Additional source reading tools
 
 [HTML/CSS source facts and value edits](docs/HTML_CSS_SOURCE.md) now use bundled parsers in the browser and VS Code. They read tags, text, selectors and declarations without executing scripts or guessing rendered layout. Ordinary text, selected attributes and CSS values support preview, apply and undo; actual page behavior still needs checking.
 
@@ -28,11 +36,40 @@ The development source also connects [project test/build commands](docs/PROJECT_
 
 It also adds [before/after command measurements](docs/BENCHMARKS.md): seven elapsed-time and peak-memory samples, output hashes, observed variation and local JSON reports. Requires Python 3 and a reviewed repeatable process task; this is measurement evidence, not an automatic optimization guarantee.
 
-[한국어](README.ko.md) · [Watch 30 seconds](https://him55710-sudo.github.io/pureobom/demo.html) · [Try the demo](https://him55710-sudo.github.io/pureobom/?demo=shipping&lang=en) · [Install](#try-it) · [Examples](examples/README.md) · [Contribute](CONTRIBUTING.md)
 
-[![Verify](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml/badge.svg)](https://github.com/him55710-sudo/pureobom/actions/workflows/ci.yml)
+[![Verify](https://github.com/him55710-sudo/no-dev/actions/workflows/ci.yml/badge.svg?branch=codex%2Fsystem-design-workspace)](https://github.com/him55710-sudo/no-dev/actions/workflows/ci.yml?query=branch%3Acodex%2Fsystem-design-workspace)
 
 </div>
+
+## Start by reading the code
+
+Open **풀어봄: 시스템 설계 워크스페이스 열기** in the development extension, connect Codex, and ask it to read the project. Choose a file by its explanation, then read its purpose, step-by-step behavior, reasons and possible changes. **코드와 나란히 보기** shows the exact source beside each explanation. A suggested request remains editable before implementation starts.
+
+Detailed reading checks source coverage and quoted evidence, but those checks cannot prove the model's interpretation is correct. Explicit reasons, inferred reasons and unknowns are distinguished. See [the current requirements and validation scope](docs/CODE_READING_PRODUCT.md).
+
+## Additional structure and design tools
+
+[Follow the recorded workflow](docs/SYSTEM_WORKSPACE_DEMO.md): inspect the actual seven-file permission change, checks, apply and undo, plus a separate deliberate server-guard failure that prevents applying. Run `pnpm build` and `node scripts/serve.mjs`, then open `/workspace-demo.html`. The walkthrough and original screenshots are included in the source and demo archives; hosted deployment is separate.
+
+Build the development VSIX from this branch and run **풀어봄: 시스템 설계 워크스페이스 열기** (`pureobom.openWorkspace`) in a local TypeScript/React Git project. Select a structure or create a business feature linked to several files. Read its code evidence, then describe the desired behavior, invariants and acceptance criteria.
+
+[Compare stored and current observations](docs/WORKSPACE_OBSERVATIONS.md) to inspect changed conditions, declarations and static connections. Code changes preserve the desired behavior; meeting that goal still requires separate checks and review.
+
+**Explore → edit the design → save and implement → inspect changes and checks → apply → refresh the structure.**
+
+`설계만 저장` saves the specification. `저장하고 구현` starts Codex in a separate Git worktree. Review the actual diff and command results before applying; undo restores the code while preserving the design goal. A changed source baseline or failed check prevents applying an old result. A worktree separates changes; it is not an operating-system security boundary.
+
+The first target is an existing feature spanning a React interface, server actions/API and a shared policy. [The external Next.js team-permission case](validation/next-saas-starter/README.md) records both successful checks and failed attempts. A [managed local process](docs/MANAGED_AGENT_HOST.md) keeps implementations and pending approvals alive across window exits; reopen the same project to reconnect. [A real Codex run on Windows](docs/MANAGED_LIVE_CODEX.md) retained its process and pending approval, then completed review, apply and undo. Closing the window does not cancel the job. [The status table](docs/SYSTEM_WORKSPACE_STATUS.md) identifies unverified parts, including native Webview interaction and recovery of a dead provider session. This is a development preview, not a completed release.
+
+[Actual model and installed UI run](docs/INSTALLED_NEXT_FLOW.md): seven external-app files changed, independent checks and app browser/SQL validation passed, and the UI completed review, apply, collection of new files and undo. Unverified invariants remain recorded.
+
+[Install and first task](docs/SYSTEM_WORKSPACE_START.md) · [Execution settings](docs/EXECUTION_SETTINGS.md) · [Review and apply](docs/IMPLEMENTATION_REVIEW.md) · [Recovery](docs/AGENT_IMPLEMENTATION.md)
+
+[Resume exploring](docs/WORKSPACE_NAVIGATION.md): the workspace remembers the selected structure and saved design, feature breadcrumb, tree, search and canvas arrangement per project in the same editor profile. Moving a node changes its display position only.
+
+## Earlier single-file preview — published 0.6.0
+
+The video, hosted demo and single-file capabilities below describe the earlier release. They do not demonstrate the system design workflow above.
 
 [![Watch a real rule change in Pureobom](public/media/demo-poster.png)](https://him55710-sudo.github.io/pureobom/demo.html)
 
@@ -77,11 +114,11 @@ Open `http://127.0.0.1:5173/?demo=shipping&lang=en` (use `lang=ko` for Korean). 
 
 The prebuilt `pureobom-0.6.0-demo.zip` only needs Node.js 24: unzip, run `node scripts/serve.mjs`, and open the printed address. On Windows, double-click `START.cmd`.
 
-Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Marketplace publication is not yet available; use the VSIX distribution.
+Current development source: [him55710-sudo/no-dev](https://github.com/him55710-sudo/no-dev/tree/codex/system-design-workspace). Marketplace publication is not yet available; use the locally built VSIX. Its **Pureobom: Get started with system design** command opens the bundled Korean walkthrough. The 0.6 release links above remain historical.
 
 **After your first change:** open **Install & feedback** in the demo or **Help & feedback** in VS Code. Try one task with your own code, then optionally review and copy a feedback summary. Nothing is submitted automatically. [Feedback guide](docs/FEEDBACK.md) · [Planned user study](docs/USER_STUDY.md).
 
-## What works today
+## Earlier preview capabilities
 
 - **Read:** Korean/English explanations anchored to the exact source lines, including unsaved VS Code edits.
 - **Follow cleanup:** read try, catch and finally as separate paths, including pending returns through cleanup. [Corrected in 0.5.2](docs/CONTROL_FLOW.md).
@@ -93,9 +130,9 @@ Source: [him55710-sudo/pureobom](https://github.com/him55710-sudo/pureobom). Mar
 - **Explain to someone else:** a local Markdown report containing the displayed comparison. Nothing is automatically published.
 - **Stay in control:** native diff, explicit apply, normal save/undo, stale-document checks and local workers.
 
-## Know the boundary
+## Published 0.6 preview boundaries
 
-This is an **early preview**, not an AI coding agent or a replacement for a developer's review.
+The published **0.6 single-file preview** has the boundaries below. The development system workspace has a separate [support and evidence table](docs/SYSTEM_WORKSPACE_STATUS.md).
 
 | Area | Current boundary |
 | --- | --- |

@@ -1,0 +1,1508 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-19T21:30:47.347Z",
+  "platform": "win32",
+  "vscode": "1.96.4",
+  "artifact": {
+    "vsixSha256": "16f9b98cefce93ff4038f40c6fb28d806aa1afda0925662484e7d96624752d55",
+    "files": {
+      "out/extension.cjs": "c632aca287f6703ba286f349988f793b5c395fe0ef0265cd7a104622ccfee1b8",
+      "out/worker.cjs": "bfcfb71f9b74ac29b74d27da6a5e339db1d5a56c4f55101a342cc321bbaf82e3",
+      "out/agent-host.cjs": "cd8597490e5c52b57a4b33bae441be68a51eef385d73a578c0e1768fc5b74374",
+      "media/design.js": "48c46edbcea7694ef4688acfbd2a55fcecfdd5159dea89ce77cd2a84840b4675",
+      "media/design.css": "9d31e1ea0a09ff569eff87cfb3d8c633139e50fd994cb3b104b0464f298388ce"
+    }
+  },
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "provider": "No provider invoked; read-only external-app structure exploration, callback source navigation and design metadata save.",
+  "requests": [
+    {
+      "action": "ready",
+      "at": "2026-10-19T21:28:28.766Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:28:34.637Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:28:40.195Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:28:40.419Z",
+      "ok": true
+    },
+    {
+      "action": "saveFeature",
+      "at": "2026-10-19T21:28:53.874Z",
+      "navigationBefore": {
+        "generation": 0,
+        "revision": 5,
+        "view": {
+          "selection": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+          "scopeTrail": [
+            "system",
+            "group:app:",
+            "group:app%2F(dashboard):",
+            "group:app%2F(dashboard)%2Fdashboard:",
+            "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "TeamMembers",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": -1.5,
+                "y": 29.69999999999999,
+                "zoom": 0.2
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 23.555555555555557,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "feature": {
+        "id": "ffb56dab-de63-4493-9d26-598c2f9a27e6",
+        "revision": 1,
+        "title": "팀 구성원과 활동 기록",
+        "description": "",
+        "members": [
+          {
+            "nodeId": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+            "label": "TeamMembers",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(dashboard)/dashboard/page.tsx",
+                "symbol": "TeamMembers",
+                "start": 2972,
+                "end": 5724,
+                "line": 96,
+                "endLine": 178,
+                "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                "contentHash": "885ac56d334839c45b5b7d473ba3779f69d6a28145838ca601611045ec4bff20"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+            "label": "removeTeamMember",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(login)/actions.ts",
+                "symbol": "removeTeamMember",
+                "start": 9277,
+                "end": 9943,
+                "line": 365,
+                "endLine": 392,
+                "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                "contentHash": "f17a85392868c5232acfda6363cb3131cbdf8b43cd040e3ee66453b1126f77df"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:app%2F(login)%2Factions.ts:logActivity",
+            "label": "logActivity",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(login)/actions.ts",
+                "symbol": "logActivity",
+                "start": 726,
+                "end": 1109,
+                "line": 29,
+                "endLine": 45,
+                "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                "contentHash": "7ae3dd1528407ceb51fc00d276f03323f49280bb6ac2411e06c4f6a97a375661"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-19T21:28:53.877Z"
+      },
+      "navigationAfter": {
+        "generation": 2,
+        "revision": 0,
+        "view": {
+          "selection": "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6",
+          "scopeTrail": [
+            "system"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "system",
+              "positions": []
+            },
+            {
+              "scopeId": "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 23.555555555555557,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:28:56.071Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T21:29:04.971Z",
+      "ok": true
+    },
+    {
+      "action": "saveDraft",
+      "at": "2026-10-19T21:29:05.009Z",
+      "ok": true
+    },
+    {
+      "action": "saveSpec",
+      "at": "2026-10-19T21:29:05.099Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:05.179Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:05.244Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:11.869Z",
+      "ok": true
+    },
+    {
+      "action": "source",
+      "at": "2026-10-19T21:29:15.836Z",
+      "ok": true,
+      "sourceSelection": {
+        "path": "app/(dashboard)/dashboard/page.tsx",
+        "text": "removeTeamMember"
+      },
+      "connection": {
+        "kind": "passes",
+        "from": "TeamMembers",
+        "to": "removeTeamMember",
+        "site": {
+          "summary": "useActionState의 1번째 인수로 함수 값을 넘깁니다.",
+          "code": "useActionState<\r\n    ActionState,\r\n    FormData\r\n  >(removeTeamMember, {})",
+          "inputs": [
+            {
+              "label": "전달하는 함수",
+              "code": "removeTeamMember",
+              "description": "「removeTeamMember」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0
+        },
+        "evidenceHash": "55f8834b466cb0a44505de63835ebf8ef706fb43cc6a6f42cc392ed855305916"
+      }
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:25.994Z",
+      "ok": true
+    },
+    {
+      "action": "source",
+      "at": "2026-10-19T21:29:30.412Z",
+      "ok": true,
+      "sourceSelection": {
+        "path": "app/(login)/actions.ts",
+        "text": "logActivity(\r\n      userWithTeam.teamId,\r\n      user.id,\r\n      ActivityType.REMOVE_TEAM_MEMBER\r\n    )"
+      },
+      "connection": {
+        "kind": "calls",
+        "from": "removeTeamMember",
+        "to": "logActivity",
+        "site": {
+          "summary": "logActivity에 값을 전달해 호출하는 위치입니다.",
+          "code": "logActivity(\r\n      userWithTeam.teamId,\r\n      user.id,\r\n      ActivityType.REMOVE_TEAM_MEMBER\r\n    )",
+          "inputs": [
+            {
+              "label": "1번째 인수 → teamId",
+              "code": "userWithTeam.teamId",
+              "description": "「userWithTeam」의 「teamId」"
+            },
+            {
+              "label": "2번째 인수 → userId",
+              "code": "user.id",
+              "description": "사용자의 「id」"
+            },
+            {
+              "label": "3번째 인수 → type",
+              "code": "ActivityType.REMOVE_TEAM_MEMBER",
+              "description": "「ActivityType」의 「REMOVE_TEAM_MEMBER」"
+            }
+          ],
+          "contexts": [],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다."
+        },
+        "evidenceHash": "d505a202dc158164e3221300e12564b93859903f8ee618a8ca08ed513b95a0f3"
+      }
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:39.795Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:43.238Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:43.270Z",
+      "ok": true
+    },
+    {
+      "action": "saveFeature",
+      "at": "2026-10-19T21:29:52.576Z",
+      "navigationBefore": {
+        "generation": 2,
+        "revision": 11,
+        "view": {
+          "selection": "symbol:middleware.ts:middleware.parsed",
+          "scopeTrail": [
+            "system",
+            "code-tree",
+            "file:middleware.ts:",
+            "symbol:middleware.ts:middleware",
+            "rule:middleware.ts:middleware%3A%3Acondition%231"
+          ],
+          "included": [],
+          "connections": [
+            "edge:170:symbol:app%2F(login)%2Factions.ts:removeTeamMember:symbol:app%2F(login)%2Factions.ts:logActivity"
+          ],
+          "expanded": [
+            "system"
+          ],
+          "search": "parsed",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 23.555555555555557,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "system",
+              "viewport": {
+                "x": -17.636363636363654,
+                "y": -4.181818181818187,
+                "zoom": 0.9545454545454546
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 125.68518518518519,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "rule:middleware.ts:middleware%3A%3Acondition%231",
+              "viewport": {
+                "x": 47.49097472924188,
+                "y": -0.18050541516245744,
+                "zoom": 0.33935018050541516
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "feature": {
+        "id": "a53b9909-0562-4ff2-b1a4-8d13278fa284",
+        "revision": 1,
+        "title": "세션 토큰 확인",
+        "description": "",
+        "members": [
+          {
+            "nodeId": "symbol:middleware.ts:middleware.parsed",
+            "label": "parsed",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "middleware.ts",
+                "symbol": "middleware.parsed",
+                "start": 655,
+                "end": 702,
+                "line": 20,
+                "endLine": 20,
+                "fileHash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+                "contentHash": "7dee71a9f147c5b4fb2fc78c1d1cbc92db8adcf6c1b41a64b9bff1f4119c185b"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:lib%2Fauth%2Fsession.ts:verifyToken",
+            "label": "verifyToken",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "lib/auth/session.ts",
+                "symbol": "verifyToken",
+                "start": 820,
+                "end": 995,
+                "line": 33,
+                "endLine": 38,
+                "fileHash": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+                "contentHash": "bc613e19bbb1190b292d18c51b48f979a663d21ae67f8b9ae095aa17eecb40d6"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-19T21:29:52.576Z"
+      },
+      "navigationAfter": {
+        "generation": 3,
+        "revision": 0,
+        "view": {
+          "selection": "feature:a53b9909-0562-4ff2-b1a4-8d13278fa284",
+          "scopeTrail": [
+            "system"
+          ],
+          "included": [],
+          "connections": [],
+          "expanded": [
+            "system"
+          ],
+          "search": "",
+          "focus": false,
+          "canvases": [
+            {
+              "scopeId": "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 23.555555555555557,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "system",
+              "positions": []
+            },
+            {
+              "scopeId": "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6",
+              "viewport": {
+                "x": 2.2222222222222285,
+                "y": 125.68518518518519,
+                "zoom": 0.25925925925925924
+              },
+              "positions": []
+            },
+            {
+              "scopeId": "rule:middleware.ts:middleware%3A%3Acondition%231",
+              "viewport": {
+                "x": 47.49097472924188,
+                "y": -0.18050541516245744,
+                "zoom": 0.33935018050541516
+              },
+              "positions": []
+            }
+          ]
+        }
+      },
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:29:53.946Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:30:01.715Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:30:01.745Z",
+      "ok": true
+    },
+    {
+      "action": "saveNavigation",
+      "at": "2026-10-19T21:30:07.871Z",
+      "ok": true
+    },
+    {
+      "action": "source",
+      "at": "2026-10-19T21:30:42.857Z",
+      "ok": true,
+      "sourceSelection": {
+        "path": "middleware.ts",
+        "text": "verifyToken(sessionCookie.value)"
+      },
+      "connection": {
+        "kind": "calls",
+        "from": "parsed",
+        "to": "verifyToken",
+        "site": {
+          "summary": "verifyToken에 값을 전달해 호출하는 위치입니다.",
+          "code": "verifyToken(sessionCookie.value)",
+          "inputs": [
+            {
+              "label": "1번째 인수 → input",
+              "code": "sessionCookie.value",
+              "description": "「sessionCookie」의 「value」"
+            }
+          ],
+          "contexts": [
+            {
+              "description": "이 if 조건이 참으로 평가되는 분기 안입니다.",
+              "code": "sessionCookie && request.method === 'GET'",
+              "line": 18
+            },
+            {
+              "description": "주변 try에 catch 처리가 있습니다. 기다리지 않는 비동기 실패까지 잡힌다는 뜻은 아닙니다.",
+              "code": "catch (error) {\r\n      console.error('Error updating session:', error);\r\n      res.cookies.delete('session');\r\n      if (isProtectedRoute) {\r\n        return NextResponse.redirect(new URL('/sign-in', request.url));\r\n      }\r\n    }",
+              "line": 34
+            }
+          ],
+          "omittedInputs": 0,
+          "omittedContexts": 0,
+          "result": "이 호출 결과를 await로 기다립니다. 결과를 parsed에 담습니다."
+        },
+        "evidenceHash": "52e0bd0bb9b3aef56b2d07f019c867dd7006b373d1a86016ef887bc0df971f22"
+      }
+    }
+  ],
+  "jobs": [],
+  "clientErrors": [],
+  "finalSpecs": {
+    "schemaVersion": 1,
+    "specs": [
+      {
+        "id": "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6",
+        "targetIds": [
+          "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6"
+        ],
+        "revision": 1,
+        "content": {
+          "title": "팀 구성원과 활동 기록",
+          "purpose": "",
+          "desired": "소유자만 팀 구성원을 제거하고 활동 기록을 남길 수 있어야 한다.",
+          "policies": "",
+          "inputsOutputs": "",
+          "failures": "",
+          "invariants": [],
+          "acceptance": [
+            "서버 권한을 확인한다.",
+            "화면의 함수 전달과 서버 호출 인수를 확인한다."
+          ]
+        },
+        "baseline": {
+          "graphRevision": "1c91c370d8d011dcc6976fc815c08620e7b4a39984d36a00da33fa8533e0279c",
+          "observed": "사용자가 묶은 업무 기능입니다. 3개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.\n\nTeamMembers: 「{ data: teamData }」에 「useSWR」 기능 호출 (전달: “/api/team”, 「fetcher」)을(를) 담습니다.\n「[removeState, removeAction, isRemovePending]」에 「useActionState」 기능 호출 (전달: 「removeTeamMember」, 묶음 데이터 {  })을(를) 담습니다.\n「getUserDisplayName」에 전달받아 나중에 실행할 기능 (아래 기능 설명 참조)을(를) 담습니다.\n이 조건을 만족하면: 「teamData」의 「teamMembers」의 「length」 값이 아님\n(화면 구성 요소를 만듭니다. 실제 화면은 실행 환경에 따라 달라집니다.) 값을 결과로 돌려주고 이 기능을 끝냅니다.\n\nremoveTeamMember: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.\n\nlogActivity: 이 조건을 만족하면: (「teamId」 값이 비어 있는 값 같음 (값과 종류) 또는 「teamId」 값이 「undefined」 같음 (값과 종류))\n「newActivity」에 묶음 데이터 { 「teamId」, 「userId」, action: 「type」, ipAddress: (「ipAddress」 또는 “”) }을(를) 담습니다.\n「db」의 「insert」 기능 호출 (전달: 「activityLogs」)의 「values」 기능 호출 (전달: 「newActivity」) 결과를 기다림",
+          "sources": [
+            {
+              "path": "app/(dashboard)/dashboard/page.tsx",
+              "symbol": "TeamMembers",
+              "start": 2972,
+              "end": 5724,
+              "line": 96,
+              "endLine": 178,
+              "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+              "contentHash": "885ac56d334839c45b5b7d473ba3779f69d6a28145838ca601611045ec4bff20"
+            },
+            {
+              "path": "app/(login)/actions.ts",
+              "symbol": "logActivity",
+              "start": 726,
+              "end": 1109,
+              "line": 29,
+              "endLine": 45,
+              "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+              "contentHash": "7ae3dd1528407ceb51fc00d276f03323f49280bb6ac2411e06c4f6a97a375661"
+            },
+            {
+              "path": "app/(login)/actions.ts",
+              "symbol": "removeTeamMember",
+              "start": 9277,
+              "end": 9943,
+              "line": 365,
+              "endLine": 392,
+              "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+              "contentHash": "f17a85392868c5232acfda6363cb3131cbdf8b43cd040e3ee66453b1126f77df"
+            }
+          ],
+          "observations": {
+            "schemaVersion": 1,
+            "facts": [
+              {
+                "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                "kind": "symbol",
+                "label": "TeamMembers",
+                "summary": "「{ data: teamData }」에 「useSWR」 기능 호출 (전달: “/api/team”, 「fetcher」)을(를) 담습니다.\n「[removeState, removeAction, isRemovePending]」에 「useActionState」 기능 호출 (전달: 「removeTeamMember」, 묶음 데이터 {  })을(를) 담습니다.\n「getUserDisplayName」에 전달받아 나중에 실행할 기능 (아래 기능 설명 참조)을(를) 담습니다.\n이 조건을 만족하면: 「teamData」의 「teamMembers」의 「length」 값이 아님\n(화면 구성 요소를 만듭니다. 실제 화면은 실행 환경에 따라 달라집니다.) 값을 결과로 돌려주고 이 기능을 끝냅니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "TeamMembers",
+                  "start": 2972,
+                  "end": 5724,
+                  "line": 96,
+                  "endLine": 178,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "885ac56d334839c45b5b7d473ba3779f69d6a28145838ca601611045ec4bff20"
+                }
+              },
+              {
+                "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers.getUserDisplayName",
+                "kind": "symbol",
+                "label": "getUserDisplayName",
+                "summary": "function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "TeamMembers.getUserDisplayName",
+                  "start": 3221,
+                  "end": 3350,
+                  "line": 103,
+                  "endLine": 105,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "102410bf2d9fa9ed6c8cc071f9ebaf4dc817aa4567155a4abdcaaab3a1ea1968"
+                }
+              },
+              {
+                "id": "rule:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "!teamData?.teamMembers?.length",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: !teamData?.teamMembers?.length",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "TeamMembers::condition#0",
+                  "start": 3357,
+                  "end": 3679,
+                  "line": 107,
+                  "endLine": 118,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "a5d6172444c85f00b01ffcbd9a07be94e1a60e256fed11cf6910d8a351d9f139"
+                }
+              },
+              {
+                "id": "rule:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers%3A%3Acondition%231",
+                "kind": "rule",
+                "label": "index > 1",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: index > 1",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "TeamMembers::condition#1",
+                  "start": 5035,
+                  "end": 5516,
+                  "line": 156,
+                  "endLine": 168,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "beb192db3e7ebb5c7817ee8a3f83084b0239816971ca364f84689e8180565ce0"
+                }
+              },
+              {
+                "id": "rule:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers%3A%3Acondition%232",
+                "kind": "rule",
+                "label": "isRemovePending",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: isRemovePending",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "TeamMembers::condition#2",
+                  "start": 5395,
+                  "end": 5437,
+                  "line": 165,
+                  "endLine": 165,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "de74d4f2cd0fb3bf00dd6133251b51e5ff7877ff4ffdcb0af09704c18841d721"
+                }
+              },
+              {
+                "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                "kind": "symbol",
+                "label": "logActivity",
+                "summary": "이 조건을 만족하면: (「teamId」 값이 비어 있는 값 같음 (값과 종류) 또는 「teamId」 값이 「undefined」 같음 (값과 종류))\n「newActivity」에 묶음 데이터 { 「teamId」, 「userId」, action: 「type」, ipAddress: (「ipAddress」 또는 “”) }을(를) 담습니다.\n「db」의 「insert」 기능 호출 (전달: 「activityLogs」)의 「values」 기능 호출 (전달: 「newActivity」) 결과를 기다림",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "logActivity",
+                  "start": 726,
+                  "end": 1109,
+                  "line": 29,
+                  "endLine": 45,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "7ae3dd1528407ceb51fc00d276f03323f49280bb6ac2411e06c4f6a97a375661"
+                }
+              },
+              {
+                "id": "rule:app%2F(login)%2Factions.ts:logActivity%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "teamId === null || teamId === undefined",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: teamId === null || teamId === undefined",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "logActivity::condition#0",
+                  "start": 864,
+                  "end": 928,
+                  "line": 35,
+                  "endLine": 37,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "394659b588e2ba22e9dfc10c68b71e78bd0959967a2cf1985f3718d3a9d735a1"
+                }
+              },
+              {
+                "id": "symbol:app%2F(login)%2Factions.ts:logActivity.newActivity",
+                "kind": "symbol",
+                "label": "newActivity",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "logActivity.newActivity",
+                  "start": 938,
+                  "end": 1051,
+                  "line": 38,
+                  "endLine": 43,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "511afd5d60a8b64323b5f9d8cdc1473c5abf0e9ac56c9c400c3e10c691afb339"
+                }
+              },
+              {
+                "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+                "kind": "symbol",
+                "label": "removeTeamMember",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "removeTeamMember",
+                  "start": 9277,
+                  "end": 9943,
+                  "line": 365,
+                  "endLine": 392,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "f17a85392868c5232acfda6363cb3131cbdf8b43cd040e3ee66453b1126f77df"
+                }
+              },
+              {
+                "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember.userWithTeam",
+                "kind": "symbol",
+                "label": "userWithTeam",
+                "summary": "data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "removeTeamMember.userWithTeam",
+                  "start": 9421,
+                  "end": 9466,
+                  "line": 369,
+                  "endLine": 369,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "4e8f8b186bafc2a1395bc1cc16044e3460a1e255aa54227a6e5930ad5ff9331d"
+                }
+              },
+              {
+                "id": "rule:app%2F(login)%2Factions.ts:removeTeamMember%3A%3Acondition%230",
+                "kind": "rule",
+                "label": "!userWithTeam?.teamId",
+                "summary": "이 조건에 따라 실행 경로가 달라집니다: !userWithTeam?.teamId",
+                "summaryTruncated": false,
+                "syntaxValid": true,
+                "supported": true,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "removeTeamMember::condition#0",
+                  "start": 9475,
+                  "end": 9565,
+                  "line": 371,
+                  "endLine": 373,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "5c050bc49bce6b41aab9723214c9eb4b51f18fc4777bd062a436984185e0e32a"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:fetcher",
+                  "label": "fetcher"
+                },
+                "kind": "passes",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3068,
+                  "end": 3075,
+                  "line": 97,
+                  "endLine": 97,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "89008e294b51090a98a32c9d5eed43f6a54b19b54aab3424b5168ef6cc5d5f45"
+                },
+                "evidenceHash": "5b0c6a3a05f7012076bd9933cfb0fac12d8c46f6feb400727ae30a2982da4f91"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+                  "label": "removeTeamMember"
+                },
+                "kind": "passes",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3187,
+                  "end": 3203,
+                  "line": 101,
+                  "endLine": 101,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "d82763ee80e19b3d2d27166e5ced5ddeb0bed46cb6a0e2a7501efda5b4e3a6dc"
+                },
+                "evidenceHash": "55f8834b466cb0a44505de63835ebf8ef706fb43cc6a6f42cc392ed855305916"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Fcard.tsx:Card",
+                  "label": "Card"
+                },
+                "kind": "renders",
+                "count": 2,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3416,
+                  "end": 3439,
+                  "line": 109,
+                  "endLine": 109,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "cb6626ff7319fece7d984189ad69c556dbbbf6a784bed52ade46f94aad82d569"
+                },
+                "evidenceHash": "81aa6e9360e179852ba76bc9f8a38d142a27afb9232291a54a499e2aa0776ef4"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Fcard.tsx:CardHeader",
+                  "label": "CardHeader"
+                },
+                "kind": "renders",
+                "count": 2,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3449,
+                  "end": 3461,
+                  "line": 110,
+                  "endLine": 110,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "170612d3df39cce1ade48ae747c32abdb2bfa03426719af220b56c3a3a1d7335"
+                },
+                "evidenceHash": "40c23c34c43705e21f2417e6e31b6124691190f56be54556c49a4ee2e0a6a882"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Fcard.tsx:CardTitle",
+                  "label": "CardTitle"
+                },
+                "kind": "renders",
+                "count": 2,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3473,
+                  "end": 3484,
+                  "line": 111,
+                  "endLine": 111,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "b89ea2678f3b21fa57ed2491c6c314d1c0331d841325675c768a0872cf7b18fb"
+                },
+                "evidenceHash": "29d82d97a5c5fda1e6bb0c95daff1401859fcb5e024842991e5b1c8b8cc3f473"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Fcard.tsx:CardContent",
+                  "label": "CardContent"
+                },
+                "kind": "renders",
+                "count": 2,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 3541,
+                  "end": 3554,
+                  "line": 113,
+                  "endLine": 113,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "f0684d4c9ce94fe2dbc76df60b8f49e3b6ff04c96611aece836c41b3a4a7e585"
+                },
+                "evidenceHash": "0048e98a08a06b81a35efeaad6bfbe2dab264904e9db3c2399608bf52713ff5c"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Favatar.tsx:Avatar",
+                  "label": "Avatar"
+                },
+                "kind": "renders",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 4082,
+                  "end": 4090,
+                  "line": 130,
+                  "endLine": 130,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "e2c3904c4200cccacabbcb6fd9800cc086385cbbab2e45197cdad9f07186a9b7"
+                },
+                "evidenceHash": "c6601292a0a54ca8c39d5b0bbb96ceb8d2bd3ceffd972773b9765490648d3b8e"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Favatar.tsx:AvatarFallback",
+                  "label": "AvatarFallback"
+                },
+                "kind": "renders",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 4444,
+                  "end": 4460,
+                  "line": 140,
+                  "endLine": 140,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "cc734f91c57484875e2638cd17f022ca633c6620061b30e11854d79e7eca78f8"
+                },
+                "evidenceHash": "2fd36456424337e9e61c8ea26a5c75f55b4815dc8cd085607c4d9b5ec96c8969"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers.getUserDisplayName",
+                  "label": "getUserDisplayName"
+                },
+                "kind": "calls",
+                "count": 2,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 4483,
+                  "end": 4514,
+                  "line": 141,
+                  "endLine": 141,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "7bcbbf66cd8c767d9bdd6d715cbc175ddad131530b7db924dc1f108b1883eb95"
+                },
+                "evidenceHash": "a86316213b59311810480fc475d7ef4d98bdb8a9e5c8bd6636c297701683f761"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "to": {
+                  "id": "symbol:components%2Fui%2Fbutton.tsx:Button",
+                  "label": "Button"
+                },
+                "kind": "renders",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 5191,
+                  "end": 5372,
+                  "line": 159,
+                  "endLine": 164,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "48eabdf5473db1d9aa18f733c7a5d2bc8768c0ce5311a7196653b3b5b7a4698c"
+                },
+                "evidenceHash": "552848daa99bb11a67a60defb05141f8e2c713f5812e4d81b572d6037718bd60"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:SettingsPage",
+                  "label": "SettingsPage"
+                },
+                "to": {
+                  "id": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+                  "label": "TeamMembers"
+                },
+                "kind": "renders",
+                "count": 1,
+                "source": {
+                  "path": "app/(dashboard)/dashboard/page.tsx",
+                  "symbol": "",
+                  "start": 8815,
+                  "end": 8830,
+                  "line": 280,
+                  "endLine": 280,
+                  "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                  "contentHash": "9288915e88c8dec1a1eebf4919251881000b9ebac0a802d6df597d41f2398d58"
+                },
+                "evidenceHash": "25122f9ad6a195a0ba98e22c0f38f4c99b6e07b2bbd02581dac56fc0149f787c"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:signIn",
+                  "label": "signIn"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 2173,
+                  "end": 2235,
+                  "line": 91,
+                  "endLine": 91,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "dcc5c05da092f3f9f97c753e5f100617aaefc19c563880b2db7673a53c1ba9aa"
+                },
+                "evidenceHash": "b577f2946700fe0459871bdb25a79822f80c39e1f58ab6b04a5a3a9ec0f4c3bb"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:signUp",
+                  "label": "signUp"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 3,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 4174,
+                  "end": 4241,
+                  "line": 171,
+                  "endLine": 171,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "49a8e1848037fb765017f6e4bee49424e251bdae6ac376ff1f7b97f5788479d6"
+                },
+                "evidenceHash": "3626ccde62e26a93a5bea8248cd09b962cca14d3e28f51b5f5b9f913a6e2bf06"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:signOut",
+                  "label": "signOut"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 5680,
+                  "end": 5745,
+                  "line": 227,
+                  "endLine": 227,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "421c69d5596289ee90233075239be2f45f9afb69767dcaff1b48d10e284a173c"
+                },
+                "evidenceHash": "b9b29a27f17973eec89702c7f23256ad42ba004c33778ec4ea8d0b4ddcf41029"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:updatePassword",
+                  "label": "updatePassword"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 7190,
+                  "end": 7262,
+                  "line": 282,
+                  "endLine": 282,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "073357f230e6684d4728e3c93d3ee89c9e6ee881336adab5dfa507046fce8b47"
+                },
+                "evidenceHash": "75fdc235eb63fb82179fc206df1ee52dcda487bb82561034d9779c2b462caa3d"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:deleteAccount",
+                  "label": "deleteAccount"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 7885,
+                  "end": 7984,
+                  "line": 310,
+                  "endLine": 314,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "a378ab7f254e28a590b1829f6f2e5fbd9b9eba48c82615c221b11354e1e2ed54"
+                },
+                "evidenceHash": "1cf714c6f5170590b9eea93e74b928b3b8eff55b987290a9261a9b03afdd2fa1"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:updateAccount",
+                  "label": "updateAccount"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 9031,
+                  "end": 9102,
+                  "line": 354,
+                  "endLine": 354,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "339ce184fb88341d14e305c76898c68c5a1ada82fcd4174756cf3d09e84e83ca"
+                },
+                "evidenceHash": "8f71699c004f813c9ffc17c9c17fabcad606ac2069d73040540656e72f34775b"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+                  "label": "removeTeamMember"
+                },
+                "to": {
+                  "id": "symbol:lib%2Fauth%2Fmiddleware.ts:validatedActionWithUser",
+                  "label": "validatedActionWithUser"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 9296,
+                  "end": 9943,
+                  "line": 365,
+                  "endLine": 392,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "34bd9933cd7ba8372ba58e056bbaefce5aa25855432a8ce1f7ecdbc253db75b3"
+                },
+                "evidenceHash": "8409e38f5b740403a59336a6f9de6c4d11318c2d77da2ba07250bad56a2feca7"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember.userWithTeam",
+                  "label": "userWithTeam"
+                },
+                "to": {
+                  "id": "symbol:lib%2Fdb%2Fqueries.ts:getUserWithTeam",
+                  "label": "getUserWithTeam"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 9442,
+                  "end": 9466,
+                  "line": 369,
+                  "endLine": 369,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "382dda3d6f1d4b1329f8ccce6cdb4ab847798109eb5f674a0a119112611372db"
+                },
+                "evidenceHash": "7139ace62eeb0ef362d9241e7cfa5aad81ac705522affa9a10d866a33702cf70"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+                  "label": "removeTeamMember"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 9769,
+                  "end": 9871,
+                  "line": 384,
+                  "endLine": 388,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "bf7c2f19c7b3b8da5a95a19c335383028f92e6371f82d448c4b91f48faf968c4"
+                },
+                "evidenceHash": "d505a202dc158164e3221300e12564b93859903f8ee618a8ca08ed513b95a0f3"
+              },
+              {
+                "from": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:inviteTeamMember",
+                  "label": "inviteTeamMember"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:logActivity",
+                  "label": "logActivity"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "app/(login)/actions.ts",
+                  "symbol": "",
+                  "start": 11456,
+                  "end": 11558,
+                  "line": 448,
+                  "endLine": 452,
+                  "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                  "contentHash": "9f1374ed34061e9e2a8bbdcaa171739fc222b29ab67299ab3950fb55e4926d5f"
+                },
+                "evidenceHash": "336eb31a1853fc21b2a7e6c2c23e369bd710414a5ab8e534c44ae7df7a899307"
+              },
+              {
+                "from": {
+                  "id": "symbol:pureobom-validation%2Fpermissions.test.tsx:remove",
+                  "label": "remove"
+                },
+                "to": {
+                  "id": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+                  "label": "removeTeamMember"
+                },
+                "kind": "calls",
+                "count": 1,
+                "source": {
+                  "path": "pureobom-validation/permissions.test.tsx",
+                  "symbol": "",
+                  "start": 3670,
+                  "end": 3704,
+                  "line": 82,
+                  "endLine": 82,
+                  "fileHash": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+                  "contentHash": "03836af6bb83802c43611d89319a8bc0b6a15229d2433c909e39e15744b5d681"
+                },
+                "evidenceHash": "06535087b2d01383f9d8990ac30d6449fb0ec0eaf0958713a4a0dd745ed9fe58"
+              }
+            ],
+            "notices": [
+              "app/(dashboard)/dashboard/page.tsx:13 · 가져온 범위 밖의 모듈 또는 미해석 경로: react",
+              "app/(dashboard)/dashboard/page.tsx:16 · 가져온 범위 밖의 모듈 또는 미해석 경로: swr",
+              "app/(dashboard)/dashboard/page.tsx:17 · 가져온 범위 밖의 모듈 또는 미해석 경로: react",
+              "app/(dashboard)/dashboard/page.tsx:21 · 가져온 범위 밖의 모듈 또는 미해석 경로: lucide-react",
+              "app/(dashboard)/dashboard/page.tsx:28 · 호출 대상을 정적으로 확인하지 못했습니다: fetch",
+              "app/(dashboard)/dashboard/page.tsx:41 · 호출 대상을 정적으로 확인하지 못했습니다: useSWR",
+              "app/(dashboard)/dashboard/page.tsx:97 · 호출 대상을 정적으로 확인하지 못했습니다: useSWR",
+              "app/(dashboard)/dashboard/page.tsx:98 · 호출 대상을 정적으로 확인하지 못했습니다: useActionState",
+              "app/(dashboard)/dashboard/page.tsx:191 · 호출 대상을 정적으로 확인하지 못했습니다: useSWR",
+              "app/(dashboard)/dashboard/page.tsx:193 · 호출 대상을 정적으로 확인하지 못했습니다: useActionState",
+              "app/(login)/actions.ts:3 · 가져온 범위 밖의 모듈 또는 미해석 경로: zod",
+              "app/(login)/actions.ts:4 · 가져온 범위 밖의 모듈 또는 미해석 경로: drizzle-orm",
+              "app/(login)/actions.ts:20 · 가져온 범위 밖의 모듈 또는 미해석 경로: next/navigation",
+              "app/(login)/actions.ts:21 · 가져온 범위 밖의 모듈 또는 미해석 경로: next/headers",
+              "app/(login)/actions.ts:61 · 호출 대상을 정적으로 확인하지 못했습니다: eq",
+              "app/(login)/actions.ts:62 · 호출 대상을 정적으로 확인하지 못했습니다: eq",
+              "app/(login)/actions.ts:63 · 호출 대상을 정적으로 확인하지 못했습니다: eq",
+              "app/(login)/actions.ts:100 · 호출 대상을 정적으로 확인하지 못했습니다: redirect",
+              "app/(login)/actions.ts:115 · 호출 대상을 정적으로 확인하지 못했습니다: eq",
+              "app/(login)/actions.ts:154 · 호출 대상을 정적으로 확인하지 못했습니다: and"
+            ],
+            "totals": {
+              "facts": 11,
+              "relations": 22,
+              "notices": 47
+            }
+          }
+        },
+        "updatedAt": "2026-10-19T21:29:05.115Z"
+      }
+    ],
+    "features": [
+      {
+        "id": "ffb56dab-de63-4493-9d26-598c2f9a27e6",
+        "revision": 1,
+        "title": "팀 구성원과 활동 기록",
+        "description": "",
+        "members": [
+          {
+            "nodeId": "symbol:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:TeamMembers",
+            "label": "TeamMembers",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(dashboard)/dashboard/page.tsx",
+                "symbol": "TeamMembers",
+                "start": 2972,
+                "end": 5724,
+                "line": 96,
+                "endLine": 178,
+                "fileHash": "2bc4b7cad43d1f4595ba2959e4edf017fc56f8ddc8f1498345fc6ed4625f92c8",
+                "contentHash": "885ac56d334839c45b5b7d473ba3779f69d6a28145838ca601611045ec4bff20"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:app%2F(login)%2Factions.ts:removeTeamMember",
+            "label": "removeTeamMember",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(login)/actions.ts",
+                "symbol": "removeTeamMember",
+                "start": 9277,
+                "end": 9943,
+                "line": 365,
+                "endLine": 392,
+                "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                "contentHash": "f17a85392868c5232acfda6363cb3131cbdf8b43cd040e3ee66453b1126f77df"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:app%2F(login)%2Factions.ts:logActivity",
+            "label": "logActivity",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "app/(login)/actions.ts",
+                "symbol": "logActivity",
+                "start": 726,
+                "end": 1109,
+                "line": 29,
+                "endLine": 45,
+                "fileHash": "2f47cbdb703f05fce489f50e02e02a89ca0c187a014c5b4d989377cf36c91d83",
+                "contentHash": "7ae3dd1528407ceb51fc00d276f03323f49280bb6ac2411e06c4f6a97a375661"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-19T21:28:53.877Z"
+      },
+      {
+        "id": "a53b9909-0562-4ff2-b1a4-8d13278fa284",
+        "revision": 1,
+        "title": "세션 토큰 확인",
+        "description": "",
+        "members": [
+          {
+            "nodeId": "symbol:middleware.ts:middleware.parsed",
+            "label": "parsed",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "middleware.ts",
+                "symbol": "middleware.parsed",
+                "start": 655,
+                "end": 702,
+                "line": 20,
+                "endLine": 20,
+                "fileHash": "8ff7403c82cca1b181a51e66cfe97ecb56322769727ce614981b13a6175ceb06",
+                "contentHash": "7dee71a9f147c5b4fb2fc78c1d1cbc92db8adcf6c1b41a64b9bff1f4119c185b"
+              }
+            ]
+          },
+          {
+            "nodeId": "symbol:lib%2Fauth%2Fsession.ts:verifyToken",
+            "label": "verifyToken",
+            "kind": "symbol",
+            "sources": [
+              {
+                "path": "lib/auth/session.ts",
+                "symbol": "verifyToken",
+                "start": 820,
+                "end": 995,
+                "line": 33,
+                "endLine": 38,
+                "fileHash": "a975c20de001c5299be23be90f40567c2e6d0cdb2c8213b14b41d761b0cfd404",
+                "contentHash": "bc613e19bbb1190b292d18c51b48f979a663d21ae67f8b9ae095aa17eecb40d6"
+              }
+            ]
+          }
+        ],
+        "updatedAt": "2026-10-19T21:29:52.576Z"
+      }
+    ]
+  },
+  "finalNavigation": {
+    "generation": 3,
+    "revision": 6,
+    "view": {
+      "selection": "edge:282:symbol:middleware.ts:middleware.parsed:symbol:lib%2Fauth%2Fsession.ts:verifyToken",
+      "scopeTrail": [
+        "system",
+        "feature:a53b9909-0562-4ff2-b1a4-8d13278fa284"
+      ],
+      "included": [],
+      "connections": [
+        "edge:282:symbol:middleware.ts:middleware.parsed:symbol:lib%2Fauth%2Fsession.ts:verifyToken"
+      ],
+      "expanded": [
+        "system"
+      ],
+      "search": "",
+      "focus": false,
+      "canvases": [
+        {
+          "scopeId": "file:app%2F(dashboard)%2Fdashboard%2Fpage.tsx:",
+          "viewport": {
+            "x": 2.2222222222222285,
+            "y": 23.555555555555557,
+            "zoom": 0.25925925925925924
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "feature:ffb56dab-de63-4493-9d26-598c2f9a27e6",
+          "viewport": {
+            "x": 2.2222222222222285,
+            "y": 125.68518518518519,
+            "zoom": 0.25925925925925924
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "rule:middleware.ts:middleware%3A%3Acondition%231",
+          "viewport": {
+            "x": 47.49097472924188,
+            "y": -0.18050541516245744,
+            "zoom": 0.33935018050541516
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "system",
+          "viewport": {
+            "x": 1.32352941176471,
+            "y": -7.073529411764696,
+            "zoom": 0.6691176470588235
+          },
+          "positions": []
+        },
+        {
+          "scopeId": "feature:a53b9909-0562-4ff2-b1a4-8d13278fa284",
+          "viewport": {
+            "x": -1.1359223300970882,
+            "y": 118.76796116504855,
+            "zoom": 0.3378640776699029
+          },
+          "positions": []
+        }
+      ]
+    }
+  },
+  "originalRestored": true
+}

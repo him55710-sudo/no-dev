@@ -1,0 +1,180 @@
+Browser tab: 6, Title: "설치본 설계 화면 검증", URL: "[temporary local test transport]".
+0 AXWebArea 설치본 설계 화면 검증, URL: [temporary local test transport]
+	1 container
+		2 text 설치 번들 + 실제 호스트 · 테스트 전송 경로
+		3 button 승인 대기 중 창 재시작 검증, ID: restart
+		4 button 검증 종료·기록 저장, ID: finish
+	5 container
+		6 text P
+		7 text 풀어봄
+		8 text 시스템 설계 워크스페이스 project
+		9 text 52개 파일 연결됨
+		10 button 구조 새로 읽기
+		11 container
+			12 text 구조 검색
+			13 text field (settable) 구조 검색
+		14 text 프로젝트 구조 499
+		15 button (disabled) 업무 기능 만들기
+		16 container 프로젝트 구조
+			17 content list
+				18 container
+					19 button (expanded) Description: 프로젝트 접기, Secondary Actions: Collapse
+					20 button 프로젝트
+					21 content list
+						22 container
+							23 button (collapsed) Description: 팀 구성원 권한 · 재연결 검증 펼치기, Secondary Actions: Expand
+							24 button 팀 구성원 권한 · 재연결 검증
+						25 container
+							26 button (collapsed) Description: 코드 구조 펼치기, Secondary Actions: Expand
+							27 button 코드 구조
+		214 text 저장된 설계 1
+		215 content list
+			216 button 팀 구성원 권한 · 재연결 검증 v1
+				217 text 팀 구성원 권한 · 재연결 검증
+				218 text v
+				219 text 1
+		28 text 업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든 구현을 경로대로 탐색할 수 있어요.
+		29 container 시스템 구조 캔버스
+			30 container 현재 탐색 위치
+				31 button project
+			32 text SYSTEM EXPLORER
+			33 heading 프로젝트, Value: 1
+				34 text 프로젝트
+			35 text 선택해서 설계를 읽고, 두 번 눌러 내부 구조로 들어가세요.
+			36 container
+				37 container
+					38 container 업무 기능 · 사용자 정의 팀 구성원 권한 · 재연결 검증
+						39 text 업무 기능 · 사용자 정의
+						40 text 팀 구성원 권한 · 재연결 검증
+						41 text 4개 코드 연결 · 0개 재연결 필요
+						42 text 4
+						43 text 개 하위 구조 ↗
+					44 container 모듈 묶음 코드 구조
+						45 text 모듈 묶음
+						46 text 코드 구조
+						47 text 코드 경로에서 추출
+						48 text 12
+						49 text 개 하위 구조 ↗
+				50 image
+				51 container Control Panel
+					52 button Zoom In
+						53 image
+					54 button Zoom Out
+						55 image
+					56 button Fit View
+						57 image
+				58 link Description: React Flow attribution, Value: reactflow.dev/?utm_source=attribution
+			59 text 노드 이동은 화면 배치만 바꿉니다. 288 개 정적 연결
+		60 container 선택한 구조의 설계
+			61 container
+				62 text 세부 설계
+				63 checkbox 집중 보기, Value: 0
+			64 text 업무 기능  ·  팀 구성원 권한 · 재연결 검증
+			65 button 설계에 포함
+			127 container
+				128 text 사용자가 정의한 업무 기능 대시보드와 서버 액션, 현재 팀 조회를 함께 수정한다.
+				129 button (disabled) 기능 이름·코드 묶음 편집
+			66 button (collapsed) 직접 연결된 구현, Secondary Actions: Expand
+				67 text 직접 연결된 구현
+			130 text LIVING SPEC 저장 v1
+			131 container
+				132 text 설계 이름
+				133 text field (settable) 설계 이름, Value: 팀 구성원 권한 · 재연결 검증
+			134 container
+				135 text 현재 구현의 기준선 사용자가 묶은 업무 기능입니다. 4개 코드 대상에 연결되어 있으며 0개 대상은 다시 연결해야 합니다. 기능의 이름과 설명은 사용자가 작성했습니다.
+
+page.tsx: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+actions.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+queries.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+
+route.ts: 선언과 호출·화면 요소의 정적 연결을 확인할 수 있습니다.
+			136 container
+				137 text 역할과 목적
+				138 text entry area (settable) 역할과 목적, Value: 현재 팀의 소유자만 구성원을 초대하거나 제거할 수 있도록 화면, 서버 액션, 팀 조회를 함께 연결한다.
+			139 container
+				140 text 원하는 동작
+				141 text entry area (settable) 원하는 동작, Value: 읽기 전용 member는 현재 팀과 구성원을 조회할 수 있지만 초대와 제거를 할 수 없다. 화면에는 제한 이유를 명확히 표시하고 직접 호출한 서버 액션도 데이터 변경 없이 거절한다. owner는 기존처럼 유효한 구성원을 초대하고 제거할 수 있다.
+			142 container
+				143 text 정책과 조건
+				144 text entry area (settable) 정책과 조건, Value: 권한은 현재 팀의 teamMembers.role로 판단한다. users.role 또는 다른 팀에서 가진 owner 역할을 사용하지 않는다. 대시보드, /api/team, 서버 액션은 같은 현재 팀 선택 기준을 쓴다. 기존 첫 번째 membership 기준을 유지한다. owner의 제거 버튼은 배열 위치(index > 1)로 제한하지 않는다.
+			145 container
+				146 text 입출력과 데이터
+				147 text entry area (settable) 입출력과 데이터, Value: FormData의 멤버 ID는 양의 정수 문자열만 허용하고 잘못된 값은 거절한다. 초대와 제거 성공 후 SWR 데이터를 갱신하여 현재 화면을 최신화한다. 기존 팀·멤버 스키마와 응답 호환성을 유지한다. 의존성은 가능한 한 로컬 pnpm 캐시로 설치한다.
+			148 container
+				149 text 예외와 실패 처리
+				150 text entry area (settable) 예외와 실패 처리, Value: 권한이 없는 직접 호출은 오류를 반환하며 DB를 변경하지 않는다. 인증되지 않은 요청과 잘못된 ID도 거절한다. 운영 DB, 결제 서비스, 실제 이메일 전송을 호출하지 않는다.
+			151 container
+				152 text 유지해야 하는 동작 한 줄에 한 가지씩
+				153 text entry area (settable) 유지해야 하는 동작 한 줄에 한 가지씩, Value: 로그인과 결제 관련 기존 동작을 유지한다.
+pureobom-validation/permissions.test.tsx, pureobom-validation/vitest.config.mts, package.json, pnpm-lock.yaml 파일을 변경하지 않는다.
+설치 및 검사에는 테스트용 로컬 데이터만 사용한다.
+			154 container
+				155 text 완료 기준 한 줄에 한 가지씩
+				156 text entry area (settable) 완료 기준 한 줄에 한 가지씩, Value: member가 현재 팀과 구성원을 정상 조회한다.
+member에게 초대·제거가 비활성화되고 제한 이유가 보인다.
+member가 초대·제거 서버 액션을 직접 호출해도 거절되고 데이터는 그대로다.
+owner가 유효한 FormData ID로 구성원을 초대하고 제거한다.
+다른 팀의 owner 역할을 현재 팀의 권한으로 사용하지 않는다.
+잘못된 ID를 거절하고 성공한 변경은 화면 데이터에 반영한다.
+			157 container
+				158 button 설계만 저장
+				159 text 설계만 저장하면 구현을 실행하지 않습니다.
+				190 container 구현 설정
+					191 text Codex로 구현
+					192 text 별도 Git 작업 공간에서 수정하고 검사합니다. 결과를 검토한 뒤 원본 프로젝트에 반영합니다.
+					193 text 모델:  Codex 기본 설정
+					194 button (disabled) Codex 연결 확인
+					195 button 실행기·모델 설정
+					196 container
+						197 text Codex에 연결되었습니다. 구현 실행 시 로그인 상태를 다시 확인합니다.  (Codex Desktop/0.163.0-alpha.10.2 (Windows 10.0.26200; x86_64) dumb (pureobom; 0.7.0))
+					198 button (collapsed) 실행기 경로, Secondary Actions: Expand
+						199 text 실행기 경로
+					200 text 이 컴퓨터에 보관한 프로젝트 설정을 불러왔습니다.
+					201 checkbox (settable, integer) Description: 설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다., Value: 1
+					202 container 구현 후 실행할 검사
+						203 text 구현 후 실행할 검사
+						204 checkbox (settable, integer) Description: pnpm run test, Value: 1
+						205 text vitest run --config pureobom-validation/vitest.config.mts
+						206 checkbox (settable, integer) Description: pnpm run typecheck, Value: 1
+						207 text tsc --noEmit
+						208 checkbox (settable, integer) Description: pnpm run build, Value: 0
+						209 text next build
+					210 button (disabled) 이 프로젝트에 보관
+					211 button 보관 해제
+					212 text 보관하면 다음에도 이 설정을 사용합니다. 해제는 이후 구현에 적용되며, 진행 중인 작업은 작업 패널에서 취소할 수 있습니다.
+					213 button (disabled) 저장하고 구현
+		119 button (collapsed) 이전 구현 작업 0개, Secondary Actions: Expand
+			120 text 이전 구현 작업
+			121 text 0
+			122 text 개
+		220 container 구현 작업 연결
+			221 container 구현 작업
+				222 container
+					223 text 실행 선택 필요 설계 v 1
+					224 button 작업 취소
+				225 text 창을 닫아도 작업은 계속됩니다. 같은 프로젝트를 다시 열면 연결됩니다. 중지하려면 작업 취소를 선택하세요.
+				230 text 명령 실행 요청
+				231 text "C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe" -Command 'pnpm test'
+				232 text The sandbox blocked Vitest/esbuild from resolving the worktree config. Allow the test suite to run outside the sandbox using its in-memory local test database?
+				233 text C:\Users\user\.pureobom\worktrees\a12bd6b4261842d5\a3d96794-25a0-4f76-9146-adbbcdf267b1
+				234 button 이번 요청 허용
+				235 button 거절
+				226 container
+					227 button (expanded) 진행 내용, Secondary Actions: Collapse
+						228 text 진행 내용
+					229 text Codex가 설계를 구현하고 있습니다.
+I’ll trace how the dashboard, team API, and actions select the current team, then implement the permission checks and run the requested tests and typecheck. I’ll keep the protected files unchanged and use only local test data.
+The UI currently checks the account-wide role, while the actions check only team membership. Removal also rejects normal FormData strings and hides buttons based on list position. I’ll align these paths around the current team’s membership role and add SWR refreshes after successful changes.
+The permission changes are in place. Both actions now check the first membership’s role, and removal returns an error without an audit entry if the target is outside the current team. The UI uses the same role policy and refreshes `/api/team` after success. I’m adding regression cases for ID validation, team selection, and refresh behavior.
+The added regression cases cover invalid and file-valued IDs, removal from another team, expired sessions, demotion, and first-team selection after a membership update. Dependency setup is still in progress: the default offline store was empty, so I’m copying the existing local pnpm cache into the worktree to keep installation offline.
+The API now returns 401 with the existing `null` body for unauthenticated requests. Authenticated members still receive the same team response shape. I’m checking the React changes for refresh and disabled-control behavior while the local dependency setup finishes, using the React best-practices skill.
+All 245 dependencies are available in the local cache; installation has downloaded nothing. The implementation and regression tests are ready, and the four protected files still match their original hashes. I’m moving on to the acceptance suite and typecheck.
+ 작업 복사본:  C:\Users\user\.pureobom\worktrees\a12bd6b4261842d5\a3d96794-25a0-4f76-9146-adbbcdf267b1
+		123 text 설계를 저장하고 구현 작업을 시작했습니다.
+		124 button (collapsed) 확인하지 못한 범위 323, Secondary Actions: Expand
+			125 text 확인하지 못한 범위
+			126 text 323
+
+The focused UI element is 227 button (expanded) 진행 내용, Secondary Actions: Collapse

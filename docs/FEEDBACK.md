@@ -20,4 +20,4 @@ These are voluntary, self-reported accounts. They cannot establish an activation
 - Preserve completed, stuck and unsupported outcomes. Do not convert missing results into success.
 - Ask for a minimal public/synthetic reproduction when needed; avoid requesting a whole private repository.
 - Record the next reproducible improvement and link its fix to the feedback issue.
-- Keep [the five-person observation protocol](USER_STUDY.md) separate from unsolicited reports, downloads and GitHub stars.
+- Keep [the system-design comparison protocol](USER_STUDY.md) separate from unsolicited reports, downloads and GitHub stars.

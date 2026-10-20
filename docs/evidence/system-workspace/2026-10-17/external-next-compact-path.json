@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-10-17T04:05:40.929Z",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "workspace": "C:\\Users\\user\\.pureobom\\worktrees\\f235422b1adb3f83\\3b5acce3-2402-4701-8958-53a6bdd4b476",
+  "metadata": "C:\\Users\\user\\AppData\\Local\\Temp\\pureobom-compact-validation-twOw1N\\profile\\User\\globalStorage\\pureobom-local.pureobom\\implementation-jobs\\3b5acce3-2402-4701-8958-53a6bdd4b476",
+  "install": {
+    "command": "pnpm install --offline --frozen-lockfile --ignore-scripts",
+    "exitCode": 0,
+    "packages": 245,
+    "downloaded": 0
+  },
+  "fixed": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "pending": 0
+  },
+  "additional": {
+    "total": 22,
+    "passed": 22,
+    "failed": 0,
+    "pending": 0
+  },
+  "typecheck": {
+    "command": "pnpm run typecheck",
+    "exitCode": 0
+  },
+  "nativeExecutable": {
+    "version": "0.28.2",
+    "binary": "C:\\Users\\user\\.pureobom\\worktrees\\f235422b1adb3f83\\3b5acce3-2402-4701-8958-53a6bdd4b476\\node_modules\\.pnpm\\@esbuild+win32-x64@0.28.2\\node_modules\\@esbuild\\win32-x64\\esbuild.exe",
+    "characters": 176,
+    "oldLayoutCharacters": 273,
+    "overrideUsed": false
+  },
+  "candidateHashes": {
+    "app/(dashboard)/dashboard/page.tsx": "57c7b669768acdb1541383aaeb5a615991b7123f16848785e8d6bfecaf6b218a",
+    "lib/auth/team-permissions.ts": "d11af5919ad3f113ddd9cec666e876ec869a12ba4b4513a861b51b0d3089a237",
+    "lib/db/queries.ts": "885a431fb4dcd69aa2ca96c44f0940916e14264ae90e72f6a49be81857c9b0d3",
+    "tests/team-permissions.test.tsx": "25847741fa5a6da5fdc2e47f6f60677f61b79c109d5395e93112078c14c69b7f",
+    "app/(login)/actions.ts": "457619e2cb777e3f0f5d9eef8f8378fdd645481dccc21b01ac5ce6c3477d8114",
+    "tests/team-permissions.config.mts": "628ee24220c9aa06289651032a168aafdbe3d9259756345a4314897908022517"
+  },
+  "preservedInputs": {
+    "package.json": "9dd5bec1b9d8d96750aa4f175544422e6385461f18774dad2a51e63235d5d714",
+    "pnpm-lock.yaml": "ee0a8a1fa54a632033fc1a6a00650ab412021f2a7d390e8b770163f959a353d8",
+    "pureobom-validation/permissions.test.tsx": "3f8435c1fc79746cb694bcfc784a87bb48be8ad0ce27988f140c8ed90d02ecfa",
+    "pureobom-validation/vitest.config.mts": "294a655871f43415f96399c267bc1b51bcd04843d5217291792b24ea8011e82d"
+  },
+  "scope": "Independent fresh compact worktree using the changed workspace implementation. Plain package scripts with locked dependencies and exact candidate files pass; not a new installed-UI model run."
+}

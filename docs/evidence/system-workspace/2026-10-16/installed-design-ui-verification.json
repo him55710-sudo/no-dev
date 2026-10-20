@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T11:49:56.681Z",
+  "provider": "Explicit deterministic stdio fixture; no external inference.",
+  "scope": "Unmodified installed Webview JS/CSS operated through a browser, using a token-scoped loopback replacement for acquireVsCodeApi. Requests execute in the installed Production VS Code host. Native VS Code Webview DOM/pointer delivery is not verified.",
+  "sourceReports": [
+    "installed-design-ui-before-fix.json",
+    "installed-design-ui.json"
+  ],
+  "automatedReportAssertions": {
+    "successfulRequests": 17,
+    "changedFiles": [
+      "policy.js",
+      "service.js",
+      "ui.js"
+    ],
+    "realTestsPassed": 5,
+    "fixedTestFileUnchanged": true,
+    "confirmedCriteria": 6,
+    "unverifiedCriteria": 1,
+    "explicitUnverifiedAcceptance": true,
+    "desiredContentPreserved": true,
+    "analysisFileHashesRestored": true,
+    "analysisChangedAfterApply": true,
+    "originalTrackedFilesHeadIndexStatusRestored": true,
+    "unchangedHostWorkerCssBundles": true,
+    "changedUiBundle": true
+  },
+  "browserObservations": {
+    "method": "Validation agent operated the rendered UI through documented browser locators; observations below are separate from host assertions.",
+    "saveSpec": {
+      "savedVersion": 1,
+      "draftNoticeCount": 0
+    },
+    "discardDraft": {
+      "draftNoticeCount": 0,
+      "restoredPurpose": ""
+    },
+    "implement": {
+      "savedVersion": 2,
+      "draftNoticeCount": 0
+    },
+    "graphNodes": {
+      "before": 21,
+      "applied": 22,
+      "undone": 21
+    },
+    "afterUndo": {
+      "draftNoticeCount": 0,
+      "desiredContentPreserved": true
+    },
+    "finishText": "기록 저장 완료"
+  },
+  "beforeFix": {
+    "hostAssertionsPassed": true,
+    "uiPassed": false,
+    "observedFailure": "Draft notice with stale saving/conflict state remained after host consumed the draft."
+  },
+  "screenshots": [
+    {
+      "path": "installed-design-ui-applied.jpg",
+      "sha256": "09a75ca596971b69a3577aaeca6e94f39361a385b745bc6179a69f03a26d4edf"
+    },
+    {
+      "path": "installed-design-ui-undone.jpg",
+      "sha256": "e489a9a677138fea0bab93b1aca98bd8c075b41bd8fafc47da0d5543654b3786"
+    }
+  ],
+  "limitations": [
+    "Deterministic stdio fixture, no external inference in this UI run.",
+    "Actual app screen criterion remains unverified; synthetic ui.js exposes only editControls return values.",
+    "Native VS Code Webview DOM, CSP and pointer delivery are not covered.",
+    "Review performed by validation agent, not human usability participant."
+  ],
+  "regressionTests": {
+    "command": "pnpm exec vitest run tests/design-drafts.test.ts tests/system-workspace.test.ts tests/implementation-review.test.ts",
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "suites": [
+      {
+        "file": "design-drafts.test.ts",
+        "status": "passed",
+        "total": 4
+      },
+      {
+        "file": "implementation-review.test.ts",
+        "status": "passed",
+        "total": 4
+      },
+      {
+        "file": "system-workspace.test.ts",
+        "status": "passed",
+        "total": 12
+      }
+    ]
+  },
+  "validationCommands": [
+    {
+      "command": "pnpm build",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm exec tsc -p extension/tsconfig.json",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check scripts/test-installed-design-ui.mjs",
+      "exitCode": 0
+    }
+  ],
+  "testTransportShipped": false
+}

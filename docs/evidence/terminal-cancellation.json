@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-20T00:56:10.687Z",
+  "baseCommit": "436b40f36523156a6a821f44f59f0bb7f6e122a0",
+  "scenario": "A real process emits turn/completed; cancellation occurs after internal resolution but before result delivery.",
+  "runs": [
+    {
+      "stage": "before-fix",
+      "source": "test-results/cancellation-terminal-before.json",
+      "sha256": "08fb4c08c220c1335d5d1d9435e79a798c9ed73532a7527554ca6a9fa87826cf",
+      "success": false,
+      "startTime": 1792457441365,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 11,
+      "tests": [
+        {
+          "name": "Codex App Server protocol uses read-only turns and a structured response contract for project explanations",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol decodes split UTF-8, redacts identity, and handles terminal events before the response",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol never converts a failed turn or widened sandbox into success",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol declines unhandled approvals and only accepts the exact requested decision",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol rejects unsupported server calls explicitly",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol keeps a live turn open while multiple approvals are being reviewed",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol resumes the remaining execution budget after a decision",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol cancels while an approval is paused and rejects a late decision",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol does not reset the elapsed execution budget when approval finishes",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol resumes after the server resolves an approval without a client decision",
+          "status": "skipped",
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol rejects cancellation received after a terminal frame but before run resolves",
+          "status": "failed",
+          "durationMs": 1703.5572000000002,
+          "failures": [
+            "AssertionError: expected 'resolved' to be 'rejected' // Object.is equality\n    at <workspace>/tests/agent-protocol.test.ts:269:29\n    at processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at <workspace>/node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20"
+          ]
+        },
+        {
+          "name": "Codex App Server protocol cancels a live turn and closes its process",
+          "status": "skipped",
+          "failures": []
+        }
+      ]
+    },
+    {
+      "stage": "after-fix-protocol",
+      "source": "test-results/cancellation-terminal-after.json",
+      "sha256": "ff118620c2273af68878be19a68e6da105851ae02c018f6fab194718a4a15810",
+      "success": true,
+      "startTime": 1792457455496,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "tests": [
+        {
+          "name": "Codex App Server protocol uses read-only turns and a structured response contract for project explanations",
+          "status": "passed",
+          "durationMs": 3402.1904999999997,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol decodes split UTF-8, redacts identity, and handles terminal events before the response",
+          "status": "passed",
+          "durationMs": 1649.0710999999997,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol never converts a failed turn or widened sandbox into success",
+          "status": "passed",
+          "durationMs": 3333.3531000000003,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol declines unhandled approvals and only accepts the exact requested decision",
+          "status": "passed",
+          "durationMs": 3298.3356999999996,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol rejects unsupported server calls explicitly",
+          "status": "passed",
+          "durationMs": 1634.9362999999994,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol keeps a live turn open while multiple approvals are being reviewed",
+          "status": "passed",
+          "durationMs": 3471.3863,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol resumes the remaining execution budget after a decision",
+          "status": "passed",
+          "durationMs": 3062.0272000000004,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol cancels while an approval is paused and rejects a late decision",
+          "status": "passed",
+          "durationMs": 2353.4890000000014,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol does not reset the elapsed execution budget when approval finishes",
+          "status": "passed",
+          "durationMs": 3782.4455000000016,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol resumes after the server resolves an approval without a client decision",
+          "status": "passed",
+          "durationMs": 2878.2239999999983,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol rejects cancellation received after a terminal frame but before run resolves",
+          "status": "passed",
+          "durationMs": 1618.871500000001,
+          "failures": []
+        },
+        {
+          "name": "Codex App Server protocol cancels a live turn and closes its process",
+          "status": "passed",
+          "durationMs": 1613.222099999999,
+          "failures": []
+        }
+      ]
+    },
+    {
+      "stage": "after-fix-related",
+      "source": "test-results/cancellation-terminal-related.json",
+      "sha256": "6028d8e404800f7256951b3b88bcd1e31fe3dcaab7cc61c2189feb2573bbb73f",
+      "success": true,
+      "startTime": 1792457510951,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "tests": [
+        {
+          "name": "managed implementation host cancels a stalled initialize before inference and confirms the provider stopped",
+          "status": "passed",
+          "durationMs": 6101.396,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host cancels a stalled account/read before inference and confirms the provider stopped",
+          "status": "passed",
+          "durationMs": 6766.15,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host explicitly continues a dead job with its partial changes, new approval, fresh checks, review, apply and undo",
+          "status": "passed",
+          "durationMs": 20893.5539,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host outlives its original client process and reconnects to the same approval, checks, review, apply and undo",
+          "status": "passed",
+          "durationMs": 13260.5962,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host serializes concurrent windows, rejects stale approval/cancel requests, and cancels through a new connection",
+          "status": "passed",
+          "durationMs": 4480.041400000002,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host refuses unauthenticated clients and restores a dead host as interrupted without repeating inference",
+          "status": "passed",
+          "durationMs": 3990.495600000002,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host does not launch a replacement when an occupied endpoint fails to answer authentication",
+          "status": "passed",
+          "durationMs": 11272.131199999996,
+          "failures": []
+        },
+        {
+          "name": "managed implementation host stops a stubborn provider and detached writer when its managed host dies, preserving the interrupted job and original",
+          "status": "passed",
+          "durationMs": 4232.281700000007,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+          "status": "passed",
+          "durationMs": 4247.135,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+          "status": "passed",
+          "durationMs": 4314.8036999999995,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+          "status": "passed",
+          "durationMs": 7247.912899999999,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery persists explicit scope and test review, rejects stale proposals and preserves uncertainty",
+          "status": "passed",
+          "durationMs": 9441.972699999998,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+          "status": "passed",
+          "durationMs": 4133.012599999998,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery keeps an interrupted continuation copy unavailable and points back to the preserved parent",
+          "status": "passed",
+          "durationMs": 3797.734099999998,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+          "status": "passed",
+          "durationMs": 3152.985200000003,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+          "status": "passed",
+          "durationMs": 6624.173900000002,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+          "status": "passed",
+          "durationMs": 2158.509600000005,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery excludes a second writer until its lease is released",
+          "status": "passed",
+          "durationMs": 2428.042499999996,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery excludes another process and releases the lease after its owner is killed",
+          "status": "passed",
+          "durationMs": 229.09410000000207,
+          "failures": []
+        },
+        {
+          "name": "durable implementation recovery can acquire an IPC lease while an unrelated service holds the former TCP port",
+          "status": "passed",
+          "durationMs": 45.93340000000171,
+          "failures": []
+        },
+        {
+          "name": "retains real verification and review evidence through repair and restoration (repair succeeds: true)",
+          "status": "passed",
+          "durationMs": 21683.918599999997,
+          "failures": []
+        },
+        {
+          "name": "retains real verification and review evidence through repair and restoration (repair succeeds: false)",
+          "status": "passed",
+          "durationMs": 19684.1395,
+          "failures": []
+        },
+        {
+          "name": "independent implementation verification marks omitted output while retaining the tail and real failing exit",
+          "status": "passed",
+          "durationMs": 5233.2283,
+          "failures": []
+        },
+        {
+          "name": "independent implementation verification records real exits, refuses missing or replaced scripts, and terminates timed-out commands",
+          "status": "passed",
+          "durationMs": 16291.440000000002,
+          "failures": []
+        },
+        {
+          "name": "independent implementation verification cancels a running check only after its actual child and descendant stop",
+          "status": "passed",
+          "durationMs": 3240.9347000000016,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review carries modified, added and deleted files into an independent continuation without touching the original candidate",
+          "status": "passed",
+          "durationMs": 6072.8257,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review rejects changed source and unrelated checkpoints before copying any partial change",
+          "status": "passed",
+          "durationMs": 7097.9966,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review keeps native tools runnable outside a deep profile and restores the exact compact worktree",
+          "status": "passed",
+          "durationMs": 6056.137000000002,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review preserves staged/unstaged work, raw CRLF and assets without copying excluded secrets",
+          "status": "passed",
+          "durationMs": 5200.769900000003,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review refuses changes when any original input or the reviewed proposal changes",
+          "status": "passed",
+          "durationMs": 4987.7161000000015,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review rolls back a partial multi-file application and records the actual result",
+          "status": "passed",
+          "durationMs": 2663.5586000000003,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review does not overwrite subsequent user edits during undo",
+          "status": "passed",
+          "durationMs": 2512.8308000000034,
+          "failures": []
+        },
+        {
+          "name": "isolated implementation and review rejects new source files added while implementation was running",
+          "status": "passed",
+          "durationMs": 2648.7432000000044,
+          "failures": []
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Deterministic protocol peer, not an external AI run.",
+    "Not native pointer/keyboard verification or a human usability result.",
+    "The existing job manager already checks cancellation after server.run."
+  ],
+  "installedRecovery": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-10-20T00:54:58.227Z",
+    "platform": "win32",
+    "vscode": "1.96.4",
+    "node": "v24.19.0",
+    "artifact": {
+      "version": "0.7.0",
+      "vsixSha256": "ae60ff55f5207c5e01aede5f6be8c7bb341cd6b78ccb9e9448b3d2c048e89c6f",
+      "files": {
+        "out/extension.cjs": "2db42d257dda4930a8e4a4cd6b521430f905fc95b2278e644fb6ed34d2b851bc",
+        "out/worker.cjs": "336c797222355550a408a9bde9ea6d4030ebcee2a912641ed36052c122999dc8",
+        "out/agent-host.cjs": "61259e69bc7b27304b8e2b1025184e0b75e5a6b2cbec9eb6acca6b408af09729",
+        "media/design.js": "894a0b7001938434f7960bcd29f52741dfddf8d2b1aa8d477287880c377fe9ad",
+        "media/design.css": "88f286ed9d2c40d00812c37f698eacfcc418fd5d70fa3b21625d38cd15bb6012",
+        "THIRD_PARTY_NOTICES.txt": "af45ed0f443d83747b8df800aad4c0cdd62e94846f4c29830406142e0f6d5fc1",
+        "media/view.js": "431389a2e0afde29c22f2a57b3a8de93fd58aec2aacb5fe118c475ada95edc47",
+        "media/view.css": "3963785129d404f4fd30ebacf8c267984758d9bda0340b6be2006cde14d8c7f3",
+        "package.nls.json": "b7b6bb988714f5d1f285fe1c4f99e56709f1089f524bc5cf79daca1e7410ede8",
+        "package.nls.ko.json": "20b7f4eb33170de5a541c942a4c3c679e1e8bd6b96be611067a17a0c6923dc58",
+        "readme.md": "2502bf46f79dc22a01f0d8ae0f6ed59f2489ec9997068f0c3a57f2de6444130b",
+        "media/start/explore.md": "9a003d1af497870746c4ecb5d02c7ff7aafccdf6358bd511d6b6f42194ccb2ac",
+        "media/start/design.md": "6ad06e1c7c4437851fa0b5d60a7cc1d1468f45342f49f4623ec3388db4768a70",
+        "media/start/implement.md": "3ea8324fbcb1d4e7b963a58034039a3c4298526a32b50057e851c435b56774f2",
+        "media/start/review.md": "6cfadf3b3428f5981e47a20dc4974ca23c82a944e48e9abdf699a08d4c313cd5"
+      }
+    },
+    "scope": "Installed VSIX in Production extension mode across six separate VS Code launches. The first phase observes actual native Webview boot, graph/navigation messages and close/reopen without replacing its HTML/CSP or JS. Remaining recovery operations call the validated host dispatcher directly. A pending approval survives the first window exit; a managed file transaction continues after the extension host is killed. This is not pointer/keyboard UI automation, visual verification, managed-worker crash recovery, or model-quality evidence.",
+    "provider": "Explicit deterministic local stdio fixture; no external AI inference or credentials used.",
+    "dependencyEnvironment": "Synthetic repository outside the host checkout with no third-party dependencies. Checks use Node's built-in test runner through the real package-manager verification path.",
+    "phases": [
+      {
+        "phase": "prepare-review",
+        "extensionHostPid": 12052,
+        "checkedAt": "2026-10-20T00:53:40.974Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "unmodified native Webview boots, exchanges graph/navigation state, and reopens without implementation",
+          "bundled walkthrough command opens editor (Welcome) without starting a job or changing designs",
+          "connection check uses the real stdio adapter without starting an implementation or changing design",
+          "overlapping connection requests start only one peer",
+          "project execution approval is saved in local extension storage",
+          "implementation begins from a saved cross-file business feature",
+          "window exits with a live unapproved request; no approval is synthesized",
+          "unfinished local draft is durable without changing the confirmed design or starting another agent",
+          "implementation does not modify the original source or index"
+        ],
+        "nativeWebviewStartup": {
+          "scope": "Unmodified installed native VS Code Webview boot and protocol round trip, observed through its existing host dispatcher. No DOM injection, browser replacement, pointer/keyboard input, visual assertion or model execution.",
+          "viewType": "mainThreadWebview-pureobom.design",
+          "events": [
+            {
+              "id": "1",
+              "action": "ready",
+              "elapsedMs": 1290,
+              "completed": true
+            },
+            {
+              "id": "2",
+              "action": "saveNavigation",
+              "elapsedMs": 3101,
+              "projectKey": "411b676887af2178af64785419e1091573889a4480eea7d8cad83eaee538b13f",
+              "generation": 0,
+              "canvasCount": 1,
+              "completed": true
+            },
+            {
+              "id": "1",
+              "action": "ready",
+              "elapsedMs": 3523,
+              "completed": true
+            }
+          ],
+          "closedAndReopened": true,
+          "navigationPreserved": true,
+          "designPreserved": true,
+          "implementationJobsStarted": 0
+        },
+        "verification": []
+      },
+      {
+        "phase": "resume-review",
+        "extensionHostPid": 34140,
+        "checkedAt": "2026-10-20T00:53:57.869Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "business feature persists after restart",
+          "project execution settings survive an independent installed extension launch",
+          "passing checks do not auto-confirm criteria; explicit review preserves unverified criteria",
+          "explicit file approval reaches the peer",
+          "real package-manager checks pass",
+          "three-file review is durable",
+          "acceptance tests are unchanged",
+          "fresh installed extension attaches to the same live job and original approval without starting another turn"
+        ],
+        "verification": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "outputSha256": "3a2242e86f07f8a691acf56639ceccc79f0d843adb68482f4f29d38bf94a996c"
+          }
+        ]
+      },
+      {
+        "phase": "review-and-apply",
+        "extensionHostPid": 30792,
+        "checkedAt": "2026-10-20T00:54:15.613Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "business feature persists after restart",
+          "project execution settings survive an independent installed extension launch",
+          "unfinished draft restores after a fresh VS Code launch without auto-confirmation or execution",
+          "saved review decisions restore with their exact proposal after restart without claiming criterion completion",
+          "changing feature membership blocks an old implementation review",
+          "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+          "review restored after VS Code restart",
+          "native diff opened",
+          "same-revision manual design changes block apply",
+          "dirty editor blocks apply",
+          "original project passes the acceptance tests after apply"
+        ],
+        "verification": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "outputSha256": "3a2242e86f07f8a691acf56639ceccc79f0d843adb68482f4f29d38bf94a996c"
+          }
+        ]
+      },
+      {
+        "phase": "undo-after-restart",
+        "extensionHostPid": 32368,
+        "checkedAt": "2026-10-20T00:54:41.941Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "business feature persists after restart",
+          "project execution settings survive an independent installed extension launch",
+          "draft keeps its original context across baseline changes and explicit discard preserves confirmed design",
+          "applied record survives another restart",
+          "undo preserves subsequent user edits",
+          "undo restores exact original bytes and staged/unstaged status",
+          "explicit baseline acceptance preserves intent and previous evidence without starting an agent",
+          "passing checks do not auto-confirm criteria; explicit review preserves unverified criteria",
+          "explicit file approval reaches the peer",
+          "real package-manager checks pass",
+          "three-file review is durable",
+          "acceptance tests are unchanged",
+          "next implementation uses the explicitly accepted baseline"
+        ],
+        "verification": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "outputSha256": "a3a05d674efd647fd43ddf5e5a7bb57c4c8041a24a3f53fda675d4b19c0ee172"
+          }
+        ]
+      },
+      {
+        "phase": "crash-during-apply",
+        "extensionHostPid": 8092,
+        "checkedAt": "2026-10-20T00:54:50.415Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "business feature persists after restart",
+          "project execution settings survive an independent installed extension launch",
+          "product apply journal exists",
+          "at least one original file changed",
+          "test extension host terminated while transaction is incomplete"
+        ]
+      },
+      {
+        "phase": "continue-after-crash",
+        "extensionHostPid": 19612,
+        "checkedAt": "2026-10-20T00:54:57.873Z",
+        "checks": [
+          "installed VSIX bytes match",
+          "Production extension mode",
+          "real workspace command opens analyzed design panel",
+          "business feature persists after restart",
+          "project execution settings survive an independent installed extension launch",
+          "managed apply completes despite the extension-host exit",
+          "newly attached window reconciles actual file bytes",
+          "explicit undo restores the original source and preserves the Git index"
+        ],
+        "verification": [
+          {
+            "name": "test",
+            "status": "passed",
+            "exitCode": 0,
+            "outputSha256": "a3a05d674efd647fd43ddf5e5a7bb57c4c8041a24a3f53fda675d4b19c0ee172"
+          }
+        ]
+      }
+    ],
+    "crash": {
+      "journalState": "applying",
+      "afterFiles": 1,
+      "beforeFiles": 2,
+      "progressEntries": 0,
+      "termination": "SIGKILL of this test extension-host process during apply",
+      "hostExit": {
+        "code": 1,
+        "signal": null
+      }
+    },
+    "restoredOriginalFiles": [
+      "policy.js",
+      "service.js",
+      "ui.js",
+      "test.js",
+      "app-server",
+      "package.json"
+    ],
+    "preserved": [
+      "staged user changes",
+      "unstaged user changes",
+      "acceptance tests",
+      "source HEAD and index"
+    ]
+  }
+}

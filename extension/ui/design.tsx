@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { useEffect, useState } from "react";
+import { Activity, useEffect, useState } from "react";
 import { DesignWorkspaceView } from "../../src/workspace/DesignWorkspaceView";
 import type { DesignWorkspaceState } from "../../src/workspace/state";
 import type { LivingSpec } from "../../src/workspace/spec";
@@ -10,7 +10,7 @@ import { request } from "./bridge";
 import { ProjectReader } from "./ProjectReader";
 
 function DesignApp() {
-  const [advanced, setAdvanced] = useState(false);
+  const [reading, setReading] = useState(true);
   const [state, setState] = useState<DesignWorkspaceState>({
     projectName: "",
     selectedId: "system",
@@ -36,24 +36,27 @@ function DesignApp() {
     );
     return () => window.removeEventListener("message", receive);
   }, []);
-  if (!advanced)
-    return (
-      <ProjectReader
-        key={state.projectKey ?? "loading"}
-        state={state}
-        onAdvanced={() => setAdvanced(true)}
-      />
-    );
   return (
     <>
-      <button onClick={() => setAdvanced(false)}>
-        ← 쉬운 한국어 화면으로 돌아가기
-      </button>
-      {
+      <div
+        aria-hidden={reading}
+        inert={reading}
+        style={
+          reading
+            ? {
+                position: "fixed",
+                inset: 0,
+                visibility: "hidden",
+                pointerEvents: "none",
+              }
+            : undefined
+        }
+      >
         <DesignWorkspaceView
           key={state.projectKey ?? "loading"}
           state={state}
           actions={{
+            readProject: () => setReading(true),
             refresh: () => request("refresh"),
             saveNavigation: (payload) =>
               request<NavigationSnapshot>("saveNavigation", payload),
@@ -105,7 +108,14 @@ function DesignApp() {
             jobAction: (action, payload) => request(action, payload),
           }}
         />
-      }
+      </div>
+      <Activity mode={reading ? "visible" : "hidden"}>
+        <ProjectReader
+          key={state.projectKey ?? "loading"}
+          state={state}
+          onAdvanced={() => setReading(false)}
+        />
+      </Activity>
     </>
   );
 }

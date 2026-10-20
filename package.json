@@ -1,11 +1,11 @@
 {
   "name": "pureobom",
   "version": "0.7.0",
-  "description": "Read code in your language. Change a rule. Check what changes.",
+  "description": "Explore software structure, edit source-linked designs, and review implementation and verification.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/him55710-sudo/pureobom.git"
+    "url": "https://github.com/him55710-sudo/no-dev.git"
   },
   "engines": {
     "node": ">=24"
@@ -21,15 +21,25 @@
     "bench": "vitest run tests/performance.test.ts",
     "extension:build": "tsc -p extension/tsconfig.json && node scripts/build-extension.mjs",
     "extension:test": "node scripts/test-extension.mjs",
+    "extension:design-test": "node scripts/test-design-workspace.mjs",
+    "extension:design-ui-test": "node scripts/test-installed-design-ui.mjs",
+    "extension:recovery-test": "node scripts/test-installed-recovery.mjs",
+    "agent:connection": "node scripts/check-agent-connection.mjs",
+    "agent:live-test": "node scripts/test-live-design.mjs",
     "extension:test:installed": "node scripts/test-extension.mjs --installed",
     "extension:package": "node scripts/package-extension.mjs",
     "release:package": "node scripts/package-release.mjs",
     "release:check": "node scripts/check-release.mjs",
+    "demo:record": "node scripts/build-system-demo.mjs",
+    "study:package": "node scripts/package-user-study.mjs",
+    "pages:package": "node scripts/package-pages.mjs",
+    "pages:preview": "node scripts/serve.mjs --site",
     "verify": "pnpm test && pnpm build && pnpm extension:build && pnpm extension:test",
     "format": "prettier --write src tests docs *.json *.ts *.html",
-    "extension:design-test": "node scripts/test-design-workspace.mjs",
-    "agent:connection": "node scripts/check-agent-connection.mjs",
-    "extension:project-live-test": "node scripts/test-project-reader.mjs"
+    "extension:project-live-test": "node scripts/test-project-reader.mjs",
+    "extension:code-reading-live-test": "node scripts/test-installed-code-reading.mjs",
+    "reader:live-test": "node scripts/check-live-code-reading.mjs",
+    "reader:preview": "node scripts/preview-code-reading.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "3.1.1",

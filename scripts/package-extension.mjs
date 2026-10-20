@@ -59,7 +59,11 @@ const licenses = await Promise.all(
 );
 await writeFile(
   "extension/THIRD_PARTY_NOTICES.txt",
-  licenses.join("\n") +
+  "LOCAL MODIFICATION: @xyflow/react 12.12.0 ESM bundles include a ResizeObserver " +
+    "scheduling/cleanup backport adapted from fpaupier's xyflow/xyflow PR #5999 " +
+    "and the pane-disconnect fix described in MokiMeow's PR #6054. " +
+    "See patches/README.md in the source distribution. Upstream MIT licenses follow.\n\n" +
+    licenses.join("\n") +
     "\n" +
     (await bundledNotices(
       JSON.parse(await readFile("extension/out/bundle-inputs.json", "utf8")),

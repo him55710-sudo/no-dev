@@ -567,6 +567,9 @@ export default function App() {
             <strong>{projectTitle}</strong>
           </div>
           <div className="topbar-actions">
+            <a className="button" href="./workspace-demo.html">
+              {t("시스템 설계 실행 기록", "System design walkthrough")}
+            </a>
             <button className="button" onClick={() => setModal("help")}>
               {t("설치·피드백", "Install & feedback")}
             </button>

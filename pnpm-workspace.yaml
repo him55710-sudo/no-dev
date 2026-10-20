@@ -2,3 +2,5 @@ allowBuilds:
   '@vscode/vsce-sign': false
   esbuild: true
   keytar: false
+patchedDependencies:
+  '@xyflow/react@12.12.0': patches/@xyflow__react@12.12.0.patch

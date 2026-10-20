@@ -1,0 +1,278 @@
+- complementary:
+  - text: 설치 번들 + 실제 호스트 · 테스트 전송 경로
+  - button "검증용 외부 코드 변경" [disabled]
+  - button "관측 기준 보관 후 창 재시작 검증"
+  - button "검증 종료·기록 저장"
+  - text: 검증용 코드 변경과 재분석 완료
+- main:
+  - generic: P
+  - strong: 풀어봄
+  - generic: 시스템 설계 워크스페이스
+  - generic: project
+  - status: 6개 파일 연결됨
+  - button "구조 새로 읽기"
+  - complementary:
+    - generic: 구조 검색
+    - textbox "구조 검색":
+      - /placeholder: 기능, 규칙, 파일 검색
+    - text: 프로젝트 구조
+    - generic: "20"
+    - button "업무 기능 만들기"
+    - navigation "프로젝트 구조":
+      - list:
+        - button "프로젝트 접기" [expanded]: ⌄
+        - button "프로젝트": 프로젝트
+        - list:
+          - button "package.json": package.json
+          - button "policy.js 펼치기": ›
+          - button "policy.js": policy.js
+          - button "README.md": README.md
+          - button "service.js 펼치기": ›
+          - button "service.js": service.js
+          - button "test.js 펼치기": ›
+          - button "test.js": test.js
+          - button "ui.js 펼치기": ›
+          - button "ui.js": ui.js
+    - text: 저장된 설계
+    - generic: "1"
+    - list:
+      - button "공유 권한 관측 비교 v1":
+        - text: 공유 권한 관측 비교
+        - generic: v1
+    - paragraph: 업무 기능은 사용자가 연결한 코드 묶음입니다. 코드 구조에서 모든 구현을 경로대로 탐색할 수 있어요.
+  - generic: 2개 연결
+  - generic: 3개 연결
+  - generic: 2개 연결
+  - generic: 2개 연결
+  - group "구현 파일 package.json":
+    - generic: 구현 파일
+    - strong: package.json
+    - generic: package.json · L1
+  - group "구현 파일 policy.js":
+    - generic: 구현 파일
+    - strong: policy.js
+    - generic: policy.js · L1
+    - generic: 1개 하위 구조 ↗
+  - group "구현 파일 README.md":
+    - generic: 구현 파일
+    - strong: README.md
+    - generic: README.md · L1
+  - group "구현 파일 service.js":
+    - generic: 구현 파일
+    - strong: service.js
+    - generic: service.js · L1
+    - generic: 3개 하위 구조 ↗
+  - group "구현 파일 test.js":
+    - generic: 구현 파일
+    - strong: test.js
+    - generic: test.js · L1
+    - generic: 5개 하위 구조 ↗
+  - group "구현 파일 ui.js":
+    - generic: 구현 파일
+    - strong: ui.js
+    - generic: ui.js · L1
+    - generic: 1개 하위 구조 ↗
+  - complementary "선택한 구조의 설계":
+    - generic: 세부 설계
+    - button "구조 함께 보기" [pressed]
+    - generic: 프로젝트 · 프로젝트
+    - button "설계에 포함"
+    - generic "직접 연결된 구현"
+    - generic: LIVING SPEC
+    - generic: 저장 v1
+    - text: 설계 이름
+    - textbox "설계 이름": 공유 권한 관측 비교
+    - text: 저장한 구현 기준
+    - paragraph: 코드에서 확인한 모듈·함수·규칙과 연결입니다. 폴더 묶음은 업무상의 시스템 경계를 확정하지 않습니다.
+    - status:
+      - strong: 설계와 구현의 재검토가 필요해요
+      - paragraph: "policy.js : 근거 코드가 바뀌었습니다. 목표 충족 여부를 다시 확인해야 합니다."
+      - paragraph: "service.js : 근거 코드가 바뀌었습니다. 목표 충족 여부를 다시 확인해야 합니다."
+      - paragraph: 아래 목표는 유지됩니다. 코드 변화만으로 동작의 정합성을 판정하지 않습니다.
+    - button "기준 코드 비교·다시 연결"
+    - region "설계와 코드 관측 비교":
+      - heading "설계와 코드 관측 비교" [level=3]
+      - strong: 원하는 동작
+      - paragraph: viewer는 조회만 허용하고 수정 API와 편집 화면은 차단한다. owner와 editor의 편집은 유지한다.
+      - text: 목표 충족 여부는 아직 이 비교에서 판정하지 않습니다.
+      - paragraph: 정적 분석으로 확인한 조건·설명·호출 관계입니다. 코드가 같거나 검사가 통과했다는 사실만으로 목표를 달성했다고 표시하지 않습니다.
+      - paragraph: 저장한 기준 · 동작·선언 14/14개 · 연결 11/11개
+      - paragraph: 현재 분석 · 동작·선언 15/15개 · 연결 12/12개
+      - generic "동작·선언 15개 · 달라진 관측 3개" [active]
+      - article:
+        - heading "canEdit 코드 변경" [level=4]:
+          - text: canEdit
+          - generic: 코드 변경
+        - strong: 저장할 때
+        - paragraph: ((「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류)) 또는 「role」 값이 “viewer” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.
+        - code: policy.js:1
+        - strong: 현재 코드
+        - paragraph: (「role」 값이 “owner” 같음 (값과 종류) 또는 「role」 값이 “editor” 같음 (값과 종류))를 결과로 돌려주고 이 기능을 끝냅니다.
+        - code: policy.js:1
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "updateProject 코드 변경" [level=4]:
+          - text: updateProject
+          - generic: 코드 변경
+        - strong: 저장할 때
+        - paragraph: "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님 (「project」의 「title」 에 저장: 「title」) 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다."
+        - code: service.js:2
+        - strong: 현재 코드
+        - paragraph: "이 조건을 만족하면: 「canEdit」 기능 호출 (전달: 「project」의 「members」에서 「userId」 위치의 값)이 아님 「audit」 기능 호출 (전달: 없음) (「project」의 「title」 에 저장: 「title」) 「project」 값을 결과로 돌려주고 이 기능을 끝냅니다."
+        - code: service.js:2
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "audit 새로 관측" [level=4]:
+          - text: audit
+          - generic: 새로 관측
+        - strong: 관측 내용
+        - paragraph: “recorded” 값을 결과로 돌려주고 이 기능을 끝냅니다.
+        - code: service.js:13
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "package.json 같은 코드 근거" [level=4]:
+          - text: package.json
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: 구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.
+        - paragraph: 이 파일의 동작 분석은 지원하지 않습니다. 원문 근거만 연결합니다.
+        - code: package.json:1
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "README.md 같은 코드 근거" [level=4]:
+          - text: README.md
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: 구조 분석 미지원 파일입니다. 원문은 탐색할 수 있습니다.
+        - paragraph: 이 파일의 동작 분석은 지원하지 않습니다. 원문 근거만 연결합니다.
+        - code: README.md:1
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "!canEdit(project.members[userId]) 같은 코드 근거" [level=4]:
+          - text: "!canEdit(project.members[userId])"
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: "이 조건에 따라 실행 경로가 달라집니다: !canEdit(project.members[userId])"
+        - code: service.js:3
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "readProject 같은 코드 근거" [level=4]:
+          - text: readProject
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: "이 조건을 만족하면: 「project」의 「members」에서 「userId」 위치의 값이 아님 「project」의 「title」 값을 결과로 돌려주고 이 기능을 끝냅니다."
+        - code: service.js:8
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "!project.members[userId] 같은 코드 근거" [level=4]:
+          - text: "!project.members[userId]"
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: "이 조건에 따라 실행 경로가 달라집니다: !project.members[userId]"
+        - code: service.js:9
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "project 같은 코드 근거" [level=4]:
+          - text: project
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: function 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: test.js:5
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "item 같은 코드 근거" [level=4]:
+          - text: item
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: test.js:10
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "before 같은 코드 근거" [level=4]:
+          - text: before
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: test.js:11
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "user 같은 코드 근거" [level=4]:
+          - text: user
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: test.js:19
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "item 같은 코드 근거" [level=4]:
+          - text: item
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: test.js:24
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "editControls 같은 코드 근거" [level=4]:
+          - text: editControls
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: "「editable」에 「canEdit」 기능 호출 (전달: 「role」)을(를) 담습니다. 묶음 데이터 { 「editable」, reason: “” } 값을 결과로 돌려주고 이 기능을 끝냅니다."
+        - code: ui.js:2
+        - button "현재 근거 열기 ↗"
+      - article:
+        - heading "editable 같은 코드 근거" [level=4]:
+          - text: editable
+          - generic: 같은 코드 근거
+        - strong: 관측 내용
+        - paragraph: data 선언입니다. 코드만으로 업무 목적이나 작성 의도를 확정하지 않습니다.
+        - code: ui.js:3
+        - button "현재 근거 열기 ↗"
+      - generic "호출·모듈·화면 연결 12개 · 달라진 관측 1개"
+      - generic "확인할 완료 기준 2개 · 유지 조건 1개"
+      - generic "현재 관측의 제한 7개"
+    - text: 역할과 목적
+    - textbox "역할과 목적":
+      - /placeholder: 이 기능이 필요한 이유를 적어 주세요.
+    - text: 원하는 동작
+    - textbox "원하는 동작":
+      - /placeholder: 어떤 동작으로 바꾸려는지 구체적으로 적어 주세요.
+      - text: viewer는 조회만 허용하고 수정 API와 편집 화면은 차단한다. owner와 editor의 편집은 유지한다.
+    - text: 정책과 조건
+    - textbox "정책과 조건":
+      - /placeholder: 권한, 분기, 상태 변화, 제한
+    - text: 입출력과 데이터
+    - textbox "입출력과 데이터":
+      - /placeholder: 받는 정보, 반환하는 결과, 저장되는 데이터
+    - text: 예외와 실패 처리
+    - textbox "예외와 실패 처리":
+      - /placeholder: 실패할 때 사용자가 확인해야 할 동작
+    - text: 유지해야 하는 동작
+    - generic: 한 줄에 한 가지씩
+    - textbox "유지해야 하는 동작 한 줄에 한 가지씩": owner와 editor는 계속 수정할 수 있다.
+    - text: 완료 기준
+    - generic: 한 줄에 한 가지씩
+    - textbox "완료 기준 한 줄에 한 가지씩": viewer의 수정 요청을 거절한다. 거절한 요청은 데이터를 변경하지 않는다.
+    - button "설계만 저장"
+    - paragraph: 설계만 저장하면 구현을 실행하지 않습니다.
+    - region "구현 설정":
+      - strong: Codex로 구현
+      - paragraph: 별도 Git 작업 공간에서 수정하고 검사합니다. 결과를 검토한 뒤 원본 프로젝트에 반영합니다.
+      - generic: "모델: Codex 기본 설정"
+      - button "Codex 연결 확인"
+      - button "실행기·모델 설정"
+      - paragraph: 연결 확인은 실행기와 로그인 상태를 확인합니다. 모델 구현 요청은 시작하지 않습니다.
+      - generic "실행기 경로"
+      - checkbox "설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다."
+      - text: 설계와 프로젝트 코드를 Codex 모델에 전달하고, 선택한 검사 명령을 실행합니다.
+      - group "구현 후 실행할 검사":
+        - generic: 구현 후 실행할 검사
+        - checkbox "pnpm run test"
+        - text: pnpm run test
+        - code: node --test test.js
+      - button "이 프로젝트에 보관" [disabled]
+      - paragraph: 보관하면 다음에도 이 설정을 사용합니다. 해제는 이후 구현에 적용되며, 진행 중인 작업은 작업 패널에서 취소할 수 있습니다.
+      - button "저장하고 구현" [disabled]
+  - generic "이전 구현 작업 0개"
+  - status: 설계를 저장했습니다. 현재 구현과 목표는 별도로 유지됩니다.
+  - generic "탐색 위치 저장 상태": 탐색 위치 기억함
+  - generic "확인하지 못한 범위 7"

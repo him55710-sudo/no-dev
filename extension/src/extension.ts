@@ -296,7 +296,8 @@ export function activate(context: vscode.ExtensionContext) {
     getTreeItem: (item) => item,
     getChildren: () =>
       [
-        ["프로젝트 전체를 한국어로 읽고 수정", "pureobom.openWorkspace", "sparkle"],
+        ["시스템 설계 워크스페이스", "pureobom.openWorkspace", "type-hierarchy-sub"],
+        ["시스템 설계 시작 안내", "pureobom.getStarted", "lightbulb"],
         ["현재 파일 설명 열기", "pureobom.explain", "book"],
         ["작업 공간 연결 지도", "pureobom.map", "type-hierarchy"],
         ["예제로 시작하기", "pureobom.example", "beaker"],
@@ -313,6 +314,13 @@ export function activate(context: vscode.ExtensionContext) {
     designWorkspace,
     controller,
     vscode.window.registerTreeDataProvider("pureobom.start", sidebar),
+    vscode.commands.registerCommand("pureobom.getStarted", handle(async () =>
+      vscode.commands.executeCommand(
+        "workbench.action.openWalkthrough",
+        `${context.extension.id}#systemDesign`,
+        false,
+      ),
+    )),
     vscode.commands.registerCommand("pureobom.explain", handle(openPanel)),
     vscode.commands.registerCommand("pureobom.openWorkspace", handle(() => designWorkspace.open())),
     vscode.commands.registerCommand("pureobom.revealInWorkspace", handle(() => designWorkspace.open(true))),

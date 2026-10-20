@@ -1,8 +1,15 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { build } from "esbuild";
 import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
-import { cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import {
+  access,
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  writeFile,
+} from "node:fs/promises";
 import { resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { createConnection, createServer } from "node:net";
@@ -14,6 +21,23 @@ import type { ChangeRequest } from "../src/workspace/spec";
 
 const exec = promisify(execFile);
 const parent = resolve("test-results/agent-host");
+const observations: {
+  root: string;
+  startedAt: string;
+  events: {
+    elapsedMs: number;
+    phase: string;
+    running: boolean;
+    message: string;
+    connectionError?: string;
+  }[];
+}[] = [];
+afterEach(async () => {
+  await writeFile(
+    resolve(parent, "observations.json"),
+    JSON.stringify(observations, null, 2) + "\n",
+  );
+});
 let runtime: string, clientBundle: string;
 beforeAll(async () => {
   await mkdir(parent, { recursive: true });
@@ -42,6 +66,12 @@ beforeAll(async () => {
     format: "cjs",
     logLevel: "silent",
   });
+  // The two setup-cancellation cases can also exercise the exact installed host
+  // bundle. Other cases intentionally rely on the source fixture's 500ms idle.
+  if (process.env.PUREOBOM_TEST_AGENT_HOST) {
+    runtime = resolve(process.env.PUREOBOM_TEST_AGENT_HOST);
+    await access(runtime);
+  }
 }, 60000);
 
 async function until(
@@ -51,15 +81,25 @@ async function until(
   const deadline = Date.now() + timeout;
   while (!(await predicate())) {
     if (Date.now() >= deadline)
-      throw Error("Timed out waiting for the specific fixture state");
+      throw Error(
+        "Timed out waiting for the specific fixture state. Latest observations: " +
+          JSON.stringify(observations.at(-1)),
+      );
     await delay(30);
   }
 }
 async function fixture() {
+  const started = performance.now();
   const directory = await mkdtemp(resolve(parent, "run-"));
   const root = resolve(directory, "project"),
     storage = resolve(directory, "jobs"),
     trace = resolve(directory, "turns.txt");
+  const observation = {
+    root,
+    startedAt: new Date().toISOString(),
+    events: [] as (typeof observations)[number]["events"],
+  };
+  observations.push(observation);
   await cp("tests/fixtures/installed-recovery", root, { recursive: true });
   const peer = resolve(root, "app-server");
   await writeFile(
@@ -106,6 +146,18 @@ async function fixture() {
     executable: process.execPath,
     checks: ["test"] as ["test"],
     allowExternal: true,
+    specSnapshot: {
+      id: request.specId,
+      revision: request.specRevision,
+      targetIds: [request.specId],
+      content,
+      baseline: {
+        graphRevision: request.graphRevision,
+        observed: "",
+        sources: [],
+      },
+      updatedAt: new Date().toISOString(),
+    },
   };
   return {
     directory,
@@ -114,7 +166,36 @@ async function fixture() {
     trace,
     request,
     options,
-    client: () => new ManagedImplementationJobs(storage, runtime, () => {}),
+    client: (
+      changed: ConstructorParameters<
+        typeof ManagedImplementationJobs
+      >[2] = () => {},
+    ) => {
+      const client = new ManagedImplementationJobs(
+        storage,
+        runtime,
+        (job, connectionError) => {
+          const last = observation.events.at(-1);
+          const phase = job?.phase ?? "none";
+          if (
+            last?.phase !== phase ||
+            last?.running !== client.isRunning ||
+            last?.connectionError !== connectionError
+          ) {
+            observation.events.push({
+              elapsedMs: Math.round(performance.now() - started),
+              phase,
+              running: client.isRunning,
+              message: job?.message.slice(0, 200) ?? "",
+              connectionError,
+            });
+            if (observation.events.length > 80) observation.events.shift();
+          }
+          changed(job, connectionError);
+        },
+      );
+      return client;
+    },
   };
 }
 async function closed(root: string, storage: string) {
@@ -133,11 +214,257 @@ async function closed(root: string, storage: string) {
 }
 
 describe("managed implementation host", { timeout: 60000 }, () => {
+  it.each(["initialize", "account/read"])(
+    "cancels a stalled %s before inference and confirms the provider stopped",
+    async (method) => {
+      const f = await fixture();
+      const peer = resolve(f.root, "app-server");
+      const ready = resolve(f.directory, "setup-ready.json");
+      const writes = resolve(f.directory, "setup-writes.txt");
+      const stop = resolve(f.directory, "stop-setup");
+      await writeFile(
+        peer,
+        (await readFile(peer, "utf8"))
+          .replace(
+            "import { appendFileSync,",
+            "import { existsSync, appendFileSync,",
+          )
+          .replace(
+            "const message = JSON.parse(line);",
+            `const message = JSON.parse(line);
+            if (message.method === ${JSON.stringify(method)}) {
+              writeFileSync(${JSON.stringify(ready)}, JSON.stringify({pid:process.pid}));
+              writeFileSync(${JSON.stringify(writes)}, 'x');
+              const deadline = Date.now() + 45000;
+              setInterval(() => {
+                if (existsSync(${JSON.stringify(stop)}) || Date.now() > deadline) process.exit();
+                appendFileSync(${JSON.stringify(writes)}, 'x');
+              }, 20);
+              return;
+            }`,
+          )
+          .replace(
+            '.on("close", () => process.exit(0))',
+            '.on("close", () => {})',
+          ),
+      );
+      const original = await readFile(resolve(f.root, "policy.js"));
+      const originalStatus = (
+        await exec("git", ["-C", f.root, "status", "--porcelain"])
+      ).stdout;
+      const worker = spawn(process.execPath, [runtime, f.root, f.storage], {
+        windowsHide: true,
+        stdio: "ignore",
+      });
+      const exited = new Promise<void>((done) =>
+        worker.once("exit", () => done()),
+      );
+      let observedPid: number | undefined;
+      let cancelledWhileAlive = false;
+      const c = f.client((job) => {
+        if (job?.phase !== "cancelled" || observedPid === undefined) return;
+        try {
+          process.kill(observedPid, 0);
+          cancelledWhileAlive = true;
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== "ESRCH") throw error;
+        }
+      });
+      try {
+        await until(async () => !(await closed(f.root, f.storage)));
+        await c.start(f.root, f.request, f.options);
+        await until(async () => {
+          try {
+            await readFile(ready);
+            return true;
+          } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT")
+              return false;
+            throw error;
+          }
+        });
+        const { pid } = JSON.parse(await readFile(ready, "utf8")) as {
+          pid: number;
+        };
+        observedPid = pid;
+        expect(c.isRunning).toBe(true);
+        await c.cancel();
+        await until(() => c.state?.phase === "cancelled" && !c.isRunning, 5000);
+        expect(() => process.kill(pid, 0)).toThrow(/ESRCH/);
+        expect(cancelledWhileAlive).toBe(false);
+        const stoppedBytes = await readFile(writes);
+        await delay(200);
+        expect(await readFile(writes)).toEqual(stoppedBytes);
+        expect(c.state?.approvals).toEqual([]);
+        expect(c.state?.checks).toEqual([]);
+        expect(c.state?.message).toBe("구현 작업을 취소했습니다.");
+        expect((await c.history(f.root)).entries[0].phase).toBe("cancelled");
+        await expect(readFile(f.trace)).rejects.toMatchObject({
+          code: "ENOENT",
+        });
+        expect(await readFile(resolve(f.root, "policy.js"))).toEqual(original);
+        expect(
+          (await exec("git", ["-C", f.root, "status", "--porcelain"])).stdout,
+        ).toBe(originalStatus);
+      } finally {
+        // On platforms without owner-death containment, the fallback also stops
+        // the deliberate stubborn peer when an earlier assertion has failed.
+        await writeFile(stop, "fixture cleanup");
+        c.dispose();
+        if (worker.exitCode === null && worker.signalCode === null)
+          worker.kill();
+        await exited;
+      }
+    },
+  );
+
+  it("explicitly continues a dead job with its partial changes, new approval, fresh checks, review, apply and undo", async () => {
+    const f = await fixture();
+    const peer = resolve(f.root, "app-server");
+    await writeFile(
+      peer,
+      (await readFile(peer, "utf8")).replace(
+        "reply(message.id, { turn: {",
+        `const continuation = message.params.input[0].text.includes('Continue an interrupted implementation.');
+      if (!continuation) {
+        writeFileSync('continuation.txt', 'partial change retained');
+        writeFileSync('policy.js', '// unfinished implementation\\n' + readFileSync('policy.js', 'utf8'));
+      } else if (readFileSync('continuation.txt', 'utf8') !== 'partial change retained' || !readFileSync('policy.js', 'utf8').startsWith('// unfinished implementation')) {
+        throw Error('Continuation lost partial changes');
+      }
+      reply(message.id, { turn: {`,
+      ),
+    );
+    const original = await readFile(resolve(f.root, "policy.js"), "utf8");
+    const status = (await exec("git", ["-C", f.root, "status", "--porcelain"]))
+      .stdout;
+    const worker = spawn(process.execPath, [runtime, f.root, f.storage], {
+      windowsHide: true,
+      stdio: "ignore",
+    });
+    const exited = new Promise<void>((done) =>
+      worker.once("exit", () => done()),
+    );
+    const c = f.client();
+    try {
+      await until(async () => !(await closed(f.root, f.storage)));
+      await c.start(f.root, f.request, f.options);
+      await until(() => c.state?.phase === "approval");
+      const firstId = c.state!.id,
+        firstPath = c.state!.worktree!,
+        approval = c.state!.approvals[0].id;
+      await until(
+        async () =>
+          JSON.parse(
+            await readFile(resolve(f.storage, firstId, "job.json"), "utf8"),
+          ).state.phase === "approval",
+      );
+      const partial = await readFile(resolve(firstPath, "policy.js"), "utf8");
+      worker.kill();
+      await exited;
+      await until(async () => await closed(f.root, f.storage));
+      c.dispose();
+      const next = f.client();
+      try {
+        await next.restore(f.root, firstId);
+        expect(next.state?.phase).toBe("interrupted");
+        await expect(
+          next.resume(f.root, firstId, { ...f.options, allowExternal: false }),
+        ).rejects.toThrow();
+        await expect(
+          next.resume(f.root, firstId, {
+            ...f.options,
+            specSnapshot: { ...f.options.specSnapshot, revision: 2 },
+          }),
+        ).rejects.toThrow(/설계/);
+        const resumed = await next.resume(f.root, firstId, f.options);
+        expect(resumed.id).not.toBe(firstId);
+        expect(resumed.continuedFrom).toBe(firstId);
+        await until(() => next.state?.phase === "approval");
+        expect(next.state?.checks).toEqual([]);
+        expect(
+          await readFile(resolve(next.state!.worktree!, "policy.js"), "utf8"),
+        ).toBe(partial);
+        await expect(next.decide(approval, "accept", firstId)).rejects.toThrow(
+          /현재 작업/,
+        );
+        await expect(
+          next.resume(f.root, resumed.id, f.options),
+        ).rejects.toThrow(/중단된/);
+        await next.decide(next.state!.approvals[0].id, "accept");
+        await until(() => next.state?.phase === "review" && !next.isRunning);
+        expect(next.state?.checks.map((check) => check.status)).toEqual([
+          "passed",
+        ]);
+        expect(await readFile(f.trace, "utf8")).toBe("turn\nturn\n");
+        expect(await readFile(resolve(firstPath, "policy.js"), "utf8")).toBe(
+          partial,
+        );
+        const oldRecord = JSON.parse(
+          await readFile(resolve(f.storage, firstId, "job.json"), "utf8"),
+        );
+        expect(oldRecord.state.phase).toBe("interrupted");
+        expect(
+          oldRecord.review.files.map((file: { path: string }) => file.path),
+        ).toEqual(["continuation.txt", "policy.js"]);
+        expect(next.state!.files.map((file) => file.path)).toEqual([
+          "continuation.txt",
+          "policy.js",
+          "service.js",
+          "ui.js",
+        ]);
+        await next.reviewDecision({
+          jobId: next.state!.id,
+          reviewId: next.state!.reviewId,
+          approvedScopePaths: ["continuation.txt"],
+          reviewedVerificationPaths: [],
+          acceptUnverified: false,
+          criteria: next.state!.assessment!.criteria.map((criterion) => ({
+            id: criterion.id,
+            outcome: "confirmed",
+            note: "Controlled fixture assertions",
+            checkNames: ["test"],
+          })),
+        });
+        await next.apply(next.state!.reviewId!);
+        expect(
+          await readFile(resolve(f.root, "continuation.txt"), "utf8"),
+        ).toBe("partial change retained");
+        await next.undo(next.state!.reviewId!);
+        expect(await readFile(resolve(f.root, "policy.js"), "utf8")).toBe(
+          original,
+        );
+        expect(
+          (await exec("git", ["-C", f.root, "status", "--porcelain"])).stdout,
+        ).toBe(status);
+        await next.restore(f.root, firstId);
+        expect(next.state?.files).toHaveLength(2);
+        expect((await next.file(1)).after).toBe(partial);
+      } finally {
+        if (next.isRunning) {
+          await next.cancel();
+          await until(() => !next.isRunning);
+        }
+        next.dispose();
+      }
+    } finally {
+      c.dispose();
+      if (worker.exitCode === null) {
+        worker.kill();
+        await exited;
+      }
+    }
+  });
   it("outlives its original client process and reconnects to the same approval, checks, review, apply and undo", async () => {
     const f = await fixture();
     const script = `const {ManagedImplementationJobs}=require(process.argv[1]);
       const [root,storage,runtime,request,options]=JSON.parse(process.argv[2]);
-      const c=new ManagedImplementationJobs(storage,runtime,job=>{if(job?.phase==='approval'){console.log(JSON.stringify(job));process.exit(0)}});
+      let lastPhase;
+      const c=new ManagedImplementationJobs(storage,runtime,(job,error)=>{
+        if(job?.phase!==lastPhase||error){console.error(JSON.stringify({phase:job?.phase,message:job?.message,error}));lastPhase=job?.phase;}
+        if(job?.phase==='approval'){console.log(JSON.stringify(job));process.exit(0)}
+        if(job?.phase==='failed'){process.exit(2)}
+      });
       c.start(root,request,options).catch(e=>{console.error(e);process.exit(1)});`;
     let c = f.client();
     let initial: { id: string; approvals: { id: string }[] };
@@ -280,6 +607,17 @@ describe("managed implementation host", { timeout: 60000 }, () => {
     } finally {
       first.dispose();
       second.dispose();
+      // A failed approval wait must not leave this fixture's detached host alive.
+      const cleanup = f.client();
+      try {
+        await cleanup.history(f.root);
+        if (cleanup.isRunning) {
+          await cleanup.cancel();
+          await until(() => !cleanup.isRunning);
+        }
+      } finally {
+        cleanup.dispose();
+      }
     }
   });
 
@@ -311,13 +649,9 @@ describe("managed implementation host", { timeout: 60000 }, () => {
     });
     expect(leaked).toBe("");
     let connectionError: string | undefined;
-    const c = new ManagedImplementationJobs(
-      f.storage,
-      runtime,
-      (_job, error) => {
-        connectionError = error;
-      },
-    );
+    const c = f.client((_job, error) => {
+      connectionError = error;
+    });
     try {
       await c.start(f.root, f.request, f.options);
       await until(() => c.state?.phase === "approval");

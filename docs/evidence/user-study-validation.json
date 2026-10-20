@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-19T23:40:16.603Z",
+  "scope": "Package verification only; no model, app tests or human study",
+  "archiveSha256": "86d9b263ec8782ed0ab29fe4739046ff2ec4945fe5ef28e0c7007327f5b5cb4a",
+  "archiveEntries": 32,
+  "candidateChangedPaths": [
+    "app/(login)/actions.ts"
+  ],
+  "allArchiveHashesMatch": true,
+  "observerAnswerKeyExcluded": true,
+  "corruptedFaultHashRejectedBeforeOutput": true,
+  "csv": {
+    "docs/user-study-observations.csv": {
+      "columns": 33,
+      "participantRows": 0
+    },
+    "docs/user-study-review-observations.csv": {
+      "columns": 12,
+      "participantRows": 0
+    }
+  }
+}

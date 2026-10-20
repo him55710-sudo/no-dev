@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16T08:26:02.076Z",
+  "environment": {
+    "platform": "win32",
+    "node": "v24.19.0"
+  },
+  "scope": "Implementation state persistence, actual Git file transactions and process-interruption recovery; not a new model inference or an installed-extension restart demo.",
+  "command": "pnpm exec vitest run --maxWorkers=2 --reporter=default --reporter=json --outputFile.json=test-results/recovery-release-validation.json",
+  "regression": {
+    "files": 20,
+    "tests": 180,
+    "passed": 180,
+    "failed": 0
+  },
+  "recoveryCases": [
+    {
+      "name": "durable implementation recovery recovers after the writing process exits mid-apply, including an outdated progress list",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery reconciles a partial undo but refuses to overwrite any subsequent user edit",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery restores review, applies, restarts again, and undoes without losing the saved design",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery invalidates old approvals and checks when the agent connection is lost",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery invalidates a completed review if its files change after restart",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery persists a real failed launch and restores it without launching another process",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery rejects corrupt records, forged source paths, and snapshot hashes before restoring",
+      "status": "passed"
+    },
+    {
+      "name": "durable implementation recovery excludes a second writer and releases the OS lease when the owner exits",
+      "status": "passed"
+    }
+  ],
+  "failureObservedDuringDevelopment": {
+    "first": "The process verification test exceeded its former 30-second total test deadline during concurrent work.",
+    "second": "After adding a shutdown bound, one full run passed 179/180 tests; Windows verification did not confirm process termination within 7 seconds. The original PID was absent when subsequently inspected. The precise timing cause was not established.",
+    "change": "Verification now bounds shutdown at 20 seconds and retains taskkill diagnostics; an unconfirmed shutdown rejects verification and cannot enable apply. The real multi-process test has a 120-second total budget. The final full run above passed without bypassing termination checks."
+  },
+  "extensionHost": {
+    "checkedAt": "2026-10-16T08:14:53.847Z",
+    "passedChecks": [
+      "real compiler graph",
+      "alias/re-export shared policy",
+      "node to exact source",
+      "source to node",
+      "durable design save",
+      "stale design rejected",
+      "unsaved source invalidation",
+      "observed drift preserves intent",
+      "restored source reconnects",
+      "project verification script discovery",
+      "documentation save never starts agent",
+      "external data choice required",
+      "dirty editor blocks implementation"
+    ],
+    "scope": "Existing VS Code 1.96.4 graph/spec/consent/dirty-buffer integration; does not prove recovery through installed UI."
+  },
+  "build": {
+    "extension": "passed",
+    "web": "passed",
+    "vsixBytes": 1663196,
+    "vsixSha256": "263470cd628a9feb8b9f443d48cee040452369b1cebd8ff3e5c46ed71754b6c6"
+  },
+  "browser": {
+    "scope": "Read-only rendering of a restored synthetic test record: history disclosure and current before/after file status. The controls did not run an agent or mutate project files."
+  },
+  "limitations": [
+    "Some completed-review records are controlled persistence fixtures, not model output.",
+    "No live agent is automatically resumed; a disconnected record does not prove that its old process exited.",
+    "Installed VSIX restart and complete recovery UI sequence remain to be verified.",
+    "External projects, independent dependency installation, Linux live inference, power loss and leftover temporary-file cleanup remain outside this evidence."
+  ],
+  "sourceHashes": {
+    "extension/src/agent/records.ts": "53ac49d6d265b683b99349c22d835a3fa25ed1340c608608f66f625ea6b93c17",
+    "extension/src/agent/gitWorkspace.ts": "46f071c5f1a240be6e5f6dad3899b8959f295360ecad186e361c660900fd5ff4",
+    "extension/src/agent/jobs.ts": "d01dec30171c85561db2354a429950b243d8ec281a55da59a3f5b6d714247ddd",
+    "extension/src/agent/verify.ts": "09fa85672d6100d6992ee70433a90fc0951ae6337e683ee9294b88a4ec68fb49",
+    "extension/src/designWorkspace.ts": "f6e1004f40dff11eee8aa4e4b367fc41b11fb1dd095739bd1b1eb6628c3d2350",
+    "src/workspace/DesignWorkspaceView.tsx": "279c2a8ca67d6a469d21b941905835545e23d2fdf500215a59e4847bb8094a16",
+    "src/workspace/JobTray.tsx": "b3ede1b2d29d9817970af0ac4417394d7ba566553d548c8e738a09b148e175a5",
+    "src/workspace/job.ts": "427f39867a3e8a124e710a8ee7f9a9089b34091a773fba9a9af1654388611752",
+    "src/workspace/spec.ts": "310dde5e95dfaa917424ba77d5e7bc932ecd877cc26e40034ca437df073acda9",
+    "src/workspace/state.ts": "d609c6f4e94fbe20cd2e0be489e7789ef6db83f66e20a1140fb607ebc0d3cd89",
+    "tests/agent-recovery.test.ts": "5da0103b8dea8cde8915756bf99a7962c37a119860b92af2b420f385acce926d",
+    "tests/agent-verification.test.ts": "d2ebc0ea65e63d7a2227ef98eaeb11b9ea47549ecccbed9f473141b77febc706"
+  }
+}
